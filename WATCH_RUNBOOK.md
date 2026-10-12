@@ -14,8 +14,9 @@ The current cadence is every 3 hours. The old `poll.py` schedules the next wakeu
 The cronjob owns scheduling. Do not run `poll.py` or create another schedule.
 
 Do not edit the site repo, run refresh.py/build_data.py, import board data, run
-Lean, push, deploy, post on GitHub, or contact authors. GitHub Actions owns data
-refresh. X watching is off permanently. Do not open browser tabs.
+Lean, deploy, post on GitHub, or contact authors. Git pushes are allowed only
+from `main` to `origin` as shown below. Never force-push, push `private-history`,
+or use `--all` or `--mirror`. GitHub Actions owns data refresh. X watching is off permanently. Do not open browser tabs.
 
 ## Check the hourly site refresh on every run
 
@@ -70,13 +71,19 @@ invented workflow verdict. Successful runs need no message.
 Start here. This block holds the same lock as the old poll loop. It refuses dirty
 worktrees, saves the previous reports for comparison, runs the tests, then runs
 people_watch.py before pivot_watch.py. The pivot watch reads the people report.
-It commits only the two report files, locally. Do not use --recheck or --watch-only
-for a normal cycle: those options omit the full search.
+It commits only the two report files and pushes `main` after every successful
+cycle, even when neither report changed. This retries a previous failed push.
+Do not use --recheck or --watch-only for a normal cycle: those options omit the
+full search.
 
 ```bash
 cd "$(git rev-parse --show-toplevel)"
 flock -n .git/poll.lock bash <<'SH'
 set -eu
+if test "$(git branch --show-current)" != main; then
+  echo 'Watch cycles require branch main; stop without changing branches.' >&2
+  exit 1
+fi
 if test -n "$(git status --porcelain)"; then
   echo 'Worktree has edits; leave them untouched and stop.' >&2
   exit 1
@@ -104,14 +111,28 @@ if ! git diff --quiet -- people-watch.json pivot-watch.json; then
   git add -- people-watch.json pivot-watch.json
   git commit -m "Update GitHub watches $(date -u +%Y-%m-%dT%H:%M:%SZ)" -- people-watch.json pivot-watch.json
 fi
+if ! git -c push.followTags=false push origin main:refs/heads/main > .git/watch-push.log 2>&1; then
+  python3 - <<'PY'
+from datetime import datetime, timezone
+from poll import office, LEAD
+stamp=datetime.now(timezone.utc).isoformat(timespec='seconds')
+result=office(f'/api/agents/{LEAD}/messages', {'text':
+    stamp+': Watch push failed for main to bigospeedrun/watch. Local commits are retained; '
+    'the next successful cycle will retry. Inspect .git/watch-push.log.'})
+assert result.get('messageId'), 'Push failure alert delivery was not confirmed'
+PY
+  exit 1
+fi
 SH
 ```
 
 A lock conflict means another cycle is running: do not start duplicate work.
 On a failed test or command, inspect the corresponding `.git/*.log`. Do not reset,
 stash, repair unrelated code, or claim full coverage. Preserve partial output for
-review. A failure or coverage warning alone is not a lead alert. End silently;
-the next cron cycle can retry. The cron execution record retains the failure.
+review. A push failure must be reported to Lead by the block above. If that
+notification fails, retain the log and report the delivery failure through the
+scheduler. Other command failures or coverage warnings alone are not lead alerts.
+The next cron cycle can retry. The cron execution record retains the failure.
 
 ## Read and review the results
 
@@ -290,8 +311,8 @@ API lookup of bigospeedrun/site data at a pinned main commit can resolve it.
 
 ## Notify Lead, or end silently
 
-Send a message only for a reviewed research lead or an unreported hourly
-workflow failure as specified above. For a research lead, Use the
+Send a message only for a reviewed research lead, an unreported hourly
+workflow failure, or a push failure as specified above. For a research lead, Use the
 same format as poll.py (one message grouping all qualifying leads):
 
 `CHECKED_AT: Possible new bound race or problem pivot; README signals need review: REPO_URL (PROBLEM_GUESS); REPO_URL (PROBLEM_GUESS)`
@@ -318,4 +339,4 @@ PYCODE
 The token belongs only in the localhost Authorization header. Never print it or
 send it to GitHub. Check that the response has `messageId` before treating the
 alert as delivered. Do not send success reports, coverage summaries or an
-all-clear message. If there is no qualifying research or workflow-failure alert, end silently.
+all-clear message. If there is no qualifying research, workflow-failure, or push-failure alert, end silently.
