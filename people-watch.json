@@ -1,7 +1,7 @@
 {
-  "checked_at": "2026-10-12T03:48:18Z",
+  "checked_at": "2026-10-12T06:48:15Z",
   "first_run": false,
-  "window_start": "2026-10-09T03:48:18Z",
+  "window_start": "2026-10-09T06:48:15Z",
   "users": {
     "Swapnil-jain": {
       "github": "Swapnil-jain",
@@ -22,7 +22,7 @@
         "twitter_username": null,
         "url": "https://github.com/Swapnil-jain"
       },
-      "checked_at": "2026-10-12T03:48:18Z",
+      "checked_at": "2026-10-12T06:48:15Z",
       "seen_ids": [
         "23732402585",
         "23732140605",
@@ -127,7 +127,7 @@
         "twitter_username": "0xDoug",
         "url": "https://github.com/Mister-Meeseeks"
       },
-      "checked_at": "2026-10-12T03:48:18Z",
+      "checked_at": "2026-10-12T06:48:15Z",
       "seen_ids": [
         "16974467438",
         "16974466425",
@@ -321,7 +321,7 @@
         "twitter_username": "CrocSwap",
         "url": "https://github.com/CrocSwap"
       },
-      "checked_at": "2026-10-12T03:48:18Z",
+      "checked_at": "2026-10-12T06:48:15Z",
       "seen_ids": [
         "15170341229"
       ],
@@ -391,8 +391,43 @@
         "twitter_username": "Viewforge",
         "url": "https://github.com/rohanarun"
       },
-      "checked_at": "2026-10-12T03:48:18Z",
+      "checked_at": "2026-10-12T06:48:15Z",
       "seen_ids": [
+        "23749629626",
+        "16984605876",
+        "23749445757",
+        "23748782520",
+        "23746911650",
+        "23746909174",
+        "23746477269",
+        "23746465996",
+        "23745647909",
+        "23745584938",
+        "23745456730",
+        "16981309956",
+        "23744613508",
+        "23744388268",
+        "23744230736",
+        "23744153870",
+        "23744035060",
+        "23743388807",
+        "23743212420",
+        "23743069498",
+        "23742998361",
+        "23742978225",
+        "23742896490",
+        "23742843969",
+        "16979659227",
+        "23742705231",
+        "16979488792",
+        "23742438924",
+        "23742426309",
+        "23741593188",
+        "23741583048",
+        "23741262447",
+        "23740615432",
+        "23740220786",
+        "23740031277",
         "23739608908",
         "16977219336",
         "16976998762",
@@ -885,9 +920,9 @@
         "15364175414"
       ],
       "event_count": 300,
-      "oldest_returned_at": "2026-10-10T04:41:18Z",
+      "oldest_returned_at": "2026-10-10T12:41:46Z",
       "repository_inventory": {
-        "rohanarun/integer-mult-bounds": "2026-10-12T03:45:40Z",
+        "rohanarun/integer-mult-bounds": "2026-10-12T06:06:41Z",
         "rohanarun/sidorenko-template-refinements": "2026-10-10T17:55:09Z",
         "rohanarun/matrix-multiplication-sector-barrier": "2026-10-10T12:41:46Z",
         "rohanarun/van-der-waerden-refinement": "2026-10-10T17:48:27Z",
@@ -986,7 +1021,8 @@
         "rohanarun/super-agent-news-agent-json-duplicate-key-loss-20260915": "2026-09-15T11:47:34Z",
         "rohanarun/super-agent-news-super-developer-line-ending-handoff-20260915": "2026-09-15T11:37:57Z",
         "rohanarun/super-agent-news-agent-localized-number-roundtrip-20260915": "2026-09-15T11:27:23Z",
-        "rohanarun/super-agent-news-super-vs-budibase-20260915": "2026-09-15T11:08:08Z"
+        "rohanarun/super-agent-news-super-vs-budibase-20260915": "2026-09-15T11:08:08Z",
+        "rohanarun/integer-multiplication-illustrated": "2026-10-12T05:08:35Z"
       }
     },
     "chafreaky": {
@@ -1000,8 +1036,13 @@
         "twitter_username": "cfky_",
         "url": "https://github.com/chafreaky"
       },
-      "checked_at": "2026-10-12T03:48:18Z",
+      "checked_at": "2026-10-12T06:48:15Z",
       "seen_ids": [
+        "23748076406",
+        "16980435773",
+        "16979410579",
+        "16978397889",
+        "23740895340",
         "16976897012",
         "23738695628",
         "23736158773",
@@ -1064,11 +1105,9 @@
         "23683137719",
         "16941495274",
         "23681776343",
-        "23681143627",
         "16940061872",
         "16939066830",
         "16938964025",
-        "23678263541",
         "16938134744",
         "16936918144",
         "16935948122",
@@ -1134,6 +1173,8 @@
         "16827104173",
         "16814705516",
         "16731481005",
+        "23681143627",
+        "23678263541",
         "23674738805",
         "23673640070",
         "23673637245",
@@ -1244,10 +1285,10 @@
         "23402814491",
         "23401987083"
       ],
-      "event_count": 132,
+      "event_count": 135,
       "oldest_returned_at": "2026-10-08T13:34:37Z",
       "repository_inventory": {
-        "chafreaky/integer-mult-bounds": "2026-10-12T03:29:39Z",
+        "chafreaky/integer-mult-bounds": "2026-10-12T04:58:49Z",
         "chafreaky/wht-power-saving-lean": "2026-10-10T02:29:10Z",
         "chafreaky/exact-dft-bounds": "2026-10-10T00:52:20Z"
       }
@@ -1263,8 +1304,23 @@
         "twitter_username": null,
         "url": "https://github.com/eumemic"
       },
-      "checked_at": "2026-10-12T03:48:18Z",
+      "checked_at": "2026-10-12T06:48:15Z",
       "seen_ids": [
+        "23749204940",
+        "16984234548",
+        "16983837828",
+        "23748439209",
+        "16982948816",
+        "23747255266",
+        "16982154803",
+        "23746175036",
+        "16981610634",
+        "16980875181",
+        "23744053150",
+        "16980245486",
+        "23743573529",
+        "23743427527",
+        "16978994973",
         "16977169002",
         "16976834415",
         "16976562466",
@@ -1284,15 +1340,8 @@
         "16957755273",
         "23705858367",
         "23698336492",
-        "23698249406",
-        "23691389693",
         "16946831870",
-        "23691033139",
-        "23690944841",
-        "23690897809",
-        "23690013187",
         "16944532234",
-        "23687601686",
         "16944036704",
         "16942685620",
         "16942520856",
@@ -1557,6 +1606,13 @@
         "16883505796",
         "16883505719",
         "16883503858",
+        "23698249406",
+        "23691389693",
+        "23691033139",
+        "23690944841",
+        "23690897809",
+        "23690013187",
+        "23687601686",
         "16883458697",
         "16883457556",
         "16882807199",
@@ -2047,13 +2103,13 @@
         "16499276089"
       ],
       "event_count": 300,
-      "oldest_returned_at": "2026-10-10T04:25:08Z",
+      "oldest_returned_at": "2026-10-10T06:17:38Z",
       "repository_inventory": {
-        "eumemic/integer-mult-bounds": "2026-10-12T03:28:03Z",
-        "eumemic/exoplanets": "2026-10-10T19:11:58Z",
+        "eumemic/integer-mult-bounds": "2026-10-12T06:15:10Z",
+        "eumemic/exoplanets": "2026-10-12T05:58:06Z",
         "eumemic/exact-dft-bounds": "2026-10-09T09:34:28Z",
         "eumemic/beyond-n-log-n": "2026-10-09T07:51:37Z",
-        "eumemic/aios": "2026-10-09T06:37:36Z",
+        "eumemic/aios": "2026-10-12T06:27:27Z",
         "eumemic/photocraft": "2026-10-07T02:55:52Z",
         "eumemic/math": "2026-10-06T22:01:11Z",
         "eumemic/categorize": "2026-09-26T03:26:49Z",
@@ -2103,7 +2159,7 @@
         "twitter_username": null,
         "url": "https://github.com/maxime-fleury"
       },
-      "checked_at": "2026-10-12T03:48:18Z",
+      "checked_at": "2026-10-12T06:48:15Z",
       "seen_ids": [
         "23721883135",
         "23721866661",
@@ -2326,7 +2382,7 @@
         "twitter_username": null,
         "url": "https://github.com/DominikScholz"
       },
-      "checked_at": "2026-10-12T03:48:18Z",
+      "checked_at": "2026-10-12T06:48:15Z",
       "seen_ids": [
         "23584476952",
         "23570716184",
@@ -2427,8 +2483,21 @@
         "twitter_username": null,
         "url": "https://github.com/GamingPuzzled"
       },
-      "checked_at": "2026-10-12T03:48:18Z",
+      "checked_at": "2026-10-12T06:48:15Z",
       "seen_ids": [
+        "23750484653",
+        "23749519931",
+        "23748703456",
+        "23747628927",
+        "23746834984",
+        "23743967716",
+        "23743031462",
+        "23742878291",
+        "23742314113",
+        "23742210881",
+        "23741590119",
+        "23741353427",
+        "23740473442",
         "23739612803",
         "23737992387",
         "23737852891",
@@ -3048,10 +3117,10 @@
         "23348652256",
         "23347841078"
       ],
-      "event_count": 300,
-      "oldest_returned_at": "2026-10-08T16:24:26Z",
+      "event_count": 200,
+      "oldest_returned_at": "2026-10-08T23:27:06Z",
       "repository_inventory": {
-        "GamingPuzzled/gold-trading-dashboard": "2026-10-12T03:45:44Z",
+        "GamingPuzzled/gold-trading-dashboard": "2026-10-12T06:47:27Z",
         "GamingPuzzled/integer-mult-bounds": "2026-10-11T06:24:54Z",
         "GamingPuzzled/csfinal": "2026-06-17T06:15:01Z",
         "GamingPuzzled/pandas_numpy_workshop": "2026-02-18T01:53:54Z",
@@ -3071,7 +3140,7 @@
         "twitter_username": null,
         "url": "https://github.com/icekylinx"
       },
-      "checked_at": "2026-10-12T03:48:18Z",
+      "checked_at": "2026-10-12T06:48:15Z",
       "seen_ids": [
         "23736211800",
         "16974035591",
@@ -3134,8 +3203,27 @@
         "twitter_username": null,
         "url": "https://github.com/Dugongue"
       },
-      "checked_at": "2026-10-12T03:48:18Z",
+      "checked_at": "2026-10-12T06:48:15Z",
       "seen_ids": [
+        "16983446678",
+        "23747899724",
+        "23747873275",
+        "23747867985",
+        "23747812679",
+        "23746863570",
+        "23746391562",
+        "16982095944",
+        "23746062564",
+        "23746046634",
+        "23746001991",
+        "16980366657",
+        "23743717167",
+        "16979478231",
+        "23742148013",
+        "23742120052",
+        "23741586667",
+        "23741093857",
+        "23741074418",
         "16977499097",
         "23739408952",
         "23739400371",
@@ -3374,9 +3462,9 @@
         "21241483058"
       ],
       "event_count": 200,
-      "oldest_returned_at": "2026-09-16T03:12:00Z",
+      "oldest_returned_at": "2026-09-24T05:14:01Z",
       "repository_inventory": {
-        "Dugongue/integer-mult-bounds": "2026-10-12T03:44:08Z",
+        "Dugongue/integer-mult-bounds": "2026-10-12T06:06:29Z",
         "Dugongue/beyond-n-log-n": "2026-10-09T06:57:11Z",
         "Dugongue/MathProofs": "2026-10-05T23:31:44Z"
       }
@@ -3392,7 +3480,7 @@
         "twitter_username": null,
         "url": "https://github.com/ikeboy"
       },
-      "checked_at": "2026-10-12T03:48:18Z",
+      "checked_at": "2026-10-12T06:48:15Z",
       "seen_ids": [
         "23572093384",
         "23570263448",
@@ -3455,7 +3543,7 @@
         "twitter_username": null,
         "url": "https://github.com/sennemmi"
       },
-      "checked_at": "2026-10-12T03:48:18Z",
+      "checked_at": "2026-10-12T06:48:15Z",
       "seen_ids": [
         "23717442755",
         "23700445658",
@@ -3536,31 +3624,31 @@
   },
   "hits": [
     {
-      "event_id": "23731535552",
+      "event_id": "inventory:rohanarun/integer-multiplication-illustrated:2026-10-12T05:08:35Z",
       "actor": "rohanarun",
-      "kind": "branch-outside-watchlist",
-      "repo": "rohanarun/sidorenko-template-refinements",
-      "url": "https://github.com/rohanarun/sidorenko-template-refinements",
-      "created_at": "2026-10-10T06:41:49Z",
-      "title": null,
+      "kind": "repository-inventory-change",
+      "repo": "rohanarun/integer-multiplication-illustrated",
+      "url": "https://github.com/rohanarun/integer-multiplication-illustrated",
+      "created_at": "2026-10-12T05:08:35Z",
+      "title": "Illustrated reading guide and annotated edition of the OpenAI integer multiplication paper, with figures, worked examples, and editable sources.",
       "head": null,
-      "rank": 20,
-      "relevance": "bound-related lead; inspect source",
+      "rank": 30,
+      "relevance": "Recent owned bound repository; inspect source",
       "openai_math_fork": false
     }
   ],
   "ranked_hits": [
     {
-      "event_id": "23731535552",
+      "event_id": "inventory:rohanarun/integer-multiplication-illustrated:2026-10-12T05:08:35Z",
       "actor": "rohanarun",
-      "kind": "branch-outside-watchlist",
-      "repo": "rohanarun/sidorenko-template-refinements",
-      "url": "https://github.com/rohanarun/sidorenko-template-refinements",
-      "created_at": "2026-10-10T06:41:49Z",
-      "title": null,
+      "kind": "repository-inventory-change",
+      "repo": "rohanarun/integer-multiplication-illustrated",
+      "url": "https://github.com/rohanarun/integer-multiplication-illustrated",
+      "created_at": "2026-10-12T05:08:35Z",
+      "title": "Illustrated reading guide and annotated edition of the OpenAI integer multiplication paper, with figures, worked examples, and editable sources.",
       "head": null,
-      "rank": 20,
-      "relevance": "bound-related lead; inspect source",
+      "rank": 30,
+      "relevance": "Recent owned bound repository; inspect source",
       "openai_math_fork": false,
       "event_count": 1,
       "actors": [
