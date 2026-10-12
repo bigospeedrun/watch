@@ -26,6 +26,20 @@ class DiscordTests(unittest.TestCase):
         self.assertEqual(len(w.github_urls(text)),5)
         self.assertEqual(w.github_urls('<https://github.com/a/b> https://github.com/a/b.'),['https://github.com/a/b'])
 
+    def test_bots_webhooks_and_own_org_are_ignored(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp);bot=msg(1,'https://github.com/a/b');bot['author']['bot']=True
+            webhook=msg(2,'https://github.com/a/b');webhook['webhook_id']='99'
+            emptybot=msg(3,'');emptybot['author']['bot']=True
+            own=msg(4,'https://github.com/BigOSpeedrun/verifier/pull/7')
+            api=API([bot,webhook,emptybot,own]);alerts=[]
+            result=w.run(api,lambda *x:alerts.append(x),root)
+            self.assertEqual(result['status'],'ok');self.assertEqual(result['hits'],0)
+            self.assertEqual(alerts,[]);self.assertEqual(api.reactions,[])
+            self.assertFalse((root/w.PUBLIC).exists())
+            state=json.loads((root/w.PRIVATE).read_text())
+            self.assertEqual(state['messages'],{});self.assertEqual(state['last_seen'],'4')
+
     def test_private_public_split_reaction_and_retry(self):
         with tempfile.TemporaryDirectory() as tmp:
             root=Path(tmp);api=API([msg(1,'secret prose https://github.com/a/b/pull/7'),msg(2,'no link')]);alerts=[]

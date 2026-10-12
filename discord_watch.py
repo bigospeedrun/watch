@@ -26,6 +26,7 @@ def github_urls(content):
             parts=u.path.strip('/').split('/')
             if len(parts)<2 or not re.fullmatch(r'[A-Za-z0-9](?:[A-Za-z0-9-]{0,38})',parts[0]):continue
             if not re.fullmatch(r'[A-Za-z0-9_.-]{1,100}',parts[1]) or parts[1] in ('.','..'):continue
+            if parts[0].lower()=='bigospeedrun':continue
             tail=parts[2:]
             if tail:
                 if tail[0]=='pull':
@@ -39,6 +40,9 @@ def github_urls(content):
             urls.add('https://github.com/'+'/'.join(parts))
         except ValueError:continue
     return sorted(urls)
+
+def excluded_message(message):
+    return bool(message.get('author',{}).get('bot') or message.get('webhook_id'))
 
 def repo_url(url):return '/'.join(url.split('/')[:5])
 
@@ -80,7 +84,7 @@ def run(api,notify,root=ROOT,dry_run=False):
         if not batch:break
         # An empty ordinary message may be intent-redacted. Fail closed for the
         # complete page; do not acknowledge or move past any hidden content.
-        if any(m.get('type',0) in (0,19) and not m.get('content') and
+        if any(not excluded_message(m) and m.get('type',0) in (0,19) and not m.get('content') and
                not m.get('attachments') and not m.get('embeds') for m in batch):
             if not dry_run and not state['content_alerted']:
                 notify('Discord submission watch: content unavailable; enable Message Content intent. Cursor unchanged.', 'discord-content-unavailable')
@@ -89,7 +93,7 @@ def run(api,notify,root=ROOT,dry_run=False):
         for message in sorted(batch,key=lambda m:int(m['id'])):
             mid=message['id']
             if not re.fullmatch(r'[0-9]+',mid) or int(mid)<=int(cursor):raise ValueError('Invalid message order')
-            urls=github_urls(message.get('content',''));count+=1
+            urls=[] if excluded_message(message) else github_urls(message.get('content',''));count+=1
             if urls:
                 hits+=1
                 if not dry_run:

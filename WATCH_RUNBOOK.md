@@ -146,7 +146,8 @@ credential file directly; never copy its value into this repository or logs.
 Nil controls Message Content intent in the Discord developer portal.
 
 The parser accepts HTTPS github.com repository, commit, pull-request, tree and
-blob links. It removes query strings and fragments, deduplicates links, and sends
+blob links. It skips bot and webhook messages and all links to the
+`bigospeedrun` organization (case-insensitive). It removes query strings and fragments, deduplicates links, and sends
 repository URLs through the existing Lead alert format with `Discord submission`
 as the signal. This is an explicit intake route: workers review each submitted
 repository read-only before deciding its problem or mathematical relevance.
