@@ -1,0 +1,15 @@
+{
+  "state": "passed",
+  "checked_at": "2026-10-08T22:33:38.808770+00:00",
+  "observed_at": "2026-10-08T22:35:20.574242Z",
+  "scope": "Local scored 3SUM baseline reproduction at 2499/1250; Race.bound; both kernels accepted.",
+  "source_receipt_path": "sources/3sum-scored-baseline/verification.json",
+  "log_path": "sources/3sum-scored-baseline-comparator.log",
+  "time_path": "sources/3sum-scored-baseline-comparator.time",
+  "comparator_exit_code": 0,
+  "source_commit": "02286f1026443cd76a2b04d05737f2f141449390",
+  "reused_proof_files": 5776,
+  "note": "Uses cached upstream proof artifacts with fresh statement, challenge and wrapper; no remote run or site badge.",
+  "log_sha256": "edbbbb2228076fa712528bd88a6b81c208fdb89a08df6b708b518449a74f633e",
+  "time_sha256": "c745b404ce002362eec78ebe791c4416eb566cd35904c09417091b2b8ea98629"
+}

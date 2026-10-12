@@ -1,0 +1,130 @@
+{
+  "schema_version": 1,
+  "problem_id": "directed-sssp/comparison-addition-sparse",
+  "model": {
+    "id": "comparison-addition-sparse",
+    "version": "1",
+    "description": "Uniform deterministic exact directed SSSP with nonnegative real weights in the source RAM/comparison-addition model. Improved branch requires m <= n F(n), F(n)=floor(floor(log2 n)^(3/4)). Score applies only on that density profile. Bellman-Ford fallback outside it; no general-density improvement claimed.",
+    "definition_url": "https://github.com/spicylemonade/c-hd-proof/blob/98c53accb47a505482a1781597ae14bf67e81cec/README.md"
+  },
+  "score": {
+    "id": "log-time-exponent",
+    "version": "1",
+    "symbol": "alpha",
+    "definition": "Worst-case O(n (log n)^alpha) on m <= n floor(floor(log2 n)^(3/4)).",
+    "direction": "lower-is-better",
+    "encoding": "rational-string",
+    "minimum": "0",
+    "maximum": "1"
+  },
+  "checked_at": "2026-10-08",
+  "sources": [
+    {
+      "url": "https://github.com/spicylemonade/c-hd-proof/blob/98c53accb47a505482a1781597ae14bf67e81cec/README.md",
+      "checked_at": "2026-10-08"
+    },
+    {
+      "url": "https://web.eecs.umich.edu/~pettie/matching/Fredman-Tarjan-Fibonacci-Heaps.pdf",
+      "checked_at": "2026-10-08"
+    }
+  ],
+  "records": [
+    {
+      "id": "classical-baseline",
+      "kind": "baseline",
+      "score": "1",
+      "tier": "claimed",
+      "submitted_at": null,
+      "upstream_status": "not-applicable",
+      "upstream_status_at": "2026-10-08T21:34:39.207006Z",
+      "site_observed_at": "2026-10-08T21:34:39.207006Z",
+      "source": {
+        "kind": "paper",
+        "url": "https://doi.org/10.1145/28869.28874"
+      },
+      "spec_version": "1",
+      "title": "Fredman and Tarjan (1987), Fibonacci heaps and their uses in improved network optimization algorithms",
+      "authors": [
+        {
+          "name": "Fredman and Tarjan (1987), Fibonacci heaps and their uses in improved network optimization algorithms",
+          "url": "https://doi.org/10.1145/28869.28874"
+        }
+      ],
+      "predecessors": [],
+      "submission_url": "https://doi.org/10.1145/28869.28874",
+      "artifact": {
+        "path": "sources/directed-sssp-baseline.json",
+        "sha256": "c6033d9ecb2f9ba43720662a1f00520859d1c1e1670dcc79a814fa20ba829809"
+      },
+      "evidence": {
+        "paper_url": "https://doi.org/10.1145/28869.28874",
+        "theorem": null,
+        "certificate_path": null
+      },
+      "dependencies": []
+    },
+    {
+      "id": "directed-sssp-2026",
+      "kind": "improvement",
+      "score": "11/12",
+      "tier": "claimed",
+      "submitted_at": "2026-10-08T21:34:39.207006Z",
+      "upstream_status": "not-applicable",
+      "upstream_status_at": "2026-10-08T21:34:39.207006Z",
+      "site_observed_at": "2026-10-08T21:34:39.207006Z",
+      "source": {
+        "kind": "repo-artifact",
+        "url": "https://github.com/spicylemonade/c-hd-proof/blob/98c53accb47a505482a1781597ae14bf67e81cec/README.md"
+      },
+      "spec_version": "1",
+      "title": "C-HD uniform deterministic sparse-density SSSP",
+      "authors": [
+        {
+          "name": "spicylemonade",
+          "url": "https://github.com/spicylemonade"
+        }
+      ],
+      "predecessors": [],
+      "submission_url": "https://github.com/spicylemonade/c-hd-proof/blob/98c53accb47a505482a1781597ae14bf67e81cec/README.md",
+      "artifact": {
+        "path": "sources/directed-sssp-2026.json",
+        "sha256": "b2c28b60be415df76e29f5289c1cba46269076a03433ea057aeb68179a8c03d0"
+      },
+      "evidence": {
+        "paper_url": "https://github.com/spicylemonade/c-hd-proof/blob/98c53accb47a505482a1781597ae14bf67e81cec/README.md",
+        "theorem": "Frontier.CHD.Final.chd_exact_within",
+        "certificate_path": null
+      },
+      "dependencies": [],
+      "source_commit": "98c53accb47a505482a1781597ae14bf67e81cec"
+    }
+  ],
+  "record_metadata": {
+    "classical-baseline": {
+      "checked_at": "2026-10-08",
+      "eligible_for_record": true,
+      "proof_status": "Classical paper baseline; no site proof check.",
+      "date_precision": "Publication year only; exact submission time unknown. site_observed_at is separate.",
+      "source_access": "paper mirror timed out; original full text unchecked",
+      "publication_year": 1987,
+      "publication_date_precision": "year",
+      "publication_source_url": "https://doi.org/10.1145/28869.28874",
+      "upstream_tier": "claimed",
+      "site_tier": "claimed",
+      "comparison_key": "directed-sssp/comparison-addition-sparse/v1"
+    },
+    "directed-sssp-2026": {
+      "checked_at": "2026-10-08",
+      "source_url": "https://github.com/spicylemonade/c-hd-proof/blob/98c53accb47a505482a1781597ae14bf67e81cec/README.md",
+      "site_badge": false,
+      "eligible_for_record": true,
+      "proof_status": "Source claim; not independently rerun by bigOspeedrun",
+      "comparison_status": "source scope only",
+      "upstream_tier": "claimed",
+      "site_tier": "claimed",
+      "comparison_key": "directed-sssp/comparison-addition-sparse/v1",
+      "publication_date_precision": "unknown"
+    }
+  },
+  "updated_at": "2026-10-08T21:41:48Z"
+}

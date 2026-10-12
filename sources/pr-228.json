@@ -1,0 +1,11 @@
+{
+  "number": 228,
+  "html_url": "https://github.com/CrocSwap/integer-mult-bounds/pull/228",
+  "title": "Refine PR195 frame witness to κ = 0.000662832575455842015647",
+  "body": "## Change and mathematical scope\n\nRefine the pinned PR195 physical-frame witness to conditional\nkappa = 0.000662832575455842015647, a 0.0272526% increase over\n0.000662651985348746. Exactly 468 operation frames change; the scalar\nword, aliases, deadlines, 46 terminal sinks and bit supplier are retained.\n\nPR195 already implements arbitrary-subspace joins/intersections. This adds\nan independent standard-library implementation and fixed proposal catalogue,\nnot a new move family or a record claim across other pending suppliers.\nThe PR195 seed commit and frame hash are pinned; its notice and all parent\nattribution are preserved. Substantial OpenAI Codex assistance is disclosed.\nThe original all-size analytic and compiler assumptions remain conditional.\n\nThe diff adds only research/subspace-bundle-frames and its dedicated CI workflow.\nNo selected result pointer, upstream file or existing proof package changes.\nThe builder extracts its pinned prerequisites automatically. Verification\nrequires neither discovery nor a local-investigation directory.\n\n## Validation\n\nCompleted: full PR195 replay; exact new physical, sink, formal-column, moment\nand 47-constraint assembly checks; clean Python 3.13 certificate replay;\nbyte-identical rebuild of all eight candidate inputs; small exact move tests\non Python 3.13 and 3.14; optimized-mode rejection; cold package review.\n\nAll repository `make verify` targets and explicit `make entrance-bank-verify`\npassed. The historical OpenMP target required resuming with GCC 15; audit-only\nBoost headers supplied another historical dependency. All 538 isolated tests\npassed and all 2183 tracked baseline files remained byte-identical. The focused\n26-file patch passes applicability, whitespace and isolated application checks. Linux CI is configured but has not\nrun because this PR has not been published. Finite checks do not formally\nverify the full multiplication theorem.\n",
+  "created_at": "2026-10-09T20:36:33Z",
+  "updated_at": "2026-10-09T20:36:33Z",
+  "closed_at": null,
+  "merged_at": null,
+  "state": "open"
+}

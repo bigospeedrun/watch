@@ -1,0 +1,11 @@
+{
+  "number": 197,
+  "html_url": "https://github.com/CrocSwap/integer-mult-bounds/pull/197",
+  "title": "Pack #187's bit residuals: conditional κ = 0.000676080316519385",
+  "body": "## Change and mathematical scope\n\nPack rank-4 and rank-24 scratch residuals from #187 into shared banks after each core completes. This removes 6,600 rank-60 exterior corrections across three copies. All other recursive children remain charged.\n\nCombined with #193's complex supplier, this raises conditional κ from **0.000670450176035363** to **0.000676080316519385**, a **0.8398% packing gain**. The result is 1.2957% above #194's published value; that larger difference also includes supplier and arithmetic choices.\n\nThis builds on #187's bit word, #193's complex word, #185/#187's finite leaf composition, and #186's related bank construction. Exact source commits are pinned in `research/packed-source-assisted-bit/SOURCE.json`. `PROOF.md` gives the scratch-restoration argument, routing costs and inherited assumptions. The full multiplication theorem remains conditional.\n\nThe diff adds only this package and its workflow to main. Both unmerged suppliers are loaded from separately pinned checkouts; their source files are unchanged. Setup commands are in the package README.\n\n## Validation\n\n```sh\npython3.13 -B research/packed-source-assisted-bit/verify.py \\\n  --complex-root ../packed-complex-pr193 \\\n  --bit-root ../packed-bit-pr187 --full\n```\n\nPassed locally: both unchanged upstream verifiers, the packing checks, two independent exact moment calculations, all 47 assembly inequalities, seven margins, and corruption controls. The reduced certificate regenerated exactly with unchanged κ.\n\nCurrent main's `make entrance-bank-verify` passed with no tracked changes. Historical regression targets completed on the earlier preparation checkout after supplying Boost headers and resuming the remaining groups; this is not a claim of a fresh full `make verify` run on current main. The new PR workflow has not yet run.\n\nPrepared with substantial OpenAI Codex assistance. Predecessor attribution is retained; new contributions are Apache-2.0.\n",
+  "created_at": "2026-10-09T13:27:16Z",
+  "updated_at": "2026-10-09T17:34:24Z",
+  "closed_at": null,
+  "merged_at": null,
+  "state": "open"
+}

@@ -1,0 +1,57 @@
+[
+  {
+    "sha": "741e7aa078392553815df7926ee17ac5e25a8c38",
+    "date": "2026-10-08T20:37:15Z",
+    "message": "Round seven: conditional witness kappa > 2^-14\n\nDeferred readouts and V leaves on the two-stage bit interchange, with\nPR #62's producer, lifted frames and late copies. Frozen schedule and\nframes, stdlib checkers, Lean kernel check of the moment certificates\nand assembly, and a note. Staircase entrance corner:\na_b = 31987/(5*10^8), kappa = 1599247689723/(2.5*10^16)."
+  },
+  {
+    "sha": "f2176bc1124821bf17eb63725bd366d7bdc020a3",
+    "date": "2026-10-08T14:01:26Z",
+    "message": "Round six: conditional witness kappa > 2^-15\n\nCopied centres (after PR #36) with retained point totals on our two-stage bit interchange, and the two-stage complex interchange with our pair-exclusion producer, copied centres and full batching; Lean kernel check of both moment certificates and the assembly. Exact certificate kappa = 3666565558019/10^17."
+  },
+  {
+    "sha": "c2c2f279d93643e5ff3fe121a0fbc68e0e6f4007",
+    "date": "2026-10-08T12:38:33Z",
+    "message": "Round five: conditional witness kappa > 2^-16\n\nCommon flag basis for the two-stage interchange, a cheaper shared side circuit, side roles batched one level down, and a data-entrance corner run; Lean kernel check of the moment certificates and the assembly. Exact certificate kappa = 309575208081/(2*10^16)."
+  },
+  {
+    "sha": "d0b6ff0a62849602ba8c4138d38e0e4ed101ae80",
+    "date": "2026-10-08T11:14:42Z",
+    "message": "README: compare against our earlier witnesses"
+  },
+  {
+    "sha": "8f235d6e00f2f230e5cc6c3384f5725a1bdb2f6e",
+    "date": "2026-10-08T11:10:00Z",
+    "message": "Round four: conditional witness kappa > 2^-17\n\nOur stack with PR #24's endpoint-gauge bit network (published multiset, certified independently), PR #7's complex network fully batched with complex source frames, and data-edge batching for the two-stage bit interchange. Exact certificate kappa = 59861145819/(5*10^15)."
+  },
+  {
+    "sha": "ae405eb474d1486b2d8aef90139869f927f4836a",
+    "date": "2026-10-08T10:05:12Z",
+    "message": "Round three: conditional witness kappa > 2^-18\n\nBatched two-stage bit interchange with the partial-swap batching lemma, PR #7's complex network fully batched (rebuilt and certified independently), the stack driving eps toward 1, and a topology-free guard. Exact certificate kappa = 13086957581/(3.125*10^15)."
+  },
+  {
+    "sha": "5a505ab16258ce23f01e31968fcdb411801fd7bb",
+    "date": "2026-10-08T07:55:28Z",
+    "message": "README: finite-alphabet lemma"
+  },
+  {
+    "sha": "8d744a2f3583dc3ee81d29658d473c919ca343f0",
+    "date": "2026-10-08T07:52:15Z",
+    "message": "Independent recount of PR #7 role counts, PDF notes"
+  },
+  {
+    "sha": "5ac01ce684dc3c529bfa2d6efc16d5232dee1e73",
+    "date": "2026-10-08T07:44:16Z",
+    "message": "README evidence for the reuse path"
+  },
+  {
+    "sha": "cccc71de8b25f71317305eb7e78df65f79eaef6d",
+    "date": "2026-10-08T07:31:22Z",
+    "message": "Update README and notes for the 7499/10^12 witness"
+  },
+  {
+    "sha": "b95f720d68ed27d2f03254223744acca2e329bdf",
+    "date": "2026-10-08T07:17:47Z",
+    "message": "Conditional witness kappa = 249/(5*10^10) for integer multiplication\n\nExact certificate, identity checks, segmented-inverse check and notes."
+  }
+]

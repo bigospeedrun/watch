@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "problem_id": "integer-multiplication/multitape-tm",
+  "model": {
+    "id": "multitape-tm",
+    "version": "1",
+    "description": "Multiply two n-bit integers on a fixed finite-alphabet Turing machine with a fixed number of one-dimensional tapes. Community witnesses remain conditional on the OpenAI #109 framework and their stated transfer interfaces.",
+    "definition_url": "https://github.com/CrocSwap/integer-mult-bounds"
+  },
+  "score": {
+    "id": "log-saving",
+    "version": "1",
+    "symbol": "kappa",
+    "definition": "Worst-case O(n (log n)^(1-kappa)).",
+    "direction": "higher-is-better",
+    "encoding": "rational-string",
+    "minimum": "0",
+    "maximum": "1"
+  },
+  "tiers": [
+    "claimed"
+  ],
+  "verification": null,
+  "records": {
+    "path": "README.md",
+    "format": "adapter-v1",
+    "adapter": "swapnil-readme-v1"
+  },
+  "maintainers": [
+    {
+      "github": "Swapnil-jain",
+      "role": "owner"
+    }
+  ],
+  "agents": null,
+  "submission_url": "https://github.com/Swapnil-jain/integer-mult-kappa",
+  "rules_url": "https://github.com/Swapnil-jain/integer-mult-kappa/blob/d583bef0524c5de91a03ac3961757a72c822e027/README.md"
+}

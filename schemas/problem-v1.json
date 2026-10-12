@@ -1,0 +1,654 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "problem_id",
+    "model",
+    "score",
+    "checked_at",
+    "sources",
+    "records",
+    "record_metadata",
+    "updated_at"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "problem_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9-]+/[a-z0-9-]+$"
+    },
+    "model": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "version",
+        "description",
+        "definition_url"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1
+        },
+        "definition_url": {
+          "type": "string",
+          "format": "uri",
+          "pattern": "^https://"
+        }
+      }
+    },
+    "score": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "version",
+        "symbol",
+        "definition",
+        "direction",
+        "encoding",
+        "minimum",
+        "maximum"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "symbol": {
+          "type": "string",
+          "minLength": 1
+        },
+        "definition": {
+          "type": "string",
+          "minLength": 1
+        },
+        "direction": {
+          "enum": [
+            "higher-is-better",
+            "lower-is-better"
+          ]
+        },
+        "encoding": {
+          "const": "rational-string"
+        },
+        "minimum": {
+          "type": "string",
+          "pattern": "^-?(0|[1-9][0-9]*)(/[1-9][0-9]*)?$",
+          "maxLength": 256
+        },
+        "maximum": {
+          "type": "string",
+          "pattern": "^-?(0|[1-9][0-9]*)(/[1-9][0-9]*)?$",
+          "maxLength": 256
+        }
+      }
+    },
+    "checked_at": {
+      "type": "string",
+      "format": "date"
+    },
+    "sources": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "url",
+          "checked_at"
+        ],
+        "properties": {
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "pattern": "^https://"
+          },
+          "checked_at": {
+            "type": "string",
+            "format": "date"
+          },
+          "status": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "records": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "https://bigospeedrun.com/schemas/records-v1.json",
+      "title": "Proposed Big O Speedrun records v1",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "kind",
+          "score",
+          "tier",
+          "submitted_at",
+          "spec_version",
+          "title",
+          "authors",
+          "predecessors",
+          "submission_url",
+          "artifact",
+          "evidence",
+          "dependencies",
+          "upstream_status",
+          "upstream_status_at",
+          "site_observed_at",
+          "source"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9-]*$"
+          },
+          "kind": {
+            "enum": [
+              "baseline",
+              "improvement",
+              "reproduction"
+            ]
+          },
+          "score": {
+            "type": "string",
+            "pattern": "^-?(0|[1-9][0-9]*)(/[1-9][0-9]*)?$",
+            "maxLength": 256
+          },
+          "tier": {
+            "enum": [
+              "verified",
+              "certified-conditional",
+              "claimed"
+            ]
+          },
+          "submitted_at": {
+            "oneOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "source_commit": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{40}$"
+          },
+          "spec_version": {
+            "type": "string",
+            "minLength": 1
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1
+          },
+          "authors": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "name",
+                "url"
+              ],
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "url": {
+                  "type": "string",
+                  "format": "uri",
+                  "pattern": "^https://"
+                }
+              }
+            },
+            "minItems": 1
+          },
+          "predecessors": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uri",
+              "pattern": "^https://"
+            },
+            "minItems": 0
+          },
+          "submission_url": {
+            "type": "string",
+            "format": "uri",
+            "pattern": "^https://"
+          },
+          "artifact": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "path",
+              "sha256"
+            ],
+            "properties": {
+              "path": {
+                "type": "string",
+                "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))[A-Za-z0-9_.-]+(?:/[A-Za-z0-9_.-]+)*$"
+              },
+              "sha256": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              }
+            }
+          },
+          "evidence": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "paper_url",
+              "theorem",
+              "certificate_path"
+            ],
+            "properties": {
+              "paper_url": {
+                "oneOf": [
+                  {
+                    "type": "null"
+                  },
+                  {
+                    "type": "string",
+                    "format": "uri",
+                    "pattern": "^https://"
+                  }
+                ]
+              },
+              "theorem": {
+                "oneOf": [
+                  {
+                    "type": "null"
+                  },
+                  {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                ]
+              },
+              "certificate_path": {
+                "oneOf": [
+                  {
+                    "type": "null"
+                  },
+                  {
+                    "type": "string",
+                    "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))[A-Za-z0-9_.-]+(?:/[A-Za-z0-9_.-]+)*$"
+                  }
+                ]
+              }
+            }
+          },
+          "dependencies": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "id",
+                "statement",
+                "source_url",
+                "status"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "statement": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "source_url": {
+                  "type": "string",
+                  "format": "uri",
+                  "pattern": "^https://"
+                },
+                "status": {
+                  "enum": [
+                    "proved",
+                    "unverified"
+                  ]
+                }
+              }
+            },
+            "minItems": 0
+          },
+          "provenance": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [],
+            "properties": {
+              "model": {
+                "type": "string",
+                "minLength": 1
+              },
+              "harness": {
+                "type": "string",
+                "minLength": 1
+              },
+              "container_digest": {
+                "type": "string",
+                "pattern": "^sha256:[0-9a-f]{64}$"
+              },
+              "logs": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "format": "uri",
+                  "pattern": "^https://"
+                },
+                "minItems": 0
+              }
+            }
+          },
+          "upstream_status": {
+            "enum": [
+              "merged",
+              "open",
+              "closed-unmerged",
+              "not-applicable"
+            ]
+          },
+          "upstream_status_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "site_observed_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "source": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "kind",
+              "url"
+            ],
+            "properties": {
+              "kind": {
+                "enum": [
+                  "repo-artifact",
+                  "paper"
+                ]
+              },
+              "url": {
+                "type": "string",
+                "format": "uri",
+                "pattern": "^https://"
+              }
+            }
+          },
+          "rerun_status": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "state",
+              "checked_at",
+              "receipt_path"
+            ],
+            "properties": {
+              "state": {
+                "enum": [
+                  "pending",
+                  "passed",
+                  "failed"
+                ]
+              },
+              "checked_at": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "receipt_path": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "minLength": 1
+              }
+            },
+            "allOf": [
+              {
+                "if": {
+                  "properties": {
+                    "state": {
+                      "enum": [
+                        "passed",
+                        "failed"
+                      ]
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "receipt_path": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          "score_relation": {
+            "enum": [
+              "attained",
+              "strict-upper-bound"
+            ],
+            "description": "Absent means attained. strict-upper-bound stores an excluded endpoint: every fixed saving below score is supported, not the endpoint itself."
+          }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "tier": {
+                  "const": "verified"
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "evidence": {
+                  "properties": {
+                    "theorem": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  }
+                },
+                "dependencies": {
+                  "items": {
+                    "properties": {
+                      "status": {
+                        "const": "proved"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "tier": {
+                  "const": "certified-conditional"
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "evidence": {
+                  "properties": {
+                    "certificate_path": {
+                      "type": "string",
+                      "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))[A-Za-z0-9_.-]+(?:/[A-Za-z0-9_.-]+)*$"
+                    }
+                  }
+                },
+                "dependencies": {
+                  "contains": {
+                    "properties": {
+                      "status": {
+                        "const": "unverified"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "tier": {
+                  "const": "claimed"
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "evidence": {
+                  "properties": {
+                    "paper_url": {
+                      "type": "string",
+                      "format": "uri",
+                      "pattern": "^https://"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "source": {
+                  "properties": {
+                    "kind": {
+                      "const": "repo-artifact"
+                    }
+                  }
+                }
+              }
+            },
+            "then": {
+              "required": [
+                "source_commit"
+              ]
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "submitted_at": {
+                  "type": "null"
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "source": {
+                  "properties": {
+                    "kind": {
+                      "const": "paper"
+                    }
+                  }
+                },
+                "kind": {
+                  "const": "baseline"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "minItems": 0
+    },
+    "record_metadata": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": [
+          "checked_at",
+          "eligible_for_record",
+          "proof_status"
+        ],
+        "properties": {
+          "checked_at": {
+            "type": "string",
+            "format": "date"
+          },
+          "eligible_for_record": {
+            "type": "boolean"
+          },
+          "proof_status": {
+            "type": "string"
+          },
+          "publication_year": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 2026
+          },
+          "publication_date_precision": {
+            "type": "string"
+          },
+          "publication_source_url": {
+            "type": "string",
+            "format": "uri",
+            "pattern": "^https://"
+          },
+          "comparison_key": {
+            "type": "string"
+          },
+          "upstream_tier": {
+            "enum": [
+              "verified",
+              "certified-conditional",
+              "claimed"
+            ]
+          },
+          "site_tier": {
+            "enum": [
+              "verified",
+              "certified-conditional",
+              "claimed"
+            ]
+          }
+        }
+      }
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "Z$"
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema"
+}

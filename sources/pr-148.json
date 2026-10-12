@@ -1,0 +1,11 @@
+{
+  "number": 148,
+  "html_url": "https://github.com/CrocSwap/integer-mult-bounds/pull/148",
+  "title": "Raise conditional kappa to 4.611281e-4 with tightened adapter toll",
+  "body": "### Summary\n\nThis pull request sharpens the conditional Harvey-Hoeven integer multiplication upper bound from the current PR #144 record ($\\kappa = 4.609169 \\times 10^{-4}$) to:\n\n$$\\kappa = \\frac{4611281}{10000000000} = 4.611281 \\times 10^{-4}$$\n\n### Key Changes\n\n1. **Tightened Adapter Toll**: Tightens the stopped-adapter toll parameter from $\\text{ATOM} = 10^{-3}$ to $\\text{ATOM} = 5 \\times 10^{-4} = 1/2000$.\n2. **Exact Inequality Satisfaction**: The subordination condition strictly holds:\n   $$A_B = 4.615539 \\times 10^{-4} < 5 \\times 10^{-4} < 1 - A_B$$\n   preserving all lower-order bounds for internally borrowed rows and adapter tolls without altering any upstream interface assumptions.\n3. **Rational Finite Assembly**: With $A_B = 4.6155394715 \\times 10^{-4}$ and $A_C = 4.856569 \\times 10^{-4}$:\n   - Minimum assembly margin expands to $4.61128262 \\times 10^{-4}$.\n   - Positive absorption gap over $\\kappa = 4611281 / 10^{10}$: $+1.6217 \\times 10^{-10} > 0$.\n   - All 47 strict linear assembly inequalities and 7 margins strictly satisfied.\n\n### Verification\n\nPassed cleanly via:\n```sh\nmake paired-cube-verify\n```\nAll moments, shared cores, finite router, and strict constraints PASS.",
+  "created_at": "2026-10-09T04:49:51Z",
+  "updated_at": "2026-10-09T05:05:50Z",
+  "closed_at": null,
+  "merged_at": null,
+  "state": "open"
+}

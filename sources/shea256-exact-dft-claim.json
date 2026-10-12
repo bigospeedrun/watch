@@ -1,0 +1,11 @@
+{
+  "checked_at": "2026-10-09T15:00:24Z",
+  "source_url": "https://github.com/shea256/fourier-transform-below-nlogn/blob/0b0170640e8659cc3343830d3207bbeaf26660c3/manuscript.md",
+  "source_commit": "0b0170640e8659cc3343830d3207bbeaf26660c3",
+  "statement": "Proposed all-length O(n (log n)^(1-73/1000000)) exact DFT, from the attributed Swapnil Jain round-six complex network and a written Fourier transfer.",
+  "scope": "Every positive length; exact complex arithmetic, specified root, and O(log(n+2))-bit integer/address words. Scalar preparation, schedule construction, index work and movement are charged. No finite-precision, numerical-stability or bit-complexity claim.",
+  "review_status": "Proposed research result; independent mathematical review and end-to-end formal verification remain outstanding. External Lean checks do not formalize this Fourier theorem.",
+  "manuscript_sha256": "a0366477dc5b8b54bae33759acf3325669da17c6d4ee3e49699c35fe2775e98d",
+  "readme_sha256": "1290b7c864a175646646ec6e2c75a3c0d2c29cb1019b0b703b1935738cc54c89",
+  "license_status": "No repository-root license file at inspected commit; vendored material has separate notices"
+}

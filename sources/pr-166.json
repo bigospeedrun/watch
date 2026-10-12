@@ -1,0 +1,11 @@
+{
+  "number": 166,
+  "html_url": "https://github.com/CrocSwap/integer-mult-bounds/pull/166",
+  "title": "Add exact dirty-target terminal compiler and 67-sink witness",
+  "body": "This draft supplies a physical compiler lemma and an author-checked finite substitution on the current PR163 complex word. It does not change the advertised multiplication bound.\n\nAn existing independently valued target absorbs the actual writes of a destination-only producer sink. Pre/post target shears preserve its old value; the original retained dirty-response columns, complete source return and chronological inverse remain paid. A late-corrected pivot is sufficient: independent corrections to non-pivot targets may occur while they are encoded.\n\nThe exact current witness replaces67 sinks on disjoint eight-target cubes:\n- physical R13041→12974; W15681→15614\n- children18 and4 each decrease201\n- rank1033626→1029204; deficit1320 unchanged\n-300 fewer scalar gates; no new odd denominator\n\nThe standalone standard-library checker verifies source pins, original full histogram, every changed target event, actual aliased source/dirty pullbacks, retained arbitrary-dirty restoration, literal inverse, and simultaneous child deltas. Author run: about5.5seconds/85MiB. Independent review is still welcome.\n\nBase: e1813796ef5c3ca38c5dd7b9e8d81b3908ff5997. The finite scientific inputs are unchanged from15c702a; the later commit corrects attribution. No broad search, source rebuild or new kappa is claimed. Output-accumulating scalar ideas are credited to the Dumas–Grenet literature, without a novelty claim for that identity.\n\nThis is proof, checker and substitution specification; integration into the existing executor and updated full supplier certificates is pending. Independent mathematical review and exact-head CI are pending.\n",
+  "created_at": "2026-10-09T08:09:48Z",
+  "updated_at": "2026-10-10T00:01:50Z",
+  "closed_at": null,
+  "merged_at": null,
+  "state": "open"
+}

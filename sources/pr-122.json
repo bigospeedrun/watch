@@ -1,0 +1,11 @@
+{
+  "number": 122,
+  "html_url": "https://github.com/CrocSwap/integer-mult-bounds/pull/122",
+  "title": "Terminal accumulator elimination with exact majorization audit",
+  "body": "## Summary\n\nThis draft PR adds a reviewable, source-bound Round 15 artifact package for\nterminal-accumulator elimination on the replayed h=24 complex producer.\n\nThe finite candidate has conditional\n\n    κ = 2188324161643 / 20000000000000000\n      = 1.0941620808215e-4.\n\nAt the time of submission this is approximately 0.124% above the updated\npublic PR114 value 1.09281094468e-4. The result remains conditional on the\ninherited stopped-product, Gaussian normal-form, streaming, fixed-tape,\nanalytic, and all-size assembly interfaces.\n\n## Construction\n\nAfter PR118's replayed graph and PR114's saturated placement, 393 terminal\nauxiliary roles are removed. Each has no outgoing auxiliary use and one\nordinary output. Its incoming updates are redirected to that output at their\noriginal gate indices and frames. The complete before/after packet is\n\n    [m-h+σ, 1, F-σ, h-1-M]  ->  [m, F-M, 0, 0].\n\nFor 0 <= σ <= M <= F <= h-1, the latter strictly majorizes the former.\nThis proves improvement for every strictly concave power cost, including all\n576 paid child-width hinge functions. Target-front moves, source snapshots,\ncleanup, and reflected signed inverse operations are charged explicitly.\n\n## Verification\n\nThe package includes:\n\n- exact integer adjoint and all-input Q(i) dirty identity;\n- exact source-time redirect chronology;\n- forward and signed reflected frame traces;\n- complete paid histogram and scalar guard;\n- six actual malformed-witness rejection tests;\n- portable exact assembly receipt with accepted and next-grid-rejected κ.\n\nThe main report is `research/terminal-elision/ROUND15_RESEARCH_REPORT.md`.\nThe checkpoint, exact word, receipts, source hashes, and reproduction scripts\nare in the same directory. No pinned upstream worktree was modified.\n\nThis is a draft research artifact for review; it does not claim an\nunconditional multiplication theorem or a practical runtime benchmark.\n",
+  "created_at": "2026-10-09T01:11:36Z",
+  "updated_at": "2026-10-09T01:11:36Z",
+  "closed_at": null,
+  "merged_at": null,
+  "state": "open"
+}

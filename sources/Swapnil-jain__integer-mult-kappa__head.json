@@ -1,0 +1,100 @@
+{
+  "sha": "d583bef0524c5de91a03ac3961757a72c822e027",
+  "node_id": "C_kwDOVAlstdoAKGQ1ODNiZWYwNTI0YzVkZTkxYTAzYWMzOTYxNzU3YTcyYzgyMmUwMjc",
+  "commit": {
+    "author": {
+      "name": "Rob Gruhl",
+      "email": "13952844+RobGruhl@users.noreply.github.com",
+      "date": "2026-10-10T07:05:12Z"
+    },
+    "committer": {
+      "name": "GitHub",
+      "email": "[email removed]",
+      "date": "2026-10-10T07:05:12Z"
+    },
+    "message": "round8 gate: default reclaim depth 6, so make round8-heavy reproduces the published word\n\nbuild_word.py defaulted DEEP to 12 while complex_hist.py, which reproduces the published histogram, uses depth 6, so the last step of make round8-heavy failed on a clean checkout. Default 6 matches the docstring; DEEP=12 in the environment still selects the deeper reclaim. The published certificate is unaffected. Found and fixed by RobGruhl.",
+    "tree": {
+      "sha": "3e25897e1b417ccda0047282af9666ca6567e241",
+      "url": "https://api.github.com/repos/Swapnil-jain/integer-mult-kappa/git/trees/3e25897e1b417ccda0047282af9666ca6567e241"
+    },
+    "url": "https://api.github.com/repos/Swapnil-jain/integer-mult-kappa/git/commits/d583bef0524c5de91a03ac3961757a72c822e027",
+    "comment_count": 0,
+    "verification": {
+      "verified": true,
+      "reason": "valid",
+      "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJqyeOoCRC1aQ7uu5UhlAAA3uIQAFNMmXrVHYxrDgeTSvCZc3I7\nHDH2IjkZ7X0Jme8V50WEBSIOVykgJyK2MMXElnMyKC38Ayb4CKqeDkZobE830K7S\nWT+g6fhRds1Q5dSDByn3wKDRs3JU8GrILHDzbUjAAlcLIBoGUdQv/o/x6lIoCtZt\nnKDKt4s/0p1aKRzdZtOFAmqH9JqfPafxBOHrHIj7Fvn/KYgBylcLFC5+srDYAitk\nk1SaryXSeK1YNKjEadZ9C3+ACsVSN5hTnohGBKFPj4drcfkuY5SzpHB0HCvonmxS\n6sqCwnbIrA1mwB2btwoiM/H30pDVypmBq3awkt7TmjOGweSfxdlZuVffBPvAE57K\nfA8lfzFF5OsbbIQGEEUyEBfg6jotW71rriGBVljTJQ6bNJ0cJGLzU1lO82dGitYc\nIW8pxp1sBx3tvDPIeexjGWuc75qjCN/1fUBC6xPYz6hvwGG1NzhgiRNDnibTNgDc\n3pjIYr00xo4atl91CpoSI2ZTb5SmyYgjRGb1zz44i77A7kNiAA5q0Xz2xZNpq4Y6\nGp5ebqj0p28fuZgh55fd0pHob1eKUE/6bG8jIcxpYnyLiNjuda3XWk+c9/bM6EtY\njSm8XWddCFMU97xgM5sq0cjfrLSEZqWn3maJCL2/pMYBzorgsZRFxcyDSRECQ7+b\nWh98Xzj94DXVkQYwfyhk\n=DA4w\n-----END PGP SIGNATURE-----\n",
+      "payload": "tree 3e25897e1b417ccda0047282af9666ca6567e241\nparent 7bb0f94a778fdff709cf9317fd7015363f1fb30a\nauthor Rob Gruhl <13952844+RobGruhl@users.noreply.github.com> 1791615912 -0700\ncommitter GitHub <[email removed]> 1791615912 +0530\n\nround8 gate: default reclaim depth 6, so make round8-heavy reproduces the published word\n\nbuild_word.py defaulted DEEP to 12 while complex_hist.py, which reproduces the published histogram, uses depth 6, so the last step of make round8-heavy failed on a clean checkout. Default 6 matches the docstring; DEEP=12 in the environment still selects the deeper reclaim. The published certificate is unaffected. Found and fixed by RobGruhl.",
+      "verified_at": "2026-10-10T07:05:13Z"
+    }
+  },
+  "url": "https://api.github.com/repos/Swapnil-jain/integer-mult-kappa/commits/d583bef0524c5de91a03ac3961757a72c822e027",
+  "html_url": "https://github.com/Swapnil-jain/integer-mult-kappa/commit/d583bef0524c5de91a03ac3961757a72c822e027",
+  "comments_url": "https://api.github.com/repos/Swapnil-jain/integer-mult-kappa/commits/d583bef0524c5de91a03ac3961757a72c822e027/comments",
+  "author": {
+    "login": "RobGruhl",
+    "id": 13952844,
+    "node_id": "MDQ6VXNlcjEzOTUyODQ0",
+    "avatar_url": "https://avatars.githubusercontent.com/u/13952844?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/RobGruhl",
+    "html_url": "https://github.com/RobGruhl",
+    "followers_url": "https://api.github.com/users/RobGruhl/followers",
+    "following_url": "https://api.github.com/users/RobGruhl/following{/other_user}",
+    "gists_url": "https://api.github.com/users/RobGruhl/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/RobGruhl/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/RobGruhl/subscriptions",
+    "organizations_url": "https://api.github.com/users/RobGruhl/orgs",
+    "repos_url": "https://api.github.com/users/RobGruhl/repos",
+    "events_url": "https://api.github.com/users/RobGruhl/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/RobGruhl/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "committer": {
+    "login": "web-flow",
+    "id": 19864447,
+    "node_id": "MDQ6VXNlcjE5ODY0NDQ3",
+    "avatar_url": "https://avatars.githubusercontent.com/u/19864447?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/web-flow",
+    "html_url": "https://github.com/web-flow",
+    "followers_url": "https://api.github.com/users/web-flow/followers",
+    "following_url": "https://api.github.com/users/web-flow/following{/other_user}",
+    "gists_url": "https://api.github.com/users/web-flow/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/web-flow/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/web-flow/subscriptions",
+    "organizations_url": "https://api.github.com/users/web-flow/orgs",
+    "repos_url": "https://api.github.com/users/web-flow/repos",
+    "events_url": "https://api.github.com/users/web-flow/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/web-flow/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "parents": [
+    {
+      "sha": "7bb0f94a778fdff709cf9317fd7015363f1fb30a",
+      "url": "https://api.github.com/repos/Swapnil-jain/integer-mult-kappa/commits/7bb0f94a778fdff709cf9317fd7015363f1fb30a",
+      "html_url": "https://github.com/Swapnil-jain/integer-mult-kappa/commit/7bb0f94a778fdff709cf9317fd7015363f1fb30a"
+    }
+  ],
+  "stats": {
+    "total": 2,
+    "additions": 1,
+    "deletions": 1
+  },
+  "files": [
+    {
+      "sha": "caacaaf9e5067c7181da456a8f32559aebd6987e",
+      "filename": "independent/round8-complex-gate/build_word.py",
+      "status": "modified",
+      "additions": 1,
+      "deletions": 1,
+      "changes": 2,
+      "blob_url": "https://github.com/Swapnil-jain/integer-mult-kappa/blob/d583bef0524c5de91a03ac3961757a72c822e027/independent%2Fround8-complex-gate%2Fbuild_word.py",
+      "raw_url": "https://github.com/Swapnil-jain/integer-mult-kappa/raw/d583bef0524c5de91a03ac3961757a72c822e027/independent%2Fround8-complex-gate%2Fbuild_word.py",
+      "contents_url": "https://api.github.com/repos/Swapnil-jain/integer-mult-kappa/contents/independent%2Fround8-complex-gate%2Fbuild_word.py?ref=d583bef0524c5de91a03ac3961757a72c822e027"
+    }
+  ]
+}

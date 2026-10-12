@@ -1,0 +1,63 @@
+{
+  "checked_at": "2026-10-09",
+  "active_author_count": 10,
+  "active_author_source": "submissions.json; top ten by observed CrocSwap PR count, recomputed each run",
+  "people": [
+    {
+      "github": "Swapnil-jain",
+      "name": "Swapnil Jain",
+      "x_handle_supplied_by_nil": "SJ_Swapnil_Jain",
+      "confirmation": "README identifies author as Swapnil Jain; commit author login is Swapnil-jain. GitHub profile names Swapnil.",
+      "evidence_url": "https://github.com/Swapnil-jain/integer-mult-kappa/blob/1a580dcc91dad5fbcffb5c80b7641a96bfa24e16/README.md",
+      "x_link_status": "Not independently confirmed from GitHub; profile twitter_username is null.",
+      "profile_observed": {
+        "login": "Swapnil-jain",
+        "name": "Swapnil",
+        "type": "User",
+        "twitter_username": null
+      }
+    },
+    {
+      "github": "Mister-Meeseeks",
+      "name": "Doug Colkitt",
+      "x_handle_supplied_by_nil": "0xdoug",
+      "confirmation": "GitHub profile names Doug Colkitt, bio says Founder/Lead Dev @CrocSwap, and twitter_username is 0xDoug. CrocSwap main commits bind author login Mister-Meeseeks to Douglas R. Colkitt.",
+      "evidence_url": "https://github.com/Mister-Meeseeks",
+      "commit_evidence_url": "https://github.com/CrocSwap/integer-mult-bounds/commit/3b6b66891c0ac888521cf591fe306c6286601d4f",
+      "x_link_status": "Confirmed by profile, case-insensitive handle match.",
+      "profile_observed": {
+        "login": "Mister-Meeseeks",
+        "name": "Doug Colkitt",
+        "type": "User",
+        "twitter_username": "0xDoug"
+      }
+    },
+    {
+      "github": "CrocSwap",
+      "name": "CrocSwap repository owner",
+      "confirmation": "Repository README names Douglas Colkitt as maintainer. This owner account is watched in addition to his personal commit-author account.",
+      "evidence_url": "https://github.com/CrocSwap/integer-mult-bounds/blob/3b6b66891c0ac888521cf591fe306c6286601d4f/README.md",
+      "x_link_status": "Profile lists CrocSwap; not the personal 0xdoug account.",
+      "profile_observed": {
+        "login": "CrocSwap",
+        "name": null,
+        "type": "Organization",
+        "twitter_username": "CrocSwap"
+      }
+    },
+    {
+      "github": "rohanarun",
+      "name": "Rohan Arun",
+      "x_handle_supplied_by_nil": "RohanArun",
+      "confirmation": "Pinned CrocSwap README explicitly credits Rohan Arun (rohanarun) and links this profile; saved PR author logins agree.",
+      "evidence_url": "https://github.com/CrocSwap/integer-mult-bounds/blob/3b6b66891c0ac888521cf591fe306c6286601d4f/README.md",
+      "x_link_status": "The supplied handle is not independently confirmed from GitHub. Current GitHub profile lists Viewforge, not RohanArun.",
+      "profile_observed": {
+        "login": "rohanarun",
+        "name": null,
+        "type": "User",
+        "twitter_username": "Viewforge"
+      }
+    }
+  ]
+}

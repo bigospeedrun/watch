@@ -1,0 +1,11 @@
+{
+  "number": 190,
+  "html_url": "https://github.com/CrocSwap/integer-mult-bounds/pull/190",
+  "title": "Stop pinning Makefile, README.md and NOTICE in the joint-dual manifest (no new κ)",
+  "body": "The joint-dual manifest hash-pins `Makefile`, `README.md` and `NOTICE`, but nothing in the computation reads them. Any edit to them, even a README typo, fails `verify_joint_dual.py` until `SOURCE.json` and two certificates are regenerated: a ~2 min `make verify-joint` re-pin plus a rebase conflict on the same three files. 65 of the 131 other open PRs hit this.\n\nThis removes the three names from the pin list and closure check and regenerates the hashes. **No κ or mathematical change** (the certificate diff is hashes only). `docs/paired-cube.md` is updated to match.\n\nChecked locally on Python 3.12: edits to the three files now pass `verify_joint_dual.py`, `make verify-joint` passes, and the `tests`, `community` and `producers` groups pass with a clean `git diff --exit-code`. The other groups are left to CI.\n",
+  "created_at": "2026-10-09T12:14:04Z",
+  "updated_at": "2026-10-09T19:56:01Z",
+  "closed_at": null,
+  "merged_at": null,
+  "state": "open"
+}

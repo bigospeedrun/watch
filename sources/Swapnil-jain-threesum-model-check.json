@@ -1,0 +1,45 @@
+{
+  "source_commit": "087ece61dd9ef6108441927785b16dfda0e95284",
+  "checked_at": "2026-10-10T09:04:13Z",
+  "files": {
+    "README.md": {
+      "path": "sources/Swapnil-jain__threesum-derand__README.md",
+      "sha256": "4daa996b6e8c214c29630d81827dbe03c58ccd3278de3897f271e47391dba325",
+      "url": "https://github.com/Swapnil-jain/threesum-derand/blob/087ece61dd9ef6108441927785b16dfda0e95284/README.md"
+    },
+    "LICENSE": {
+      "path": "sources/Swapnil-jain__threesum-derand__LICENSE",
+      "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+      "url": "https://github.com/Swapnil-jain/threesum-derand/blob/087ece61dd9ef6108441927785b16dfda0e95284/LICENSE"
+    },
+    "NOTICE": {
+      "path": "sources/Swapnil-jain__threesum-derand__NOTICE",
+      "sha256": "770a71adb142fb516cbbb79d1c9601f2635d504c3c59d0a8ec2b993033e862dd",
+      "url": "https://github.com/Swapnil-jain/threesum-derand/blob/087ece61dd9ef6108441927785b16dfda0e95284/NOTICE"
+    },
+    "proofs/derandomisation.md": {
+      "path": "sources/Swapnil-jain__threesum-derand__proofs__derandomisation.md",
+      "sha256": "51dd387248c07c2b1a1befb3f4d8dd2d2f5d1234723c2c9e27f707c5dcdd806e",
+      "url": "https://github.com/Swapnil-jain/threesum-derand/blob/087ece61dd9ef6108441927785b16dfda0e95284/proofs/derandomisation.md"
+    },
+    "proofs/bands.md": {
+      "path": "sources/Swapnil-jain__threesum-derand__proofs__bands.md",
+      "sha256": "5033449e20ce953802e849c943a66c718492e6786b1451c61f65cf65d3960444",
+      "url": "https://github.com/Swapnil-jain/threesum-derand/blob/087ece61dd9ef6108441927785b16dfda0e95284/proofs/bands.md"
+    },
+    "proofs/stacked.md": {
+      "path": "sources/Swapnil-jain__threesum-derand__proofs__stacked.md",
+      "sha256": "048aed0c608b2c62f48ae6a131085074e15bcd91b4b0412377ae8f5759a92522",
+      "url": "https://github.com/Swapnil-jain/threesum-derand/blob/087ece61dd9ef6108441927785b16dfda0e95284/proofs/stacked.md"
+    },
+    "lean/README.md": {
+      "path": "sources/Swapnil-jain__threesum-derand__lean__README.md",
+      "sha256": "1a474bc36ca20c9e31792e77f9b41c0ff9f4b54c37d3af33d6d79a8a54fb85fb",
+      "url": "https://github.com/Swapnil-jain/threesum-derand/blob/087ece61dd9ef6108441927785b16dfda0e95284/lean/README.md"
+    }
+  },
+  "model_comparison": "Deterministic worst-case algorithms for each fixed polynomial input-magnitude bound on logarithmic-word RAM. Not a randomized claim. Unlike EndStatement, the paper does not supply a fixed-width program or quantify all sufficiently large word widths in Lean. Model compatibility is an algorithmic interpretation, not a checked formal statement equivalence: polynomial-sized words can be simulated by the signed arithmetic/load/store/branch model with polylogarithmic overhead, absorbed by the explicit strict exponent margin.",
+  "3sum_adaptation": "Paper states three-set a+b=c and cites the standard one-set reduction. For distinct positions, use O(log^2 n) deterministic index-bit partitions into three disjoint classes, negate the third set, and deduplicate within each class. Each distinct triple is separated by some partition. Polylogarithmic overhead fits the positive margin below 1.995782. This adaptation is reasoned here, not an upstream Lean proof.",
+  "apsp_scope": "Directed integer weights, no negative cycles, all-pairs distances. Lemmas 4.3-4.4 handle missing edges with a polynomial infinity sentinel and repeated squaring; reachability is recovered from infinity.",
+  "proof_scope": "Lean checks certificate arithmetic and finite lemmas only. Reductions, cost accounting and Theorem 3 combinatorics remain written proof dependencies; no site rerun."
+}

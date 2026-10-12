@@ -1,0 +1,11 @@
+{
+  "number": 73,
+  "html_url": "https://github.com/CrocSwap/integer-mult-bounds/pull/73",
+  "title": "Withdrawn: PR71 assembly-backoff note",
+  "body": "Withdrawn in favor of [a small arithmetic note on PR #71](https://github.com/CrocSwap/integer-mult-bounds/pull/71#issuecomment-6067419855).\n\nThe construction is unchanged from PR #71. This only reduces its assembly backoff and changes κ by `1.55e-16`; it does not warrant a separate contribution PR.\n\nThe exact calculation, its cutoff tradeoff, verification status and immutable reproduction artifacts are linked in that comment. Credit remains with PR #71 and its cited predecessors. Prepared with substantial OpenAI Codex assistance.\n",
+  "created_at": "2026-10-08T19:19:17Z",
+  "updated_at": "2026-10-08T19:25:53Z",
+  "closed_at": "2026-10-08T19:25:49Z",
+  "merged_at": null,
+  "state": "closed"
+}

@@ -1,0 +1,11 @@
+{
+  "number": 231,
+  "html_url": "https://github.com/CrocSwap/integer-mult-bounds/pull/231",
+  "title": "The paired-cube decoder does not extend to 4-dimensional ports: a Lucas-parity obstruction (no new κ)",
+  "body": "Scoping note, **no new κ**: one README and one standard-library checker, with no existing file changed.\n\n**Question:** does the paired-cube decoder generalize from triples (3-dimensional cubes) to k-dimensional ports, with more sources per cell and a bigger deficit?\n\n**Answer:** consider the star family of mod-2 decoders for k-ports:\n\n    x_T = Σ_{0<l<k} a_l Σ_{L⊆T,|L|=l} star_L + Σ_{0<j<k} b_j Σ_{|S∩T|=j} x_S\n\nThis is the family the paired-cube lemma uses: level-1 stars plus overlap-1 corrections for k = 3. **A decoder in this family exists iff k is not a power of two.**\n\nThe coefficient of x_S depends only on j = |S∩T|. The corrections b_j fix every 0 < j < k. The diagonal coefficient is Σ a_l C(k,l), and by Lucas' theorem every C(k,l) with 0 < l < k is even exactly when k is a power of two.\n\n| k | Decoder |\n|---|---|\n| 3 (paired cubes) | yes |\n| **4 (hypercubes)** | **none** |\n| 5, 6 | yes; they need corrections at more overlap sizes (5) or level-2 stars (6) |\n\n```sh\npython3 -B research/hypercube-decoder-parity/check.py   # <1 s; tests every coefficient vector for k = 3..6\n```\n\nScope:\n- This covers the star or overlap-class family only. It is not an impossibility proof for every 4-port decoder.\n- It makes no claim that k = 5 or 6 beats k = 3; that needs a full construction.\n\nCredits: icekylinx (#144), eumemic (paired-cube bit word and lemma). Prepared by Joel Pulikkan with Anthropic Claude assistance; Apache-2.0.\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n",
+  "created_at": "2026-10-09T20:59:39Z",
+  "updated_at": "2026-10-09T20:59:39Z",
+  "closed_at": null,
+  "merged_at": null,
+  "state": "open"
+}

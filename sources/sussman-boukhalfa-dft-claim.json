@@ -1,0 +1,35 @@
+{
+  "checked_at": "2026-10-10T05:54:18Z",
+  "primary_repo": "chafreaky/wht-power-saving-lean",
+  "source_commit": "fd19e46b728faa414cbfbf91b01a6a0b7903375d",
+  "source_date": "2026-10-10T01:43:53Z",
+  "pull_request": "https://github.com/jacobalansussman/wht-power-saving-lean/pull/2",
+  "pr_created_at": "2026-10-10T01:44:34Z",
+  "identity_evidence": "PR #2 author login chafreaky; body explicitly says Prepared by Chafik Boukhalfa. Commit author login/name chafreaky. Pinned README credits Chafik Boukhalfa.",
+  "credits": "Jacob Sussman: five-stage framework and formal Fourier development. Chafik Boukhalfa: stronger pairing and Fourier instantiation. Ryan Shea: incorporation and reported reproduction, not a new exponent. Community predecessors retained in source notices.",
+  "statement": "All positive-length exact DFT and convolution in O(n (log n)^(1-7547360/10^10)), as claimed by the incorporated Sussman-Boukhalfa theorem.",
+  "files": {
+    "README.md": {
+      "url": "https://github.com/chafreaky/wht-power-saving-lean/blob/fd19e46b728faa414cbfbf91b01a6a0b7903375d/README.md",
+      "path": "sources/chafreaky__wht-power-saving-lean__README.md",
+      "sha256": "c3e9b61308eaf9d23f5107bb9d7a13c14a7b947d228022a585a2f8573856f601"
+    },
+    "LICENSE": {
+      "url": "https://github.com/chafreaky/wht-power-saving-lean/blob/fd19e46b728faa414cbfbf91b01a6a0b7903375d/LICENSE",
+      "path": "sources/chafreaky__wht-power-saving-lean__LICENSE",
+      "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+    },
+    "NOTICE": {
+      "url": "https://github.com/chafreaky/wht-power-saving-lean/blob/fd19e46b728faa414cbfbf91b01a6a0b7903375d/NOTICE",
+      "path": "sources/chafreaky__wht-power-saving-lean__NOTICE",
+      "sha256": "9419dd03a2f52cf8bdfc4d18216ce29f263ab583b27f01ced8e420985bcb7c81"
+    },
+    "Work/Fourier233/Main.lean": {
+      "url": "https://github.com/chafreaky/wht-power-saving-lean/blob/fd19e46b728faa414cbfbf91b01a6a0b7903375d/Work/Fourier233/Main.lean",
+      "path": "sources/chafreaky__wht-power-saving-lean__Work__Fourier233__Main.lean",
+      "sha256": "34e239ff7322aacd9fef027d160552c5533fc091bdb5d4b781def32479cd66d5"
+    }
+  },
+  "reported_reproduction": "https://github.com/shea256/fourier-transform-below-nlogn/blob/62554f945b58454fb8452f4daaca1222ce5ca58e/results/five-stage-pr233.md",
+  "review_status": "Source-reported Lean proof; no site rerun."
+}

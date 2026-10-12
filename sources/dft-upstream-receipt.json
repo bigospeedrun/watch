@@ -1,0 +1,20 @@
+{
+  "state": "passed",
+  "checked_at": "2026-10-09T15:13:11.361385+00:00",
+  "observed_at": "2026-10-09T15:21:39Z",
+  "upstream_commit": "fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb",
+  "comparator_exit_code": 0,
+  "targets": [
+    "OAI.PowerSaving.transform_main",
+    "OAI.PowerSaving.convolution_main"
+  ],
+  "scope": "Upstream UniformFourier selected headline at saving 10^-13. Does not rerun the stronger strict frontier or Race.frontier.",
+  "nanoda": "accepted",
+  "lean_kernel": "accepted",
+  "source_receipt_path": "sources/dft-upstream-source-receipt.json",
+  "receipt_recovery": "The office restart ended the controller before it wrote its receipt. Recovered from the completed GNU time exit status 0 and both kernel acceptance lines. All staged upstream source bytes and current tool hashes were rechecked. Wall time is GNU time, not controller elapsed time.",
+  "log_path": "sources/dft-upstream-comparator.log",
+  "log_sha256": "5a323ed067be6b018adf195b4ddab080fae3bfa6ae8c6f01c0007e2f634bd6dc",
+  "time_path": "sources/dft-upstream-comparator.time",
+  "time_sha256": "1d35184ea1fbae4a908415c81bc732375d8b073f494292d935f0c8ca356fd50b"
+}

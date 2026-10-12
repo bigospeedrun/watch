@@ -1,0 +1,11 @@
+{
+  "number": 93,
+  "html_url": "https://github.com/CrocSwap/integer-mult-bounds/pull/93",
+  "title": "Coordinate refinement of aligned composition: conditional κ = 5.2790906739644e-5",
+  "body": "Full verification passed on research `c420393`: 92 isolated modules, 20 patch checks, complete regeneration and six controls; all 51 research-head CI checks passed. Validation receipt added with documentation-only status changes.\n\nFinal-coordinate refinement of #91 gives the conditional bound **κ = 13197726684911/250000000000000000 = 5.2790906739644×10⁻⁵**, approximately **0.002443% above #91** at `264f202b52edc04d0c72ca9cb3138282ca68b9ad`. The exact bit saving is **52793693766767/10¹⁸**.\n\nSwap coordinate labels 5/6 at h23 and 22/23 at h25 in the complete physical words. The role counts (26,387 / 34,772), XOR sequence, width (130,417,912) and total recursive rank (74,988,452,500) stay unchanged. Fresh fixed-basis residual profiles improve the moment. Every frame, source, output and scatter label is transported together; the full Cartesian data family is preserved. All endpoint, cleanup, copied-center and growth charges remain paid.\n\n\n```sh\npython3 research/aligned-coordinate-refinement/verify.py --regenerate\npython3 research/aligned-coordinate-refinement/test_controls.py\nmake verify\n```\n\nThe scan tested 48 identity/adjacent coordinate choices. It is a finite search, not a global optimum. The result retains #91's analytic, ordered-residual compiler, all-size recursion, scalar overhead, routing, prime selection, exact recovery and fixed-tape hypotheses. The inherited Lean companion applies to #91's arithmetic; this new exponent is checked by exact rational Python certificates, not a new Lean proof.\n\nCredit Chafik Boukhalfa's #91 composition, Thomas DiFiore's #74 coordinate construction, Rohan Arun's #78/#85 refinements, eumemic, Rohan Garg, Avi Eisenberg, Dominik Scholz, Alejandro Zarzuelo Urdiales, and all earlier contributors and OpenAI. All inherited notices and licenses remain preserved. Prepared by Rohan Arun with OpenAI Codex assistance.\n",
+  "created_at": "2026-10-08T21:53:34Z",
+  "updated_at": "2026-10-08T23:05:52Z",
+  "closed_at": null,
+  "merged_at": null,
+  "state": "open"
+}

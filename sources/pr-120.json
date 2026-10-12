@@ -1,0 +1,11 @@
+{
+  "number": 120,
+  "html_url": "https://github.com/CrocSwap/integer-mult-bounds/pull/120",
+  "title": "Deferred readouts on the replayed h24 complex network: conditional κ = 1.0911630664e-4",
+  "body": "Conditional κ = 1363953833/(1.25·10¹³) = **1.0911630664 × 10⁻⁴**, complex-bound: **+4.42% over #117** (1.044939e-4) and **+0.53% over #118** (1.085428e-4), the best open PR.\n\n- **Deferral on #117's complex DAG.** PR #110's deferred complex readouts (Avi Eisenberg) run unchanged on the replayed h=24 DAG that #117 already ships (R = 28,705); no producer or DAG changes. #118 (Rohan Arun) independently applies #110's deferral to the same producer.\n- **Saturated placement.** PR #114's refinement replaces a degenerate target-chain intersection by a nondegenerate subspace instead of discarding it. Deferred roles: 4,560. Complex saving 109140237/10¹². The expanded readouts carry #114's conservative literal scalar charge; all 47 strict constraints and 7 margins pass, and next grid points are rejected.\n\n**Gate.** An independent checker (`scripts/deferred_product/deferred_word.py`) expands both stages of the exported deferred word, with stage two as the complement time reversal and banks exchanged: 277,799 events per invocation per stage, **0 violations**, reflection continuous, values replayed with arbitrary scratch, paid histogram equal to the certified profile. Five mutation controls are rejected. Alternating residuals of ranks 2, 4, 6 and 8 occur; each is one child under the general normal form of `notes/endpoint-gauge-complex.tex`, as in #104.\n\n```sh\nmake deferred-replayed-verify\n```\n\nBuilds on #117 (head cbb05ce, included in this branch). Full `make verify` is running; this PR stays a draft until it passes.\n\nCredits: Avi Eisenberg (#110), Rohan Arun (#118, parallel work), eumemic #114 (saturated placement and readout charge), Swapnil Jain (deferred readouts, round-seven bit word), icekylinx (#104), Zhihao Chen (#97), and all predecessors in #104's NOTICE and SOURCES. Prepared by eumemic with Anthropic Claude assistance.\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n",
+  "created_at": "2026-10-09T00:56:35Z",
+  "updated_at": "2026-10-09T03:13:32Z",
+  "closed_at": "2026-10-09T03:13:32Z",
+  "merged_at": null,
+  "state": "closed"
+}

@@ -1,0 +1,134 @@
+{
+  "schema_version": 1,
+  "problem_id": "subset-sum/randomized-word-ram",
+  "model": {
+    "id": "randomized-word-ram",
+    "version": "1",
+    "description": "Positive integers a_1,...,a_n and nonnegative target t, n>=2; repeats and empty subset allowed. Let b be maximum input/target bit length. Word RAM has w=ceil(4(n+b+log2(n+2))) bits. Reads/writes, indirect addressing, comparison, arithmetic including multiply/divide/remainder, bitwise operations and shifts cost one word operation; overflow uses charged multiple operations. Independent uniform w-bit random word costs one operation; one-way randomness with retained words charged to memory. One finite program for all n,b, no advice or external tables; all preprocessing and input access charged. Halts on every run, correct with probability at least 2/3 for every fixed input. For every fixed c and b<=n^c, every random outcome costs O(2^(0.49n)); program does not depend on c.",
+    "definition_url": "https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/preprints/Subset-Sum-in-Time-2-power-0-49n-October-4-2026/build/sections/introduction.tex"
+  },
+  "score": {
+    "id": "exponential-time-exponent",
+    "version": "1",
+    "symbol": "alpha",
+    "definition": "Worst-case over random outcomes O(2^(alpha n)), for each fixed polynomial input-bit bound b<=n^c; per-input success probability at least 2/3.",
+    "direction": "lower-is-better",
+    "encoding": "rational-string",
+    "minimum": "0",
+    "maximum": "1/2"
+  },
+  "checked_at": "2026-10-08",
+  "sources": [
+    {
+      "url": "https://github.com/openai/math/tree/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/preprints/Subset-Sum-in-Time-2-power-0-49n-October-4-2026",
+      "checked_at": "2026-10-08"
+    },
+    {
+      "url": "https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/preprints/Subset-Sum-in-Time-2-power-0-49n-October-4-2026/build/sections/introduction.tex",
+      "checked_at": "2026-10-08"
+    },
+    {
+      "url": "https://www.cise.ufl.edu/~sahni/papers/computingPartitions.pdf",
+      "checked_at": "2026-10-08"
+    }
+  ],
+  "records": [
+    {
+      "id": "classical-baseline",
+      "kind": "baseline",
+      "score": "1/2",
+      "tier": "claimed",
+      "submitted_at": null,
+      "upstream_status": "not-applicable",
+      "upstream_status_at": "2026-10-08T21:34:39.207006Z",
+      "site_observed_at": "2026-10-08T21:34:39.207006Z",
+      "source": {
+        "kind": "paper",
+        "url": "https://doi.org/10.1145/321812.321823"
+      },
+      "spec_version": "1",
+      "title": "Ellis Horowitz and Sartaj Sahni (1974), Computing Partitions with Applications to the Knapsack Problem",
+      "authors": [
+        {
+          "name": "Ellis Horowitz and Sartaj Sahni (1974), Computing Partitions with Applications to the Knapsack Problem",
+          "url": "https://doi.org/10.1145/321812.321823"
+        }
+      ],
+      "predecessors": [],
+      "submission_url": "https://doi.org/10.1145/321812.321823",
+      "artifact": {
+        "path": "sources/subset-sum-baseline.json",
+        "sha256": "c4029b3df7bc0e5104ac6d2c9f16427b4eaaf947d6b0c3e57bf58a8bfb41b160"
+      },
+      "evidence": {
+        "paper_url": "https://doi.org/10.1145/321812.321823",
+        "theorem": null,
+        "certificate_path": null
+      },
+      "dependencies": []
+    },
+    {
+      "id": "subset-sum-2026",
+      "kind": "improvement",
+      "score": "49/100",
+      "tier": "claimed",
+      "submitted_at": "2026-10-08T21:34:39.207006Z",
+      "upstream_status": "not-applicable",
+      "upstream_status_at": "2026-10-08T21:34:39.207006Z",
+      "site_observed_at": "2026-10-08T21:34:39.207006Z",
+      "source": {
+        "kind": "repo-artifact",
+        "url": "https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/preprints/Subset-Sum-in-Time-2-power-0-49n-October-4-2026/build/sections/introduction.tex"
+      },
+      "spec_version": "1",
+      "title": "OpenAI Subset Sum in Time O(2^(0.49n))",
+      "authors": [
+        {
+          "name": "openai",
+          "url": "https://github.com/openai"
+        }
+      ],
+      "predecessors": [],
+      "submission_url": "https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/preprints/Subset-Sum-in-Time-2-power-0-49n-October-4-2026/README.md",
+      "artifact": {
+        "path": "sources/subset-introduction.tex",
+        "sha256": "583a20059e520cff2aa5d99c5c7a457da6d6deae83a664813cc2b474a1920376"
+      },
+      "evidence": {
+        "paper_url": "https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/preprints/Subset-Sum-in-Time-2-power-0-49n-October-4-2026/build/sections/introduction.tex",
+        "theorem": null,
+        "certificate_path": null
+      },
+      "dependencies": [],
+      "source_commit": "fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb"
+    }
+  ],
+  "record_metadata": {
+    "classical-baseline": {
+      "checked_at": "2026-10-08",
+      "eligible_for_record": true,
+      "proof_status": "Classical paper baseline; no site proof check.",
+      "date_precision": "Publication year only; exact submission time unknown. site_observed_at is separate.",
+      "source_access": "author-hosted full text timed out; classic bound also stated in opened OpenAI introduction",
+      "publication_year": 1974,
+      "publication_date_precision": "year",
+      "publication_source_url": "https://doi.org/10.1145/321812.321823",
+      "upstream_tier": "claimed",
+      "site_tier": "claimed",
+      "comparison_key": "subset-sum/randomized-word-ram/v1"
+    },
+    "subset-sum-2026": {
+      "checked_at": "2026-10-08",
+      "source_url": "https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/preprints/Subset-Sum-in-Time-2-power-0-49n-October-4-2026/README.md",
+      "site_badge": false,
+      "eligible_for_record": true,
+      "proof_status": "Source claim; not independently rerun by bigOspeedrun",
+      "comparison_status": "source scope only",
+      "upstream_tier": "claimed",
+      "site_tier": "claimed",
+      "comparison_key": "subset-sum/randomized-word-ram/v1",
+      "publication_date_precision": "unknown"
+    }
+  },
+  "updated_at": "2026-10-08T21:41:48Z"
+}

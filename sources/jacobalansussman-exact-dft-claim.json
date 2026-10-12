@@ -1,0 +1,54 @@
+{
+  "repo": "jacobalansussman/wht-power-saving-lean",
+  "source_commit": "f010392c923279e3dd59ef3aa5fedad23affc5fd",
+  "checked_at": "2026-10-09T20:54:43Z",
+  "claim": "All positive-length exact DFT and full convolution in O(n (log n)^(1-7474546/10^10)).",
+  "saving_as_stated": "7474546/10000000000",
+  "readme_line": "# Discrete Fourier transform of every length in O(n (log n)^z), z = 1 - 7.474546e-4, checked in Lean",
+  "claim_date": "2026-10-09T19:00:33Z",
+  "claim_date_commit": "6a1d04fd9094d4d88c92e45022716a09a14e01fc",
+  "claim_date_role": "Commit first adding the README headline; not scientific priority",
+  "files": {
+    "README.md": {
+      "path": "sources/jacobalansussman__wht-power-saving-lean__README.md",
+      "sha256": "785e5b06ff5daa2602ba18ede196efd03ecbb414c4812e70efa99f80bd3f5d56",
+      "url": "https://github.com/jacobalansussman/wht-power-saving-lean/blob/f010392c923279e3dd59ef3aa5fedad23affc5fd/README.md"
+    },
+    "VERIFY.md": {
+      "path": "sources/jacobalansussman__wht-power-saving-lean__VERIFY.md",
+      "sha256": "f4cc1dd3589ec1d46a729800a54190a9d879472f5e43d586dd7892e27ea27a55",
+      "url": "https://github.com/jacobalansussman/wht-power-saving-lean/blob/f010392c923279e3dd59ef3aa5fedad23affc5fd/VERIFY.md"
+    },
+    "LICENSE": {
+      "path": "sources/jacobalansussman__wht-power-saving-lean__LICENSE",
+      "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+      "url": "https://github.com/jacobalansussman/wht-power-saving-lean/blob/f010392c923279e3dd59ef3aa5fedad23affc5fd/LICENSE"
+    },
+    "NOTICE": {
+      "path": "sources/jacobalansussman__wht-power-saving-lean__NOTICE",
+      "sha256": "9419dd03a2f52cf8bdfc4d18216ce29f263ab583b27f01ced8e420985bcb7c81",
+      "url": "https://github.com/jacobalansussman/wht-power-saving-lean/blob/f010392c923279e3dd59ef3aa5fedad23affc5fd/NOTICE"
+    },
+    "Work/Fourier/Goal.lean": {
+      "path": "sources/jacobalansussman__wht-power-saving-lean__Work__Fourier__Goal.lean",
+      "sha256": "e5c9cb6c61b5d11027d1b4271d693ba45fcf653d154ae790bd4e06e52b6c638c",
+      "url": "https://github.com/jacobalansussman/wht-power-saving-lean/blob/f010392c923279e3dd59ef3aa5fedad23affc5fd/Work/Fourier/Goal.lean"
+    },
+    "Work/Fourier/Main.lean": {
+      "path": "sources/jacobalansussman__wht-power-saving-lean__Work__Fourier__Main.lean",
+      "sha256": "2e8e88efd4dcbdf0b1a6e39ce7eea8c5fd5ffee2faf360a8c0c9cba84c0e4ef3",
+      "url": "https://github.com/jacobalansussman/wht-power-saving-lean/blob/f010392c923279e3dd59ef3aa5fedad23affc5fd/Work/Fourier/Main.lean"
+    },
+    "Work/Fourier/UniformFourierChallenge.lean": {
+      "path": "sources/jacobalansussman__wht-power-saving-lean__Work__Fourier__UniformFourierChallenge.lean",
+      "sha256": "9592163f84a4c049280b9aaf67c129e09e017d785c88504661320bb8690f0d1a",
+      "url": "https://github.com/jacobalansussman/wht-power-saving-lean/blob/f010392c923279e3dd59ef3aa5fedad23affc5fd/Work/Fourier/UniformFourierChallenge.lean"
+    }
+  },
+  "model_check": {
+    "upstream_commit": "fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb",
+    "result": "Challenge RAM, DFTProgram and ConvProgram definitions unchanged; only exponent, seven names and comment differ. All 89 OAI source blobs match upstream. Goal imports unchanged DFTProgram and ConvProgram.",
+    "method": "Read-only GitHub API content diff and Git blob hash comparison; no Lean execution"
+  },
+  "verification": "Author-reported Lean Comparator pass; nanoda disabled, precompiled modules replayed, no clean full rebuild. No independent rerun here."
+}

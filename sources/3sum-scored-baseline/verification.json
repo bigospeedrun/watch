@@ -1,0 +1,18 @@
+{
+  "status": "passed",
+  "started_at": "2026-10-08T22:14:03.093139+00:00",
+  "upstream_commit": "e1a4e6508154ea59f030480661590a9fe3018011",
+  "score": "2499/1250",
+  "current_record": "2499/1250",
+  "spec_sha256": "4291e3f05781cea42f9d672ff73ceac1f6d1a0c3021038e94372fa8f7e1ad987",
+  "mode": "baseline-reproduction",
+  "source_sha256": {
+    "Submission.lean": "b80faf22bbf4ae34e5d25fa00ecd39b041ff0cf7aca3a98d8170984ab0038ed1"
+  },
+  "workspace": "out/runs/verify-5tlhhko8",
+  "reused_proof_files": 5776,
+  "wall_seconds": 1169.148,
+  "comparator_exit_code": 0,
+  "log": "out/runs/verify-5tlhhko8/comparator.log",
+  "checked_at": "2026-10-08T22:33:38.808770+00:00"
+}

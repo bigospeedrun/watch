@@ -1,0 +1,24 @@
+Running as unit: run-u7238.service; invocation ID: e3ec911040a5432cae4875eb433ddfea
+Building RaceChallenge
+⚠ [8924/8926] Built ComparatorChallenges.UniformFourier (14s)
+warning: ComparatorChallenges/UniformFourier.lean:326:8: declaration uses `sorry`
+warning: ComparatorChallenges/UniformFourier.lean:330:8: declaration uses `sorry`
+⚠ [8925/8926] Built RaceChallenge (13s)
+warning: RaceChallenge.lean:7:8: declaration uses `sorry`
+Build completed successfully (8926 jobs).
+Exporting #[Quot, Quot.mk, Quot.lift, Quot.ind, Race.frontier, propext, Quot.sound, Classical.choice, Nat.add, Nat.sub, Nat.mul, Nat.pow, Nat.gcd, Nat.div, Nat.mod, Nat.beq, Nat.ble, Nat.land, Nat.lor, Nat.xor, Nat.shiftLeft, Nat.shiftRight, String.ofList, Char.ofNat, List, eagerReduce, Nat, String, String.mk, Char, optParam, autoParam, semiOutParam, outParam] from RaceChallenge
+Building Submission
+✔ [9013/9014] Built Submission (12s)
+Build completed successfully (9014 jobs).
+Exporting #[Quot, Quot.mk, Quot.lift, Quot.ind, Race.frontier, propext, Quot.sound, Classical.choice, Nat.add, Nat.sub, Nat.mul, Nat.pow, Nat.gcd, Nat.div, Nat.mod, Nat.beq, Nat.ble, Nat.land, Nat.lor, Nat.xor, Nat.shiftLeft, Nat.shiftRight, String.ofList, Char.ofNat, List, eagerReduce, Nat, String, String.mk, Char, optParam, autoParam, semiOutParam, outParam] from Submission
+Running nanoda kernel on solution
+nanoda kernel accepts the solution
+Running Lean default kernel on solution.
+Lean default kernel accepts the solution
+Your solution is okay!
+Finished with result: success
+Main processes terminated with: code=exited/status=0
+Service runtime: 3min 41.180s
+CPU time consumed: 4min 41.791s
+Memory peak: 1.3G
+Memory swap peak: 0B

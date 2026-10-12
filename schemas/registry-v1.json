@@ -1,0 +1,183 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "checked_at",
+    "repositories",
+    "problems",
+    "updated_at"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "checked_at": {
+      "type": "string",
+      "format": "date"
+    },
+    "repositories": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "repo_id",
+          "repo",
+          "owner",
+          "url",
+          "problem_ids",
+          "tracking_branch",
+          "listing_mode",
+          "opted_in",
+          "manifest_source",
+          "admitted_at",
+          "license_status",
+          "verification_profile",
+          "comparison_keys",
+          "checked_at",
+          "source_url",
+          "submission_url",
+          "agents_url",
+          "rules_url"
+        ],
+        "properties": {
+          "repo_id": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "repo": {
+            "type": "string"
+          },
+          "owner": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "pattern": "^https://"
+          },
+          "problem_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "tracking_branch": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "listing_mode": {
+            "enum": [
+              "independent-read-only",
+              "related-read-only",
+              "research-artifact",
+              "planned"
+            ]
+          },
+          "opted_in": {
+            "const": false
+          },
+          "manifest_source": {},
+          "admitted_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date"
+          },
+          "license_status": {},
+          "verification_profile": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "comparison_keys": {},
+          "checked_at": {
+            "type": "string",
+            "format": "date"
+          },
+          "source_url": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uri"
+          },
+          "submission_url": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uri"
+          },
+          "agents_url": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uri"
+          },
+          "rules_url": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uri"
+          }
+        }
+      }
+    },
+    "problems": {
+      "type": "array",
+      "minItems": 6,
+      "maxItems": 6,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "slug",
+          "problem_id",
+          "data_file",
+          "status",
+          "race_repo"
+        ],
+        "properties": {
+          "slug": {
+            "type": "string"
+          },
+          "problem_id": {
+            "type": "string"
+          },
+          "data_file": {
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "independent-race",
+              "planned-race",
+              "status-only"
+            ]
+          },
+          "race_repo": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      }
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "Z$"
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema"
+}

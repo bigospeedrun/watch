@@ -1,0 +1,11 @@
+{
+  "number": 236,
+  "html_url": "https://github.com/CrocSwap/integer-mult-bounds/pull/236",
+  "title": "[Lean] Verification of paired-cube finite identities and arithmetic — κ = 0.0004609169",
+  "body": "This adds scoped Lean verification of the paired-cube construction at d1d6c070f5a8c684727ee7ec35d930f9ebfa9758, preserving its author-checked conditional κ = 4609169/10000000000 = 0.0004609169. This verifies an older construction, not a new frontier κ.\n\nThe accepted package contains 3,606 modules and 14,320 audited theorems: finite response and reversible-word dirty restoration, exact frame/operator and scoped local indexed-memory results, and source-derived checks of all 47 finite assembly inequalities and seven margins. The root-event implementation includes computed constants, sequential register kernels and streamed indexing. The scratch-spill obstruction is explicit.\n\nFiles are isolated under research/lean-paired-cube-d1d6/: curated scientific sources, six browsable principal theorem files, exact source pins and an offline compiler/axiom-audit driver. No inherited root files changed.\n\nAuthor checks: accepted per-module source/object/log/axiom checks passed; archive readback passed; 11 driver fixture tests and a 168-declaration smoke test passed. The complete clean rebuild using the new driver remains unrun and is estimated to take several hours. Current-head hosted CI is pending, not represented as passed. Independent mathematical review of this submitted package remains pending.\n\nScope: this does not prove the full asymptotic multiplication theorem or the newer entrance-bank result. Concrete-field and real-analysis bridges, full physical composition, arbitrary dirty-spill restoration, global restored-row/fixed-tape costs and inherited all-size assumptions remain explicit. Only the stated finite κ arithmetic is Lean-checked; no new unrestricted bound is claimed.",
+  "created_at": "2026-10-09T22:10:20Z",
+  "updated_at": "2026-10-09T22:34:50Z",
+  "closed_at": null,
+  "merged_at": null,
+  "state": "open"
+}

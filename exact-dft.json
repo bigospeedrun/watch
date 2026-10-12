@@ -1,0 +1,591 @@
+{
+  "schema_version": 1,
+  "problem_id": "exact-dft/uniform-exact-arithmetic",
+  "model": {
+    "id": "uniform-exact-arithmetic",
+    "version": "1",
+    "description": "Fixed deterministic programs for every positive n. Exact canonical DFT and full convolution over complex vectors. Root of unity supplied; unrestricted coefficients and exact complex arithmetic. Polynomially bounded integer values and indices. Cost includes root-order selection and scalar preparation. Excludes bit complexity and the separate subsequential circuit result.",
+    "definition_url": "https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/docs/130.md"
+  },
+  "score": {
+    "id": "log-saving",
+    "version": "1",
+    "symbol": "kappa",
+    "definition": "Arithmetic work O(n (log n)^(1-kappa)) for every positive length.",
+    "direction": "higher-is-better",
+    "encoding": "rational-string",
+    "minimum": "0",
+    "maximum": "1"
+  },
+  "checked_at": "2026-10-10",
+  "sources": [
+    {
+      "url": "https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/docs/130.md",
+      "checked_at": "2026-10-08"
+    },
+    {
+      "url": "https://web.stanford.edu/class/cme324/classics/cooley-tukey.pdf",
+      "checked_at": "2026-10-08"
+    },
+    {
+      "url": "https://doi.org/10.1109/TAU.1970.1162132",
+      "checked_at": "2026-10-08",
+      "status": "Full text unchecked: browser challenge. All-length baseline uses Bluestein reduction with FFT; Cooley-Tukey alone is not the all-length source."
+    },
+    {
+      "url": "https://github.com/eumemic/exact-dft-bounds/blob/6f87d1a0c9ae462cdcb2034a1361c87623221e66/notes/batched-dft-note.tex",
+      "checked_at": "2026-10-09"
+    },
+    {
+      "url": "https://github.com/shea256/fourier-transform-below-nlogn/blob/0b0170640e8659cc3343830d3207bbeaf26660c3/manuscript.md",
+      "checked_at": "2026-10-09"
+    },
+    {
+      "url": "https://github.com/jacobalansussman/wht-power-saving-lean/blob/f010392c923279e3dd59ef3aa5fedad23affc5fd/README.md",
+      "checked_at": "2026-10-09"
+    },
+    {
+      "url": "https://github.com/shea256/fourier-transform-below-nlogn/blob/53f03853aea8caf46de7cc9d93efc9bb034bb4c7/results/round11.md",
+      "checked_at": "2026-10-10"
+    },
+    {
+      "url": "https://github.com/shea256/fourier-transform-below-nlogn/blob/62554f945b58454fb8452f4daaca1222ce5ca58e/results/five-stage-pr233.md",
+      "checked_at": "2026-10-10"
+    },
+    {
+      "url": "https://github.com/chafreaky/wht-power-saving-lean/blob/fd19e46b728faa414cbfbf91b01a6a0b7903375d/README.md",
+      "checked_at": "2026-10-10"
+    }
+  ],
+  "records": [
+    {
+      "id": "classical-baseline",
+      "kind": "baseline",
+      "score": "0",
+      "tier": "claimed",
+      "submitted_at": null,
+      "upstream_status": "not-applicable",
+      "upstream_status_at": "2026-10-08T21:34:39.207006Z",
+      "site_observed_at": "2026-10-08T21:34:39.207006Z",
+      "source": {
+        "kind": "paper",
+        "url": "https://doi.org/10.1090/S0025-5718-1965-0178586-1"
+      },
+      "spec_version": "1",
+      "title": "Cooley and Tukey (1965), FFT; Bluestein (1970), all-length reduction",
+      "authors": [
+        {
+          "name": "Cooley and Tukey (1965), FFT; Bluestein (1970), all-length reduction",
+          "url": "https://doi.org/10.1090/S0025-5718-1965-0178586-1"
+        }
+      ],
+      "predecessors": [],
+      "submission_url": "https://doi.org/10.1090/S0025-5718-1965-0178586-1",
+      "artifact": {
+        "path": "sources/exact-dft-baseline.json",
+        "sha256": "87a992fca2b099a1c9a1b7d31c4b8d3b8d3b0eeaa89539a480f310ec950dfe23"
+      },
+      "evidence": {
+        "paper_url": "https://doi.org/10.1090/S0025-5718-1965-0178586-1",
+        "theorem": null,
+        "certificate_path": null
+      },
+      "dependencies": []
+    },
+    {
+      "id": "exact-dft-2026",
+      "kind": "improvement",
+      "score": "1/10000000000000",
+      "tier": "verified",
+      "submitted_at": "2026-10-08T21:34:39.207006Z",
+      "upstream_status": "not-applicable",
+      "upstream_status_at": "2026-10-08T21:34:39.207006Z",
+      "site_observed_at": "2026-10-08T21:34:39.207006Z",
+      "source": {
+        "kind": "repo-artifact",
+        "url": "https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Computability/FourierTransform/Main.lean"
+      },
+      "spec_version": "1",
+      "title": "OpenAI uniform exact DFT power saving",
+      "authors": [
+        {
+          "name": "openai",
+          "url": "https://github.com/openai"
+        }
+      ],
+      "predecessors": [],
+      "submission_url": "https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Computability/FourierTransform/Main.lean",
+      "artifact": {
+        "path": "sources/openai__math__lean__OAI__Computability__FourierTransform__Main.lean",
+        "sha256": "0b2b9f758ff41d4b13b6420451d04fbbd84826a8a2594eb8d5b2311a3861ef55"
+      },
+      "evidence": {
+        "paper_url": "https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Computability/FourierTransform/Main.lean",
+        "theorem": "OAI.PowerSaving.transform_main; OAI.PowerSaving.convolution_main",
+        "certificate_path": null
+      },
+      "dependencies": [],
+      "source_commit": "fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb",
+      "rerun_status": {
+        "state": "passed",
+        "checked_at": "2026-10-09T15:13:11.361385+00:00",
+        "receipt_path": "sources/dft-upstream-receipt.json"
+      }
+    },
+    {
+      "id": "openai-uniform-dft-frontier",
+      "kind": "improvement",
+      "score": "1/50000000000",
+      "tier": "verified",
+      "submitted_at": "2026-10-08T05:20:00Z",
+      "upstream_status": "not-applicable",
+      "upstream_status_at": "2026-10-08T21:34:39.207006Z",
+      "site_observed_at": "2026-10-09T15:00:24Z",
+      "source": {
+        "kind": "repo-artifact",
+        "url": "https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Computability/FourierTransform/Main.lean"
+      },
+      "spec_version": "1",
+      "title": "OpenAI uniform exact DFT: every fixed saving s < 2/10^11",
+      "authors": [
+        {
+          "name": "openai",
+          "url": "https://github.com/openai"
+        }
+      ],
+      "predecessors": [],
+      "submission_url": "https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Computability/FourierTransform/Main.lean",
+      "artifact": {
+        "path": "sources/openai__math__lean__OAI__Computability__FourierTransform__Main.lean",
+        "sha256": "0b2b9f758ff41d4b13b6420451d04fbbd84826a8a2594eb8d5b2311a3861ef55"
+      },
+      "evidence": {
+        "paper_url": "https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Computability/FourierTransform/Main.lean",
+        "theorem": "OAI.PowerSaving.Skies.flight_little with OAI.PowerSaving.alpha = 1 - 2/10^11; lunch_big and flagshipOne/flagshipBoth",
+        "certificate_path": null
+      },
+      "dependencies": [],
+      "source_commit": "fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb",
+      "rerun_status": {
+        "state": "passed",
+        "checked_at": "2026-10-09T15:38:29.607243+00:00",
+        "receipt_path": "sources/dft-frontier-receipt.json"
+      },
+      "score_relation": "strict-upper-bound"
+    },
+    {
+      "id": "eumemic-exact-dft-2026",
+      "kind": "improvement",
+      "score": "607/1250000",
+      "tier": "claimed",
+      "submitted_at": "2026-10-09T09:34:21Z",
+      "upstream_status": "not-applicable",
+      "upstream_status_at": "2026-10-09T09:34:21Z",
+      "site_observed_at": "2026-10-09T15:00:24Z",
+      "source": {
+        "kind": "repo-artifact",
+        "url": "https://github.com/eumemic/exact-dft-bounds/blob/6f87d1a0c9ae462cdcb2034a1361c87623221e66/notes/batched-dft-note.tex"
+      },
+      "spec_version": "1",
+      "title": "eumemic exact DFT draft: every fixed κ < 607/1250000",
+      "authors": [
+        {
+          "name": "eumemic",
+          "url": "https://github.com/eumemic"
+        }
+      ],
+      "predecessors": [
+        "https://github.com/openai/math"
+      ],
+      "submission_url": "https://github.com/eumemic/exact-dft-bounds/blob/6f87d1a0c9ae462cdcb2034a1361c87623221e66/notes/batched-dft-note.tex",
+      "artifact": {
+        "path": "sources/eumemic__exact-dft-bounds__notes__batched-dft-note.tex",
+        "sha256": "18d506b1b005806296ff0ecdc62989a5dc445f7b90d2ea0660dc22f2d1f9b836"
+      },
+      "evidence": {
+        "paper_url": "https://github.com/eumemic/exact-dft-bounds/blob/6f87d1a0c9ae462cdcb2034a1361c87623221e66/notes/batched-dft-note.tex",
+        "theorem": "Theorem 1.1 and Corollary 1.2",
+        "certificate_path": null
+      },
+      "dependencies": [
+        {
+          "id": "community-network-and-fourier-transfer",
+          "statement": "Correctness of the community paired-cube complex network from CrocSwap PR #144 and the stated batched recursion and transfer arguments; no independent rerun.",
+          "source_url": "https://github.com/eumemic/exact-dft-bounds/blob/6f87d1a0c9ae462cdcb2034a1361c87623221e66/notes/batched-dft-note.tex",
+          "status": "unverified"
+        }
+      ],
+      "source_commit": "6f87d1a0c9ae462cdcb2034a1361c87623221e66",
+      "score_relation": "strict-upper-bound"
+    },
+    {
+      "id": "shea256-exact-dft-2026",
+      "kind": "improvement",
+      "score": "73/1000000",
+      "tier": "claimed",
+      "submitted_at": "2026-10-08T23:56:35Z",
+      "upstream_status": "not-applicable",
+      "upstream_status_at": "2026-10-08T23:56:35Z",
+      "site_observed_at": "2026-10-09T15:00:24Z",
+      "source": {
+        "kind": "repo-artifact",
+        "url": "https://github.com/shea256/fourier-transform-below-nlogn/blob/0b0170640e8659cc3343830d3207bbeaf26660c3/manuscript.md"
+      },
+      "spec_version": "1",
+      "title": "Ryan Shea exact DFT draft: proposed κ = 73/1000000",
+      "authors": [
+        {
+          "name": "Ryan Shea",
+          "url": "https://github.com/shea256"
+        }
+      ],
+      "predecessors": [
+        "https://github.com/openai/math"
+      ],
+      "submission_url": "https://github.com/shea256/fourier-transform-below-nlogn/blob/0b0170640e8659cc3343830d3207bbeaf26660c3/manuscript.md",
+      "artifact": {
+        "path": "sources/shea256-exact-dft-claim.json",
+        "sha256": "34818f0b0d098cf05405c5c5e66b737d2f6c90ca74208471154061631b3a352f"
+      },
+      "evidence": {
+        "paper_url": "https://github.com/shea256/fourier-transform-below-nlogn/blob/0b0170640e8659cc3343830d3207bbeaf26660c3/manuscript.md",
+        "theorem": "Proposed headline; Sections 8 and 9 transfer argument",
+        "certificate_path": null
+      },
+      "dependencies": [
+        {
+          "id": "community-network-and-fourier-transfer",
+          "statement": "Correctness of the pinned Swapnil Jain round-six complex network and written transfer into OpenAI #130; finite checks have not been independently rerun.",
+          "source_url": "https://github.com/shea256/fourier-transform-below-nlogn/blob/0b0170640e8659cc3343830d3207bbeaf26660c3/manuscript.md",
+          "status": "unverified"
+        }
+      ],
+      "source_commit": "0b0170640e8659cc3343830d3207bbeaf26660c3",
+      "score_relation": "attained"
+    },
+    {
+      "id": "jacob-sussman-exact-dft-2026",
+      "kind": "improvement",
+      "score": "3737273/5000000000",
+      "tier": "claimed",
+      "submitted_at": "2026-10-09T19:00:33Z",
+      "upstream_status": "not-applicable",
+      "upstream_status_at": "2026-10-09T20:54:43Z",
+      "site_observed_at": "2026-10-09T20:54:43Z",
+      "source": {
+        "kind": "repo-artifact",
+        "url": "https://github.com/jacobalansussman/wht-power-saving-lean/blob/f010392c923279e3dd59ef3aa5fedad23affc5fd/README.md"
+      },
+      "spec_version": "1",
+      "title": "Jacob Sussman uniform exact DFT claim",
+      "authors": [
+        {
+          "name": "Jacob Sussman",
+          "url": "https://github.com/jacobalansussman"
+        }
+      ],
+      "predecessors": [
+        "https://github.com/openai/math"
+      ],
+      "submission_url": "https://github.com/jacobalansussman/wht-power-saving-lean/blob/f010392c923279e3dd59ef3aa5fedad23affc5fd/README.md",
+      "artifact": {
+        "path": "sources/jacobalansussman-exact-dft-claim.json",
+        "sha256": "5c2739f8be407432a6905369baec7349006a17aad30965e6185fe525ce636389"
+      },
+      "evidence": {
+        "paper_url": "https://github.com/jacobalansussman/wht-power-saving-lean/blob/f010392c923279e3dd59ef3aa5fedad23affc5fd/README.md",
+        "theorem": "OAI.PowerSaving.transform_mainZ; OAI.PowerSaving.convolution_mainZ",
+        "certificate_path": null
+      },
+      "dependencies": [],
+      "source_commit": "f010392c923279e3dd59ef3aa5fedad23affc5fd",
+      "score_relation": "attained",
+      "rerun_status": {
+        "state": "pending",
+        "checked_at": "2026-10-09T20:54:43Z",
+        "receipt_path": null
+      }
+    },
+    {
+      "id": "shea256-exact-dft-round11-2026",
+      "kind": "improvement",
+      "score": "67/100000",
+      "tier": "claimed",
+      "submitted_at": "2026-10-09T15:24:16Z",
+      "upstream_status": "not-applicable",
+      "upstream_status_at": "2026-10-10T02:52:24Z",
+      "site_observed_at": "2026-10-10T02:52:24Z",
+      "source": {
+        "kind": "repo-artifact",
+        "url": "https://github.com/shea256/fourier-transform-below-nlogn/blob/53f03853aea8caf46de7cc9d93efc9bb034bb4c7/results/round11.md"
+      },
+      "spec_version": "1",
+      "title": "Ryan Shea exact DFT round eleven: proposed κ = 67/100000",
+      "authors": [
+        {
+          "name": "Ryan Shea",
+          "url": "https://github.com/shea256"
+        }
+      ],
+      "predecessors": [
+        "https://github.com/openai/math"
+      ],
+      "submission_url": "https://github.com/shea256/fourier-transform-below-nlogn/blob/53f03853aea8caf46de7cc9d93efc9bb034bb4c7/results/round11.md",
+      "artifact": {
+        "path": "sources/shea256-exact-dft-round11-claim.json",
+        "sha256": "4476ce32bfded3a29fd4a89938402449ba680f001bc1bb5d65b887bdaa12169d"
+      },
+      "evidence": {
+        "paper_url": "https://github.com/shea256/fourier-transform-below-nlogn/blob/53f03853aea8caf46de7cc9d93efc9bb034bb4c7/results/round11.md",
+        "theorem": "Conditional transfer theorem (framework Section 2); round-eleven Section 7.5",
+        "certificate_path": null
+      },
+      "dependencies": [
+        {
+          "id": "community-network-and-fourier-transfer",
+          "statement": "Jain round-eleven finite network, physical interfaces, and written all-length Fourier transfer; independent review and end-to-end formal verification pending.",
+          "source_url": "https://github.com/shea256/fourier-transform-below-nlogn/blob/53f03853aea8caf46de7cc9d93efc9bb034bb4c7/paper/framework.md",
+          "status": "unverified"
+        }
+      ],
+      "source_commit": "53f03853aea8caf46de7cc9d93efc9bb034bb4c7",
+      "score_relation": "attained"
+    },
+    {
+      "id": "shea256-exact-dft-five-stage-2026",
+      "kind": "improvement",
+      "score": "47171/62500000",
+      "tier": "claimed",
+      "submitted_at": "2026-10-10T01:43:53Z",
+      "upstream_status": "not-applicable",
+      "upstream_status_at": "2026-10-10T05:52:59Z",
+      "site_observed_at": "2026-10-10T05:52:59Z",
+      "source": {
+        "kind": "repo-artifact",
+        "url": "https://github.com/chafreaky/wht-power-saving-lean/blob/fd19e46b728faa414cbfbf91b01a6a0b7903375d/README.md"
+      },
+      "spec_version": "1",
+      "title": "Sussman–Boukhalfa all-length exact DFT claim",
+      "authors": [
+        {
+          "name": "Jacob Sussman",
+          "url": "https://github.com/jacobalansussman"
+        },
+        {
+          "name": "Chafik Boukhalfa",
+          "url": "https://github.com/chafreaky"
+        }
+      ],
+      "predecessors": [
+        "https://github.com/openai/math",
+        "https://github.com/chafreaky/wht-power-saving-lean/tree/fd19e46b728faa414cbfbf91b01a6a0b7903375d"
+      ],
+      "submission_url": "https://github.com/jacobalansussman/wht-power-saving-lean/pull/2",
+      "artifact": {
+        "path": "sources/sussman-boukhalfa-dft-claim.json",
+        "sha256": "b387ad00f432964fa89ee60d42d5667819f4fb116c4fd22991e82f45506b2dd9"
+      },
+      "evidence": {
+        "paper_url": "https://github.com/chafreaky/wht-power-saving-lean/blob/fd19e46b728faa414cbfbf91b01a6a0b7903375d/README.md",
+        "theorem": "OAI.PowerSaving.transform_mainY; OAI.PowerSaving.convolution_mainY",
+        "certificate_path": null
+      },
+      "dependencies": [],
+      "source_commit": "fd19e46b728faa414cbfbf91b01a6a0b7903375d",
+      "score_relation": "attained",
+      "rerun_status": {
+        "state": "pending",
+        "checked_at": "2026-10-10T05:52:59Z",
+        "receipt_path": null
+      }
+    }
+  ],
+  "record_metadata": {
+    "classical-baseline": {
+      "checked_at": "2026-10-08",
+      "eligible_for_record": true,
+      "proof_status": "Classical paper baseline; no site proof check.",
+      "date_precision": "Publication year only; exact submission time unknown. site_observed_at is separate.",
+      "source_access": "opened classic paper scan; Bluestein full text unchecked",
+      "publication_year": 1970,
+      "publication_date_precision": "year",
+      "publication_source_url": "https://doi.org/10.1109/TAU.1970.1162132",
+      "upstream_tier": "claimed",
+      "site_tier": "claimed",
+      "comparison_key": "exact-dft/uniform-exact-arithmetic/v1",
+      "publication_date_role": "Bluestein all-length reduction (1970); Cooley–Tukey FFT account is 1965."
+    },
+    "exact-dft-2026": {
+      "checked_at": "2026-10-09",
+      "source_url": "https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Computability/FourierTransform/Main.lean",
+      "site_badge": false,
+      "eligible_for_record": true,
+      "proof_status": "Upstream Lean headline independently accepted by nanoda and Lean kernels; recovered receipt and hashed logs retained. No site badge.",
+      "comparison_status": "source scope only",
+      "upstream_tier": "verified",
+      "site_tier": "verified",
+      "comparison_key": "exact-dft/uniform-exact-arithmetic/v1",
+      "publication_date_precision": "unknown"
+    },
+    "openai-uniform-dft-frontier": {
+      "checked_at": "2026-10-09",
+      "source_url": "https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Computability/FourierTransform/Main.lean",
+      "site_badge": false,
+      "eligible_for_record": true,
+      "proof_status": "The full rational open DFT frontier passed Comparator with nanoda and Lean kernels through local Race.frontier. The endpoint is excluded; no site badge.",
+      "comparison_status": "source scope only",
+      "upstream_tier": "verified",
+      "site_tier": "verified",
+      "comparison_key": "exact-dft/uniform-exact-arithmetic/v1",
+      "publication_date_precision": "date-time",
+      "score_interpretation": "Strict endpoint, not attained: for every fixed s < 2/10^11, work is O(n (log n)^(1-s)).",
+      "scope": "Fixed deterministic programs for every positive length and complex input vector; unchanged OpenAI DFTProgram with root supplied, preparation and index work charged, polynomially bounded integer values and unrestricted exact complex coefficients. This rerun is for DFT, not convolution.",
+      "frontier_evidence": "TensorSaving.lean defines alpha = 1 - 2/10^11. Asymptotics.lean bounds work by n (log n)^alpha (log log n)^2. Main.lean flight_little absorbs this overhead at each exponent v > alpha. The public comparator headline remains 10^-13.",
+      "publication_date_role": "Pinned source commit, not paper priority",
+      "rerun_theorem": "Race.frontier",
+      "rerun_scope": "Every rational s < 1/50000000000 admits fixed programs with unchanged DFTProgram and pure-power Big-O at exponent 1-s. DFT only; no attained endpoint and no convolution-frontier rerun claim.",
+      "rerun_artifact": {
+        "path": "sources/dft-frontier-Submission.lean",
+        "sha256": "46f1e26b7a7c4acc5b10a246be4eabdd6a52824b4b82b46937ec17e5fb42f83b"
+      }
+    },
+    "eumemic-exact-dft-2026": {
+      "checked_at": "2026-10-09",
+      "source_url": "https://github.com/eumemic/exact-dft-bounds/blob/6f87d1a0c9ae462cdcb2034a1361c87623221e66/notes/batched-dft-note.tex",
+      "repo": "eumemic/exact-dft-bounds",
+      "site_badge": false,
+      "eligible_for_record": true,
+      "record_eligibility_note": "Within this source-specific claimed track only; no cross-track record claim.",
+      "proof_status": "Research draft with written arguments and exact finite certificate claims; independent review and end-to-end formal verification are outstanding.",
+      "upstream_tier": "claimed",
+      "site_tier": "claimed",
+      "comparison_key": "eumemic/exact-dft-bounds/exact-dft-source-scope-v1",
+      "comparison_status": "Source claims the OpenAI #130 arithmetic model. Formal scope equivalence and transfer correctness have not been checked; keep separate tracks.",
+      "scope": "Every positive length; exact complex arithmetic, specified root, and O(log(n+2))-bit integer/address words. Scalar preparation, schedule construction, index work and movement are charged. No finite-precision, numerical-stability or bit-complexity claim.",
+      "exact_statement": "O(n (log n)^theta (log log n)^(4-theta)), theta = 1 - 607/1250000. Therefore O(n (log n)^(1-kappa)) for each fixed kappa < 607/1250000. Convolution permits general field multiplication for pointwise products.",
+      "credits": "eumemic, with substantial Claude (Anthropic) assistance; community finite network credited in retained NOTICE; prior DFT transfer credited to Ryan Shea.",
+      "license_status": "Apache-2.0; LICENSE and NOTICE retained",
+      "publication_date_precision": "date-time",
+      "publication_date_role": "Source snapshot commit, not scientific priority",
+      "publication_date": "2026-10-09T09:34:21Z",
+      "publication_source_url": "https://github.com/eumemic/exact-dft-bounds/blob/6f87d1a0c9ae462cdcb2034a1361c87623221e66/notes/batched-dft-note.tex",
+      "listing_status": "research-draft",
+      "open_race": false,
+      "observed_pr_count": 0,
+      "submission_rules": "No race submission rules found in the inspected README or note.",
+      "notes_url": "https://github.com/eumemic/exact-dft-bounds/blob/6f87d1a0c9ae462cdcb2034a1361c87623221e66/notes/batched-dft-note.tex",
+      "pdf_url": "https://github.com/eumemic/exact-dft-bounds/blob/6f87d1a0c9ae462cdcb2034a1361c87623221e66/artifacts/batched-dft-note.pdf"
+    },
+    "shea256-exact-dft-2026": {
+      "checked_at": "2026-10-09",
+      "source_url": "https://github.com/shea256/fourier-transform-below-nlogn/blob/0b0170640e8659cc3343830d3207bbeaf26660c3/manuscript.md",
+      "repo": "shea256/fourier-transform-below-nlogn",
+      "site_badge": false,
+      "eligible_for_record": true,
+      "record_eligibility_note": "Within this source-specific claimed track only; no cross-track record claim.",
+      "proof_status": "Proposed research result; independent mathematical review and end-to-end formal verification remain outstanding. External Lean checks do not formalize this Fourier theorem.",
+      "upstream_tier": "claimed",
+      "site_tier": "claimed",
+      "comparison_key": "shea256/fourier-transform-below-nlogn/exact-dft-source-scope-v1",
+      "comparison_status": "Source claims the OpenAI #130 arithmetic model. Formal scope equivalence and transfer correctness have not been checked; keep separate tracks.",
+      "scope": "Every positive length; exact complex arithmetic, specified root, and O(log(n+2))-bit integer/address words. Scalar preparation, schedule construction, index work and movement are charged. No finite-precision, numerical-stability or bit-complexity claim.",
+      "exact_statement": "Proposed all-length O(n (log n)^(1-73/1000000)) exact DFT, from the attributed Swapnil Jain round-six complex network and a written Fourier transfer.",
+      "credits": "Ryan Shea; network credited to Swapnil Jain, Douglas Colkitt, icekylinx, eumemic and Aurel Prosz / Paureel; README discloses GPT-6 Pro and GPT-6-Astra Max assistance.",
+      "license_status": "No repository-root license file at inspected commit; vendored material has separate notices",
+      "publication_date_precision": "date-time",
+      "publication_date_role": "Source snapshot commit, not scientific priority",
+      "publication_date": "2026-10-08T23:56:35Z",
+      "publication_source_url": "https://github.com/shea256/fourier-transform-below-nlogn/blob/0b0170640e8659cc3343830d3207bbeaf26660c3/manuscript.md",
+      "listing_status": "research-draft",
+      "open_race": false,
+      "observed_pr_count": 0,
+      "submission_rules": "No race submission rules found in the inspected README or note.",
+      "notes_url": "https://github.com/shea256/fourier-transform-below-nlogn/blob/0b0170640e8659cc3343830d3207bbeaf26660c3/manuscript.md",
+      "pdf_url": "https://github.com/shea256/fourier-transform-below-nlogn/blob/0b0170640e8659cc3343830d3207bbeaf26660c3/manuscript.pdf"
+    },
+    "jacob-sussman-exact-dft-2026": {
+      "checked_at": "2026-10-09",
+      "source_url": "https://github.com/jacobalansussman/wht-power-saving-lean/blob/f010392c923279e3dd59ef3aa5fedad23affc5fd/README.md",
+      "repo": "jacobalansussman/wht-power-saving-lean",
+      "site_badge": false,
+      "eligible_for_record": true,
+      "proof_status": "Author-reported Lean Comparator pass; nanoda disabled, precompiled modules replayed, no clean full rebuild. No independent rerun here.",
+      "upstream_tier": "claimed",
+      "site_tier": "claimed",
+      "comparison_key": "exact-dft/uniform-exact-arithmetic/v1",
+      "comparison_status": "Source model matches the OpenAI family-130 RAM statement by definition diff and upstream blob hashes; proof acceptance has not been independently checked.",
+      "scope": "Fixed deterministic programs for every positive n. Exact canonical DFT and full convolution over complex vectors. Root of unity supplied; unrestricted coefficients and exact complex arithmetic. Polynomially bounded integer values and indices. Cost includes root-order selection and scalar preparation. Excludes bit complexity and the separate subsequential circuit result.",
+      "exact_statement": "All positive-length exact DFT and full convolution in O(n (log n)^(1-7474546/10^10)).",
+      "score_interpretation": "Attained as claimed: saving 7474546/10^10, stored in reduced rational form. No WHT result or WHT endpoint is imported.",
+      "model_note": "OpenAI family-130 exact complex scalar/index RAM; unchanged DFTProgram and ConvProgram.",
+      "publication_date_precision": "date-time",
+      "publication_date_role": "Commit first adding the README claim, not scientific priority",
+      "publication_date": "2026-10-09T19:00:33Z",
+      "publication_source_url": "https://github.com/jacobalansussman/wht-power-saving-lean/blob/6a1d04fd9094d4d88c92e45022716a09a14e01fc/README.md#L1",
+      "claim_date_commit": "6a1d04fd9094d4d88c92e45022716a09a14e01fc",
+      "listing_status": "research-draft",
+      "open_race": false,
+      "observed_pr_count": 0,
+      "submission_rules": "No race admission rules found in the inspected README; zero PRs observed.",
+      "notes_url": "https://github.com/jacobalansussman/wht-power-saving-lean/blob/f010392c923279e3dd59ef3aa5fedad23affc5fd/VERIFY.md",
+      "license_status": "Apache-2.0; LICENSE and NOTICE retained",
+      "credits": "Jacob Sussman with disclosed Claude-agent assistance; OpenAI reduction and community circuit credits retained in README and NOTICE."
+    },
+    "shea256-exact-dft-round11-2026": {
+      "checked_at": "2026-10-10",
+      "source_url": "https://github.com/shea256/fourier-transform-below-nlogn/blob/53f03853aea8caf46de7cc9d93efc9bb034bb4c7/results/round11.md",
+      "repo": "shea256/fourier-transform-below-nlogn",
+      "site_badge": false,
+      "eligible_for_record": true,
+      "record_eligibility_note": "Within this source-specific claimed track only; no cross-track record claim.",
+      "proof_status": "Proposed research result; independent mathematical review and end-to-end formal verification remain outstanding. External Lean checks do not formalize this Fourier theorem.",
+      "upstream_tier": "claimed",
+      "site_tier": "claimed",
+      "comparison_key": "shea256/fourier-transform-below-nlogn/exact-dft-source-scope-v1",
+      "comparison_status": "Written scope matches the problem: all positive lengths, exact complex arithmetic, unrestricted coefficients, supplied root of order below 1024n^3, logarithmic-word indices, charged scalar preparation, initialization and movement. Formal equivalence and transfer correctness not independently verified.",
+      "scope": "Every positive length; exact complex arithmetic, specified root, and O(log(n+2))-bit integer/address words. Scalar preparation, schedule construction, index work and movement are charged. No finite-precision, numerical-stability or bit-complexity claim.",
+      "exact_statement": "Proposed all-length exact DFT in O(n (log n)^(1-67/100000)), conditional on the finite network and Fourier transfer.",
+      "credits": "Ryan Shea; Jain round-eleven integration with community network credits described in the pinned result record. README discloses AI assistance.",
+      "license_status": "No repository-root license file at inspected commit; vendored material has separate notices",
+      "publication_date_precision": "date-time",
+      "publication_date_role": "Commit first stating this README bound, not scientific priority",
+      "publication_date": "2026-10-09T15:24:16Z",
+      "publication_source_url": "https://github.com/shea256/fourier-transform-below-nlogn/blob/a2840b10970b8066b9e86fdce97d9bf8a32fa4ea/README.md",
+      "listing_status": "research-draft",
+      "open_race": false,
+      "observed_pr_count": 0,
+      "submission_rules": "No race submission rules found in the inspected README or note.",
+      "notes_url": "https://github.com/shea256/fourier-transform-below-nlogn/blob/53f03853aea8caf46de7cc9d93efc9bb034bb4c7/paper/framework.md",
+      "pdf_url": "https://github.com/shea256/fourier-transform-below-nlogn/blob/53f03853aea8caf46de7cc9d93efc9bb034bb4c7/manuscript.pdf",
+      "claim_date_commit": "a2840b10970b8066b9e86fdce97d9bf8a32fa4ea"
+    },
+    "shea256-exact-dft-five-stage-2026": {
+      "checked_at": "2026-10-10",
+      "source_url": "https://github.com/chafreaky/wht-power-saving-lean/blob/fd19e46b728faa414cbfbf91b01a6a0b7903375d/README.md",
+      "repo": "chafreaky/wht-power-saving-lean",
+      "site_badge": false,
+      "eligible_for_record": true,
+      "record_eligibility_note": "Claimed result in the matching OpenAI family-130 model; independent proof rerun pending.",
+      "proof_status": "Source-reported Lean proof; no site rerun. Ryan Shea separately reports a reproduction.",
+      "upstream_tier": "claimed",
+      "site_tier": "claimed",
+      "comparison_key": "exact-dft/uniform-exact-arithmetic/v1",
+      "comparison_status": "Read pinned chafreaky/wht-power-saving-lean fd19e46b Work/Fourier233/UniformFourierChallenge.lean and diffed against OpenAI fd4aeeb UniformFourier.lean: only comment, exponent and seven declaration names differ. RAM, DFTProgram and ConvProgram definitions unchanged. Written framework model also unchanged.",
+      "scope": "Every positive length; exact complex arithmetic, specified root, and O(log(n+2))-bit integer/address words. Scalar preparation, schedule construction, index work and movement are charged. No finite-precision, numerical-stability or bit-complexity claim.",
+      "exact_statement": "All positive-length exact DFT and convolution in O(n (log n)^(1-7547360/10^10)), as claimed by the incorporated Sussman-Boukhalfa theorem.",
+      "credits": "Jacob Sussman: five-stage framework and formal Fourier development. Chafik Boukhalfa: stronger pairing and Fourier instantiation. Ryan Shea: incorporation and reported reproduction, not a new exponent. Community predecessors retained in source notices.",
+      "license_status": "Apache-2.0 at this snapshot; LICENSE and NOTICE retained",
+      "publication_date_precision": "date-time",
+      "publication_date_role": "First primary-source commit stating the bound",
+      "publication_date": "2026-10-10T01:43:53Z",
+      "publication_source_url": "https://github.com/chafreaky/wht-power-saving-lean/commit/fd19e46b728faa414cbfbf91b01a6a0b7903375d",
+      "listing_status": "research-draft",
+      "open_race": false,
+      "notes_url": "https://github.com/chafreaky/wht-power-saving-lean/blob/fd19e46b728faa414cbfbf91b01a6a0b7903375d/README.md",
+      "claim_date_commit": "fd19e46b728faa414cbfbf91b01a6a0b7903375d",
+      "reproduction_url": "https://github.com/shea256/fourier-transform-below-nlogn/blob/62554f945b58454fb8452f4daaca1222ce5ca58e/results/five-stage-pr233.md",
+      "primary_submission_url": "https://github.com/jacobalansussman/wht-power-saving-lean/pull/2"
+    }
+  },
+  "updated_at": "2026-10-10T05:54:18Z"
+}

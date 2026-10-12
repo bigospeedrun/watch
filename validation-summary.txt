@@ -1,0 +1,11 @@
+Checked 2026-10-09
+problem | verified | certified-conditional | claimed (observed maximum/minimum) | records
+3sum | 2499/1250 | — | 2 | 3
+apsp | 149971/50000 | — | 3 | 2
+subset-sum | — | — | 49/100 | 2
+integer-multiplication | — | — | 25573/200000 | 206
+exact-dft | 1/50000000000 | — | 607/1250000 | 5
+directed-sssp | — | — | 11/12 | 2
+All schemas, IDs, score ranges, rational encodings, source hashes, PR coverage and chart checks passed.
+Observed best numbers are not global record claims. Open PRs and unreviewed comparison tracks cannot hold the record.
+Scores marked strict-upper-bound are excluded endpoints, not attained savings.

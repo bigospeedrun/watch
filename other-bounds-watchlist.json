@@ -1,0 +1,135 @@
+{
+  "updated_at": "2026-10-11",
+  "families": [
+    {
+      "family": "003",
+      "title": "The quasi-Riemann hypothesis",
+      "aliases": [
+        "quasi Riemann",
+        "QuasiRiemann",
+        "zero-free half-plane"
+      ],
+      "repo": "HaileyStorm/QuasiRiemannTracker",
+      "baseline_commit": "58344dfdbe756cf2f743da1908ffe0582418cf5b"
+    },
+    {
+      "family": "005",
+      "title": "Irrationality of Catalan’s constant",
+      "aliases": [
+        "Catalan irrationality",
+        "Catalan constant"
+      ],
+      "repo": "slitsey/catalan-irrationality-measure",
+      "baseline_commit": "5cdfe002b4affdb39756eb789fbb192103386574"
+    },
+    {
+      "family": "029",
+      "title": "Primitive roots for every admissible integer base",
+      "aliases": [
+        "primitive roots",
+        "primitive-root primes"
+      ],
+      "repo": "Rogerhu12/openai-math-extensions",
+      "baseline_commit": "f8a2bb24c83a80f0026018e3577dd4ca29d2fc60"
+    },
+    {
+      "family": "111",
+      "title": "One-sample matroid prophet inequalities against an almighty adversary",
+      "aliases": [
+        "matroid prophet",
+        "one-sample matroid"
+      ],
+      "repo": "shea256/matroid-prophet-inequality",
+      "baseline_commit": "deb20b28cc53d8e6d865702b44cd6cd789c357d3"
+    },
+    {
+      "family": "115",
+      "title": "Sampling and counting contingency tables with arbitrary margins",
+      "aliases": [
+        "contingency tables",
+        "contingency-tables"
+      ],
+      "repo": "EcoDataLab/contingency-tables",
+      "baseline_commit": "d2e8b0be8e65fdf94b800df60296d8dd49098b62"
+    },
+    {
+      "family": "127",
+      "title": "Average sensitivity of polynomial threshold functions",
+      "aliases": [
+        "average sensitivity",
+        "ptf-average-sensitivity"
+      ],
+      "repo": "log-prathm/ptf-average-sensitivity",
+      "baseline_commit": "a02ba53faa209f9383e320220c131e11d6b41db9"
+    },
+    {
+      "family": "160",
+      "title": "Superexponential van der Waerden numbers",
+      "aliases": [
+        "van der Waerden"
+      ],
+      "repo": "rohanarun/van-der-waerden-refinement",
+      "baseline_commit": "9a1de8d6e0e47d2de3d31eb93bd8b0f551a41be4"
+    },
+    {
+      "family": "161",
+      "title": "Counterexamples to Sidorenko’s conjecture and the forcing conjecture",
+      "aliases": [
+        "Sidorenko",
+        "forcing conjecture"
+      ],
+      "repo": "rohanarun/sidorenko-template-refinements",
+      "baseline_commit": "b513fb4576b30443d0f41df556d378b676723e06"
+    },
+    {
+      "family": "167",
+      "title": "Planar distinct distances and unit-distance bounds",
+      "aliases": [
+        "unit distance",
+        "distinct distances",
+        "unit-distance"
+      ],
+      "repo": "rohanarun/unit-distance-grid-refinement",
+      "baseline_commit": "dd9b3e29f4cf4aef163d5b9c52686cc86c6b9e6a"
+    },
+    {
+      "family": "187",
+      "title": "Snaky in 21 Maker moves",
+      "aliases": [
+        "Snaky"
+      ],
+      "repo": "gotrevor/snaky-15x15",
+      "baseline_commit": "1173345102f9d39472e38db0fdd810f7bfd4ed4e"
+    },
+    {
+      "family": "190",
+      "title": "Polynomial removal fails for ordered binary matrices",
+      "aliases": [
+        "ordered matrix removal",
+        "ordered-matrix-removal",
+        "ordered binary matrices"
+      ],
+      "repo": "erebos-labs/ordered-matrix-removal-4x4",
+      "baseline_commit": "45248e57ab1c2197419981bba04e1cde050494ca"
+    },
+    {
+      "family": "191",
+      "title": "A power improvement in the Heilbronn triangle lower bound",
+      "aliases": [
+        "Heilbronn triangle"
+      ],
+      "repo": "littleBro/heilbronn-triangle-bounds",
+      "baseline_commit": "9891f18f6b978ef012258901853c259857b8d5c5"
+    },
+    {
+      "family": "268",
+      "title": "The spin-one Haldane gap",
+      "aliases": [
+        "Haldane gap",
+        "Haldane-gap"
+      ],
+      "repo": "amachino/haldane-gap-refinement",
+      "baseline_commit": "15909bdc15e947795b6fba946008dd8530bb3477"
+    }
+  ]
+}

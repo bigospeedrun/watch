@@ -1,0 +1,67 @@
+{
+  "checked_at": "2026-10-08",
+  "source_url": "https://x.com/RohanArun/status/2108207365199663189",
+  "tweet_access": "unchecked: web fetch failed",
+  "image_path": "../bigospeedrun/integer-multiplication-bounds.webp",
+  "image_sha256": "e2d870ecaf46bbd7b5b67ab1cc9ea0a31e732dc0f0e701a57e91311ae9c7f262",
+  "image_inspected": true,
+  "chart_pr_range": [
+    1,
+    44
+  ],
+  "excluded_prs": [
+    11,
+    26
+  ],
+  "numeric_count": 42,
+  "first_score": "1095199/625000000000000000000000",
+  "last_score": "2050314627/50000000000000",
+  "detailed_points": [
+    {
+      "pr_number": 36,
+      "score": "384569/10000000000",
+      "submitted_at": "2026-10-08T12:27:27Z"
+    },
+    {
+      "pr_number": 37,
+      "score": "3850771033/100000000000000",
+      "submitted_at": "2026-10-08T12:39:52Z"
+    },
+    {
+      "pr_number": 38,
+      "score": "242889/6250000000",
+      "submitted_at": "2026-10-08T12:49:21Z"
+    },
+    {
+      "pr_number": 39,
+      "score": "971668963/25000000000000",
+      "submitted_at": "2026-10-08T12:58:44Z"
+    },
+    {
+      "pr_number": 40,
+      "score": "1959367447/50000000000000",
+      "submitted_at": "2026-10-08T13:15:57Z"
+    },
+    {
+      "pr_number": 41,
+      "score": "1008542031/25000000000000",
+      "submitted_at": "2026-10-08T13:33:05Z"
+    },
+    {
+      "pr_number": 42,
+      "score": "4099494519/100000000000000",
+      "submitted_at": "2026-10-08T13:51:36Z"
+    },
+    {
+      "pr_number": 43,
+      "score": "409953/10000000000",
+      "submitted_at": "2026-10-08T13:55:52Z"
+    },
+    {
+      "pr_number": 44,
+      "score": "2050314627/50000000000000",
+      "submitted_at": "2026-10-08T14:24:20Z"
+    }
+  ],
+  "result": "42 numeric submissions reproduced from PRs 1 through 44. Nine detailed chart values and EDT minutes agree with GitHub UTC creation times. Chart is an earlier snapshot, not a priority proof."
+}

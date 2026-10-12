@@ -1,0 +1,11 @@
+{
+  "number": 90,
+  "html_url": "https://github.com/CrocSwap/integer-mult-bounds/pull/90",
+  "title": "Clarify current review checkpoint and published release",
+  "body": "CONTRIBUTING still directs reviewers of the current result to the historical ternary guide and calls make ternary-note the current-result build target. Point it to the round-two review, selected certificate, and reproduction guide, and label the ternary instructions historical.\n\nAlso distinguish the reviewed main checkpoint from the published PR #39 release in docs/reproducibility.md. This matches the README and the pinned release record.\n\nChecked the linked local paths and git diff --check. The independent audit_pair_candidate.py --check docs/research/community-pair-arithmetic.json also passed. No mathematical witness or certificate changes are included, so the full producer suite was not rerun.\n\nPrepared with AI assistance in OpenCode.",
+  "created_at": "2026-10-08T21:24:49Z",
+  "updated_at": "2026-10-08T21:24:49Z",
+  "closed_at": null,
+  "merged_at": null,
+  "state": "open"
+}

@@ -1,0 +1,20 @@
+{
+  "status": "passed",
+  "started_at": "2026-10-09T15:34:44.563812+00:00",
+  "upstream_commit": "fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb",
+  "score": "1/50000000000",
+  "current_record": "1/50000000000",
+  "current_record_relation": "strict-upper-bound",
+  "spec_sha256": "4c571f275bd7506c3ccd1e6d78f2fca77e07112c969c1c62ad8359d61544ec74",
+  "mode": "exclusive-frontier-reproduction",
+  "theorem": "Race.frontier",
+  "source_sha256": {
+    "Submission.lean": "46f1e26b7a7c4acc5b10a246be4eabdd6a52824b4b82b46937ec17e5fb42f83b"
+  },
+  "workspace": "out/runs/verify-aif9ceth",
+  "reused_proof_files": 712,
+  "wall_seconds": 221.293,
+  "comparator_exit_code": 0,
+  "log": "out/runs/verify-aif9ceth/comparator.log",
+  "checked_at": "2026-10-09T15:38:29.607243+00:00"
+}

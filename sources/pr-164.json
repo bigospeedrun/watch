@@ -1,0 +1,11 @@
+{
+  "number": 164,
+  "html_url": "https://github.com/CrocSwap/integer-mult-bounds/pull/164",
+  "title": "Connected bit-frame descents on #163: conditional κ = 5.94035602295411e-4",
+  "body": "κ = 5.94035602295411e-4\nκ ≈ 5.940356 × 10⁻⁴\n\nStacked on #163 at `e1813796ef5c3ca38c5dd7b9e8d81b3908ff5997`. Its fused complex word, balanced transfer and inherited construction are prerequisites, not contributions of this change.\n\nThis adds 168 connected operation-frame descents to #163’s p12 bit word, giving 1,464 total descents and 1,056 distinct bases. Moving equal-frame operations together permits improvements blocked by individual gate moves. The scalar word, gauges, persistent role count and complex supplier stay fixed; the complete paid bit histogram is recounted.\n\nThe conditional bound rises from #163’s κ ≈ 5.939702 × 10⁻⁴ by 6.539922 × 10⁻⁸, or approximately 0.01101%. The bit coarse saving becomes 5.947193 × 10⁻⁴. The paid atom exponent is re-instantiated for that supplier, and the bit side still binds.\n\n```sh\npython3 -B research/paired-cube-bit-descent/verify.py\n```\n\nValidation covers:\n\n- Exact frame containment, nondegeneracy, physical chains and the complete paid rank profile.\n- All source, target and arbitrary-dirty columns over F₂, plus equality with the defining integer decoder.\n- Exact Gram determinants for all 1,056 bases. Some determinants exceed 2^80 in magnitude, but complete factorization shows every prime divisor is at most 31; every retained prime q > 2^80 remains valid.\n- Strict paid moments, the full finite bridge, all 47 assembly inequalities and seven margins, with the next certified κ grid point rejected.\n\nAll source-specified all-size interfaces and conditional scope of #163 are retained. This is a finite conditional witness, with no global optimality claim.\n\nCredits: #163 was prepared by Chafik Boukhalfa with substantial OpenAI Codex assistance; its #161 dependency is eumemic’s work, building on icekylinx’s paired cubes and the credited frame, reuse, shared-core, bit, atom-toll and layout lineage. Those notices and disclosures remain intact. This extension was prepared by eumemic with substantial OpenAI Codex assistance.\n",
+  "created_at": "2026-10-09T08:04:53Z",
+  "updated_at": "2026-10-09T08:04:53Z",
+  "closed_at": null,
+  "merged_at": null,
+  "state": "open"
+}

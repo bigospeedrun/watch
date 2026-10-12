@@ -1,0 +1,40 @@
+{
+  "checked_at": "2026-10-10T05:52:59Z",
+  "source_commit": "62554f945b58454fb8452f4daaca1222ce5ca58e",
+  "source_url": "https://github.com/shea256/fourier-transform-below-nlogn/blob/62554f945b58454fb8452f4daaca1222ce5ca58e/results/five-stage-pr233.md",
+  "claim_date": "2026-10-10T03:16:54Z",
+  "claim_date_commit": "a101b363b38e6bf7d309042c94ba5fa18a424fad",
+  "statement": "All positive-length exact DFT and convolution in O(n (log n)^(1-7547360/10^10)), as claimed by the incorporated Sussman-Boukhalfa theorem.",
+  "saving": "47171/62500000",
+  "model_check": "Read pinned chafreaky/wht-power-saving-lean fd19e46b Work/Fourier233/UniformFourierChallenge.lean and diffed against OpenAI fd4aeeb UniformFourier.lean: only comment, exponent and seven declaration names differ. RAM, DFTProgram and ConvProgram definitions unchanged. Written framework model also unchanged.",
+  "review_status": "Shea reports a fresh Lean build and theorem/definition comparison. No official Linux Comparator or independent kernel reported; no site rerun.",
+  "credits": "Jacob Sussman: five-stage framework and formal Fourier development. Chafik Boukhalfa: stronger pairing and Fourier instantiation. Ryan Shea: incorporation and reported reproduction, not a new exponent. Community predecessors retained in source notices.",
+  "upstream_proof_url": "https://github.com/chafreaky/wht-power-saving-lean/tree/fd19e46b728faa414cbfbf91b01a6a0b7903375d",
+  "files": {
+    "README.md": {
+      "url": "https://github.com/shea256/fourier-transform-below-nlogn/blob/62554f945b58454fb8452f4daaca1222ce5ca58e/README.md",
+      "path": "sources/shea256__five-stage__README.md",
+      "sha256": "08b2caa75c73911b65f62070a08faedbb31cf50be809a25f04c5f6addfd3594f"
+    },
+    "LICENSE": {
+      "url": "https://github.com/shea256/fourier-transform-below-nlogn/blob/62554f945b58454fb8452f4daaca1222ce5ca58e/LICENSE",
+      "path": "sources/shea256__five-stage__LICENSE",
+      "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+    },
+    "NOTICE": {
+      "url": "https://github.com/shea256/fourier-transform-below-nlogn/blob/62554f945b58454fb8452f4daaca1222ce5ca58e/NOTICE",
+      "path": "sources/shea256__five-stage__NOTICE",
+      "sha256": "d35308219f8706ed0af5ade06b328d55fe0421e7e39887a2c226390dc25f1567"
+    },
+    "results/five-stage-pr233.md": {
+      "url": "https://github.com/shea256/fourier-transform-below-nlogn/blob/62554f945b58454fb8452f4daaca1222ce5ca58e/results/five-stage-pr233.md",
+      "path": "sources/shea256__five-stage__results__five-stage-pr233.md",
+      "sha256": "2e4ecb2da7a276860dc11a3dcae4273999384f8a0b1e5cd3c2115fe8a3bd1b6a"
+    },
+    "verification/FIVE_STAGE_AUDIT.md": {
+      "url": "https://github.com/shea256/fourier-transform-below-nlogn/blob/62554f945b58454fb8452f4daaca1222ce5ca58e/verification/FIVE_STAGE_AUDIT.md",
+      "path": "sources/shea256__five-stage__verification__FIVE_STAGE_AUDIT.md",
+      "sha256": "9c7c411cdf71fefae22ec14e2b10b8df874f6fa282737f13dc5dbff44e28d382"
+    }
+  }
+}

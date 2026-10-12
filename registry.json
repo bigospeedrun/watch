@@ -1,0 +1,309 @@
+{
+  "schema_version": 1,
+  "checked_at": "2026-10-10",
+  "repositories": [
+    {
+      "repo_id": 1408136434,
+      "repo": "CrocSwap/integer-mult-bounds",
+      "owner": "CrocSwap",
+      "url": "https://github.com/CrocSwap/integer-mult-bounds",
+      "problem_ids": [
+        "integer-multiplication/multitape-tm"
+      ],
+      "tracking_branch": "main",
+      "listing_mode": "independent-read-only",
+      "opted_in": false,
+      "manifest_source": {
+        "kind": "registry",
+        "path": "manifests/CrocSwap--integer-mult-bounds.json",
+        "revision": "sha256:eb6c59269eef9cfc06cef48f2e2b6f33d8bb05aa0dc516eece7058d98cf5c2d0",
+        "editor": "BOS Worker 3"
+      },
+      "admitted_at": "2026-10-08",
+      "license_status": "Apache-2.0 at inspected snapshot",
+      "verification_profile": null,
+      "comparison_keys": {
+        "integer-multiplication": "crocswap/integer-multiplication-v1"
+      },
+      "checked_at": "2026-10-10",
+      "source_url": "https://github.com/CrocSwap/integer-mult-bounds",
+      "submission_url": "https://github.com/CrocSwap/integer-mult-bounds/pulls",
+      "agents_url": null,
+      "rules_url": "https://github.com/CrocSwap/integer-mult-bounds/blob/3b6b66891c0ac888521cf591fe306c6286601d4f/CONTRIBUTING.md"
+    },
+    {
+      "repo_id": 1409903797,
+      "repo": "Swapnil-jain/integer-mult-kappa",
+      "owner": "Swapnil-jain",
+      "url": "https://github.com/Swapnil-jain/integer-mult-kappa",
+      "problem_ids": [
+        "integer-multiplication/multitape-tm"
+      ],
+      "tracking_branch": "main",
+      "listing_mode": "related-read-only",
+      "opted_in": false,
+      "manifest_source": {
+        "kind": "registry",
+        "path": "manifests/Swapnil-jain--integer-mult-kappa.json",
+        "revision": "sha256:515737a423226d2b6cb9e7fa0b5cd344b144ba6c62262d1cc0766666c05ea67b",
+        "editor": "BOS Worker 3"
+      },
+      "admitted_at": "2026-10-08",
+      "license_status": "Apache-2.0 at inspected snapshot",
+      "verification_profile": null,
+      "comparison_keys": {
+        "integer-multiplication": "swapnil/independent-assumptions-unreviewed"
+      },
+      "checked_at": "2026-10-10",
+      "source_url": "https://github.com/Swapnil-jain/integer-mult-kappa",
+      "submission_url": "https://github.com/Swapnil-jain/integer-mult-kappa",
+      "agents_url": null,
+      "rules_url": "https://github.com/Swapnil-jain/integer-mult-kappa/blob/d583bef0524c5de91a03ac3961757a72c822e027/README.md"
+    },
+    {
+      "repo_id": 1326008263,
+      "repo": "anthropics/formal-math",
+      "owner": "anthropics",
+      "url": "https://github.com/anthropics/formal-math",
+      "problem_ids": [
+        "3sum/word-ram",
+        "apsp/word-ram"
+      ],
+      "tracking_branch": "main",
+      "listing_mode": "research-artifact",
+      "opted_in": false,
+      "manifest_source": null,
+      "admitted_at": "2026-10-08",
+      "license_status": "Apache-2.0 at inspected snapshot",
+      "verification_profile": null,
+      "comparison_keys": {
+        "3sum": "3sum/word-ram/v1/scope-v1",
+        "apsp": "apsp/word-ram/v1/scope-v1"
+      },
+      "checked_at": "2026-10-08",
+      "source_url": "https://github.com/anthropics/formal-math",
+      "submission_url": null,
+      "agents_url": null,
+      "rules_url": null
+    },
+    {
+      "repo_id": 1407950271,
+      "repo": "openai/math",
+      "owner": "openai",
+      "url": "https://github.com/openai/math",
+      "problem_ids": [
+        "subset-sum/randomized-word-ram",
+        "integer-multiplication/multitape-tm",
+        "exact-dft/uniform-exact-arithmetic"
+      ],
+      "tracking_branch": "main",
+      "listing_mode": "research-artifact",
+      "opted_in": false,
+      "manifest_source": null,
+      "admitted_at": "2026-10-08",
+      "license_status": "Apache-2.0 at inspected snapshot",
+      "verification_profile": null,
+      "comparison_keys": {
+        "subset-sum": "subset-sum/randomized-word-ram/v1/scope-v1",
+        "integer-multiplication": "integer-multiplication/multitape-tm/v1/conditional-unreviewed",
+        "exact-dft": "exact-dft/uniform-exact-arithmetic/v1/scope-v1"
+      },
+      "checked_at": "2026-10-08",
+      "source_url": "https://github.com/openai/math",
+      "submission_url": null,
+      "agents_url": null,
+      "rules_url": null
+    },
+    {
+      "repo_id": 1379207505,
+      "repo": "spicylemonade/c-hd-proof",
+      "owner": "spicylemonade",
+      "url": "https://github.com/spicylemonade/c-hd-proof",
+      "problem_ids": [
+        "directed-sssp/comparison-addition-sparse"
+      ],
+      "tracking_branch": "main",
+      "listing_mode": "research-artifact",
+      "opted_in": false,
+      "manifest_source": null,
+      "admitted_at": "2026-10-08",
+      "license_status": "not-established",
+      "verification_profile": null,
+      "comparison_keys": {
+        "directed-sssp": "directed-sssp/comparison-addition-sparse/v1/scope-v1"
+      },
+      "checked_at": "2026-10-08",
+      "source_url": "https://github.com/spicylemonade/c-hd-proof",
+      "submission_url": null,
+      "agents_url": null,
+      "rules_url": null
+    },
+    {
+      "repo_id": null,
+      "repo": "bigospeedrun/3sum",
+      "owner": "bigospeedrun",
+      "url": "https://github.com/bigospeedrun/3sum",
+      "problem_ids": [
+        "3sum/word-ram"
+      ],
+      "tracking_branch": null,
+      "listing_mode": "planned",
+      "opted_in": false,
+      "manifest_source": null,
+      "admitted_at": null,
+      "license_status": "planned",
+      "verification_profile": null,
+      "comparison_keys": {
+        "3sum": "3sum/word-ram/v1/scope-v1"
+      },
+      "checked_at": "2026-10-08",
+      "source_url": null,
+      "submission_url": null,
+      "agents_url": null,
+      "rules_url": null
+    },
+    {
+      "repo_id": 1411530594,
+      "repo": "eumemic/exact-dft-bounds",
+      "owner": "eumemic",
+      "url": "https://github.com/eumemic/exact-dft-bounds",
+      "problem_ids": [
+        "exact-dft/uniform-exact-arithmetic"
+      ],
+      "tracking_branch": "main",
+      "listing_mode": "research-artifact",
+      "opted_in": false,
+      "manifest_source": null,
+      "admitted_at": "2026-10-09",
+      "license_status": "Apache-2.0; LICENSE and NOTICE retained",
+      "verification_profile": null,
+      "comparison_keys": {
+        "exact-dft": "eumemic/exact-dft-bounds/exact-dft-source-scope-v1"
+      },
+      "checked_at": "2026-10-09",
+      "source_url": "https://github.com/eumemic/exact-dft-bounds",
+      "submission_url": null,
+      "agents_url": null,
+      "rules_url": null
+    },
+    {
+      "repo_id": 1410566944,
+      "repo": "shea256/fourier-transform-below-nlogn",
+      "owner": "shea256",
+      "url": "https://github.com/shea256/fourier-transform-below-nlogn",
+      "problem_ids": [
+        "exact-dft/uniform-exact-arithmetic"
+      ],
+      "tracking_branch": "master",
+      "listing_mode": "research-artifact",
+      "opted_in": false,
+      "manifest_source": null,
+      "admitted_at": "2026-10-09",
+      "license_status": "Apache-2.0 at this snapshot; LICENSE and NOTICE retained",
+      "verification_profile": null,
+      "comparison_keys": {
+        "exact-dft": "shea256/fourier-transform-below-nlogn/exact-dft-source-scope-v1"
+      },
+      "checked_at": "2026-10-10",
+      "source_url": "https://github.com/shea256/fourier-transform-below-nlogn",
+      "submission_url": null,
+      "agents_url": null,
+      "rules_url": null
+    },
+    {
+      "repo_id": 1411873192,
+      "repo": "jacobalansussman/wht-power-saving-lean",
+      "owner": "jacobalansussman",
+      "url": "https://github.com/jacobalansussman/wht-power-saving-lean",
+      "problem_ids": [
+        "exact-dft/uniform-exact-arithmetic"
+      ],
+      "tracking_branch": "main",
+      "listing_mode": "research-artifact",
+      "opted_in": false,
+      "manifest_source": null,
+      "admitted_at": "2026-10-09",
+      "license_status": "Apache-2.0; LICENSE and NOTICE retained",
+      "verification_profile": null,
+      "comparison_keys": {
+        "exact-dft": "exact-dft/uniform-exact-arithmetic/v1"
+      },
+      "checked_at": "2026-10-09",
+      "source_url": "https://github.com/jacobalansussman/wht-power-saving-lean",
+      "submission_url": null,
+      "agents_url": null,
+      "rules_url": null
+    },
+    {
+      "repo_id": 1412614803,
+      "repo": "Swapnil-jain/threesum-derand",
+      "owner": "Swapnil-jain",
+      "url": "https://github.com/Swapnil-jain/threesum-derand",
+      "problem_ids": [
+        "3sum/word-ram",
+        "apsp/word-ram"
+      ],
+      "tracking_branch": "main",
+      "listing_mode": "research-artifact",
+      "opted_in": false,
+      "manifest_source": null,
+      "admitted_at": "2026-10-10",
+      "license_status": "Apache-2.0; LICENSE and NOTICE retained",
+      "verification_profile": null,
+      "comparison_keys": {
+        "3sum": "3sum/word-ram/v1",
+        "apsp": "apsp/word-ram/v1"
+      },
+      "checked_at": "2026-10-10",
+      "source_url": "https://github.com/Swapnil-jain/threesum-derand",
+      "submission_url": null,
+      "agents_url": null,
+      "rules_url": null
+    }
+  ],
+  "problems": [
+    {
+      "slug": "3sum",
+      "problem_id": "3sum/word-ram",
+      "data_file": "3sum.json",
+      "status": "planned-race",
+      "race_repo": null
+    },
+    {
+      "slug": "apsp",
+      "problem_id": "apsp/word-ram",
+      "data_file": "apsp.json",
+      "status": "status-only",
+      "race_repo": null
+    },
+    {
+      "slug": "subset-sum",
+      "problem_id": "subset-sum/randomized-word-ram",
+      "data_file": "subset-sum.json",
+      "status": "status-only",
+      "race_repo": null
+    },
+    {
+      "slug": "integer-multiplication",
+      "problem_id": "integer-multiplication/multitape-tm",
+      "data_file": "integer-multiplication.json",
+      "status": "independent-race",
+      "race_repo": "CrocSwap/integer-mult-bounds"
+    },
+    {
+      "slug": "exact-dft",
+      "problem_id": "exact-dft/uniform-exact-arithmetic",
+      "data_file": "exact-dft.json",
+      "status": "status-only",
+      "race_repo": null
+    },
+    {
+      "slug": "directed-sssp",
+      "problem_id": "directed-sssp/comparison-addition-sparse",
+      "data_file": "directed-sssp.json",
+      "status": "status-only",
+      "race_repo": null
+    }
+  ],
+  "updated_at": "2026-10-10T09:26:52Z"
+}

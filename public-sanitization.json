@@ -1,0 +1,114 @@
+{
+  "checked_at": "2026-10-12",
+  "note": "Public copies are scrubbed evidence. Original bytes are retained only in local private-history. No mathematical claims were changed.",
+  "files": [
+    {
+      "path": "sources/3sum-scored-baseline-comparator.time",
+      "original_sha256": "da3de790a80197e5a4d5b7960d8781e696995c3011ffc778363b2288e78443c7",
+      "public_sha256": "c745b404ce002362eec78ebe791c4416eb566cd35904c09417091b2b8ea98629",
+      "reason": "Remove personal email addresses or local absolute paths; update hashes of scrubbed dependencies where present."
+    },
+    {
+      "path": "sources/3sum-scored-baseline-receipt.json",
+      "original_sha256": "bef5642f14d5144fee13516496dae063a05ba870cd1fcbe95a3365364e74a750",
+      "public_sha256": "85d5b78b8da3d97c742989a0499e01781eb7d13af8f756077ab4cbad85bcba13",
+      "reason": "Remove personal email addresses or local absolute paths; update hashes of scrubbed dependencies where present."
+    },
+    {
+      "path": "sources/3sum-scored-baseline/comparator.time",
+      "original_sha256": "da3de790a80197e5a4d5b7960d8781e696995c3011ffc778363b2288e78443c7",
+      "public_sha256": "c745b404ce002362eec78ebe791c4416eb566cd35904c09417091b2b8ea98629",
+      "reason": "Remove personal email addresses or local absolute paths; update hashes of scrubbed dependencies where present."
+    },
+    {
+      "path": "sources/3sum-scored-baseline/receipt.json",
+      "original_sha256": "f26bf6840ff43819ae529d4583d57e54bebd7b85710ac90adc3c14669ffcba19",
+      "public_sha256": "a1e89754e5a23ea2e5640f1e9c05647f47d323194cb17670587febbcd00fd97a",
+      "reason": "Remove personal email addresses or local absolute paths; update hashes of scrubbed dependencies where present."
+    },
+    {
+      "path": "sources/CrocSwap__integer-mult-bounds__head.json",
+      "original_sha256": "b993d0142f56c8db0c1e65d262f3f1c42f65bb1c90491600e5d4eb4b6e71bb26",
+      "public_sha256": "d4bbf9685cd38cd3061cfb9bc0ba4ab07b39ca054d84d8c9161a4d4c6041b890",
+      "reason": "Remove personal email addresses or local absolute paths; update hashes of scrubbed dependencies where present."
+    },
+    {
+      "path": "sources/Swapnil-jain__integer-mult-kappa__head.json",
+      "original_sha256": "a1954f6f17f7a089b3a79c740b33565f6f35f3f1024374e6a8fa1fdb5ed8e065",
+      "public_sha256": "288c70cf50c2dd57bb10521fcc2e730356b86c5a3148036b8f661c6a82a9becc",
+      "reason": "Remove personal email addresses or local absolute paths; update hashes of scrubbed dependencies where present."
+    },
+    {
+      "path": "sources/anthropic-comparator-endstatement.time",
+      "original_sha256": "fc40975034d3da75344b9239b1210461d2f4c8f3bdd74820efcc9db784243113",
+      "public_sha256": "57309854b333dfd82a750c2290db10b4d5dac1cda2a56d4f577b26f8517c7823",
+      "reason": "Remove personal email addresses or local absolute paths; update hashes of scrubbed dependencies where present."
+    },
+    {
+      "path": "sources/anthropic-comparator-receipt.json",
+      "original_sha256": "173bbc67a76c5b25f1b1c8721c6f01713c064268dd96398fbb2388c827bd9128",
+      "public_sha256": "a5f554308b2e8fa96664c1738bd50632a60344371e11385730e67d396cca252c",
+      "reason": "Remove personal email addresses or local absolute paths; update hashes of scrubbed dependencies where present."
+    },
+    {
+      "path": "sources/crocswap-pulls.json",
+      "original_sha256": "1f45414075f33135d5a2a94315edce53c12073e261f58056c7a83b9d9d14a4fb",
+      "public_sha256": "53f5e4017753aa820ba96aed748f7b507840107d3505bce73629d3ae298b908b",
+      "reason": "Remove personal email addresses or local absolute paths; update hashes of scrubbed dependencies where present."
+    },
+    {
+      "path": "sources/dft-frontier-comparator.time",
+      "original_sha256": "24f91830738143f73e3b5a4fc22b51ce29d545a6b2ac2c2260a256b5552f18cc",
+      "public_sha256": "885cc9abe71830a097fec803b0d67aaaa6143de54df0bb0e46805233bc3b35df",
+      "reason": "Remove personal email addresses or local absolute paths; update hashes of scrubbed dependencies where present."
+    },
+    {
+      "path": "sources/dft-frontier-receipt.json",
+      "original_sha256": "7a6462a1e82a6561e1a7c95a54445ee2e80532e225de667c495487bbdc9e4022",
+      "public_sha256": "9450bd62b4981c5acd6fde5b809c0b48f18743024d20ddbe4a4f0a7cffc95695",
+      "reason": "Remove personal email addresses or local absolute paths; update hashes of scrubbed dependencies where present."
+    },
+    {
+      "path": "sources/dft-upstream-comparator.time",
+      "original_sha256": "d1de72b029b4b0d481d5f60cc0b7af2eb1fb5bc3b55955439310e49386a46346",
+      "public_sha256": "1d35184ea1fbae4a908415c81bc732375d8b073f494292d935f0c8ca356fd50b",
+      "reason": "Remove personal email addresses or local absolute paths; update hashes of scrubbed dependencies where present."
+    },
+    {
+      "path": "sources/dft-upstream-receipt.json",
+      "original_sha256": "dc2a0c6f1e9830888e011d396d1d40daa2931edd54892eba77ad23b316c17f4a",
+      "public_sha256": "3948318cc494bc6317b74658909d03203a02c3daa7dfe4ae4d4985138b68ac4f",
+      "reason": "Remove personal email addresses or local absolute paths; update hashes of scrubbed dependencies where present."
+    },
+    {
+      "path": "sources/eumemic__exact-dft-bounds__dft-head.json",
+      "original_sha256": "ac6b6173892828946936dc41a56ca81b868bbf0f15cfd51a5c0a2759c0e7ec5d",
+      "public_sha256": "9f18232a825caf002dd25c1472253c25d09224ad188167b894f1bf8514cc6050",
+      "reason": "Remove personal email addresses or local absolute paths; update hashes of scrubbed dependencies where present."
+    },
+    {
+      "path": "sources/openai__math__dft-head.json",
+      "original_sha256": "60c089273df69a033256811f09e74ade8db0ad9c4f5306812fb2b779b91ac72b",
+      "public_sha256": "d949c4795d2b5f7b6d15e0a5b473f812e5ec535d2696917af3c956c1fac07242",
+      "reason": "Remove personal email addresses or local absolute paths; update hashes of scrubbed dependencies where present."
+    },
+    {
+      "path": "sources/openai__math__dft-repo.json",
+      "original_sha256": "52a2042682508dee3cc4ef6e6eac8095851e4b9de00bd3a8a897768f0c5f0a46",
+      "public_sha256": "9d6c518144428be761480e27fd037ea5ce1aa2447cf7cdb52dafa2580727ef11",
+      "reason": "Remove personal email addresses or local absolute paths; update hashes of scrubbed dependencies where present."
+    },
+    {
+      "path": "sources/pr-50.json",
+      "original_sha256": "9ec073ba367ba39bf9790b619c59552cbd37dfe9365c9e2aaf058e9f1fbea798",
+      "public_sha256": "47f2e3ced4b8011693a434da3905c7f50e5db6ea525f2e01a5674f5fbac9131a",
+      "reason": "Remove personal email addresses or local absolute paths; update hashes of scrubbed dependencies where present."
+    },
+    {
+      "path": "sources/shea256__fourier-transform-below-nlogn__dft-head.json",
+      "original_sha256": "ad6477d084b071c8bbbac773a750205225f39da0c0baa2ade23c0abbbcee77bf",
+      "public_sha256": "dccb2f0a2e4f86f897362a9f4e4e934c85bda80dfdc52e372da8b523f5676fd0",
+      "reason": "Remove personal email addresses or local absolute paths; update hashes of scrubbed dependencies where present."
+    }
+  ]
+}

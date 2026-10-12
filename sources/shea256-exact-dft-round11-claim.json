@@ -1,0 +1,29 @@
+{
+  "checked_at": "2026-10-10T02:52:24Z",
+  "source_commit": "53f03853aea8caf46de7cc9d93efc9bb034bb4c7",
+  "source_url": "https://github.com/shea256/fourier-transform-below-nlogn/blob/53f03853aea8caf46de7cc9d93efc9bb034bb4c7/results/round11.md",
+  "claim_date": "2026-10-09T15:24:16Z",
+  "claim_date_commit": "a2840b10970b8066b9e86fdce97d9bf8a32fa4ea",
+  "statement": "Proposed all-length exact DFT in O(n (log n)^(1-67/100000)), conditional on the finite network and Fourier transfer.",
+  "model_check": "Written scope matches the problem: all positive lengths, exact complex arithmetic, unrestricted coefficients, supplied root of order below 1024n^3, logarithmic-word indices, charged scalar preparation, initialization and movement. Formal equivalence and transfer correctness not independently verified.",
+  "files": {
+    "README.md": {
+      "url": "https://github.com/shea256/fourier-transform-below-nlogn/blob/53f03853aea8caf46de7cc9d93efc9bb034bb4c7/README.md",
+      "sha256": "4c898bdce49331ec73d61b77a50e6bdf7f1c0f1802d3ebe87c5ef7d3313d4701"
+    },
+    "paper/framework.md": {
+      "url": "https://github.com/shea256/fourier-transform-below-nlogn/blob/53f03853aea8caf46de7cc9d93efc9bb034bb4c7/paper/framework.md",
+      "sha256": "1b654a30d0f8a95742b0261060cfe9c02a4e19484563a0478b70cd2ca6dafb0e"
+    },
+    "results/round11.md": {
+      "url": "https://github.com/shea256/fourier-transform-below-nlogn/blob/53f03853aea8caf46de7cc9d93efc9bb034bb4c7/results/round11.md",
+      "sha256": "060fb0ff3bd02c2b2db82315de49c6e44f8dd8e2aed22626b15c8dec92402f30"
+    },
+    "results/registry.json": {
+      "url": "https://github.com/shea256/fourier-transform-below-nlogn/blob/53f03853aea8caf46de7cc9d93efc9bb034bb4c7/results/registry.json",
+      "sha256": "12d722f4fa536e048a2b79a77e8c53fb2d315a24b71c48ad138ef7d79cb8ba01"
+    }
+  },
+  "review_status": "Written transfer and finite checks only; independent mathematical review and end-to-end formal verification pending.",
+  "license_status": "No root license file found; retain hashes and derived summary, not full source text."
+}

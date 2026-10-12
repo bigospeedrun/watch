@@ -1,0 +1,50 @@
+{
+  "id": "baseline-19992",
+  "kind": "baseline",
+  "score": "2499/1250",
+  "tier": "verified",
+  "submitted_at": "2026-10-08T22:25:27.032164+00:00",
+  "source_commit": "02286f1026443cd76a2b04d05737f2f141449390",
+  "spec_version": "3sum-word-ram-v1",
+  "title": "3SUM in O(n^1.9992): Anthropic formalization of Alman and Vassilevska Williams",
+  "authors": [
+    {
+      "name": "Anthropic (Lean formalization)",
+      "url": "https://github.com/anthropics/formal-math"
+    },
+    {
+      "name": "Josh Alman (paper)",
+      "url": "https://arxiv.org/abs/2610.06783"
+    },
+    {
+      "name": "Virginia Vassilevska Williams (paper)",
+      "url": "https://arxiv.org/abs/2610.06783"
+    }
+  ],
+  "predecessors": [
+    "https://github.com/anthropics/formal-math/tree/e1a4e6508154ea59f030480661590a9fe3018011/3sum-apsp"
+  ],
+  "submission_url": "https://github.com/bigospeedrun/3sum/blob/02286f1026443cd76a2b04d05737f2f141449390/records/baseline-19992/submission/Submission.lean",
+  "artifact": {
+    "path": "records/baseline-19992/submission/Submission.lean",
+    "sha256": "b80faf22bbf4ae34e5d25fa00ecd39b041ff0cf7aca3a98d8170984ab0038ed1"
+  },
+  "evidence": {
+    "paper_url": "https://arxiv.org/abs/2610.06783",
+    "theorem": "Race.bound",
+    "certificate_path": null
+  },
+  "dependencies": [],
+  "source": {
+    "kind": "repo-artifact",
+    "url": "https://github.com/bigospeedrun/3sum/blob/02286f1026443cd76a2b04d05737f2f141449390/records/baseline-19992/submission/Submission.lean"
+  },
+  "upstream_status": "not-applicable",
+  "upstream_status_at": "2026-10-08T22:25:27.032164+00:00",
+  "site_observed_at": "2026-10-08T22:33:38.808770+00:00",
+  "rerun_status": {
+    "state": "passed",
+    "checked_at": "2026-10-08T22:33:38.808770+00:00",
+    "receipt_path": "records/baseline-19992/verification.json"
+  }
+}

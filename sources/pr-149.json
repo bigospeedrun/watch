@@ -1,0 +1,11 @@
+{
+  "number": 149,
+  "html_url": "https://github.com/CrocSwap/integer-mult-bounds/pull/149",
+  "title": "Integrate reviewed PR144: conditional kappa = 0.0004609169",
+  "body": "Select κ = 4609169/10000000000 (0.0004609169), about 9.03× the preceding reviewed main saving, from icekylinx's #144. Preserve the original #104 → #115 → #130 → #144 contributor commits and all existing notices.\n\nThe construction builds on an664's #128 completed-core sharing, eumemic's #117 producer, Zhihao Chen's #97 physical bit ledger, and Swapnil Jain's underlying frozen word and lifted frames. The README, contributor record, citation metadata and current-result pointers distinguish this cumulative advance from historical checkpoints.\n\nThe maintainer commit adds optimized-Python rejection to the bit checker and corrects the elementary signed-gate inverse in the proof note. Only source hashes change in the selected mathematical certificate. Historical joint-dual provenance is refreshed without changing its mathematical fields or replay payload.\n\nValidation: full selected target passes locally, now including the previously unavailable bit witness; both entry-point regression tests (12 optimized modes) and the independent arithmetic check pass. The reviewed source head also passed all 45 CI jobs. The combined integration is being checked before merge. Detailed proof scope, finite controls, source pins and attribution are in docs/research/community-round6-review.md and the integration receipts.\n\nThe result remains conditional on the retained upstream analytic, semantic and fixed-tape interfaces. This is not a formal proof of the complete multiplication theorem or independent human peer review.\n",
+  "created_at": "2026-10-09T04:53:53Z",
+  "updated_at": "2026-10-09T05:06:01Z",
+  "closed_at": "2026-10-09T05:06:01Z",
+  "merged_at": "2026-10-09T05:06:00Z",
+  "state": "closed"
+}

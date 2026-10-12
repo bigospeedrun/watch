@@ -1,0 +1,27 @@
+{
+  "checked_at": "2026-10-10",
+  "repo": "Swapnil-jain/threesum-derand",
+  "people_miss": {
+    "account_watched": true,
+    "event_id": "23540844011",
+    "event_type": "CreateEvent",
+    "ref_type": "branch",
+    "created_at": "2026-10-10T01:14:37Z",
+    "cause": "Classifier accepted repository creation but ignored branch creation, then marked this event seen. Live public feed had the first-branch event and no PushEvent for this repo.",
+    "recovery": "Branch handling and pushed repository inventory each recovered this repo in the live 09:03:37Z run."
+  },
+  "pivot_miss": {
+    "broad_3sum_count": 3838,
+    "broad_cap": 100,
+    "narrow_name_description_count": 6,
+    "narrow_threesum_count": 1,
+    "narrow_search_found_repo": true,
+    "fixes": [
+      "Separate name/description queries",
+      "threesum alias",
+      "People inventory leads feed candidate inspection",
+      "Recognize Anthropic/arXiv references as pivot evidence",
+      "Watch both imported exponents for changes"
+    ]
+  }
+}

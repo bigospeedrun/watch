@@ -1,0 +1,38 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "checked_at",
+    "source_url",
+    "tweet_access",
+    "image_path",
+    "image_sha256",
+    "image_inspected",
+    "chart_pr_range",
+    "excluded_prs",
+    "numeric_count",
+    "first_score",
+    "last_score",
+    "detailed_points",
+    "result"
+  ],
+  "properties": {
+    "checked_at": {
+      "type": "string",
+      "format": "date"
+    },
+    "source_url": {},
+    "tweet_access": {},
+    "image_path": {},
+    "image_sha256": {},
+    "image_inspected": {},
+    "chart_pr_range": {},
+    "excluded_prs": {},
+    "numeric_count": {},
+    "first_score": {},
+    "last_score": {},
+    "detailed_points": {},
+    "result": {}
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema"
+}

@@ -1,0 +1,25 @@
+{
+  "checked_at": "2026-10-08T22:12:13.857231Z",
+  "state": "passed",
+  "scope": "Full upstream EndStatement Comparator rerun; independent read of saved log and timing output.",
+  "targets": [
+    "ThreeSumApsp.endStatement_theorem_19",
+    "ThreeSumApsp.endStatement_theorem_22_3SUM",
+    "ThreeSumApsp.endStatement_theorem_22_MinPlus",
+    "ThreeSumApsp.endStatement_theorem_22_APSP",
+    "ThreeSumApsp.endStatement_corollary_39_zeroWeight"
+  ],
+  "nanoda": "accepted",
+  "lean_kernel": "accepted",
+  "comparator_exit_code": 0,
+  "wall_time": "1:04:14",
+  "source_log_path": "../bigospeedrun-3sum/logs/comparator-endstatement.log",
+  "source_time_path": "../bigospeedrun-3sum/logs/comparator-endstatement.time",
+  "log_path": "sources/anthropic-comparator-endstatement.log",
+  "log_sha256": "14ad0a557858950a7c0c0c14104b97adb5f770f05abef5be034ed16eff7df4cb",
+  "time_path": "sources/anthropic-comparator-endstatement.time",
+  "time_sha256": "57309854b333dfd82a750c2290db10b4d5dac1cda2a56d4f577b26f8517c7823",
+  "note": "The log ends with a shell-wrapper quoting error after the checker and systemd service reported success. This receipt records checker success, not success of the entire wrapper. No site badge is granted.",
+  "upstream_commit": "e1a4e6508154ea59f030480661590a9fe3018011",
+  "statement_sha256": "4291e3f05781cea42f9d672ff73ceac1f6d1a0c3021038e94372fa8f7e1ad987"
+}

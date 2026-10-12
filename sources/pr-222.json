@@ -1,0 +1,11 @@
+{
+  "number": 222,
+  "html_url": "https://github.com/CrocSwap/integer-mult-bounds/pull/222",
+  "title": "9x faster bit-word generator (110 s -> 12 s), byte-identical output (no new κ)",
+  "body": "Faster drop-in `paired_cube_bit_word.py`: `--p 12` in ~12 s instead of ~110 s (~9x, measured back to back). Pure Python, outputs byte-identical to the pinned original. No new κ.\r\n\r\nThe generator isn't on main yet, so this adds one self-contained package (`research/paired-cube-bit-fast/`, original pinned from #168 at 4a3c769, also carried unchanged by #178, #182, #189 and #198) and changes no existing file.\r\n\r\n    python3 -B research/paired-cube-bit-fast/verify.py                 # ~12 s\r\n    python3 -B research/paired-cube-bit-fast/verify.py --against-main  # ~1 min: regenerates the bit word main carries, must match byte for byte\r\n\r\nEquivalence is checked by byte-identical regeneration of the default p=12 word, not proved.\r\n\r\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\r\n",
+  "created_at": "2026-10-09T19:29:04Z",
+  "updated_at": "2026-10-09T19:56:41Z",
+  "closed_at": null,
+  "merged_at": null,
+  "state": "open"
+}

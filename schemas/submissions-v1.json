@@ -1,0 +1,60 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "checked_at",
+    "repo",
+    "source_url",
+    "items"
+  ],
+  "properties": {
+    "schema_version": {},
+    "checked_at": {
+      "type": "string",
+      "format": "date"
+    },
+    "repo": {},
+    "source_url": {},
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "pr_number",
+          "author",
+          "author_url",
+          "title",
+          "url",
+          "submitted_at",
+          "updated_at",
+          "source_commit",
+          "upstream_status",
+          "upstream_status_at",
+          "checked_at",
+          "claimed_score",
+          "record_ids",
+          "note"
+        ],
+        "properties": {
+          "pr_number": {},
+          "author": {},
+          "author_url": {},
+          "title": {},
+          "url": {},
+          "submitted_at": {},
+          "updated_at": {},
+          "source_commit": {},
+          "upstream_status": {},
+          "upstream_status_at": {},
+          "checked_at": {},
+          "claimed_score": {},
+          "record_ids": {},
+          "note": {}
+        }
+      }
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema"
+}

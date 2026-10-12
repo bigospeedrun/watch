@@ -1,0 +1,11 @@
+{
+  "number": 10,
+  "html_url": "https://github.com/CrocSwap/integer-mult-bounds/pull/10",
+  "title": "Batch recursive networks for a conditional kappa > 2^-23 bound",
+  "body": "## Change and mathematical scope\r\n\r\nThis change supports the conditional integer-multiplication bound\r\n\r\n$$\r\nT(n)=O\\!\\left(n(\\log n)^{1-\\kappa}\\right),\\qquad\r\n\\kappa=\\frac{6149999}{50000000000000}>2^{-23}.\r\n$$\r\n\r\n- Batch contiguous rational projector blocks using a simultaneous controlled basis.\r\n- Apply whole complex residuals as recursive calls, with mixed-width row handling and a dependency-path precision guard.\r\n- Correct the retained Gaussian input error enclosure to `F = 2^ceil(1.14α²)`, preserving `P = 34p` and the final exponent.\r\n- Include the proof PDF, exact certificates, combined manuscript patch, and reproduction instructions. Integrate the new checks into `make verify`.\r\n\r\nThe change includes the required dependencies from PRs #3, #5, and #7. PR #7 is pinned at `6725c6a17b17871a35353fd29157f4ed851bc114`. Existing contributor attribution and Apache-2.0 notices are preserved; the new contribution and substantial AI assistance are recorded in NOTICE and SOURCES.json.\r\n\r\nThe result remains conditional on the pinned upstream multiplication framework and retained interfaces. Finite checks do not constitute formal verification of the full theorem.\r\n\r\n## Validation\r\n\r\n- Retained h28 producer, coefficient, and frame checks passed.\r\n- 166 unit tests passed, including exponent-boundary, Gaussian-precision, and manuscript-integration controls.\r\n- Exact certificate and combined-patch regeneration passed.\r\n- All 18 retained manuscript patch checks passed.\r\n- The proof note and complete patched manuscript compiled successfully.\r\n- Bundled upstream source and licenses remain unchanged.\r\n",
+  "created_at": "2026-10-08T08:26:23Z",
+  "updated_at": "2026-10-08T15:18:19Z",
+  "closed_at": "2026-10-08T15:18:19Z",
+  "merged_at": "2026-10-08T15:18:18Z",
+  "state": "closed"
+}

@@ -1,0 +1,11 @@
+{
+  "number": 34,
+  "html_url": "https://github.com/CrocSwap/integer-mult-bounds/pull/34",
+  "title": "Reversed two-stage basis and balanced assembly for conditional κ = 1.639226629e-5",
+  "body": "This PR reverses the ordered tensor factors in #33 from (47,45) to (45,47) and constructs a compatible common boundary basis. Combined with the attributed balanced semantic/bulk assembly, this gives the conditional bound\r\nT(n) = O(n (log n)^(1−κ)), with κ = 1639226629/10^14 = 1.639226629×10⁻⁵.\r\nThis improves #33’s composed witness of 1.638103206×10⁻⁵ by approximately 0.0686% in exponent saving. It is an asymptotic improvement, not a practical runtime benchmark.\r\nWhat changes\r\n- The data-corner profile changes from 11 singleton children plus blocks 43,37,1933 to 9 singletons plus blocks 43,39,1933.\r\n- Per occurrence, two singleton calls and one width-37 call become one contiguous width-39 call. Rank mass is preserved.\r\n- The proof verifies actual ordered pivots, permutation completions and simultaneous compatibility of the ordinary, auxiliary and data corners.\r\n- Scalar producers, role counts, maximum child width and all paid endpoint-copy corrections remain unchanged.\r\n- The new exact bit saving is 1639253501/10^14. The composition retains the PR21 complex saving of 18×10⁻⁶, uses β=1/20, and verifies the semantic guard and product row stock p^47000.\r\nVerification\r\nThe geometry and final composition received separate independent agent reviews. Checks include uniform integer rank-cut identities, distinct exact rational nonvanishing witnesses, complete histogram reconstruction, strict bit/complex moments, all 47 assembly constraints plus three halo conditions, and negative controls using rigorous lower moment bounds.\r\nFour package tests passed. Reproduction scripts, exact certificates, source hashes and scoped review summaries are included. The full inherited repository suite was not rerun for this increment.\r\nReview entry point: [proofs, certificates and reproduction instructions](https://github.com/jamesyc/integer-mult-bounds/tree/research/reversed-two-stage/research/reversed-two-stage).",
+  "created_at": "2026-10-08T12:10:06Z",
+  "updated_at": "2026-10-08T12:10:06Z",
+  "closed_at": null,
+  "merged_at": null,
+  "state": "open"
+}

@@ -1,0 +1,11 @@
+{
+  "number": 124,
+  "html_url": "https://github.com/CrocSwap/integer-mult-bounds/pull/124",
+  "title": "Birth-read slot recycling: conditional kappa 1.1038332094346e-4",
+  "body": "Reuse 2,106 dead auxiliary slots at deferred-readout births, paying the intervening frame transition and the original dirty-value readout. This reduces the complex supplier from 28,705 to 26,599 roles while preserving its rank deficit and complete dirty return. The conditional saving is κ=5519166047173/50000000000000000=1.1038332094346e-4.\n\nAuthor checks cover the literal forward/reflected word, complete paid histogram, expanded scalar charges, three moments, 47 inequalities and seven margins. A [separate AI-agent post-publication review](https://github.com/jamesyc/integer-mult-bounds/blob/3657b5d62fabc0bd2b1c596ad86b97002e437ea8/research/birth-read-reuse/REVIEW.md) supports this conditional construction and requested a feasible-exponent qualification now applied to the proof; the bound is unchanged. The retained analytic, stopped-product and fixed-tape assumptions remain explicit. This is not human peer review or formal verification.\n\nAll 45 own-fork CI jobs pass on head 3657b5d62fabc0bd2b1c596ad86b97002e437ea8: [full inherited suite (36/36)](https://github.com/jamesyc/integer-mult-bounds/actions/runs/37870885737), [birth-read Python 3.11/3.13/3.14](https://github.com/jamesyc/integer-mult-bounds/actions/runs/37870885810), and both inherited cyclic/cube matrices. Upstream PR workflows await maintainer approval and have not run tests. Builds on #118, #114, #117 and #112; inherited notices are preserved.",
+  "created_at": "2026-10-09T01:19:02Z",
+  "updated_at": "2026-10-09T02:06:04Z",
+  "closed_at": null,
+  "merged_at": null,
+  "state": "open"
+}

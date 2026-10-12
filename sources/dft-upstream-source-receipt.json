@@ -1,0 +1,15 @@
+{
+  "status": "passed",
+  "upstream_commit": "fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb",
+  "workspace": "out/runs/upstream-wfr7x2_a",
+  "mode": "upstream-dual-kernel",
+  "comparator_exit_code": 0,
+  "log": "out/runs/upstream-wfr7x2_a/comparator.log",
+  "time_log": "out/runs/upstream-wfr7x2_a/comparator.time",
+  "wall_seconds": 1268.83,
+  "max_rss_kib": 7146520,
+  "sampled_cgroup_peak_bytes": 6247288832,
+  "checked_at": "2026-10-09T15:13:11.361385+00:00",
+  "recovered_at": "2026-10-09T15:19:49.992569+00:00",
+  "receipt_recovery": "The office restart ended the controller before it wrote its receipt. Recovered from the completed GNU time exit status 0 and both kernel acceptance lines. All staged upstream source bytes and current tool hashes were rechecked. Wall time is GNU time, not controller elapsed time."
+}

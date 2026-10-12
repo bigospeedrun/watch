@@ -1,0 +1,11 @@
+{
+  "number": 215,
+  "html_url": "https://github.com/CrocSwap/integer-mult-bounds/pull/215",
+  "title": "What entrance gauges and completed banks can absorb (no new κ)",
+  "body": "Scoping note, **no new κ**: one README and one discovery script, with no certificate or verification changes.\n\n#208 prices \"bank-absorption rungs\" (rank-22 family: +2.52%, and so on) and leaves open which families a bank may absorb. This note answers that for the published mechanism:\n\n1. **Banks remove exactly the gauge exteriors.** By `notes/paired-cube-sharing.tex`, a gauged role's end correction F_A T_σ F_A⁻¹ is one tensor child of width 3·dim σ. #186/#207 replace exactly that child with the S_P endpoint, and say every other child remains. On #207's word all 2,200 genuine entrance gauges are already banked.\n2. **An entrance gauge needs content that is both don't-care and restored.** The correction works because an auxiliary role's contract restores its own entrance value.\n   - **Targets** accumulate (old + new), so no single end correction applies; a joint start correction breaks the stage gates' inactive-offset cancellation.\n   - **Sources** are restored, but their values are consumed by the injections.\n3. **Consequence:** #208's rungs absorb internal, target, center and compensating children, matching its own \"not buildable as published\" verdict. They need a mechanism other than gauge reinterpretation.\n\n**Two measured near-misses** (float scores on #173's bit word; `regauge.py`):\n- Re-gauging auxiliaries once banks make exteriors free has a +4.17% upper bound. Each gauge read splits the first increments of 4–9 targets, so the best nested selection loses 1.46%, and a greedy pass that only accepts improvements accepts zero roles.\n- Target entrance gauges would price at +3.9–4.5%, but they are invalid by point 2.\n\nThis is a statement about the gauge/bank mechanism, not an impossibility proof for other constructions.\n\nPrepared by Joel Pulikkan with Anthropic Claude assistance; Apache-2.0.\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n",
+  "created_at": "2026-10-09T18:09:14Z",
+  "updated_at": "2026-10-09T18:09:14Z",
+  "closed_at": null,
+  "merged_at": null,
+  "state": "open"
+}

@@ -1,0 +1,32 @@
+{
+  "checked_at": "2026-10-09",
+  "repositories": [
+    {
+      "repo": "eumemic/exact-dft-bounds",
+      "problem": "exact DFT",
+      "status": "research draft; no open race confirmed",
+      "bound_pattern": "\\\\theta\\s*=\\s*1\\s*-\\s*\\\\frac\\{(?P<num>\\d+)\\}\\{(?P<den>\\d+)\\}"
+    },
+    {
+      "repo": "shea256/fourier-transform-below-nlogn",
+      "problem": "exact DFT",
+      "status": "research draft; no open race confirmed",
+      "bound_pattern": "\\\\delta\\s*=\\s*(?P<num>0\\.\\d+)"
+    },
+    {
+      "repo": "jacobalansussman/wht-power-saving-lean",
+      "problem": "exact DFT",
+      "status": "research release; author-reported Lean proof",
+      "bound_pattern": "^# Discrete Fourier[^\\n]*z\\s*=\\s*1\\s*-\\s*(?P<num>[\\d.]+e-\\d+)"
+    },
+    {
+      "repo": "Swapnil-jain/threesum-derand",
+      "problem": "3SUM and APSP",
+      "status": "research claims; partial Lean arithmetic checks",
+      "bound_patterns": [
+        "^# Deterministic 3SUM in O\\(n\\^(?P<num>[0-9.]+)\\)",
+        "\\*\\*Theorem 1'[^\\n]*\\*\\*[\\s\\S]*?O\\(n\\^\\{(?P<num>2\\.\\d+)\\}\\)"
+      ]
+    }
+  ]
+}
