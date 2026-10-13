@@ -18,12 +18,14 @@ class API:
 
 def at(minutes_ago):return (NOW-timedelta(minutes=minutes_ago)).isoformat().replace('+00:00','Z')
 
-def visitor(n,question,page='/3sum',minutes_ago=60,ip='203.0.113.7'):
-    content=f'{g.VISITOR}{question}\nIP: {ip}\nBrowser: Mozilla/5.0 (X11; Linux x86_64) SecretUA/1.2\nPage: {page}'
+def head(kind,tag):return f'[bigospeedrun.com] {kind}{" "+tag if tag else ""}:\n'
+
+def visitor(n,question,page='/3sum',minutes_ago=60,ip='203.0.113.7',tag=None):
+    content=f'{head("Visitor",tag)}{question}\nIP: {ip}\nBrowser: Mozilla/5.0 (X11; Linux x86_64) SecretUA/1.2\nPage: {page}'
     return dict(id=str(n),type=0,webhook_id='9',timestamp=at(minutes_ago),content=content[:2000],author=dict(id='9',bot=True,username='Chat log'))
 
-def bot(n,answer,minutes_ago=59):
-    return dict(id=str(n),type=0,webhook_id='9',timestamp=at(minutes_ago),content=(g.BOT+answer)[:2000],author=dict(id='9',bot=True,username='Chat log'))
+def bot(n,answer,minutes_ago=59,tag=None):
+    return dict(id=str(n),type=0,webhook_id='9',timestamp=at(minutes_ago),content=(head('Bot',tag)+answer)[:2000],author=dict(id='9',bot=True,username='Chat log'))
 
 def run(api,root,**kw):return g.run(api,root,now=NOW,rng=random.Random(1),**kw)
 
@@ -75,6 +77,26 @@ class ChatGapTests(unittest.TestCase):
             self.assertEqual((result['pairs'],result['flagged']),(1,1))
             self.assertEqual(report['flagged'][0]['question'],'second');self.assertNotIn('ambiguous_pairing',report['flagged'][0])
             self.assertEqual(json.loads((root/g.STATE).read_text()),{'last_seen':'5','consumed':[]})
+
+    def test_tagged_exchanges_pair_by_tag_then_order(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp)
+            rows=[visitor(1,'qa',tag='aaaaaa',minutes_ago=4),visitor(2,'qb',tag='bbbbbb',minutes_ago=4),
+                visitor(3,'qa2',tag='aaaaaa',minutes_ago=4),bot(4,'reply b',tag='bbbbbb',minutes_ago=3),
+                bot(5,'reply a',tag='aaaaaa',minutes_ago=3),bot(6,'reply a2',tag='aaaaaa',minutes_ago=3),
+                bot(7,'reply c',tag='cccccc',minutes_ago=3),visitor(8,'old untagged',minutes_ago=3),
+                bot(9,'untagged reply',minutes_ago=2)]
+            result=run(API(rows),root,sample=10)
+            self.assertEqual((result['pairs'],result['ambiguous'],result['orphan_replies'],result['held']),(4,0,1,0))
+            got={p['question']:p['answer'] for p in json.loads((root/g.OUTPUT).read_text())['sample']}
+            self.assertEqual(got,{'qa':'reply a','qb':'reply b','qa2':'reply a2','old untagged':'untagged reply'})
+
+    def test_bad_headers_are_ignored(self):
+        for content in ('[bigospeedrun.com] Bot 3FA9C1:\nx','[bigospeedrun.com] Bot 3fa9c:\nx',
+                        '[bigospeedrun.com] Bot 3fa9c1: x','x [bigospeedrun.com] Bot:\nx','[bigospeedrun.com] Bots:\nx'):
+            self.assertIsNone(g.parse(dict(content=content)),content)
+        self.assertEqual(g.parse(dict(content='[bigospeedrun.com] Visitor 3fa9c1:\nhi\nIP: 1.2.3.4\nBrowser: b\nPage: /apsp')),
+            ('visitor','3fa9c1','hi','/apsp'))
 
     def test_orphan_reply_counted(self):
         with tempfile.TemporaryDirectory() as tmp:
