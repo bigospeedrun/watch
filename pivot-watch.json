@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-12T21:49:10.635699+00:00",
+  "checked_at": "2026-10-13T00:49:04.248361+00:00",
   "watched_repositories": [
     {
       "repo": "eumemic/exact-dft-bounds",
@@ -12,8 +12,8 @@
     {
       "repo": "shea256/fourier-transform-below-nlogn",
       "head_sha": "9749945f0f3f7fa0edb22065c786f7106953f1db",
-      "previous_head": "9e2164d288fe1d30f4f6a161d2b64d9daecc4178",
-      "new_commit": true,
+      "previous_head": "9749945f0f3f7fa0edb22065c786f7106953f1db",
+      "new_commit": false,
       "problem": "exact DFT",
       "status": "research draft; no open race confirmed"
     },
@@ -34,57 +34,57 @@
       "status": "research claims; partial Lean arithmetic checks"
     }
   ],
-  "window_start": "2026-10-09T21:49:10Z",
+  "window_start": "2026-10-10T00:49:04Z",
   "queries": [
-    "\"matrix multiplication\" in:name,description pushed:>=2026-10-09T21:49:10Z fork:false",
-    "\"integer multiplication\" in:name,description pushed:>=2026-10-09T21:49:10Z fork:false",
-    "\"DFT\" in:name,description pushed:>=2026-10-09T21:49:10Z fork:false",
-    "\"FFT\" in:name,description pushed:>=2026-10-09T21:49:10Z fork:false",
-    "\"3SUM\" in:name,description pushed:>=2026-10-09T21:49:10Z fork:false",
-    "\"threesum\" in:name,description pushed:>=2026-10-09T21:49:10Z fork:false",
-    "\"APSP\" in:name,description pushed:>=2026-10-09T21:49:10Z fork:false",
-    "\"subset sum\" in:name,description pushed:>=2026-10-09T21:49:10Z fork:false",
-    "\"discrete Fourier transform\" in:name,description pushed:>=2026-10-09T21:49:10Z fork:false",
-    "\"bounds\" in:name,description,readme created:>=2026-10-09T21:49:10Z fork:false",
-    "\"bounds\" in:name,description,readme pushed:>=2026-10-09T21:49:10Z fork:false",
-    "\"kappa\" in:name,description,readme created:>=2026-10-09T21:49:10Z fork:false",
-    "\"kappa\" in:name,description,readme pushed:>=2026-10-09T21:49:10Z fork:false",
-    "\"exponent\" in:name,description,readme created:>=2026-10-09T21:49:10Z fork:false",
-    "\"exponent\" in:name,description,readme pushed:>=2026-10-09T21:49:10Z fork:false",
-    "\"speedrun\" in:name,description,readme created:>=2026-10-09T21:49:10Z fork:false",
-    "\"speedrun\" in:name,description,readme pushed:>=2026-10-09T21:49:10Z fork:false",
-    "\"matrix multiplication\" in:name,description,readme created:>=2026-10-09T21:49:10Z fork:false",
-    "\"matrix multiplication\" in:name,description,readme pushed:>=2026-10-09T21:49:10Z fork:false",
-    "\"integer multiplication\" in:name,description,readme created:>=2026-10-09T21:49:10Z fork:false",
-    "\"integer multiplication\" in:name,description,readme pushed:>=2026-10-09T21:49:10Z fork:false",
-    "\"DFT\" in:name,description,readme created:>=2026-10-09T21:49:10Z fork:false",
-    "\"DFT\" in:name,description,readme pushed:>=2026-10-09T21:49:10Z fork:false",
-    "\"FFT\" in:name,description,readme created:>=2026-10-09T21:49:10Z fork:false",
-    "\"FFT\" in:name,description,readme pushed:>=2026-10-09T21:49:10Z fork:false",
-    "\"3SUM\" in:name,description,readme created:>=2026-10-09T21:49:10Z fork:false",
-    "\"3SUM\" in:name,description,readme pushed:>=2026-10-09T21:49:10Z fork:false",
-    "\"threesum\" in:name,description,readme created:>=2026-10-09T21:49:10Z fork:false",
-    "\"threesum\" in:name,description,readme pushed:>=2026-10-09T21:49:10Z fork:false",
-    "\"APSP\" in:name,description,readme created:>=2026-10-09T21:49:10Z fork:false",
-    "\"APSP\" in:name,description,readme pushed:>=2026-10-09T21:49:10Z fork:false",
-    "\"subset sum\" in:name,description,readme created:>=2026-10-09T21:49:10Z fork:false",
-    "\"subset sum\" in:name,description,readme pushed:>=2026-10-09T21:49:10Z fork:false",
-    "\"discrete Fourier transform\" in:name,description,readme created:>=2026-10-09T21:49:10Z fork:false",
-    "\"discrete Fourier transform\" in:name,description,readme pushed:>=2026-10-09T21:49:10Z fork:false",
+    "\"matrix multiplication\" in:name,description pushed:>=2026-10-10T00:49:04Z fork:false",
+    "\"integer multiplication\" in:name,description pushed:>=2026-10-10T00:49:04Z fork:false",
+    "\"DFT\" in:name,description pushed:>=2026-10-10T00:49:04Z fork:false",
+    "\"FFT\" in:name,description pushed:>=2026-10-10T00:49:04Z fork:false",
+    "\"3SUM\" in:name,description pushed:>=2026-10-10T00:49:04Z fork:false",
+    "\"threesum\" in:name,description pushed:>=2026-10-10T00:49:04Z fork:false",
+    "\"APSP\" in:name,description pushed:>=2026-10-10T00:49:04Z fork:false",
+    "\"subset sum\" in:name,description pushed:>=2026-10-10T00:49:04Z fork:false",
+    "\"discrete Fourier transform\" in:name,description pushed:>=2026-10-10T00:49:04Z fork:false",
+    "\"bounds\" in:name,description,readme created:>=2026-10-10T00:49:04Z fork:false",
+    "\"bounds\" in:name,description,readme pushed:>=2026-10-10T00:49:04Z fork:false",
+    "\"kappa\" in:name,description,readme created:>=2026-10-10T00:49:04Z fork:false",
+    "\"kappa\" in:name,description,readme pushed:>=2026-10-10T00:49:04Z fork:false",
+    "\"exponent\" in:name,description,readme created:>=2026-10-10T00:49:04Z fork:false",
+    "\"exponent\" in:name,description,readme pushed:>=2026-10-10T00:49:04Z fork:false",
+    "\"speedrun\" in:name,description,readme created:>=2026-10-10T00:49:04Z fork:false",
+    "\"speedrun\" in:name,description,readme pushed:>=2026-10-10T00:49:04Z fork:false",
+    "\"matrix multiplication\" in:name,description,readme created:>=2026-10-10T00:49:04Z fork:false",
+    "\"matrix multiplication\" in:name,description,readme pushed:>=2026-10-10T00:49:04Z fork:false",
+    "\"integer multiplication\" in:name,description,readme created:>=2026-10-10T00:49:04Z fork:false",
+    "\"integer multiplication\" in:name,description,readme pushed:>=2026-10-10T00:49:04Z fork:false",
+    "\"DFT\" in:name,description,readme created:>=2026-10-10T00:49:04Z fork:false",
+    "\"DFT\" in:name,description,readme pushed:>=2026-10-10T00:49:04Z fork:false",
+    "\"FFT\" in:name,description,readme created:>=2026-10-10T00:49:04Z fork:false",
+    "\"FFT\" in:name,description,readme pushed:>=2026-10-10T00:49:04Z fork:false",
+    "\"3SUM\" in:name,description,readme created:>=2026-10-10T00:49:04Z fork:false",
+    "\"3SUM\" in:name,description,readme pushed:>=2026-10-10T00:49:04Z fork:false",
+    "\"threesum\" in:name,description,readme created:>=2026-10-10T00:49:04Z fork:false",
+    "\"threesum\" in:name,description,readme pushed:>=2026-10-10T00:49:04Z fork:false",
+    "\"APSP\" in:name,description,readme created:>=2026-10-10T00:49:04Z fork:false",
+    "\"APSP\" in:name,description,readme pushed:>=2026-10-10T00:49:04Z fork:false",
+    "\"subset sum\" in:name,description,readme created:>=2026-10-10T00:49:04Z fork:false",
+    "\"subset sum\" in:name,description,readme pushed:>=2026-10-10T00:49:04Z fork:false",
+    "\"discrete Fourier transform\" in:name,description,readme created:>=2026-10-10T00:49:04Z fork:false",
+    "\"discrete Fourier transform\" in:name,description,readme pushed:>=2026-10-10T00:49:04Z fork:false",
     "\"CrocSwap/integer-mult-bounds\" in:readme fork:true",
-    "\"quasi Riemann\" in:name,description,readme pushed:>=2026-10-09T21:49:10Z fork:false",
-    "\"Catalan irrationality\" in:name,description,readme pushed:>=2026-10-09T21:49:10Z fork:false",
-    "\"primitive roots\" in:name,description,readme pushed:>=2026-10-09T21:49:10Z fork:false",
-    "\"matroid prophet\" in:name,description,readme pushed:>=2026-10-09T21:49:10Z fork:false",
-    "\"contingency tables\" in:name,description,readme pushed:>=2026-10-09T21:49:10Z fork:false",
-    "\"average sensitivity\" in:name,description,readme pushed:>=2026-10-09T21:49:10Z fork:false",
-    "\"van der Waerden\" in:name,description,readme pushed:>=2026-10-09T21:49:10Z fork:false",
-    "\"Sidorenko\" in:name,description,readme pushed:>=2026-10-09T21:49:10Z fork:false",
-    "\"unit distance\" in:name,description,readme pushed:>=2026-10-09T21:49:10Z fork:false",
-    "\"Snaky\" in:name,description,readme pushed:>=2026-10-09T21:49:10Z fork:false",
-    "\"ordered matrix removal\" in:name,description,readme pushed:>=2026-10-09T21:49:10Z fork:false",
-    "\"Heilbronn triangle\" in:name,description,readme pushed:>=2026-10-09T21:49:10Z fork:false",
-    "\"Haldane gap\" in:name,description,readme pushed:>=2026-10-09T21:49:10Z fork:false"
+    "\"quasi Riemann\" in:name,description,readme pushed:>=2026-10-10T00:49:04Z fork:false",
+    "\"Catalan irrationality\" in:name,description,readme pushed:>=2026-10-10T00:49:04Z fork:false",
+    "\"primitive roots\" in:name,description,readme pushed:>=2026-10-10T00:49:04Z fork:false",
+    "\"matroid prophet\" in:name,description,readme pushed:>=2026-10-10T00:49:04Z fork:false",
+    "\"contingency tables\" in:name,description,readme pushed:>=2026-10-10T00:49:04Z fork:false",
+    "\"average sensitivity\" in:name,description,readme pushed:>=2026-10-10T00:49:04Z fork:false",
+    "\"van der Waerden\" in:name,description,readme pushed:>=2026-10-10T00:49:04Z fork:false",
+    "\"Sidorenko\" in:name,description,readme pushed:>=2026-10-10T00:49:04Z fork:false",
+    "\"unit distance\" in:name,description,readme pushed:>=2026-10-10T00:49:04Z fork:false",
+    "\"Snaky\" in:name,description,readme pushed:>=2026-10-10T00:49:04Z fork:false",
+    "\"ordered matrix removal\" in:name,description,readme pushed:>=2026-10-10T00:49:04Z fork:false",
+    "\"Heilbronn triangle\" in:name,description,readme pushed:>=2026-10-10T00:49:04Z fork:false",
+    "\"Haldane gap\" in:name,description,readme pushed:>=2026-10-10T00:49:04Z fork:false"
   ],
   "rechecked_retained_candidates": false,
   "preprint_names": [],
@@ -142,184 +142,163 @@
     "YuzeHao2023/daily-arxiv-ai4physics: Unsupported content: YuzeHao2023/daily-arxiv-ai4physics/README.md",
     "YuzeHao2023/daily-arxiv-ai4math: Unsupported content: YuzeHao2023/daily-arxiv-ai4math/README.md",
     "andrefmotamarques/billboard-hits-sound-profiles: GitHub GET failed: repos/andrefmotamarques/billboard-hits-sound-profiles/compare/5627525e5b6472a4494608e06a11a2c9eec63dcd...0506aac02b8a29485172499fda0fbdfb9fb87f37 (exit 1)",
-    "CrocSwap/integer-mult-bounds PR #540: missing diff patch research/lean-source-invocation-audit/SourceWord.lean",
-    "CrocSwap/integer-mult-bounds PR #491: missing diff patch research/r740-idle-hosted-replicas/NOTICE.md",
-    "CrocSwap/integer-mult-bounds PR #491: missing diff patch research/r740-idle-hosted-replicas/PROOF.md",
-    "CrocSwap/integer-mult-bounds PR #491: missing diff patch research/r740-idle-hosted-replicas/README.md",
-    "CrocSwap PR inspection budget exhausted; unfinished PRs will be retried"
+    "ikonstas70/ikonstas70: GitHub GET failed: repos/ikonstas70/ikonstas70/compare/d706b3393f9c68bc980970a1b03a4d4e29adedcc...596f40b1fc7fbc77ed63c586580d9a3ef6bd71ae (exit 1)",
+    "CrocSwap/integer-mult-bounds PR #640: missing diff patch research/ck-u4-improvement-20261013/witness/owner-search/README.md",
+    "CrocSwap/integer-mult-bounds PR #639: missing diff patch research/pr638-improvement-20261013/witness638/owner-search/README.md",
+    "CrocSwap/integer-mult-bounds PR #636: missing diff patch research/combined-cold-ends-20261013/witness635/owner-search/README.md"
   ],
   "truncated_queries": [
     {
-      "query": "\"DFT\" in:name,description pushed:>=2026-10-09T21:49:10Z fork:false",
-      "total_count": 132
+      "query": "\"DFT\" in:name,description pushed:>=2026-10-10T00:49:04Z fork:false",
+      "total_count": 147
     },
     {
-      "query": "\"FFT\" in:name,description pushed:>=2026-10-09T21:49:10Z fork:false",
+      "query": "\"FFT\" in:name,description pushed:>=2026-10-10T00:49:04Z fork:false",
       "total_count": 243
     },
     {
-      "query": "\"bounds\" in:name,description,readme created:>=2026-10-09T21:49:10Z fork:false",
-      "total_count": 6029
+      "query": "\"bounds\" in:name,description,readme created:>=2026-10-10T00:49:04Z fork:false",
+      "total_count": 6072
     },
     {
-      "query": "\"bounds\" in:name,description,readme pushed:>=2026-10-09T21:49:10Z fork:false",
-      "total_count": 29744
+      "query": "\"bounds\" in:name,description,readme pushed:>=2026-10-10T00:49:04Z fork:false",
+      "total_count": 29897
     },
     {
-      "query": "\"kappa\" in:name,description,readme created:>=2026-10-09T21:49:10Z fork:false",
-      "total_count": 481
+      "query": "\"kappa\" in:name,description,readme created:>=2026-10-10T00:49:04Z fork:false",
+      "total_count": 494
     },
     {
-      "query": "\"kappa\" in:name,description,readme pushed:>=2026-10-09T21:49:10Z fork:false",
-      "total_count": 1892
+      "query": "\"kappa\" in:name,description,readme pushed:>=2026-10-10T00:49:04Z fork:false",
+      "total_count": 1920
     },
     {
-      "query": "\"exponent\" in:name,description,readme created:>=2026-10-09T21:49:10Z fork:false",
-      "total_count": 602
+      "query": "\"exponent\" in:name,description,readme created:>=2026-10-10T00:49:04Z fork:false",
+      "total_count": 621
     },
     {
-      "query": "\"exponent\" in:name,description,readme pushed:>=2026-10-09T21:49:10Z fork:false",
-      "total_count": 2946
+      "query": "\"exponent\" in:name,description,readme pushed:>=2026-10-10T00:49:04Z fork:false",
+      "total_count": 2973
     },
     {
-      "query": "\"speedrun\" in:name,description,readme created:>=2026-10-09T21:49:10Z fork:false",
-      "total_count": 407
+      "query": "\"speedrun\" in:name,description,readme created:>=2026-10-10T00:49:04Z fork:false",
+      "total_count": 406
     },
     {
-      "query": "\"speedrun\" in:name,description,readme pushed:>=2026-10-09T21:49:10Z fork:false",
-      "total_count": 879
+      "query": "\"speedrun\" in:name,description,readme pushed:>=2026-10-10T00:49:04Z fork:false",
+      "total_count": 876
     },
     {
-      "query": "\"matrix multiplication\" in:name,description,readme created:>=2026-10-09T21:49:10Z fork:false",
-      "total_count": 255
+      "query": "\"matrix multiplication\" in:name,description,readme created:>=2026-10-10T00:49:04Z fork:false",
+      "total_count": 257
     },
     {
-      "query": "\"matrix multiplication\" in:name,description,readme pushed:>=2026-10-09T21:49:10Z fork:false",
-      "total_count": 1200
+      "query": "\"matrix multiplication\" in:name,description,readme pushed:>=2026-10-10T00:49:04Z fork:false",
+      "total_count": 1207
     },
     {
-      "query": "\"DFT\" in:name,description,readme created:>=2026-10-09T21:49:10Z fork:false",
-      "total_count": 222
+      "query": "\"DFT\" in:name,description,readme created:>=2026-10-10T00:49:04Z fork:false",
+      "total_count": 238
     },
     {
-      "query": "\"DFT\" in:name,description,readme pushed:>=2026-10-09T21:49:10Z fork:false",
-      "total_count": 1110
+      "query": "\"DFT\" in:name,description,readme pushed:>=2026-10-10T00:49:04Z fork:false",
+      "total_count": 1133
     },
     {
-      "query": "\"FFT\" in:name,description,readme created:>=2026-10-09T21:49:10Z fork:false",
-      "total_count": 925
+      "query": "\"FFT\" in:name,description,readme created:>=2026-10-10T00:49:04Z fork:false",
+      "total_count": 920
     },
     {
-      "query": "\"FFT\" in:name,description,readme pushed:>=2026-10-09T21:49:10Z fork:false",
-      "total_count": 3920
+      "query": "\"FFT\" in:name,description,readme pushed:>=2026-10-10T00:49:04Z fork:false",
+      "total_count": 3928
     },
     {
-      "query": "\"3SUM\" in:name,description,readme pushed:>=2026-10-09T21:49:10Z fork:false",
+      "query": "\"3SUM\" in:name,description,readme pushed:>=2026-10-10T00:49:04Z fork:false",
       "total_count": 3753
     },
     {
-      "query": "\"subset sum\" in:name,description,readme pushed:>=2026-10-09T21:49:10Z fork:false",
-      "total_count": 1099
+      "query": "\"subset sum\" in:name,description,readme pushed:>=2026-10-10T00:49:04Z fork:false",
+      "total_count": 1102
     },
     {
-      "query": "\"discrete Fourier transform\" in:name,description,readme pushed:>=2026-10-09T21:49:10Z fork:false",
-      "total_count": 111
+      "query": "\"discrete Fourier transform\" in:name,description,readme pushed:>=2026-10-10T00:49:04Z fork:false",
+      "total_count": 112
     },
     {
-      "query": "\"contingency tables\" in:name,description,readme pushed:>=2026-10-09T21:49:10Z fork:false",
-      "total_count": 133
+      "query": "\"contingency tables\" in:name,description,readme pushed:>=2026-10-10T00:49:04Z fork:false",
+      "total_count": 132
     },
     {
-      "query": "GTimG/QuasiRiemannTracker claim diff",
-      "total_count": "at least 300 files"
+      "query": "\"unit distance\" in:name,description,readme pushed:>=2026-10-10T00:49:04Z fork:false",
+      "total_count": 105
     },
     {
       "query": "abigailhaddad/vdw-records claim diff",
       "total_count": "at least 300 files"
     },
     {
-      "query": "graph-theory-AI/graph-theory-rocq claim diff",
-      "total_count": "at least 300 files"
-    },
-    {
       "query": "Other bounds deferred work",
-      "total_count": "51 repositories pending; next older fork page 1"
+      "total_count": "52 repositories pending; next older fork page 1"
     },
     {
-      "query": "CrocSwap/integer-mult-bounds PR #626 files",
+      "query": "CrocSwap/integer-mult-bounds PR #642 files",
       "total_count": "continued through page 3; at most 300 files per cycle"
     },
     {
-      "query": "CrocSwap/integer-mult-bounds PR #616 files",
+      "query": "CrocSwap/integer-mult-bounds PR #640 files",
       "total_count": "continued through page 3; at most 300 files per cycle"
     },
     {
-      "query": "CrocSwap/integer-mult-bounds PR #619 files",
+      "query": "CrocSwap/integer-mult-bounds PR #639 files",
+      "total_count": "continued through page 3; at most 300 files per cycle"
+    },
+    {
+      "query": "CrocSwap/integer-mult-bounds PR #638 files",
+      "total_count": "continued through page 3; at most 300 files per cycle"
+    },
+    {
+      "query": "CrocSwap/integer-mult-bounds PR #636 files",
+      "total_count": "continued through page 3; at most 300 files per cycle"
+    },
+    {
+      "query": "CrocSwap/integer-mult-bounds PR #632 files",
+      "total_count": "continued through page 3; at most 300 files per cycle"
+    },
+    {
+      "query": "CrocSwap/integer-mult-bounds PR #275 files",
       "total_count": "continued through page 3; at most 300 files per cycle"
     },
     {
       "query": "CrocSwap/integer-mult-bounds PR #473 files",
-      "total_count": "continued through page 24; at most 300 files per cycle"
-    },
-    {
-      "query": "CrocSwap/integer-mult-bounds PR #491 files",
-      "total_count": "continued through page 24; at most 300 files per cycle"
+      "total_count": "continued through page 27; at most 300 files per cycle"
     },
     {
       "query": "CrocSwap/integer-mult-bounds PR #376 files",
-      "total_count": "continued through page 21; at most 300 files per cycle"
-    },
-    {
-      "query": "CrocSwap/integer-mult-bounds PR #455 files",
-      "total_count": "continued through page 15; at most 300 files per cycle"
-    },
-    {
-      "query": "CrocSwap/integer-mult-bounds PR #422 files",
-      "total_count": "continued through page 18; at most 300 files per cycle"
+      "total_count": "continued through page 24; at most 300 files per cycle"
     },
     {
       "query": "CrocSwap/integer-mult-bounds PR #429 files",
-      "total_count": "continued through page 15; at most 300 files per cycle"
-    },
-    {
-      "query": "CrocSwap/integer-mult-bounds PR #418 files",
-      "total_count": "continued through page 15; at most 300 files per cycle"
-    },
-    {
-      "query": "CrocSwap/integer-mult-bounds PR #415 files",
-      "total_count": "continued through page 15; at most 300 files per cycle"
-    },
-    {
-      "query": "CrocSwap/integer-mult-bounds PR #413 files",
-      "total_count": "continued through page 15; at most 300 files per cycle"
+      "total_count": "continued through page 18; at most 300 files per cycle"
     },
     {
       "query": "CrocSwap/integer-mult-bounds PR #409 files",
-      "total_count": "continued through page 6; at most 300 files per cycle"
+      "total_count": "continued through page 9; at most 300 files per cycle"
     },
     {
       "query": "CrocSwap/integer-mult-bounds PR #406 files",
-      "total_count": "continued through page 8; at most 300 files per cycle"
+      "total_count": "continued through page 11; at most 300 files per cycle"
     },
     {
       "query": "CrocSwap/integer-mult-bounds PR #403 files",
-      "total_count": "continued through page 6; at most 300 files per cycle"
+      "total_count": "continued through page 9; at most 300 files per cycle"
     },
     {
       "query": "CrocSwap/integer-mult-bounds PR #405 files",
-      "total_count": "continued through page 6; at most 300 files per cycle"
+      "total_count": "continued through page 9; at most 300 files per cycle"
     },
     {
       "query": "CrocSwap/integer-mult-bounds PR #404 files",
-      "total_count": "continued through page 6; at most 300 files per cycle"
-    },
-    {
-      "query": "CrocSwap/integer-mult-bounds PR #401 files",
-      "total_count": "continued through page 6; at most 300 files per cycle"
-    },
-    {
-      "query": "CrocSwap/integer-mult-bounds PR #400 files",
-      "total_count": "continued through page 6; at most 300 files per cycle"
+      "total_count": "continued through page 9; at most 300 files per cycle"
     },
     {
       "query": "CrocSwap/integer-mult-bounds PR inspection budget",
@@ -327,37 +306,6 @@
     }
   ],
   "candidates": [
-    {
-      "repo": "shea256/fourier-transform-below-nlogn",
-      "url": "https://github.com/shea256/fourier-transform-below-nlogn",
-      "stars": 16,
-      "created_at": "2026-10-08T15:26:48Z",
-      "pushed_at": "2026-10-12T21:22:50Z",
-      "problem_guess": "exact DFT",
-      "description": "Improved exponent bounds for the exact discrete Fourier transform, building on OpenAI Math Problem #130.",
-      "rank": 17,
-      "evidence": [
-        "watchlist",
-        "discrete Fourier transform",
-        "speedrun",
-        "integer multiplication",
-        "DFT"
-      ],
-      "likely_new_race": true,
-      "on_board": true,
-      "stated_bound_changed": true,
-      "readme_commit": "9749945f0f3f7fa0edb22065c786f7106953f1db",
-      "wht_only": false,
-      "likely_tracked_source": false,
-      "likely_pivot": true,
-      "pivot_evidence": [
-        "A living research project on **OpenAI Math Problem #130**, *An explicit power saving for the exact discrete Fourier transform*. We study how improvements to the complex networks developed around integer multiplication (#109) transfer to all-length Fourier bounds.",
-        "OpenAI's [#130 Fourier manuscript](https://github.com/openai/math/blob/main/preprints/An-explicit-power-saving-for-the-exact-discrete-Fourier-transform-September-25-2026/main.pdf) supplies the exact-arithmetic model, Fourier compiler and all-length reduction. The network research originates in [#109](https://github.com/openai/math/blob/main/preprin"
-      ],
-      "race_evidence": [
-        "<sub>Leaderboard history through 2026-10-12; the new local result below is not yet a leaderboard entry. The [Big O Speedrun exact-DFT leaderboard](https://bigospeedrun.com/exact-dft) lists our 7.3e-5 and 6.7e-4 results as Claimed. Our 6.7e-4 result has a [Lean proof](lean/round11/) that passes the official comparator (Lean and nanoda kernels) local"
-      ]
-    },
     {
       "repo": "selanavot/omega_le_nine_quarters_all_rings",
       "url": "https://github.com/selanavot/omega_le_nine_quarters_all_rings",
@@ -385,21 +333,19 @@
       "url": "https://github.com/platypii/integer-mult-bounds-lean",
       "stars": 3,
       "created_at": "2026-10-08T06:46:09Z",
-      "pushed_at": "2026-10-12T21:37:15Z",
+      "pushed_at": "2026-10-13T00:19:53Z",
       "problem_guess": "integer multiplication",
       "description": "Lean 4 formalization (work in progress) of O(n log n \u00b7 log^(-\u03b5) n) integer multiplication on a multitape Turing machine",
       "rank": 9,
       "evidence": [
         "integer multiplication",
-        "exponent",
-        "FFT",
         "discrete Fourier transform",
         "citation"
       ],
       "likely_new_race": false,
       "on_board": false,
       "stated_bound_changed": false,
-      "readme_commit": "816e285c04ca99c97cb34eba639a08a3580bf9b8",
+      "readme_commit": "bc40ac02299685f13d7b52cb015d6988b66d9f99",
       "wht_only": false,
       "likely_tracked_source": false,
       "likely_pivot": false,
@@ -498,7 +444,7 @@
     {
       "repo": "dzako/sweepfft",
       "url": "https://github.com/dzako/sweepfft",
-      "stars": 1,
+      "stars": 2,
       "created_at": "2026-10-12T17:49:09Z",
       "pushed_at": "2026-10-12T19:12:28Z",
       "problem_guess": "integer multiplication",
@@ -521,272 +467,27 @@
       "race_evidence": []
     },
     {
-      "repo": "MarcosCarreira/catalan-designs",
-      "url": "https://github.com/MarcosCarreira/catalan-designs",
+      "repo": "incrediblecrab/erdos-1186",
+      "url": "https://github.com/incrediblecrab/erdos-1186",
       "stars": 0,
-      "created_at": "2026-10-12T20:37:32Z",
-      "pushed_at": "2026-10-12T21:30:28Z",
-      "description": "General designs and an irrationality exponent for Catalan\u2019s constant; determinant constructions for \u03b2(4)",
-      "problem_guess": "Family 005: Irrationality of Catalan\u2019s constant",
-      "rank": 20,
-      "evidence": [
-        "other-bounds"
-      ],
-      "readme_commit": "ec231b32f94cc3ec6a3e61b717b264f8382bb4ac",
-      "source_claim_evidence": [
-        "- *General designs and an irrationality exponent for Catalan's constant*: doi:10.5281/zenodo.23326324 (v1: 10.5281/zenodo.23326325)",
-        "The preprint is OpenAI, *Catalan's constant is irrational*, 24 September 2026:",
-        "Catalan's constant G is irrational (Theorem 6, with a proof that follows the preprint section by section).",
-        "2. A second design, (96, 15, 6, 8, 5), that satisfies the four conditions with a certified gap of",
-        "2.59e-3, about twenty times the gap of the preprint's design (Theorem 17).",
-        "3. An upper bound for the irrationality exponent of G (Section 5): the ingredients of R. K. Jha"
-      ],
-      "claim_signature": "0f2f62c2b0d5e1f31275b0ab9e44958260fcf75cbdae000743fafc9abd232f4b",
-      "other_family": "005",
-      "openai_fork_improvement": false,
-      "stated_bound_changed": true,
-      "likely_tracked_source": true,
-      "likely_new_race": false,
-      "likely_pivot": false,
-      "on_board": false
-    },
-    {
-      "repo": "Kerinjo/mathdeck",
-      "url": "https://github.com/Kerinjo/mathdeck",
-      "stars": 0,
-      "created_at": "2026-10-12T19:31:48Z",
-      "pushed_at": "2026-10-12T21:28:34Z",
-      "description": "math sloptware",
-      "problem_guess": "Family 029: Primitive roots for every admissible integer base",
-      "rank": 20,
-      "evidence": [
-        "other-bounds"
-      ],
-      "readme_commit": "fb0e99c629c11c8435a9e1e2067366b0eb4feb25",
-      "source_claim_evidence": [
-        "must be a short simplified value (no plugging in x = 10^9); formula answers can't use tiny or huge constants (no"
-      ],
-      "claim_signature": "40ac077f63bfb3bf8d7f56cefcbdd50dcd85f5853e7ddd7a49ea6f68e5e4185c",
-      "other_family": "029",
-      "openai_fork_improvement": false,
-      "stated_bound_changed": true,
-      "likely_tracked_source": true,
-      "likely_new_race": false,
-      "likely_pivot": false,
-      "on_board": false
-    },
-    {
-      "repo": "samjd-zz/UIRA",
-      "url": "https://github.com/samjd-zz/UIRA",
-      "stars": 2,
-      "created_at": "2026-09-23T21:44:29Z",
-      "pushed_at": "2026-10-12T19:51:30Z",
-      "description": "UIRA (Universal Isomorphic Representation Architecture)\u2014a pre-training and latent-alignment paradigm designed to ground AI latent spaces directly into physical and relational invariants.",
-      "problem_guess": "Family 029: Primitive roots for every admissible integer base",
-      "rank": 20,
-      "evidence": [
-        "other-bounds"
-      ],
-      "readme_commit": "368d51125e3b6b31636cf6235e1bbe42d66da250",
-      "source_claim_evidence": [
-        "# For k=2: e_v1 (tensor_prod) e_v2 -> shape [batch, seq, embed_dim * embed_dim]"
-      ],
-      "claim_signature": "092e9abf7b6ecb88ba61bcee5c45d7f99e8a7db700900d901d02664a66595eb3",
-      "other_family": "029",
-      "openai_fork_improvement": false,
-      "stated_bound_changed": true,
-      "likely_tracked_source": true,
-      "likely_new_race": false,
-      "likely_pivot": false,
-      "on_board": false
-    },
-    {
-      "repo": "trustdan/quant-methods-practice",
-      "url": "https://github.com/trustdan/quant-methods-practice",
-      "stars": 1,
-      "created_at": "2026-10-05T02:01:10Z",
-      "pushed_at": "2026-10-12T20:36:12Z",
-      "description": "Probability and statistics practice",
-      "problem_guess": "Family 115: Sampling and counting contingency tables with arbitrary margins",
-      "rank": 20,
-      "evidence": [
-        "other-bounds"
-      ],
-      "readme_commit": "5a9cd9e0f38534dc2059e023b54fd67dc55956b3",
-      "source_claim_evidence": [
-        "- Press <kbd>F1</kbd> to open the Help dialog and click **\"\ud83d\ude80 Launch Product Tour\"**.",
-        "| **Act 1** | **Multi-Stage Practice Drill & Pedagogical Feedback** | \u2022 Scenario contemplation on four-toss binomial experiment ($n = 4, p = 0.5, k = 2$)<br>\u2022 **Intentional Misconception Trigger**: Selecting distractor confuses parameter with random variable count<br>\u2022 **Causal Hint & Retry Badge**: Real-time causal explanation triggers with active `\"1 Retry Remaining\"` state<br>\u2022 **Resolution & Derivation**: Correcting answer reveals green solved badge with full step-by-step LaTeX derivation<br>\u2022 **Scaffolding Progression**: Advances to Stage 2 distribution model, requests on-demand **Offline Hint**, and completes Stage 3 combinatorial formula |",
-        "| **Act 2** | **Full Question Bank (137 Questions) & Randomization** | \u2022 **Settings Modal (`t`)**: Inspects all 6 quantitative modules, question count selectors (5 to 137), and session intensity modes<br>\u2022 **Clock-Seeded Randomization (`\ud83c\udfb2 New Drill`)**: Re-samples newly shuffled questions from the approved 137-template bank<br>\u2022 **Cross-Problem Navigation**: Answers fresh questions and smoothly cycles between problems using the Question Strip |",
-        "| **Act 3** | **Comprehensive Tour of Core Learning Modes** | \u2022 **Concept Mastery Matrix (`#tab-mastery`)**: 22-objective retention profile with real-time concept search<br>\u2022 **Reference Library (`#tab-reference`)**: Formula cards, axioms, and searchable LaTeX references with Excel/R functions<br>\u2022 **Saved Notes (`#tab-notes`)**: Persistent SQLite personal notes and derivation export<br>\u2022 **Question Candidates (`#tab-candidates`)**: In-app candidate generation and human review governance<br>\u2022 **Worksheets (`#tab-worksheets`)**: Full worked solution forms and raw 4-toss coin outcome CSV cases<br>\u2022 **Exams Mode (`#tab-exams`)**: Mock assessments with module targeting, strict aids withholding, and score reporting |",
-        "| **Act 3.7** | **Mathematical Visuals Lab (Smooth Scrolling to SVG Diagrams)** | \u2022 **Normal Distribution**: Upper-tail rejection region, CDF curves, and live Excel formula companion (`=NORM.DIST`)<br>\u2022 **Uniform Distribution**: Density rectangle $f(x) = 1/(b-a)$ and interval probabilities<br>\u2022 **Exponential Distribution**: Rate decay density $f(x) = \\lambda e^{-\\lambda x}$ and memoryless property<br>\u2022 **Discrete PMF/CDF**: Poisson arrival bar chart ($\\lambda$) with exact mass probabilities<br>\u2022 **Central Limit Theorem Simulator**: Empirical sample mean convergence to theoretical normality ($\\sigma/\\sqrt{n}$)<br>\u2022 **Confidence Intervals**: 95% coverage simulation lines verifying frequentist long-run capture rates<br>\u2022 **Hypothesis Testing**: Two-tailed rejection bounds, critical values, and $\\alpha$-level rejection regions<br>\u2022 **Bivariate Linear Regression**: Scatter plot, OLS best-fit regression line, and individual residual error bars |",
-        "| **Act 3.8** | **Quant Flight Space Arcade & Return** | \u2022 Retro vector arcade autopilot attract mode<br>\u2022 Manual flight takeover (`Space`), thruster maneuvers, and laser combat (`f` / `Space`) targeting statistical hazards<br>\u2022 Clean return to active practice session with state and focus fully preserved |"
-      ],
-      "claim_signature": "1b8ac2298c77604d32b1e212353c6225216fe18c9085650f09e58147e4ca8f56",
-      "other_family": "115",
-      "openai_fork_improvement": false,
-      "stated_bound_changed": true,
-      "likely_tracked_source": true,
-      "likely_new_race": false,
-      "likely_pivot": false,
-      "on_board": false
-    },
-    {
-      "repo": "purvaa211/Traffic-Congestion-Prediction",
-      "url": "https://github.com/purvaa211/Traffic-Congestion-Prediction",
-      "stars": 0,
-      "created_at": "2026-10-12T19:28:05Z",
-      "pushed_at": "2026-10-12T19:46:44Z",
-      "description": null,
-      "problem_guess": "Family 115: Sampling and counting contingency tables with arbitrary margins",
-      "rank": 20,
-      "evidence": [
-        "other-bounds"
-      ],
-      "readme_commit": "bde01dbc14afd612926bbf21af79764e02567b5c",
-      "source_claim_evidence": [
-        "* Measures of Dispersion: Sample variance ($s^2$), standard deviation ($s$), interquartile range (IQR), and the Coefficient of Variation ($CV = \\frac{s}{\\bar{x}} \\times 100\\%$) to compare relative dispersion across heterogeneous corridors.",
-        "* Central Limit Theorem (CLT): Empirical simulation demonstrating convergence of sample means from skewed delay data toward a Gaussian normal distribution across increasing sample sizes ($n = 5, 20, 50, 100$).",
-        "$$H_0: \\mu \\ge 55.0 \\text{ km/h} \\quad \\text{vs} \\quad H_1: \\mu < 55.0 \\text{ km/h}$$",
-        "* Regression Analysis: Ordinary Least Squares (OLS) Multiple Linear Regression with standard error of estimate ($s_e$), coefficient of determination ($R^2$), adjusted $R^2$, and 95% prediction intervals.",
-        "* `02_clt_convergence.png`: Central Limit Theorem convergence across sample sizes.",
-        "* `03_probability_models.png`: Bayesian prior-to-posterior update and exponential survival curve."
-      ],
-      "claim_signature": "0d46f87c774309eaf8634376385005d534a55d97c0a2bdff0fdc9523630bd0b7",
-      "other_family": "115",
-      "openai_fork_improvement": false,
-      "stated_bound_changed": true,
-      "likely_tracked_source": true,
-      "likely_new_race": false,
-      "likely_pivot": false,
-      "on_board": false
-    },
-    {
-      "repo": "ArjunCodess/PSYCON",
-      "url": "https://github.com/ArjunCodess/PSYCON",
-      "stars": 2,
-      "created_at": "2026-05-24T20:14:55Z",
-      "pushed_at": "2026-10-12T19:33:58Z",
-      "description": "Wearable system for estimating calm, mild stress, and high stress using multimodal physiological, motion, and audio-derived signals.",
-      "problem_guess": "Family 127: Average sensitivity of polynomial threshold functions",
-      "rank": 20,
-      "evidence": [
-        "other-bounds"
-      ],
-      "readme_commit": "12c8eb3e123037265106947bbd3ee07ffd9c56a1",
-      "source_claim_evidence": [
-        "The [presentation content](docs/IRIS_PRESENTATION.md) contains exactly 25 numbered content slides, excluding a title-opening slide and closing thanks. It covers the behavioral argument, evidence boundaries, and a short future hardware/3D/KiCad roadmap. It is versioned alongside the research documentation.",
-        "The study has two separate evaluations. H1 asks whether conversational measurements and context predict per-item reviewed ratings better than a constant training-median baseline on held-out participants and sources. H2 asks whether richer reports improve independently rated grounding and usefulness without increasing overclaiming. The report experiment compares transcript-only, structured-context, and full-PSYCON inputs using the same speaker, transcript window, local model digest, and generation settings. Structured context and full PSYCON share frozen supervised predictions. Full PSYCON also adds retrieved evidence and reference information, so the current package comparison cannot isolate history's effect; a history-only ablation must hold those other inputs fixed.",
-        "The [maximum defensible audit](docs/research/maximum-defensible-2026-10-13/submission_results.md) reproduces the historical outputs exactly. New nested pooled selection reached 65.67% agreement and MAE 0.453 on the common 402 ratings, exactly matching the fold training-mode predictions; its score-3 recall fell to 4.85%, so compact remains the research reference. The 67.16% fixed-configuration diagnostic predicted score 4 on 397/402 ratings and is not a selected winner. No model was activated, independent testing remains unavailable, and 85% agreement is unsupported. [Aggregate results](docs/report_assets/maximum-defensible-summary.json) include both cohorts, class behaviour and all fixed configurations. Reproduce with `python -m research.maximum_defensible --output <new-directory>` using the private frozen inputs.",
-        "The earlier [emergency audit](docs/research/emergency-audit-2026-10-12/audit_report.md) reproduces the original omitted-group predictions exactly: 230/402 matches, with 21 abstentions. The often-quoted roughly 64% is the fold training-median reference, 259/402 (64.43%), rather than model agreement. A new fixed inner agreement-selection policy with ordinal-error and class-recall guards achieved 247/402 (61.44%), below the existing compact procedure's 250/402 (62.19%), so the existing implementation is retained. The fold training-mode reference reaches 264/402 (65.67%); it is a population reference, not individualized prediction. All results remain retrospective development. Reproduce the audit with `python -m research.emergency_audit --output <new-directory>` using the private frozen inputs; private artifacts remain in `.runtime/emergency-audit-2026-10-12/`. The versioned audit directory contains anonymized reports, aggregate metrics and graphs. No reference rating or live model was cha",
-        "The report now includes a deterministic measurement summary and an explicitly untested exercise selected by the user's communication goal. Prompt 1.3.3 bounds factual observations, interpretations and complete-recording limitations; validators withhold duplicates, mismatched measurements and unsupported numerical inferences. An actual bounded local run completed with the measured 17.80% speaking share. The interface distinguishes full-recording measurements from linked excerpts rather than treating excerpts as independent numerical verification. The exercise is prewritten, not proof of learned personalized coaching. A history-only comparison helper refuses missing history and changes only that input; no benefit study is claimed. Feature definition 1.0.1 corrects denominator metadata without altering frozen feature values or human scores.",
-        "The author's [cross-recording seat mapping](docs/research/PARTICIPANT_OVERLAP.md) supplies nineteen identity links, reducing the 85 slots to 66 provisional components, an upper bound rather than a confirmed unique-person count. It connects seven recordings into two multi-recording groups; four other recordings remain singleton groups. These six provisional groups are minimum constraints for unseen-participant splitting and may merge further as remaining overlaps are resolved. Only the first handwritten mapping section's left labels are corrected to right. [Exact anonymous links](docs/research/PARTICIPANT_OVERLAP.json) retain full filenames and right-based seat indexes. The links were applied transactionally to 34 participant records representing fifteen known people, with private before-state journals and database audit events. Eight linked seats were added without invented answers or permissions; 84 participant-session records now exist, of which 76 have imported forms. Source/group c"
-      ],
-      "claim_signature": "89a118d23c0635a9581285e7d367597625f0d58c6ba01f82039e6cf4c13ee1f6",
-      "other_family": "127",
-      "openai_fork_improvement": false,
-      "stated_bound_changed": true,
-      "likely_tracked_source": true,
-      "likely_new_race": false,
-      "likely_pivot": false,
-      "on_board": false
-    },
-    {
-      "repo": "ArjunCodess/PSYCON",
-      "url": "https://github.com/ArjunCodess/PSYCON",
-      "stars": 2,
-      "created_at": "2026-05-24T20:14:55Z",
-      "pushed_at": "2026-10-12T19:33:58Z",
-      "description": "Wearable system for estimating calm, mild stress, and high stress using multimodal physiological, motion, and audio-derived signals.",
-      "problem_guess": "Family 127: Average sensitivity of polynomial threshold functions",
-      "rank": 20,
-      "evidence": [
-        "other-bounds"
-      ],
-      "readme_commit": "12c8eb3e123037265106947bbd3ee07ffd9c56a1",
-      "source_claim_evidence": [
-        "The other 23 predictors remain excluded from the compact candidate. component_decisions.csv lists all 31 individually, their availability, family contrasts and decision evidence. Constant context indicators cannot separate these samples and need no correction to earn a place here; broader contexts may change that. Variable excluded predictors are inconclusive, because removing a family sometimes improves a fixed diagnostic but does not establish reliable incremental loss across this small, previously inspected cohort. Cleanup/log/winsorization and class weighting remain unpromoted alternatives. No feature is called useless solely because its standalone agreement is low."
-      ],
-      "claim_signature": "b6e1b2a06c4564b3d84b57cafedabb28662ef7f4c6dfa92815f31b8a665ea634",
-      "other_family": "127",
-      "openai_fork_improvement": false,
-      "stated_bound_changed": true,
-      "likely_tracked_source": true,
-      "likely_new_race": false,
-      "likely_pivot": false,
-      "on_board": false
-    },
-    {
-      "repo": "ArjunCodess/PSYCON",
-      "url": "https://github.com/ArjunCodess/PSYCON",
-      "stars": 2,
-      "created_at": "2026-05-24T20:14:55Z",
-      "pushed_at": "2026-10-12T19:33:58Z",
-      "description": "Wearable system for estimating calm, mild stress, and high stress using multimodal physiological, motion, and audio-derived signals.",
-      "problem_guess": "Family 127: Average sensitivity of polynomial threshold functions",
-      "rank": 20,
-      "evidence": [
-        "other-bounds"
-      ],
-      "readme_commit": "12c8eb3e123037265106947bbd3ee07ffd9c56a1",
-      "source_claim_evidence": [
-        "Inner selection maximized equal-group agreement subject to no MAE increase over either reference, individual-class recall loss at most 0.02 versus median for classes with at least five inner observations, and a minimum 0.025 agreement gain over the best reference. The disclosed policy was frozen before these runs after earlier results were known, so it remains retrospective development. Promotion required agreement gain over compact, no MAE increase versus compact/mode, no score-specific recall loss above 0.02 versus compact, and positive descriptive paired agreement lower bounds versus compact/mode. Fixed outer diagnostics could not select another winner."
-      ],
-      "claim_signature": "7af76a814772ab4bdfd793c848668ccd36cf8b99d0e1d428fcf6d4b1a3187d83",
-      "other_family": "127",
-      "openai_fork_improvement": false,
-      "stated_bound_changed": true,
-      "likely_tracked_source": true,
-      "likely_new_race": false,
-      "likely_pivot": false,
-      "on_board": false
-    },
-    {
-      "repo": "ArjunCodess/PSYCON",
-      "url": "https://github.com/ArjunCodess/PSYCON",
-      "stars": 2,
-      "created_at": "2026-05-24T20:14:55Z",
-      "pushed_at": "2026-10-12T19:33:58Z",
-      "description": "Wearable system for estimating calm, mild stress, and high stress using multimodal physiological, motion, and audio-derived signals.",
-      "problem_guess": "Family 127: Average sensitivity of polynomial threshold functions",
-      "rank": 20,
-      "evidence": [
-        "other-bounds"
-      ],
-      "readme_commit": "12c8eb3e123037265106947bbd3ee07ffd9c56a1",
-      "source_claim_evidence": [
-        "PSYCON turns recorded group discussions into speaker-specific communication measurements and evidence-linked reports for psychologist review. The implemented workflow combines normalized audio, diarization, transcription, timestamped exchanges and a versioned observation rubric that separates numeric ratings, insufficient opportunity and missing answers. This creates a reviewable connection between a communication observation and its supporting recording. The source-score pilot uses 423 psychologist-provided ratings from forty participant-session examples across nine recordings and five known connected groups. Compact grouped development improved agreement from 57.21\\% to 62.19\\% and reduced mean absolute error from 0.562 to 0.490 on the same 402 ratings. Training-mode agreement was 65.67\\%, so reliable predictive superiority remains a question for the next study. A bounded 51-configuration audit tested feature families with training-only preprocessing and inner grouped selection, repr",
-        "The audiovisual comparison retained 57 PSYCON profiles versus 51 per Nemotron mode out of 85 slots, not unique people. The source-score pilot uses forty examples, nine recordings, five known groups and 423 ratings across G, I and P1--P12. Training agreement of 97.9\\% is resubstitution. Original grouped development matched 230/402 ratings (57.21\\%, MAE 0.562) with twenty-one abstentions. Compact selection reached 250/402 (62.19\\%, 0.490), versus training median 259/402 (64.43\\%, 0.460) and mode 264/402 (65.67\\%, 0.453). The previous agreement-selection experiment reached 247/402 (61.44\\%, 0.498). A new bounded inner-group-selected pooled procedure exactly matched mode predictions, reducing score-3 recall from 18.45\\% to 4.85\\%. A later 51-configuration feature-family autopsy yielded inner-selected 251/402 agreement (62.44\\%, MAE 0.488), failing replacement gates. Chronological sorting fixed a demonstrated retry-latency defect without rewriting frozen features or claiming an accuracy gai"
-      ],
-      "claim_signature": "561e67c357905214a6d067079a8116dcb043811a4f5562e5211044dd3c65fa06",
-      "other_family": "127",
-      "openai_fork_improvement": false,
-      "stated_bound_changed": true,
-      "likely_tracked_source": true,
-      "likely_new_race": false,
-      "likely_pivot": false,
-      "on_board": false
-    },
-    {
-      "repo": "Hermes34-dev/LibreStats",
-      "url": "https://github.com/Hermes34-dev/LibreStats",
-      "stars": 0,
-      "created_at": "2026-10-12T20:15:46Z",
-      "pushed_at": "2026-10-12T20:42:50Z",
-      "description": "LibreStats adds a LibreStats menu to LibreOffice Calc with dialog-driven statistical tools, in the spirit of Excel statistics add-ins.",
+      "created_at": "2026-09-22T20:17:24Z",
+      "pushed_at": "2026-10-12T23:29:26Z",
+      "description": "Erdos problem #1186: bounds for delta_k, the density of monochromatic k-term APs forced in any 2-colouring of {1,...,n}. Open. Certified improvements to delta_5 (20.8%), delta~_4 (2.8%) and delta~_5 (10.6%), a first bound for delta_6, all re-derived in exact rational arithmetic.",
       "problem_guess": "Family 160: Superexponential van der Waerden numbers",
       "rank": 20,
       "evidence": [
         "other-bounds"
       ],
-      "readme_commit": "b7c3a8497cb7521c0d0b3735fb6f8673ff60ea7c",
+      "readme_commit": "8a9381f3a810637a947b6c606c61de42ca67c26d",
       "source_claim_evidence": [
-        "<img src=\"LibreStats_LOGO.png\" alt=\"LibreStats logo\" width=\"200\">",
-        "<h1 align=\"center\">LibreStats</h1>",
-        "> **Status:** early development (v0.3.0). Developed and tested on Linux with LibreOffice 26.8. Not yet tested on Windows or macOS.",
-        "\u2502   \u251c\u2500\u2500 description.xml         # id org.librestats, version, LO >= 26.8",
-        "| t, \u03c7\u00b2, normal distributions | scipy, relative error < 10\u207b\u2079 |"
+        "This repository studies Erd\u0151s problem 1186, monochromatic $k$-term arithmetic progressions in 2-colourings, by certifying explicit upper-bound constructions. The problem is open and cannot be resolved with a finite computation; no lower-bound work was attempted here.",
+        "> Let $\\delta_k$ be such that in any $2$-colouring of $\\{1,\\ldots,n\\}$ there exist at least $(\\delta_k+o(1))n^2$ many monochromatic $k$-term arithmetic progressions. Give reasonable bounds (or even an asymptotic formula) for $\\delta_k$.",
+        "> [\u2026] It is easier to study this quantity if we replace $\\{1,\\ldots,n\\}$ with a finite field $\\mathbb{F}_p$; let this analogue be denoted by $\\tilde{\\delta}_k$.",
+        "Comparing the optimal periodic colourings at $m=88$ and $m=132$ showed both reduce to one 44-bit base with a free coset of size 4. Generalising gives a **wildcard recursion**, proved here as a theorem ([`NOTES.md`](NOTES.md) \u00a73.1). A *base* is a colouring of $\\mathbb{Z}_b$ with a proper coset $F$ of size $f<b$ such that every $k$-AP of nonzero difference that avoids $F$ is non-monochromatic, and every one that meets both $F$ and its complement is non-constant outside $F$. Every base gives",
+        "$$m_k(\\mathbb{Z}_{bt}) \\le \\frac{(b-f)+f^2 m_k(\\mathbb{Z}_{ft})}{b^2}, \\qquad \\delta_k \\le \\frac{1}{2(k-1)(b+f)} .$$",
+        "This reproduces **both** published constants exactly \u2014 $b=11,f=1\\Rightarrow c_4\\le1/72$ and $b=37,f=1\\Rightarrow c_5\\le1/304$ \u2014 which is the evidence that it measures the published quantity. Lu and Peng's two bases turn out to be the quadratic-residue (QR) colourings of $\\mathbb{Z}_{11}$ and $\\mathbb{Z}_{37}$, the colourings behind Rabung's lower bounds for van der Waerden numbers [RL12]. Every QR colouring that passes Rabung's test is a base, and so is every good zipped one [HHLM07] (NOTES \u00a74). Together with one base found by search, at $k=5$, they give:"
       ],
-      "claim_signature": "285d5a615c12dd1ffc1565ed0a1bfabd1130b9685a6a58eee7c5678ad800911b",
+      "claim_signature": "fce507fe16b342c36ae9699c1d959abdb04eaec05b8f8fe798f17f3b80f0e48d",
       "other_family": "160",
       "openai_fork_improvement": false,
       "stated_bound_changed": true,
@@ -796,46 +497,18 @@
       "on_board": false
     },
     {
-      "repo": "wellingtonb3/serverpod",
-      "url": "https://github.com/wellingtonb3/serverpod",
-      "stars": 0,
-      "created_at": "2026-10-12T20:41:19Z",
-      "pushed_at": "2026-10-12T21:35:59Z",
-      "description": "Build Something Real with Serverpod",
-      "problem_guess": "Family 167: Planar distinct distances and unit-distance bounds",
-      "rank": 20,
-      "evidence": [
-        "other-bounds"
-      ],
-      "readme_commit": "b0ab6ee480a182e3b146996804afaa82da925bb6",
-      "source_claim_evidence": [
-        "\u2502  \u2502  - monitorVehicles \u2502  \u2502  Moves vehicles 5% closer per second \u2502   \u2502",
-        "The server samples the official IBGE municipality boundary at approximately 1 km",
-        "The municipal boundary is IBGE's GeoJSON malha for municipality code 3550308.",
-        "The demo seeds 30 units spread across the municipal boundary rather than in"
-      ],
-      "claim_signature": "22e2950d5b111fd797e840e19a4f5664a8567b104690709689e510478f9a45fc",
-      "other_family": "167",
-      "openai_fork_improvement": false,
-      "stated_bound_changed": true,
-      "likely_tracked_source": true,
-      "likely_new_race": false,
-      "likely_pivot": false,
-      "on_board": false
-    },
-    {
       "repo": "katopz/katgpt-rs",
       "url": "https://github.com/katopz/katgpt-rs",
       "stars": 138,
       "created_at": "2026-05-04T16:56:32Z",
-      "pushed_at": "2026-10-12T21:34:30Z",
+      "pushed_at": "2026-10-13T00:51:51Z",
       "description": "A neuro-symbolic micro-Transformer with speculative decoding, constraint pruning, recurrent attention, and adaptive test-time scaling \u2014 built in Rust.",
       "problem_guess": "Family 167: Planar distinct distances and unit-distance bounds",
       "rank": 20,
       "evidence": [
         "other-bounds"
       ],
-      "readme_commit": "170f26adec3f96cd83f80459409c54ab50f78afa",
+      "readme_commit": "29038059ffe8d2d46b852e307644f38ed0ef9417",
       "source_claim_evidence": [
         "| **Triggered Injection** | **50% skips @ 0.63% quality delta** | Sigmoid-thresholded inject/skip hot-path gate |",
         "| **KARC Trajectory Forecast** | **NRMSE 9.43e-4** at d_h=18_720 (Phase 5.1 K=8/M=8/R=2 \u03bb=5e-2; threshold leg 10% short \u2014 stays opt-in) | Delay-basis ridge forecaster (Plan 308 Phase 5.1 \u03bb-sweep, Issue 187 T7) |",
@@ -844,7 +517,7 @@
         "| **Heat Kernel Trajectory** | **exact at long horizons** vs O(T\u00b7dt\u00b2) Euler error | Single-shot DEC cochain field prediction via operator exponential (Plan 359, DEFAULT-ON) |",
         "| **Newton-Schulz Blocked Matmul** | **1.37\u00d7 faster** NS inv-sqrt r=64; per LoRA-Muon step 595\u00b5s\u2192432\u00b5s | Rank-K blocked matmul eliminates per-dot call overhead (Plan 421) |"
       ],
-      "claim_signature": "b78020495585b0c8e1ffb07d4254aed07c765ebd8d11d3db1b60f6bf77e35c4d",
+      "claim_signature": "171b9448ad02f5ad88dba160c3b9da3626191be9e11004ce83038ccb276a59d7",
       "other_family": "167",
       "openai_fork_improvement": false,
       "stated_bound_changed": true,
@@ -858,19 +531,18 @@
       "url": "https://github.com/katopz/katgpt-rs",
       "stars": 138,
       "created_at": "2026-05-04T16:56:32Z",
-      "pushed_at": "2026-10-12T21:34:30Z",
+      "pushed_at": "2026-10-13T00:51:51Z",
       "description": "A neuro-symbolic micro-Transformer with speculative decoding, constraint pruning, recurrent attention, and adaptive test-time scaling \u2014 built in Rust.",
       "problem_guess": "Family 167: Planar distinct distances and unit-distance bounds",
       "rank": 20,
       "evidence": [
         "other-bounds"
       ],
-      "readme_commit": "170f26adec3f96cd83f80459409c54ab50f78afa",
+      "readme_commit": "29038059ffe8d2d46b852e307644f38ed0ef9417",
       "source_claim_evidence": [
-        "- [-] T1 \u2014 DECLINED on analysis (Bench 937 \u00a7T1): in single-token decode the query is the static per-sublayer `score_weight` and the block state is per token, so every (sublayer, summary) pair is used exactly once; an online state has nothing to reuse. The decode redundancy was the per-call \u03a3v\u00b2 + score_weight re-fold (T3). Original: `AttnResOnlineState` \u2014 running (max, sum, accumulator) across completed block summaries; a newly completed block merges in O(d); per-sublayer cost drops from re-softmax-over-all-entries to a constant-size merge plus the current partial. Weight-free; zero-alloc (extend the existing scratch pattern).",
-        "- [x] T2 \u2014 DONE: bit-identity (not just 1e-6) vs a frozen pre-933 kernel at N\u2208{0,1,2,8,32} (`crates/katgpt-transformer/tests/bench_933_attn_res_decode_ab.rs`); G4 `kimi_k3_g4_alloc_free` 2/2 (dev); loud-zero via the shared ab harness. Original: parity gate \u2014 tolerance-based, NOT bit-identity (different reduction order): max-drift \u2264 1e-6 vs `apply_attn_res` on the Kimi-K3-0.40B config fixture (the `attn_res_g1_spec_match.rs` pattern); G4 alloc gate; canary-armed loud-zero defense on the timing bench (timed_region_guard_gate class)."
+        "**Status:** Active \u2014 Phase 1 + Phase 2 LANDED 2026-10-10 (opt-in `scale_invariant_attn`; LUT primitive + SDPA hook + parallax both-arm wiring + the tilt/Lemma G1 instruments, 404 tests green at the wired posture / 2151 default-posture no-regression / clippy 0 both postures). **Phase 3 LANDED 2026-10-11** (kernel-side: `SpreadAccumulator` + `HeadCalibration` sidecar + `SiArm` + the fused calibrated apply + the calibrated SDPA wrapper; 21 si-module tests + 5 SDPA si tests green, 2182 wired-posture / 2151 default-posture G3 unchanged, clippy 0 \u00d73 postures; feature decision RECORDED \u2014 no second flag, calibration is runtime data under `scale_invariant_attn`; parallax-arm calibrated consumption DEFERRED \u2014 its si apply stays at 1.0 until a consumer needs it; the real-checkpoint probe run + the G3 calibrated rows ride Phase 7's box/GPU gates via the Phase-4 riir-infer loader). **Phase 4 LANDED 2026-10-11** (riir-infer `new_pp` kernel-only pp table: wavelength suffix mask \u2192 exact 0.0, length pr"
       ],
-      "claim_signature": "7bf94ff50f5ffdb8418902d0276ad92c7e12b6414809dde54f99683b8a49e24d",
+      "claim_signature": "060af551eddd59b968300ff7d813737bb7077b23ec10798d8be6164b64827a28",
       "other_family": "167",
       "openai_fork_improvement": false,
       "stated_bound_changed": true,
@@ -884,18 +556,19 @@
       "url": "https://github.com/katopz/katgpt-rs",
       "stars": 138,
       "created_at": "2026-05-04T16:56:32Z",
-      "pushed_at": "2026-10-12T21:34:30Z",
+      "pushed_at": "2026-10-13T00:51:51Z",
       "description": "A neuro-symbolic micro-Transformer with speculative decoding, constraint pruning, recurrent attention, and adaptive test-time scaling \u2014 built in Rust.",
       "problem_guess": "Family 167: Planar distinct distances and unit-distance bounds",
       "rank": 20,
       "evidence": [
         "other-bounds"
       ],
-      "readme_commit": "170f26adec3f96cd83f80459409c54ab50f78afa",
+      "readme_commit": "29038059ffe8d2d46b852e307644f38ed0ef9417",
       "source_claim_evidence": [
-        "## Issue 932 (2026-10-12 \u2192 closed 2026-10-13) \u2014 belief-views multi-scale temporal retrieval (Research 619 MSAR time-depth transpose): CLOSED NEGATIVE at T3 \u2014 \"single-stream belief stays\". Probe `56ad37c4c` (real `route \u2192 accumulate \u2192 evolve_belief`, 16 seeds \u00d7 2000 ticks): the divisive kernel has NO self-dynamics (\u03b4 reads evidence only; interior map a pure translation, drift 1.6e-7) and cumulative evidence pins \u2265 6/8 dims at \u22121 for ANY stream (96.9% channel-ticks clamped, 96/128 channels constant) \u2192 views over a constant are dead (failure mode 2) and the clamp destroys only a zero-information signal; the additive kernel never clamps and is exactly invertible (b_{t-1} = (b_t \u2212 (1\u2212\u03b1)d_t)/\u03b1) \u2192 nothing destroyed for retrieval to recover, and its multi-view analogue is a multi-\u03b1 EMA bank (`temporal_deriv` already ships fast/slow). T2/T4\u2013T7 not run (gated on T1+T3). The saturation itself was a new substrate finding \u2192 Issue 934 (consumer-side, riir-ai). File removed per noise-reduction."
+        "## Issue 933 (2026-10-11 \u2192 closed 2026-10-13) \u2014 attn_res decode online-merge + the fixed-query modelless probe: CLOSED \u2014 T1 DECLINED on analysis (single-token decode has no reuseable online state \u2014 the (sublayer, summary) pair is used exactly once), T2/T3/T5 DONE (`12e031cff`, Bench 937: push-time \u03a3v\u00b2 cache + prepared score weight, bit-identical, live path 9\u201328% / prepared 21\u201331% faster at N=2/8/32) + **T4 GREEN-candidate** (the E5 probe, Research 619 MSAR): substrate `apply_attn_res_depth_profile` (`ca35f9ca9` \u2014 score[i] = \u2212\u03bb\u00b7age[i], a deterministic exponential-depth profile replacing the learned `score_weight`; gated by the EXISTING `transformer_attn_res`, no feature-count change; \u03bb=\u221e the disarmed byte-identity posture, pinned bitwise by test) + the riir-infer probe fork (`issue933_attn_res_probe`, `a9f5b0c`: the gemma-2 f16 forward re-forked at the three Kimi-semantics wiring points) + the frozen-read ppl A/B (riir-infer Bench 882, chat_probe 4096 tok paired): **\u03bb=\u221e bitwise-identica",
+        "## Issue 935 (2026-10-13 \u2192 closed 2026-10-13) \u2014 the Q2_0_g128 ternary matvec is the whole Bonsai-2-27B CPU decode (compute-bound ~25\u00d7): CLOSED \u2014 ALL TASKS DONE. T1 chunk-cap 32 (0.67\u20130.72\u00d7 wall, work-stealing over 12P+4E) + T1b real-model (`0c5ed0fe7`: tg 1.96/2.03\u21922.46/2.47 tok/s, pp +32%, 65/65 greedy identical) + T2 `ternary_group_q8_act` int8-activation SDOT kernel (~7 ops/16 weights, NEON bit-identical to the scalar integer reference) + T3 real-model GOAT (top-1 256/256 + 510/512, confident 165/165 + 348/348, NLL \u0394 \u22120.003/\u22120.019, wall 0.319/0.326\u00d7; PROMOTED in riir-infer \u2014 `deltanet_ternary_inference` implies `ternary_q8_act`; e2e tg 7.86 tok/s, Bench 877) + T4 AVX2 port `2522dc2a9` (`avx2_q8_row_range`, runtime-probed `is_avx2_fma_available`, psignb+pmaddubsw+pmaddwd, integer inner sum \u21d2 bit-identical to the same scalar reference \u21d2 the aarch64 real-model GOAT transfers to x86_64 exactly; Rosetta-verified 21/21 + `saturated_extremes` + mutation canary, clippy clean both triples) +"
       ],
-      "claim_signature": "ddee9078ab5d1c374622697b3d0eeb6ce9500ff73ce8325244159f920c88006c",
+      "claim_signature": "604b914e1f2699199c22fab9b51c272586ccd9b3b87a392c145a1e3dcfa48d82",
       "other_family": "167",
       "openai_fork_improvement": false,
       "stated_bound_changed": true,
@@ -905,55 +578,57 @@
       "on_board": false
     },
     {
-      "repo": "prinz-ai/accelerando",
-      "url": "https://github.com/prinz-ai/accelerando",
-      "stars": 33,
-      "created_at": "2026-02-03T05:20:28Z",
-      "pushed_at": "2026-10-12T21:30:19Z",
-      "description": "a chronicle of events leading to the singularity",
-      "problem_guess": "Family 167: Planar distinct distances and unit-distance bounds",
-      "rank": 20,
-      "evidence": [
-        "other-bounds"
-      ],
-      "readme_commit": "71c1f530fb811eb34002a2a0b14a064b5a418f84",
-      "source_claim_evidence": [
-        "> The mechanism by which I imagined it would happen is that we would have models that are good at coding and AI research. And we would use that to create the new generation of models and speed it up, to create a loop that would increase the speed of model development. We are now at a point where I have engineers at Anthropic who say: 'I don't write any code anymore, I let the model write the code, I edit it, I do the things around it.' We might be 6-12 months away from a model that can do everything SWEs do end-to-end. And then the question is, how fast does that loop close? Not every part of that loop is something that can be sped up by AI. There's chips, manufacture of chips, training time for the model. There's a lot of uncertainty. It's easy to see how it could take a few years. It's very hard for me to see how it could take longer than that. But if I had to guess, I would guess that it goes faster than people imagine. And that key element of code, and increasingly research, going ",
-        "> there are early signs of 5.5 being a competent ai research partner. several researchers let 5.5 run variations of experiments overnight given only a high level algorithmic idea, wake up to find completed sweep dashboards and samples, never having touched code or a terminal at all",
-        "> over break i dictated to 5.5 for minutes describing a new ambitious rl run. hit send and forgot about it as i hung out with friends and bf for a few days. returned on monday to an industrial-scale rl run humming after it worked for 31 hours",
-        "[^1]: This chronicle starts in early 2025 with Anthropic's and OpenAI's releases of the first agentic coding models. The reader is well within his right to ask the author why this particular point was the one chosen as the threshold for crossing the event horizon. Would it not have been better to choose OpenAI's release of the first reasoning model (September 2024) as the threshold? Or perhaps the release of GPT-4? The release of GPT-3.5? Some even earlier ML milestone? The author agrees with this criticism and posits that, indeed, it is possible that mankind took its first firm step towards the singularity approximately 400,000 years ago when man first learned to control fire. Be that as it may, any chronicle has to start *somewhere*, and, in the author's view, having it start right before Sam Altman definitively wrote (in January 2025) that \"we are past the event horizon; the takeoff has started\" is as good a place as any."
-      ],
-      "claim_signature": "fdb8fe359f2ef2c6c8b6a657138bba035e3f387e9e9ab637f4d3943bb1610dc5",
-      "other_family": "167",
-      "openai_fork_improvement": false,
-      "stated_bound_changed": true,
-      "likely_tracked_source": true,
-      "likely_new_race": false,
-      "likely_pivot": false,
-      "on_board": false
-    },
-    {
-      "repo": "NightBlack4825/Batman-hub",
-      "url": "https://github.com/NightBlack4825/Batman-hub",
+      "repo": "chrisaacson69/sci-fi-trading-voyage",
+      "url": "https://github.com/chrisaacson69/sci-fi-trading-voyage",
       "stars": 0,
-      "created_at": "2026-10-09T00:39:44Z",
-      "pushed_at": "2026-10-12T21:27:37Z",
+      "created_at": "2026-10-06T19:09:56Z",
+      "pushed_at": "2026-10-13T00:37:28Z",
+      "description": "Trade-route calculator for Sci-Fi Trading Voyage: ranks two-stop round trips by profit/hr",
+      "problem_guess": "Family 167: Planar distinct distances and unit-distance bounds",
+      "rank": 20,
+      "evidence": [
+        "other-bounds"
+      ],
+      "readme_commit": "fa35ff686652623cd71a247e074b763706780a97",
+      "source_claim_evidence": [
+        "py -3 trade_routes.py --json > routes.json     # for other tools (e.g. a ship picker)",
+        "- **`data/blueprints/<account>.csv`**: an account's blueprint inventory (owned variants, unlock progress, shared TP per family, capital modules), parsed by `py -3 blueprints.py <account>` from Chris's verbatim list in `<account>_raw.txt`. Format rules: `data/tp.md`.",
+        "- **`data/craft.csv`**: the mobile account's **fighters and corvettes** \u2014 `name,ship_id,kind,cp,seats,group,hp,armor,ev,flight_speed,dpm_vs_*,role,limit,tp,tp_max,class,notes`. `kind` is FT (fighter) or CO (corvette). These are **carried craft, not fleet hulls**: they have no cargo and `flight_speed` is a flight speed, not a warp stat, which is why the columns deliberately differ from `ships.csv` and why `trade_routes.py` excludes FT and CO from route fleets (`NOT_FLEET_TYPES`). `size_class` is **what size of bay the craft needs, not slots consumed** \u2014 every craft takes exactly one slot, and a bay accepts anything at or below its own size (1 small, 2 medium, 3 large), so a size-1 fighter fits everywhere. Corvettes do not use it; they take boat seats (`EFFECT_CARRIER_BOAT`). `class` is the **family**, read off the id (a craft id is family(3) + variant(2), so 126xx is BR050, 211xx M011, 209xx Nebula). `tp` is TP available to that variant as Chris read it in game, `tp_pool` is the family'",
+        "- **`data/families.md`**: the Taurus, Eris and Ruby variant families upgraded side by side. Also the corvettes and fighters, the **Pangu escort mechanic** (a bodyguard capital that takes damage aimed at another ship), the **Ranger** family (an anti-aircraft cruiser with +100% hit rate vs aircraft, a gun cruiser, and a weaponless cruise liner), and how much the in-game DPM overstates a \"full firepower\" upgrade (**+60% nominal is +36% effective** \u2014 an 18% gap \u2014 and prefix 115 is the only permanent upgrade in the tables that carries an accuracy penalty). **Eris Heavy Cannon more than doubles (+134%)** \u2014 the only hull of the nine that does \u2014 because its two guns share one system and its first 30 TP are a pure cooldown stack whose marginal value *rises* 2.6\u00d7 along the way. Also records that **`40502` and `48701` are two different hulls both called \"Taurus Assault\"** in English (8 CP / edef 20 vs 11 CP / armour 30; the cheaper one ends 21% higher).",
+        "- **`data/tp.md`** and **`data/tp_curves.csv`**: where to assign tech points. The CSV is 150 hulls with stock DPM, DPM at each quarter of the TP ladder, and the marginal DPM/TP in the first vs last quarter (`concavity`). TP is **typed and you do not choose the type**, so the question is never which hull in the game deserves points \u2014 it is \"I have 100 cruiser points, which of MY cruisers get them\". `tools/tp_assign.py \"<hull>\"` prints one hull's whole upgrade path in buy order and marks where the worthwhile buys stop; `--type <type> --tp <n> --ships <roster>` splits a type's points across hulls. **`--vs small|large` picks which pirate template to score against** \u2014 a small fleet meets team 1010501 (frigates and a destroyer), not the 98 CP battlecruiser team, and that reverses several rankings. Both score **sqrt(DPM \u00d7 seconds survived) / CP** so that armour, evasion and HP compete with weapon levels, or warp with `--for trade`. On this account 100 cruiser points spread across four hulls b",
+        "1. Write the new prices to `data/market/<game-day>.csv`, same columns as before. Commas inside"
+      ],
+      "claim_signature": "1a13b1034e32e5fb19f6d997bdc6438c00060b601fd05f80b19e2931493762cc",
+      "other_family": "167",
+      "openai_fork_improvement": false,
+      "stated_bound_changed": true,
+      "likely_tracked_source": true,
+      "likely_new_race": false,
+      "likely_pivot": false,
+      "on_board": false
+    },
+    {
+      "repo": "atilasabreuu-maker/Lego-v9.1",
+      "url": "https://github.com/atilasabreuu-maker/Lego-v9.1",
+      "stars": 0,
+      "created_at": "2026-10-12T23:39:57Z",
+      "pushed_at": "2026-10-12T23:42:21Z",
       "description": null,
       "problem_guess": "Family 167: Planar distinct distances and unit-distance bounds",
       "rank": 20,
       "evidence": [
         "other-bounds"
       ],
-      "readme_commit": "191cfe1177f84cf7bbdda90654136b1c94a42cd8",
+      "readme_commit": "0ccb63a6a570480f5833dfceb34eafc202b1153f",
       "source_claim_evidence": [
-        "return humanoid ~= nil and hrp ~= nil and humanoid.Health > 0",
-        "while farming and os.clock() - t0 < timeout do",
-        "return os.clock() - hiddenSince > 2",
-        "if Kat.remaining and Kat.remaining > 0 and table.find(K.CAKE_MOBS, enemy.Name) then",
-        "if not hrp or (pos - hrp.Position).Magnitude > 25 then return pos end",
-        "if not char or os.clock() - lastHaki < 2 then return end"
+        "local ratio = math.clamp((maxValue > 0 and value / maxValue or 0), 0, 1)",
+        "staminaFill.BackgroundColor3 = ratio < 0.22 and Color3.fromRGB(205, 87, 76)",
+        "or (ratio < 0.48 and Color3.fromRGB(218, 169, 65) or Color3.fromRGB(93, 196, 133))",
+        "local n = s < 0 and \"L\" or \"R\"",
+        "att.Name = (s > 0 and \"Right\" or \"Left\") .. \"GripAttachment\" -- ponto para armas/objetos futuros",
+        "local n = s < 0 and \"L\" or \"R\""
       ],
-      "claim_signature": "62073a9ad5661f7ce56cf83ee363f27f5087414cd89e70be4fc2861f16bf6f1f",
+      "claim_signature": "fa2568658a1993d1fbf0f5a1f812abc5e4200042d0483bfceec97e9763715a16",
       "other_family": "167",
       "openai_fork_improvement": false,
       "stated_bound_changed": true,
@@ -963,22 +638,27 @@
       "on_board": false
     },
     {
-      "repo": "wstrinz/grandportage",
-      "url": "https://github.com/wstrinz/grandportage",
+      "repo": "atilasabreuu-maker/Lego-v9-",
+      "url": "https://github.com/atilasabreuu-maker/Lego-v9-",
       "stars": 0,
-      "created_at": "2026-07-27T14:06:28Z",
-      "pushed_at": "2026-10-12T21:25:51Z",
-      "description": "Records what each modelling step in a computational-algebra campaign LOSES, and refuses the conclusions that loss does not support.",
+      "created_at": "2026-10-12T23:29:26Z",
+      "pushed_at": "2026-10-12T23:30:06Z",
+      "description": null,
       "problem_guess": "Family 167: Planar distinct distances and unit-distance bounds",
       "rank": 20,
       "evidence": [
         "other-bounds"
       ],
-      "readme_commit": "2ea6bf78449597a1453d17c8e0f7778d0960f858",
+      "readme_commit": "70b822699e0f333f2891c458042c7bb72c0624c6",
       "source_claim_evidence": [
-        "- **Number-field irreducibility** uses the rational-root test (degree \u2264 3)."
+        "local ratio = math.clamp((maxValue > 0 and value / maxValue or 0), 0, 1)",
+        "staminaFill.BackgroundColor3 = ratio < 0.22 and Color3.fromRGB(205, 87, 76)",
+        "or (ratio < 0.48 and Color3.fromRGB(218, 169, 65) or Color3.fromRGB(93, 196, 133))",
+        "local n = s < 0 and \"L\" or \"R\"",
+        "att.Name = (s > 0 and \"Right\" or \"Left\") .. \"GripAttachment\" -- ponto para armas/objetos futuros",
+        "local n = s < 0 and \"L\" or \"R\""
       ],
-      "claim_signature": "010c005134168f08027070ab4b13647919af4565f50ba7e0c712a44d7a65f46a",
+      "claim_signature": "fa2568658a1993d1fbf0f5a1f812abc5e4200042d0483bfceec97e9763715a16",
       "other_family": "167",
       "openai_fork_improvement": false,
       "stated_bound_changed": true,
@@ -988,98 +668,27 @@
       "on_board": false
     },
     {
-      "repo": "wstrinz/grandportage",
-      "url": "https://github.com/wstrinz/grandportage",
+      "repo": "atilasabreuu-maker/Lego-v7-teste",
+      "url": "https://github.com/atilasabreuu-maker/Lego-v7-teste",
       "stars": 0,
-      "created_at": "2026-07-27T14:06:28Z",
-      "pushed_at": "2026-10-12T21:25:51Z",
-      "description": "Records what each modelling step in a computational-algebra campaign LOSES, and refuses the conclusions that loss does not support.",
+      "created_at": "2026-10-12T23:11:01Z",
+      "pushed_at": "2026-10-12T23:14:00Z",
+      "description": null,
       "problem_guess": "Family 167: Planar distinct distances and unit-distance bounds",
       "rank": 20,
       "evidence": [
         "other-bounds"
       ],
-      "readme_commit": "2ea6bf78449597a1453d17c8e0f7778d0960f858",
+      "readme_commit": "e3d810b01c4132ad64629140a921e2938ff69580",
       "source_claim_evidence": [
-        "- **Number fields of degree \u2264 3.** Irreducibility uses the rational-root test."
+        "local ratio = math.clamp((maxValue > 0 and value / maxValue or 0), 0, 1)",
+        "staminaFill.BackgroundColor3 = ratio < 0.22 and Color3.fromRGB(205, 87, 76)",
+        "or (ratio < 0.48 and Color3.fromRGB(218, 169, 65) or Color3.fromRGB(93, 196, 133))",
+        "local n = s < 0 and \"L\" or \"R\"",
+        "att.Name = (s > 0 and \"Right\" or \"Left\") .. \"GripAttachment\" -- ponto para armas/objetos futuros",
+        "local n = s < 0 and \"L\" or \"R\""
       ],
-      "claim_signature": "66bfa0c35d40eede8bc27a5c17508091f13f9bcf22faffc484256e66856bba93",
-      "other_family": "167",
-      "openai_fork_improvement": false,
-      "stated_bound_changed": true,
-      "likely_tracked_source": true,
-      "likely_new_race": false,
-      "likely_pivot": false,
-      "on_board": false
-    },
-    {
-      "repo": "wstrinz/grandportage",
-      "url": "https://github.com/wstrinz/grandportage",
-      "stars": 0,
-      "created_at": "2026-07-27T14:06:28Z",
-      "pushed_at": "2026-10-12T21:25:51Z",
-      "description": "Records what each modelling step in a computational-algebra campaign LOSES, and refuses the conclusions that loss does not support.",
-      "problem_guess": "Family 167: Planar distinct distances and unit-distance bounds",
-      "rank": 20,
-      "evidence": [
-        "other-bounds"
-      ],
-      "readme_commit": "2ea6bf78449597a1453d17c8e0f7778d0960f858",
-      "source_claim_evidence": [
-        "`gp` rebuilds a Lean runner (`gp_ledger`, `gp_ledger3`) unless the stamp next to it (`<runner>.gpstamp`) records the SHA-256 identity of the sources it was built from: the profile and Kernel `.lean` files, their lakefiles, the manifest and the toolchain pin. Modification times play no part. A build is announced on stderr; a failed build is refused with the target and the last lines of lake's output, and a missing toolchain with the elan install hint."
-      ],
-      "claim_signature": "2e784e659d7892566ffda07f0b107b57f35615c8e1972fce2aaa868237e6ff9d",
-      "other_family": "167",
-      "openai_fork_improvement": false,
-      "stated_bound_changed": true,
-      "likely_tracked_source": true,
-      "likely_new_race": false,
-      "likely_pivot": false,
-      "on_board": false
-    },
-    {
-      "repo": "wstrinz/grandportage",
-      "url": "https://github.com/wstrinz/grandportage",
-      "stars": 0,
-      "created_at": "2026-07-27T14:06:28Z",
-      "pushed_at": "2026-10-12T21:25:51Z",
-      "description": "Records what each modelling step in a computational-algebra campaign LOSES, and refuses the conclusions that loss does not support.",
-      "problem_guess": "Family 167: Planar distinct distances and unit-distance bounds",
-      "rank": 20,
-      "evidence": [
-        "other-bounds"
-      ],
-      "readme_commit": "2ea6bf78449597a1453d17c8e0f7778d0960f858",
-      "source_claim_evidence": [
-        "| C1 | **`docs/USING-GP.md`:** install (elan, Python), build the runners, start a campaign in any directory, then the full loop: claim, submit, status, frontier, explain, receipts, merge, emit. Also how to build a rope from `ROPE-CHECKLIST.md`. One small worked example, end to end. | A fresh agent, given only USING-GP.md, completes the example. Record the time and every gap. |"
-      ],
-      "claim_signature": "5c1ca10262e61643c148a633a7c2c0b230313ff5e729bf7d02f991d3bdd4482d",
-      "other_family": "167",
-      "openai_fork_improvement": false,
-      "stated_bound_changed": true,
-      "likely_tracked_source": true,
-      "likely_new_race": false,
-      "likely_pivot": false,
-      "on_board": false
-    },
-    {
-      "repo": "u00dxk2/bounds-ledger",
-      "url": "https://github.com/u00dxk2/bounds-ledger",
-      "stars": 1,
-      "created_at": "2026-07-22T23:43:54Z",
-      "pushed_at": "2026-10-12T20:54:17Z",
-      "description": "A continuously re-verified ledger of mathematical records. Mirrors published bounds and constants, re-checks them daily, and goes red when a cited record moves.",
-      "problem_guess": "Family 167: Planar distinct distances and unit-distance bounds",
-      "rank": 20,
-      "evidence": [
-        "other-bounds"
-      ],
-      "readme_commit": "3c13ad3bd901fa92f35aa2ab7ef18dca9a10cdc2",
-      "source_claim_evidence": [
-        "**Outcome:** a reader about to cite a watched constant that a claim in OpenAI's 2026-10-06 math release (github.com/openai/math) bears on sees a labelled, unrefereed-claim note on that constant's page and index row. The note carries the claim's family and a formal-proof / partial / none tag taken from the release's own Lean scope page. It is never called a record and never touches a bound cell. Asked for by David (skylark-site `docs/answers/2026-10-12-afternoon-plan-bounds-ledger-openai-math.md`). A new `A-` row will be minted at P3.",
-        "P1 review: REDIRECT (inbox `b2d45f3e`). Render a formal-proof tag only from a Lean statement read and matched against the constant's definition. Keep the whole-population map as data. Render only what was statement-checked today. Public repo: no text from another publication's workspace."
-      ],
-      "claim_signature": "abdf51e11481c01f3e9e8381dc5062b6560d15d96c5b3bbaadb2f35257f136c7",
+      "claim_signature": "7272c547f13ea46202bbf1f3410699ee644c04a3ee22fa127cab6d158f16ef01",
       "other_family": "167",
       "openai_fork_improvement": false,
       "stated_bound_changed": true,
@@ -1090,30 +699,29 @@
     },
     {
       "repo": "CrocSwap/integer-mult-bounds",
-      "url": "https://github.com/CrocSwap/integer-mult-bounds/pull/621",
-      "pr_number": 621,
-      "author": "aliromman",
-      "created_at": "2026-10-12T20:35:18Z",
-      "pushed_at": "2026-10-12T20:35:18Z",
+      "url": "https://github.com/CrocSwap/integer-mult-bounds/pull/634",
+      "pr_number": 634,
+      "author": "ShikeChen01",
+      "created_at": "2026-10-12T23:38:59Z",
+      "pushed_at": "2026-10-12T23:39:00Z",
       "stars": 0,
       "rank": 25,
-      "description": "Prove uniform prime-power cyclic inverse bounds (no \u03ba claim)",
+      "description": "Research notes (no \u03ba claim): #109 and lower bounds, the coding gap, a Lorentzian minrank obstruction, and a loss chain",
       "problem_guess": "exact DFT",
-      "readme_commit": "520774462b19b29af41554b74def31f9d01e997e",
+      "readme_commit": "189b5771bc1792d5038105463e476e30cb6eb58c",
       "source_claim_evidence": [
-        "The proof uses integral tail coefficients, prime-power residue reduction, a nonzero Sylvester determinant, paired field embeddings, cofactor bounds, and an absolutely convergent Fourier series. The logarithm of the inverse upper bound is `O(r^2 phi(r))`; no dependency on cyclic length remains.",
-        "Let g(t)=1/P(exp(it)). The circle bound gives |g(t)|<=delta_r^-1.",
-        "|g'(t)| <= nH/(r delta_r^2).",
-        "sum_k k^2 |c_k|^2 <= (nH/(r delta_r^2))^2.",
-        "The estimate sum_(k!=0) k^-2 <= 4 follows from comparison of the",
-        "Cauchy-Schwarz inequality and |c_0|<=delta_r^-1,",
-        "sum_k |c_k| <= delta_r^-1 + 2nH/(r delta_r^2)."
+        "| Harvey\u2013van der Hoeven, FOCS 2025 (arXiv 2503.22848) | transposition \u21d2 multiplication lower bound | #109 already notes its address procedure uses XOR and so lies outside data-movement models (`01`, \"Lower-bound scope\") |",
+        "| Afshani\u2013Freksen\u2013Kamma\u2013Larsen, ICALP 2019 (arXiv 1902.10935) | bounded-degree circuits, **conditional on the Li\u2013Li conjecture** | the conjecture is false (\u00a71.4), so the bound is void |",
+        "Van der Hoeven's relaxed multiplication bounds (ISSAC 2014) are algebraic and FFT-specific; for integers they give",
+        "O(I(n) log n). No black-box R \u2264 M\u00b7(log n)^{o(1)} on TMs has been claimed.",
+        "- N. Ailon, *Tighter Fourier transform lower bounds*, ICALP 2015, arXiv 1404.1741.",
+        "- P. B\u00fcrgisser, M. Lotz, *Lower bounds on the bounded coefficient complexity of bilinear maps*, J. ACM 51(3) 2004.",
+        "- J. Morgenstern, *Note on a lower bound of the linear complexity of the fast Fourier transform*, J. ACM 20(2) (1973)."
       ],
       "source_claim_files": [
-        "PR body",
-        "research/prime-power-cyclic-inverse/PROOF.md"
+        "research/lower-bounds-coding-gap/notes/1-lower-bounds.md"
       ],
-      "claim_signature": "2902cd358181caa46e2851d72a0f031bd30ca44a8d1a52e1c087d95bbdcc386d",
+      "claim_signature": "71b4b05ad016b2a41c20273d91f186ebed1c31cbaea819e3f20c03820ee76057",
       "cross_problem_pr": true,
       "other_family": null,
       "stated_bound_changed": true,
@@ -1125,355 +733,13 @@
         "recent-crocswap-pr"
       ],
       "coverage_complete": true
-    },
-    {
-      "repo": "CrocSwap/integer-mult-bounds",
-      "url": "https://github.com/CrocSwap/integer-mult-bounds/pull/491",
-      "pr_number": 491,
-      "author": "M6LI",
-      "created_at": "2026-10-11T20:05:27Z",
-      "pushed_at": "2026-10-11T20:56:33Z",
-      "stars": 0,
-      "rank": 25,
-      "description": "R715 count-only fallback correction: conditional \u03ba = 0.001296611983223706",
-      "problem_guess": "exact DFT",
-      "readme_commit": "996f67f7c21b8e56b4a2b0174c419ce48c480414",
-      "source_claim_evidence": [
-        "`i^(sum sign*parity(v\u00b7y))`. Represent this exponent as a Z4 quadratic"
-      ],
-      "source_claim_files": [
-        "research/r740-hosted-rank149/PROOF.md",
-        "research/r740-hosted-rank151-mixed/PROOF.md"
-      ],
-      "claim_signature": "3c5b9c4c9ce6d60ccca5f29350f335aed4ff2d9bcfba25ba42530f9da44ea885",
-      "cross_problem_pr": true,
-      "other_family": null,
-      "stated_bound_changed": true,
-      "likely_tracked_source": true,
-      "likely_new_race": false,
-      "likely_pivot": true,
-      "on_board": true,
-      "evidence": [
-        "recent-crocswap-pr"
-      ],
-      "coverage_complete": false
-    },
-    {
-      "repo": "CrocSwap/integer-mult-bounds",
-      "url": "https://github.com/CrocSwap/integer-mult-bounds/pull/429",
-      "pr_number": 429,
-      "author": "rohanarun",
-      "created_at": "2026-10-11T11:28:01Z",
-      "pushed_at": "2026-10-11T11:52:18Z",
-      "stars": 0,
-      "rank": 25,
-      "description": "Candidate conditional kappa 0.001019646575559504: R779 gauged helper inlining",
-      "problem_guess": "3SUM",
-      "readme_commit": "b25cbe3350e32efb211508c1dd41a134770fba16",
-      "source_claim_evidence": [
-        "The productive connection was Mathlib Module.Basis.extendLe, Indep.fundCircuit_isCircuit, basis exchange and closure_exchange: filter by a physically available common frame, then construct a systematic kernel. The final witness has 925 pivots, 74 more than PR266, and total entrance rank 1762, 85 more. Of its rows, 442 originated in the filtered systematic search; this origin count is not a count of independently novel theorems. Up to rational basis equivalence, 516 cut/support/frame combinations also occur in PR266 and 409 do not. One collective component exposes eight independent pivot directions over 18 helpers at rank 11. The final packing retains this component and smaller ones rather than insisting on disjoint pair supports."
-      ],
-      "source_claim_files": [
-        "research/filtered-kernel-target120/DISCOVERY.md"
-      ],
-      "claim_signature": "f7d88dd9652c64fe1c680a6a1f6519dd0d043b28d7a02e62fc23da6051240215",
-      "cross_problem_pr": true,
-      "other_family": null,
-      "stated_bound_changed": true,
-      "likely_tracked_source": true,
-      "likely_new_race": false,
-      "likely_pivot": true,
-      "on_board": true,
-      "evidence": [
-        "recent-crocswap-pr"
-      ],
-      "coverage_complete": false
-    },
-    {
-      "repo": "CrocSwap/integer-mult-bounds",
-      "url": "https://github.com/CrocSwap/integer-mult-bounds/pull/418",
-      "pr_number": 418,
-      "author": "rohanarun",
-      "created_at": "2026-10-11T10:37:42Z",
-      "pushed_at": "2026-10-11T10:45:10Z",
-      "stars": 0,
-      "rank": 25,
-      "description": "Candidate conditional kappa 0.001017923290728024: propagated entrance frames",
-      "problem_guess": "3SUM",
-      "readme_commit": "ff8737920a4bb1a910eb069a5f86db6efdefa589",
-      "source_claim_evidence": [
-        "The productive connection was Mathlib Module.Basis.extendLe, Indep.fundCircuit_isCircuit, basis exchange and closure_exchange: filter by a physically available common frame, then construct a systematic kernel. The final witness has 925 pivots, 74 more than PR266, and total entrance rank 1762, 85 more. Of its rows, 442 originated in the filtered systematic search; this origin count is not a count of independently novel theorems. Up to rational basis equivalence, 516 cut/support/frame combinations also occur in PR266 and 409 do not. One collective component exposes eight independent pivot directions over 18 helpers at rank 11. The final packing retains this component and smaller ones rather than insisting on disjoint pair supports."
-      ],
-      "source_claim_files": [
-        "research/filtered-kernel-target120/DISCOVERY.md"
-      ],
-      "claim_signature": "f7d88dd9652c64fe1c680a6a1f6519dd0d043b28d7a02e62fc23da6051240215",
-      "cross_problem_pr": true,
-      "other_family": null,
-      "stated_bound_changed": true,
-      "likely_tracked_source": true,
-      "likely_new_race": false,
-      "likely_pivot": true,
-      "on_board": true,
-      "evidence": [
-        "recent-crocswap-pr"
-      ],
-      "coverage_complete": false
-    },
-    {
-      "repo": "CrocSwap/integer-mult-bounds",
-      "url": "https://github.com/CrocSwap/integer-mult-bounds/pull/415",
-      "pr_number": 415,
-      "author": "rohanarun",
-      "created_at": "2026-10-11T10:21:10Z",
-      "pushed_at": "2026-10-11T10:31:07Z",
-      "stars": 0,
-      "rank": 25,
-      "description": "Candidate conditional kappa 0.001017786140030308: enlarged entrances and target prefixes",
-      "problem_guess": "3SUM",
-      "readme_commit": "4ad1ef5c67e9943d21ee8c13325ca5705546ae28",
-      "source_claim_evidence": [
-        "The productive connection was Mathlib Module.Basis.extendLe, Indep.fundCircuit_isCircuit, basis exchange and closure_exchange: filter by a physically available common frame, then construct a systematic kernel. The final witness has 925 pivots, 74 more than PR266, and total entrance rank 1762, 85 more. Of its rows, 442 originated in the filtered systematic search; this origin count is not a count of independently novel theorems. Up to rational basis equivalence, 516 cut/support/frame combinations also occur in PR266 and 409 do not. One collective component exposes eight independent pivot directions over 18 helpers at rank 11. The final packing retains this component and smaller ones rather than insisting on disjoint pair supports."
-      ],
-      "source_claim_files": [
-        "research/filtered-kernel-target120/DISCOVERY.md"
-      ],
-      "claim_signature": "f7d88dd9652c64fe1c680a6a1f6519dd0d043b28d7a02e62fc23da6051240215",
-      "cross_problem_pr": true,
-      "other_family": null,
-      "stated_bound_changed": true,
-      "likely_tracked_source": true,
-      "likely_new_race": false,
-      "likely_pivot": true,
-      "on_board": true,
-      "evidence": [
-        "recent-crocswap-pr"
-      ],
-      "coverage_complete": false
-    },
-    {
-      "repo": "CrocSwap/integer-mult-bounds",
-      "url": "https://github.com/CrocSwap/integer-mult-bounds/pull/409",
-      "pr_number": 409,
-      "author": "rohanarun",
-      "created_at": "2026-10-11T09:41:27Z",
-      "pushed_at": "2026-10-11T10:09:17Z",
-      "stars": 0,
-      "rank": 25,
-      "description": "Conditional kappa 0.001017250500928266: ordered sequential entrance gauges",
-      "problem_guess": "matrix multiplication",
-      "readme_commit": "212e03d7665d08fc6a037d3e33612cb7fc60874d",
-      "source_claim_evidence": [
-        "These are bounded searches, not impossibility theorems. Prior-round attempts are recorded in PRIOR-ROUND.md. Structural retrieval queried four exact operator-cooccurrence predicates in the canonical DAG: tensor-map/composition, block-matrix multiplication, rank-one/composition, and equivalence composition/inverse. It returned163 records (140 typed,23 source-only); two queries hit their80-record limit. This was targeted retrieval, not an exhaustive search of the whole DAG. The inspected TI composition/conjugation/cancellation contracts inspired explicit preconditioning but are not imported as a certificate."
-      ],
-      "source_claim_files": [
-        "research/e8-prefix-restoration/research-notes/ROUND.md"
-      ],
-      "claim_signature": "3bdad119b34f8eb55ad31fe78fcb9f1c1e49f106d5c2ff958a9c39aed2c8e261",
-      "cross_problem_pr": true,
-      "other_family": null,
-      "stated_bound_changed": true,
-      "likely_tracked_source": true,
-      "likely_new_race": false,
-      "likely_pivot": true,
-      "on_board": true,
-      "evidence": [
-        "recent-crocswap-pr"
-      ],
-      "coverage_complete": false
-    },
-    {
-      "repo": "CrocSwap/integer-mult-bounds",
-      "url": "https://github.com/CrocSwap/integer-mult-bounds/pull/406",
-      "pr_number": 406,
-      "author": "rohanarun",
-      "created_at": "2026-10-11T09:26:31Z",
-      "pushed_at": "2026-10-11T09:46:14Z",
-      "stars": 0,
-      "rank": 25,
-      "description": "Conditional kappa 0.001016469657190768: shared-donor chains with target re-synthesis",
-      "problem_guess": "matrix multiplication",
-      "readme_commit": "5d0d8dff39db99f922ead6d11963aa643511e3ee",
-      "source_claim_evidence": [
-        "These are bounded searches, not impossibility theorems. Prior-round attempts are recorded in PRIOR-ROUND.md. Structural retrieval queried four exact operator-cooccurrence predicates in the canonical DAG: tensor-map/composition, block-matrix multiplication, rank-one/composition, and equivalence composition/inverse. It returned163 records (140 typed,23 source-only); two queries hit their80-record limit. This was targeted retrieval, not an exhaustive search of the whole DAG. The inspected TI composition/conjugation/cancellation contracts inspired explicit preconditioning but are not imported as a certificate."
-      ],
-      "source_claim_files": [
-        "research/e8-prefix-restoration/research-notes/ROUND.md"
-      ],
-      "claim_signature": "3bdad119b34f8eb55ad31fe78fcb9f1c1e49f106d5c2ff958a9c39aed2c8e261",
-      "cross_problem_pr": true,
-      "other_family": null,
-      "stated_bound_changed": true,
-      "likely_tracked_source": true,
-      "likely_new_race": false,
-      "likely_pivot": true,
-      "on_board": true,
-      "evidence": [
-        "recent-crocswap-pr"
-      ],
-      "coverage_complete": false
-    },
-    {
-      "repo": "CrocSwap/integer-mult-bounds",
-      "url": "https://github.com/CrocSwap/integer-mult-bounds/pull/403",
-      "pr_number": 403,
-      "author": "rohanarun",
-      "created_at": "2026-10-11T09:08:49Z",
-      "pushed_at": "2026-10-11T09:35:11Z",
-      "stars": 0,
-      "rank": 25,
-      "description": "Conditional kappa 0.001013370540420331: 64-replica response-subspace banks",
-      "problem_guess": "matrix multiplication",
-      "readme_commit": "4e3ef5fe92652b1a740b32cbea90d0fea678062e",
-      "source_claim_evidence": [
-        "These are bounded searches, not impossibility theorems. Prior-round attempts are recorded in PRIOR-ROUND.md. Structural retrieval queried four exact operator-cooccurrence predicates in the canonical DAG: tensor-map/composition, block-matrix multiplication, rank-one/composition, and equivalence composition/inverse. It returned163 records (140 typed,23 source-only); two queries hit their80-record limit. This was targeted retrieval, not an exhaustive search of the whole DAG. The inspected TI composition/conjugation/cancellation contracts inspired explicit preconditioning but are not imported as a certificate."
-      ],
-      "source_claim_files": [
-        "research/e8-prefix-restoration/research-notes/ROUND.md"
-      ],
-      "claim_signature": "3bdad119b34f8eb55ad31fe78fcb9f1c1e49f106d5c2ff958a9c39aed2c8e261",
-      "cross_problem_pr": true,
-      "other_family": null,
-      "stated_bound_changed": true,
-      "likely_tracked_source": true,
-      "likely_new_race": false,
-      "likely_pivot": true,
-      "on_board": true,
-      "evidence": [
-        "recent-crocswap-pr"
-      ],
-      "coverage_complete": false
-    },
-    {
-      "repo": "CrocSwap/integer-mult-bounds",
-      "url": "https://github.com/CrocSwap/integer-mult-bounds/pull/405",
-      "pr_number": 405,
-      "author": "rohanarun",
-      "created_at": "2026-10-11T09:18:07Z",
-      "pushed_at": "2026-10-11T09:20:30Z",
-      "stars": 0,
-      "rank": 25,
-      "description": "Conditional kappa 0.001013417593791468: target re-synthesis with 64-replica banks",
-      "problem_guess": "matrix multiplication",
-      "readme_commit": "66bc6cbfd0f93bcb88f7e36205ae8b160c9e5845",
-      "source_claim_evidence": [
-        "These are bounded searches, not impossibility theorems. Prior-round attempts are recorded in PRIOR-ROUND.md. Structural retrieval queried four exact operator-cooccurrence predicates in the canonical DAG: tensor-map/composition, block-matrix multiplication, rank-one/composition, and equivalence composition/inverse. It returned163 records (140 typed,23 source-only); two queries hit their80-record limit. This was targeted retrieval, not an exhaustive search of the whole DAG. The inspected TI composition/conjugation/cancellation contracts inspired explicit preconditioning but are not imported as a certificate."
-      ],
-      "source_claim_files": [
-        "research/e8-prefix-restoration/research-notes/ROUND.md"
-      ],
-      "claim_signature": "3bdad119b34f8eb55ad31fe78fcb9f1c1e49f106d5c2ff958a9c39aed2c8e261",
-      "cross_problem_pr": true,
-      "other_family": null,
-      "stated_bound_changed": true,
-      "likely_tracked_source": true,
-      "likely_new_race": false,
-      "likely_pivot": true,
-      "on_board": true,
-      "evidence": [
-        "recent-crocswap-pr"
-      ],
-      "coverage_complete": false
-    },
-    {
-      "repo": "CrocSwap/integer-mult-bounds",
-      "url": "https://github.com/CrocSwap/integer-mult-bounds/pull/404",
-      "pr_number": 404,
-      "author": "Dugongue",
-      "created_at": "2026-10-11T09:16:42Z",
-      "pushed_at": "2026-10-11T09:16:42Z",
-      "stars": 0,
-      "rank": 25,
-      "description": "research: shared-donor chains and overlapping target recovery, conditional kappa = 1.016422320428301e-3",
-      "problem_guess": "matrix multiplication",
-      "readme_commit": "12f488264cdd74a3b60d0fb534f4955792384f5c",
-      "source_claim_evidence": [
-        "These are bounded searches, not impossibility theorems. Prior-round attempts are recorded in PRIOR-ROUND.md. Structural retrieval queried four exact operator-cooccurrence predicates in the canonical DAG: tensor-map/composition, block-matrix multiplication, rank-one/composition, and equivalence composition/inverse. It returned163 records (140 typed,23 source-only); two queries hit their80-record limit. This was targeted retrieval, not an exhaustive search of the whole DAG. The inspected TI composition/conjugation/cancellation contracts inspired explicit preconditioning but are not imported as a certificate."
-      ],
-      "source_claim_files": [
-        "research/e8-prefix-restoration/research-notes/ROUND.md"
-      ],
-      "claim_signature": "3bdad119b34f8eb55ad31fe78fcb9f1c1e49f106d5c2ff958a9c39aed2c8e261",
-      "cross_problem_pr": true,
-      "other_family": null,
-      "stated_bound_changed": true,
-      "likely_tracked_source": true,
-      "likely_new_race": false,
-      "likely_pivot": true,
-      "on_board": true,
-      "evidence": [
-        "recent-crocswap-pr"
-      ],
-      "coverage_complete": false
-    },
-    {
-      "repo": "CrocSwap/integer-mult-bounds",
-      "url": "https://github.com/CrocSwap/integer-mult-bounds/pull/401",
-      "pr_number": 401,
-      "author": "Dugongue",
-      "created_at": "2026-10-11T08:44:39Z",
-      "pushed_at": "2026-10-11T08:44:39Z",
-      "stars": 0,
-      "rank": 25,
-      "description": "research: response-subspace gauges and two-sided normalization, kappa = 1.013310887459710e-3",
-      "problem_guess": "matrix multiplication",
-      "readme_commit": "7844f72c6051a4408284c3092490687061675c1a",
-      "source_claim_evidence": [
-        "These are bounded searches, not impossibility theorems. Prior-round attempts are recorded in PRIOR-ROUND.md. Structural retrieval queried four exact operator-cooccurrence predicates in the canonical DAG: tensor-map/composition, block-matrix multiplication, rank-one/composition, and equivalence composition/inverse. It returned163 records (140 typed,23 source-only); two queries hit their80-record limit. This was targeted retrieval, not an exhaustive search of the whole DAG. The inspected TI composition/conjugation/cancellation contracts inspired explicit preconditioning but are not imported as a certificate."
-      ],
-      "source_claim_files": [
-        "research/e8-prefix-restoration/research-notes/ROUND.md"
-      ],
-      "claim_signature": "3bdad119b34f8eb55ad31fe78fcb9f1c1e49f106d5c2ff958a9c39aed2c8e261",
-      "cross_problem_pr": true,
-      "other_family": null,
-      "stated_bound_changed": true,
-      "likely_tracked_source": true,
-      "likely_new_race": false,
-      "likely_pivot": true,
-      "on_board": true,
-      "evidence": [
-        "recent-crocswap-pr"
-      ],
-      "coverage_complete": false
-    },
-    {
-      "repo": "CrocSwap/integer-mult-bounds",
-      "url": "https://github.com/CrocSwap/integer-mult-bounds/pull/400",
-      "pr_number": 400,
-      "author": "rohanarun",
-      "created_at": "2026-10-11T08:26:49Z",
-      "pushed_at": "2026-10-11T08:43:31Z",
-      "stars": 0,
-      "rank": 25,
-      "description": "Conditional kappa 0.001002683712533373: R781 heterogeneous banks and padding fusion",
-      "problem_guess": "matrix multiplication",
-      "readme_commit": "b73a8b4f3d8b32676e7527005911a11a60a1c4fd",
-      "source_claim_evidence": [
-        "These are bounded searches, not impossibility theorems. Prior-round attempts are recorded in PRIOR-ROUND.md. Structural retrieval queried four exact operator-cooccurrence predicates in the canonical DAG: tensor-map/composition, block-matrix multiplication, rank-one/composition, and equivalence composition/inverse. It returned163 records (140 typed,23 source-only); two queries hit their80-record limit. This was targeted retrieval, not an exhaustive search of the whole DAG. The inspected TI composition/conjugation/cancellation contracts inspired explicit preconditioning but are not imported as a certificate."
-      ],
-      "source_claim_files": [
-        "research/e8-prefix-restoration/research-notes/ROUND.md"
-      ],
-      "claim_signature": "3bdad119b34f8eb55ad31fe78fcb9f1c1e49f106d5c2ff958a9c39aed2c8e261",
-      "cross_problem_pr": true,
-      "other_family": null,
-      "stated_bound_changed": true,
-      "likely_tracked_source": true,
-      "likely_new_race": false,
-      "likely_pivot": true,
-      "on_board": true,
-      "evidence": [
-        "recent-crocswap-pr"
-      ],
-      "coverage_complete": false
     }
   ],
   "related": [
     {
       "repo": "Paureel/beyond-n-log-n",
       "url": "https://github.com/Paureel/beyond-n-log-n",
-      "stars": 6,
+      "stars": 7,
       "created_at": "2026-10-08T15:25:39Z",
       "pushed_at": "2026-10-09T20:07:22Z",
       "problem_guess": "integer multiplication",
@@ -1508,21 +774,19 @@
       "url": "https://github.com/platypii/integer-mult-bounds-lean",
       "stars": 3,
       "created_at": "2026-10-08T06:46:09Z",
-      "pushed_at": "2026-10-12T21:37:15Z",
+      "pushed_at": "2026-10-13T00:19:53Z",
       "problem_guess": "integer multiplication",
       "description": "Lean 4 formalization (work in progress) of O(n log n \u00b7 log^(-\u03b5) n) integer multiplication on a multitape Turing machine",
       "rank": 9,
       "evidence": [
         "integer multiplication",
-        "exponent",
-        "FFT",
         "discrete Fourier transform",
         "citation"
       ],
       "likely_new_race": false,
       "on_board": false,
       "stated_bound_changed": false,
-      "readme_commit": "816e285c04ca99c97cb34eba639a08a3580bf9b8",
+      "readme_commit": "bc40ac02299685f13d7b52cb015d6988b66d9f99",
       "wht_only": false,
       "likely_tracked_source": false,
       "likely_pivot": false,
@@ -1548,7 +812,7 @@
     {
       "repo": "dzako/sweepfft",
       "url": "https://github.com/dzako/sweepfft",
-      "stars": 1,
+      "stars": 2,
       "created_at": "2026-10-12T17:49:09Z",
       "pushed_at": "2026-10-12T19:12:28Z",
       "problem_guess": "integer multiplication",
@@ -1587,11 +851,75 @@
       "stated_bound_changed": false
     },
     {
+      "repo": "vectorsss/integer-mult-bounds",
+      "url": "https://github.com/vectorsss/integer-mult-bounds",
+      "stars": 0,
+      "created_at": "2026-10-12T23:09:10Z",
+      "pushed_at": "2026-10-13T00:46:52Z",
+      "problem_guess": "integer multiplication",
+      "description": "Conditional integer multiplication: kappa > 2^-15. Community proofs, exact certificates and reproducible audits; assumes the OpenAI #109 framework.",
+      "rank": 6,
+      "evidence": [
+        "fork"
+      ],
+      "likely_new_race": false,
+      "on_board": false,
+      "stated_bound_changed": false
+    },
+    {
       "repo": "jeremykothe2/integer-mult-bounds",
       "url": "https://github.com/jeremykothe2/integer-mult-bounds",
       "stars": 0,
       "created_at": "2026-10-12T07:59:37Z",
-      "pushed_at": "2026-10-12T21:41:29Z",
+      "pushed_at": "2026-10-13T00:36:23Z",
+      "problem_guess": "integer multiplication",
+      "description": "Conditional integer multiplication: kappa > 2^-15. Community proofs, exact certificates and reproducible audits; assumes the OpenAI #109 framework.",
+      "rank": 6,
+      "evidence": [
+        "fork"
+      ],
+      "likely_new_race": false,
+      "on_board": false,
+      "stated_bound_changed": false
+    },
+    {
+      "repo": "Inventor22/integer-mult-bounds",
+      "url": "https://github.com/Inventor22/integer-mult-bounds",
+      "stars": 0,
+      "created_at": "2026-10-13T00:14:57Z",
+      "pushed_at": "2026-10-13T00:15:22Z",
+      "problem_guess": "integer multiplication",
+      "description": "Conditional integer multiplication: kappa > 2^-15. Community proofs, exact certificates and reproducible audits; assumes the OpenAI #109 framework.",
+      "rank": 6,
+      "evidence": [
+        "fork"
+      ],
+      "likely_new_race": false,
+      "on_board": false,
+      "stated_bound_changed": false
+    },
+    {
+      "repo": "chafreaky/integer-mult-bounds",
+      "url": "https://github.com/chafreaky/integer-mult-bounds",
+      "stars": 0,
+      "created_at": "2026-10-08T13:34:37Z",
+      "pushed_at": "2026-10-13T00:00:07Z",
+      "problem_guess": "integer multiplication",
+      "description": "Conditional improvement to the exponent saving in OpenAI\u2019s integer multiplication result #109",
+      "rank": 2,
+      "evidence": [
+        "fork"
+      ],
+      "likely_new_race": false,
+      "on_board": false,
+      "stated_bound_changed": false
+    },
+    {
+      "repo": "ShikeChen01/integer-mult-bounds",
+      "url": "https://github.com/ShikeChen01/integer-mult-bounds",
+      "stars": 0,
+      "created_at": "2026-10-12T23:38:49Z",
+      "pushed_at": "2026-10-12T23:38:53Z",
       "problem_guess": "integer multiplication",
       "description": "Conditional integer multiplication: kappa > 2^-15. Community proofs, exact certificates and reproducible audits; assumes the OpenAI #109 framework.",
       "rank": 6,
@@ -1607,7 +935,23 @@
       "url": "https://github.com/jeremydiviney/integer-mult-bounds",
       "stars": 0,
       "created_at": "2026-10-12T20:19:30Z",
-      "pushed_at": "2026-10-12T21:32:29Z",
+      "pushed_at": "2026-10-12T22:38:42Z",
+      "problem_guess": "integer multiplication",
+      "description": "Conditional integer multiplication: kappa > 2^-15. Community proofs, exact certificates and reproducible audits; assumes the OpenAI #109 framework.",
+      "rank": 6,
+      "evidence": [
+        "fork"
+      ],
+      "likely_new_race": false,
+      "on_board": false,
+      "stated_bound_changed": false
+    },
+    {
+      "repo": "lydakis/integer-mult-bounds",
+      "url": "https://github.com/lydakis/integer-mult-bounds",
+      "stars": 0,
+      "created_at": "2026-10-10T03:37:40Z",
+      "pushed_at": "2026-10-12T22:37:21Z",
       "problem_guess": "integer multiplication",
       "description": "Conditional integer multiplication: kappa > 2^-15. Community proofs, exact certificates and reproducible audits; assumes the OpenAI #109 framework.",
       "rank": 6,
@@ -1627,22 +971,6 @@
       "problem_guess": "integer multiplication",
       "description": "Conditional integer multiplication: kappa > 2^-15. Community proofs, exact certificates and reproducible audits; assumes the OpenAI #109 framework.",
       "rank": 6,
-      "evidence": [
-        "fork"
-      ],
-      "likely_new_race": false,
-      "on_board": false,
-      "stated_bound_changed": false
-    },
-    {
-      "repo": "chafreaky/integer-mult-bounds",
-      "url": "https://github.com/chafreaky/integer-mult-bounds",
-      "stars": 0,
-      "created_at": "2026-10-08T13:34:37Z",
-      "pushed_at": "2026-10-12T20:23:25Z",
-      "problem_guess": "integer multiplication",
-      "description": "Conditional improvement to the exponent saving in OpenAI\u2019s integer multiplication result #109",
-      "rank": 2,
       "evidence": [
         "fork"
       ],
@@ -1800,22 +1128,6 @@
       "stars": 0,
       "created_at": "2026-10-09T08:18:39Z",
       "pushed_at": "2026-10-12T06:06:29Z",
-      "problem_guess": "integer multiplication",
-      "description": "Conditional integer multiplication: kappa > 2^-15. Community proofs, exact certificates and reproducible audits; assumes the OpenAI #109 framework.",
-      "rank": 6,
-      "evidence": [
-        "fork"
-      ],
-      "likely_new_race": false,
-      "on_board": false,
-      "stated_bound_changed": false
-    },
-    {
-      "repo": "lydakis/integer-mult-bounds",
-      "url": "https://github.com/lydakis/integer-mult-bounds",
-      "stars": 0,
-      "created_at": "2026-10-10T03:37:40Z",
-      "pushed_at": "2026-10-12T04:16:47Z",
       "problem_guess": "integer multiplication",
       "description": "Conditional integer multiplication: kappa > 2^-15. Community proofs, exact certificates and reproducible audits; assumes the OpenAI #109 framework.",
       "rank": 6,
@@ -3032,7 +2344,7 @@
         "stargazers_count": 0,
         "fork": true
       },
-      "checked_cycle": 15
+      "checked_cycle": 16
     },
     "slitsey/catalan-irrationality-measure": {
       "head": "41531d6d4aac2a4af4089313a29cd513efdd3031",
@@ -3072,7 +2384,7 @@
         "stargazers_count": 0,
         "fork": false
       },
-      "checked_cycle": 15
+      "checked_cycle": 16
     },
     "shea256/matroid-prophet-inequality": {
       "head": "8cd1395994596d89ad20c2af8b69dab8e3402ee1",
@@ -3099,7 +2411,7 @@
         "stargazers_count": 1,
         "fork": false
       },
-      "checked_cycle": 15
+      "checked_cycle": 16
     },
     "EcoDataLab/contingency-tables": {
       "head": "d851f00508840e5182fe5e9328446e65626f6e6b",
@@ -3129,7 +2441,7 @@
         "stargazers_count": 0,
         "fork": false
       },
-      "checked_cycle": 15
+      "checked_cycle": 16
     },
     "log-prathm/ptf-average-sensitivity": {
       "head": "5e9f26cf74935f08be20f9ac4deb57b291d707d8",
@@ -3148,7 +2460,7 @@
         "stargazers_count": 0,
         "fork": false
       },
-      "checked_cycle": 15
+      "checked_cycle": 16
     },
     "rohanarun/van-der-waerden-refinement": {
       "head": "54ac9715fceab938ca77d5980c36ab691765a04d",
@@ -3167,7 +2479,7 @@
         "stargazers_count": 1,
         "fork": false
       },
-      "checked_cycle": 15
+      "checked_cycle": 16
     },
     "rohanarun/sidorenko-template-refinements": {
       "head": "d1df2a5cc0cb0c9003466b1c7f8ecb77a8e72a7d",
@@ -3186,7 +2498,7 @@
         "fork": false,
         "_openai_fork": false
       },
-      "checked_cycle": 15
+      "checked_cycle": 16
     },
     "rohanarun/unit-distance-grid-refinement": {
       "head": "62455a6709204f79a3a93c4eace817c3ce0d54ec",
@@ -3206,7 +2518,7 @@
         "fork": false,
         "_openai_fork": false
       },
-      "checked_cycle": 15
+      "checked_cycle": 16
     },
     "gotrevor/snaky-15x15": {
       "head": "b18ed32473a6a22ebfdda98da62d61b8b1590c1e",
@@ -3226,7 +2538,7 @@
         "stargazers_count": 1,
         "fork": false
       },
-      "checked_cycle": 15
+      "checked_cycle": 16
     },
     "erebos-labs/ordered-matrix-removal-4x4": {
       "head": "6d21ce36e83b71d8a44015016cf3ac77e44b55ff",
@@ -3245,7 +2557,7 @@
         "stargazers_count": 0,
         "fork": false
       },
-      "checked_cycle": 15
+      "checked_cycle": 16
     },
     "littleBro/heilbronn-triangle-bounds": {
       "head": "2259fc0f9d7edc0785838bceee835829df034952",
@@ -3263,7 +2575,7 @@
         "stargazers_count": 0,
         "fork": false
       },
-      "checked_cycle": 15
+      "checked_cycle": 16
     },
     "amachino/haldane-gap-refinement": {
       "head": "15909bdc15e947795b6fba946008dd8530bb3477",
@@ -3281,7 +2593,7 @@
         "stargazers_count": 0,
         "fork": false
       },
-      "checked_cycle": 15
+      "checked_cycle": 16
     },
     "massainodes/math": {
       "head": "fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb",
@@ -3452,7 +2764,7 @@
       "checked_cycle": 1
     },
     "DrMurphyIsIn/Arda": {
-      "head": "8ad5076913864c00b6bb58212376a265fdf732de",
+      "head": "15ded60422db7805d00d5d18ee380569617c1771",
       "seen_claims": [
         "76751cf32614dc010742b14488d33361a97675f336c0372f98687b492e9ad720",
         "472ceb1427e41a4b72f928f57a37352f328214a48bb4747a49d6331e85f2a6c4",
@@ -3473,12 +2785,12 @@
         "html_url": "https://github.com/DrMurphyIsIn/Arda",
         "default_branch": "main",
         "created_at": "2026-08-16T01:33:58Z",
-        "pushed_at": "2026-10-12T21:45:53Z",
+        "pushed_at": "2026-10-12T23:31:23Z",
         "description": "Machine-checked progress on the Brualdi-Goldwasser (1984) Laplacian-ratio maximizer for trees (Lean 4 + Mathlib, no sorry) + Telperion, a sympy-to-Lean certificate pipeline",
         "stargazers_count": 1,
         "fork": false
       },
-      "checked_cycle": 15
+      "checked_cycle": 16
     },
     "2016-mifare-ev-hack-github/math": {
       "head": "fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb",
@@ -4104,12 +3416,12 @@
         "html_url": "https://github.com/Sir-Teo/explainer-videos",
         "default_branch": "main",
         "created_at": "2026-10-07T03:36:05Z",
-        "pushed_at": "2026-10-12T21:09:33Z",
+        "pushed_at": "2026-10-13T00:10:25Z",
         "description": null,
         "stargazers_count": 3,
         "fork": false
       },
-      "checked_cycle": 15
+      "checked_cycle": 16
     },
     "dhruvt9636/math-checkout": {
       "head": "fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb",
@@ -4381,7 +3693,7 @@
         "fork": true,
         "_openai_fork": true
       },
-      "checked_cycle": 15
+      "checked_cycle": 16
     },
     "AlejandraValentina/Dino-active": {
       "head": "f994c63c5ca5bd602300b38f62fe4ac59a9d6f4b",
@@ -5185,7 +4497,7 @@
         "fork": true,
         "_openai_fork": true
       },
-      "checked_cycle": 15
+      "checked_cycle": 16
     },
     "Argonaut-Math/argonaut-math-quasi-riemann-boundary": {
       "head": "5971383edcb0b1cf863927eed3b359d2d3ba346e",
@@ -5322,7 +4634,7 @@
       "checked_cycle": 2
     },
     "zjukop3/openai-math-tracker": {
-      "head": "b4d52277738211e9f62909b8914e165498a663b1",
+      "head": "b22ca1445bdcabfe36a9cd8aca52756d50eb5024",
       "seen_claims": [
         "ff09ceaa6b1cf86b43b075547e4c8b1d95b71d16ec17f21970120a51fa6b1317"
       ],
@@ -5332,12 +4644,12 @@
         "html_url": "https://github.com/zjukop3/openai-math-tracker",
         "default_branch": "main",
         "created_at": "2026-10-08T02:34:39Z",
-        "pushed_at": "2026-10-08T06:20:23Z",
+        "pushed_at": "2026-10-13T00:24:43Z",
         "description": "Structured catalog & community verification tracker for openai/math \u2014 722 AI-generated math manuscripts parsed to JSON/CSV + Lean formalization & community verification status. 722 \u7bc7 AI \u6570\u5b66\u624b\u7a3f\u7684\u7ed3\u6784\u5316\u76ee\u5f55\u4e0e\u793e\u533a\u9a8c\u8bc1\u8ffd\u8e2a",
         "stargazers_count": 0,
         "fork": false
       },
-      "checked_cycle": 2
+      "checked_cycle": 16
     },
     "luminaterra/math": {
       "head": "fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb",
@@ -5371,7 +4683,7 @@
         "fork": true,
         "_openai_fork": true
       },
-      "checked_cycle": 15
+      "checked_cycle": 16
     },
     "Bigger-and-Stronger/quad-meshing-survey": {
       "head": "0e481d8d0885ce3fbd7669c273c22f7212253b60",
@@ -5404,7 +4716,7 @@
         "fork": true,
         "_openai_fork": true
       },
-      "checked_cycle": 15
+      "checked_cycle": 16
     },
     "chokmah-me/fragile-proof-audit": {
       "head": "288285bd4c47cf945026ed35188bd0d6355a10d3",
@@ -5439,7 +4751,7 @@
         "fork": true,
         "_openai_fork": true
       },
-      "checked_cycle": 15
+      "checked_cycle": 16
     },
     "conjectures-io/conjectures-validator": {
       "head": "bc4e1f7d5354fbb20d09636399ac24df2b6b63d8",
@@ -5472,7 +4784,7 @@
         "fork": true,
         "_openai_fork": true
       },
-      "checked_cycle": 15
+      "checked_cycle": 16
     },
     "rohitkrjha/catalan-measure": {
       "head": "613d6a9223cf9b6f425189c11c1e830147c10937",
@@ -5507,7 +4819,7 @@
         "fork": true,
         "_openai_fork": true
       },
-      "checked_cycle": 15
+      "checked_cycle": 16
     },
     "siliconjungle/ink-knowledge": {
       "head": "3b0bf05c6e884130b3121a999ecc952baa773dc3",
@@ -5540,7 +4852,7 @@
         "fork": true,
         "_openai_fork": true
       },
-      "checked_cycle": 15
+      "checked_cycle": 16
     },
     "zeeny2park/dynamicState": {
       "head": "08fe020efd64e0166af878a797b6fde151615a73",
@@ -5573,7 +4885,7 @@
         "fork": true,
         "_openai_fork": true
       },
-      "checked_cycle": 15
+      "checked_cycle": 16
     },
     "platypii/integer-mult-bounds-lean": {
       "head": "e5004e8e4d8b43dbf446e63b7acbffe582ccc523",
@@ -5606,7 +4918,7 @@
         "fork": true,
         "_openai_fork": true
       },
-      "checked_cycle": 15
+      "checked_cycle": 16
     },
     "systemslibrarian/crypto-lab": {
       "head": "76647e072e1caf0a3654e514d340523af302069c",
@@ -5639,7 +4951,7 @@
         "fork": true,
         "_openai_fork": true
       },
-      "checked_cycle": 15
+      "checked_cycle": 16
     },
     "domaine-oleksandr-kever/claude-plugins": {
       "head": "4944f43fba5ca580ac1eeb4e83fe7e9c7b96752f",
@@ -5672,7 +4984,7 @@
         "fork": true,
         "_openai_fork": true
       },
-      "checked_cycle": 15
+      "checked_cycle": 16
     },
     "naibarn/SmartSpecPro": {
       "head": "5f3c8f648d242cf4b1eac164ba91bd3672d4caf9",
@@ -5705,7 +5017,7 @@
         "fork": true,
         "_openai_fork": true
       },
-      "checked_cycle": 15
+      "checked_cycle": 16
     },
     "nullcryptodev/Clarity": {
       "head": "f6702165c4874532dd4d4764e2a51b925b8bc155",
@@ -5738,7 +5050,7 @@
         "fork": true,
         "_openai_fork": true
       },
-      "checked_cycle": 15
+      "checked_cycle": 16
     },
     "jzbz/dcroxide": {
       "head": "74168e8387c8f852f738119f39766f9c87b93447",
@@ -5773,7 +5085,7 @@
         "fork": true,
         "_openai_fork": true
       },
-      "checked_cycle": 15
+      "checked_cycle": 16
     },
     "MiniLangProject/MiniLangCompilerML": {
       "head": "a8a05e105e5e2ace26d703285b70f5e850211f03",
@@ -5806,7 +5118,7 @@
         "fork": true,
         "_openai_fork": true
       },
-      "checked_cycle": 15
+      "checked_cycle": 16
     },
     "MiniLangProject/MiniLangCompilerPy": {
       "head": "fd5792bf0a053e9aa1e035443a359109df5b9566",
@@ -5839,7 +5151,7 @@
         "fork": true,
         "_openai_fork": true
       },
-      "checked_cycle": 15
+      "checked_cycle": 16
     },
     "mage-uwu/sandcommand": {
       "head": "84b8ff42dc67cfe0c139e39edfb5c16db4ac83c3",
@@ -5872,7 +5184,7 @@
         "fork": true,
         "_openai_fork": true
       },
-      "checked_cycle": 15
+      "checked_cycle": 16
     },
     "jedediahg/testmiser": {
       "head": "9493e321dc84a10d1df30496b47d8d34a0608d0f",
@@ -5905,7 +5217,7 @@
         "fork": true,
         "_openai_fork": true
       },
-      "checked_cycle": 15
+      "checked_cycle": 16
     },
     "nature-tycoon/second-growth": {
       "head": "85d183b3ecf9b58c996e5455f32b17c9e908f658",
@@ -5938,7 +5250,7 @@
         "fork": true,
         "_openai_fork": true
       },
-      "checked_cycle": 15
+      "checked_cycle": 16
     },
     "adhithyan15/coding-adventures": {
       "head": "473d961784ff86cfa8f69f4d60697879566db89e",
@@ -5971,7 +5283,7 @@
         "fork": true,
         "_openai_fork": true
       },
-      "checked_cycle": 15
+      "checked_cycle": 16
     },
     "rjwalters/geode-fem": {
       "head": "fb15e9ab658ca7058ff09dba209418877a485411",
@@ -6007,7 +5319,7 @@
         "fork": true,
         "_openai_fork": true
       },
-      "checked_cycle": 15
+      "checked_cycle": 16
     },
     "Plasius-LTD/storage": {
       "head": "9ba5b054cd965a486910c8eec97332f280e0e7f7",
@@ -6040,7 +5352,7 @@
         "fork": true,
         "_openai_fork": true
       },
-      "checked_cycle": 15
+      "checked_cycle": 16
     },
     "VladimirReshetnikov/ProveIt": {
       "head": "453359f90d66937231d8b59749f00316ccaf0862",
@@ -7797,7 +7109,7 @@
       "checked_cycle": 3
     },
     "Dicklesworthstone/frankenpandas": {
-      "head": "cef818eb3548b78046b6f92d75f113fc27031754",
+      "head": "8df5a33b933e1ca9b46a5a1f4beab3dcb0f9bb22",
       "seen_claims": [
         "f3506109536ab057dcfd14e300fd9096d7ea0ed4de76f2c7affb7d25afe3a5db"
       ],
@@ -7807,12 +7119,12 @@
         "html_url": "https://github.com/Dicklesworthstone/frankenpandas",
         "default_branch": "main",
         "created_at": "2026-02-13T20:27:18Z",
-        "pushed_at": "2026-10-12T21:36:20Z",
+        "pushed_at": "2026-10-13T00:50:18Z",
         "description": "Memory-safe, clean-room Rust reimplementation of pandas with packetized conformance gates, strict/hardened runtime modes, and RaptorQ-backed artifact durability.",
         "stargazers_count": 21,
         "fork": false
       },
-      "checked_cycle": 15
+      "checked_cycle": 16
     },
     "ManojKumar7676/GridOs": {
       "head": "52f503b50124f233e26c59a21f9b6044eba36886",
@@ -7863,7 +7175,7 @@
       "checked_cycle": 3
     },
     "legacy-codes/xlstat-unofficial-legacy-archives": {
-      "head": "c37c02fcaf5cd569314b4a846307b394ab9c81be",
+      "head": "9f23ad74233a8960a8b821ce50ff1b0acf7ac3b2",
       "seen_claims": [
         "26aa8fabc1b75e4d50779fbfbf63d8bff3105b59151a50e0c5f7e9772f477379"
       ],
@@ -7873,12 +7185,12 @@
         "html_url": "https://github.com/legacy-codes/xlstat-unofficial-legacy-archives",
         "default_branch": "main",
         "created_at": "2026-06-19T13:34:38Z",
-        "pushed_at": "2026-10-12T16:15:27Z",
+        "pushed_at": "2026-10-12T23:19:28Z",
         "description": "XLStat 5.2.1413 Premium Full Setup 2026",
         "stargazers_count": 0,
         "fork": false
       },
-      "checked_cycle": 14
+      "checked_cycle": 16
     },
     "Aweinspiring-elegist588/GraphPad-Prism-2026": {
       "head": "b80555b06c0ee16ad29f5eb9f7fa41f51654ac9a",
@@ -7993,7 +7305,7 @@
         "fork": true,
         "_openai_fork": true
       },
-      "checked_cycle": 15
+      "checked_cycle": 16
     },
     "ustadzCoding-dev/phishcross": {
       "head": "6723e17ac3046853e263c1264624bbcddffcd7cf",
@@ -8272,7 +7584,7 @@
       "checked_cycle": 4
     },
     "RandanCSS/randan": {
-      "head": "cf7b9b88d6e90d2ea9b2ce7e1482a65b2be32400",
+      "head": "db9b5aa25a65d31b857fc1faf990623161ed5b40",
       "seen_claims": [
         "2e75234dae75d5651b1d506d5bee5e7f3a297d04c5b5777da55d3d95de31d3df"
       ],
@@ -8282,12 +7594,12 @@
         "html_url": "https://github.com/RandanCSS/randan",
         "default_branch": "master",
         "created_at": "2020-04-14T22:05:16Z",
-        "pushed_at": "2026-10-12T03:00:49Z",
+        "pushed_at": "2026-10-13T00:51:54Z",
         "description": "A python package for the analysis of social data",
         "stargazers_count": 5,
         "fork": false
       },
-      "checked_cycle": 10
+      "checked_cycle": 16
     },
     "mex-econo-labs/predictivehistoryaudit": {
       "head": "6ba4cc0ffb40cc02e5e06773008b4dcaed597f95",
@@ -8676,7 +7988,7 @@
       "checked_cycle": 4
     },
     "Joyce0615/failsafe-agent-debug-cli": {
-      "head": "19bfd7a67d084f9e38f91fcfc56f8d7f98bab198",
+      "head": "e96a1a1521311f8e2506a760020752d3e91a78c2",
       "seen_claims": [],
       "openai_fork": false,
       "meta": {
@@ -8684,12 +7996,12 @@
         "html_url": "https://github.com/Joyce0615/failsafe-agent-debug-cli",
         "default_branch": "main",
         "created_at": "2026-05-05T03:51:43Z",
-        "pushed_at": "2026-10-11T16:25:27Z",
+        "pushed_at": "2026-10-12T23:54:04Z",
         "description": "Agent-first debugging CLI \u2014 failure context compressor for coding agents",
         "stargazers_count": 1,
         "fork": false
       },
-      "checked_cycle": 10
+      "checked_cycle": 16
     },
     "lyutvs/flymon": {
       "head": "3766105c2f7974f1213b33a8a3bea59066a867cc",
@@ -10489,7 +9801,7 @@
       "checked_cycle": 5
     },
     "abigailhaddad/vdw-records": {
-      "head": "49a314a20c681d0b430ace609c61a242d7c385ba",
+      "head": "9669c2d13117991f5a77189f200bf7bb8cb01509",
       "seen_claims": [
         "14396d010a9340f2db4e19093f0804f901e8247b9a52b92ada623a0c9731348a"
       ],
@@ -10499,12 +9811,12 @@
         "html_url": "https://github.com/abigailhaddad/vdw-records",
         "default_branch": "main",
         "created_at": "2026-07-20T22:14:53Z",
-        "pushed_at": "2026-10-12T21:46:04Z",
+        "pushed_at": "2026-10-13T00:21:23Z",
         "description": "Seven new van der Waerden lower bounds (W(3,19)-W(3,25)) with a self-contained verification notebook",
         "stargazers_count": 0,
         "fork": false
       },
-      "checked_cycle": 15
+      "checked_cycle": 16
     },
     "genesis-plan/lingnao": {
       "head": "503d43127d01789d8856bc1a6633c231ad301377",
@@ -12291,7 +11603,7 @@
       "checked_cycle": 10
     },
     "dev-satyamjha/dev-satyamjha": {
-      "head": "4b495e9f75617f2ab12d79623e4b2855a027a66c",
+      "head": "679f6f9b45ee7c61ca215947915e303813100e81",
       "seen_claims": [
         "900ff80719d767456166f96fad6de4bdfedf00ac64efa385f6f51905313bcd11"
       ],
@@ -12301,12 +11613,12 @@
         "html_url": "https://github.com/dev-satyamjha/dev-satyamjha",
         "default_branch": "main",
         "created_at": "2024-11-17T15:35:31Z",
-        "pushed_at": "2026-10-12T05:24:43Z",
+        "pushed_at": "2026-10-13T00:00:12Z",
         "description": "Config files for my GitHub profile.",
         "stargazers_count": 2,
         "fork": false
       },
-      "checked_cycle": 10
+      "checked_cycle": 16
     },
     "christophe-stevens/queen-solver": {
       "head": "fa157a08fc7e6801da27b08fcbe54da605ebd7f2",
@@ -13844,7 +13156,7 @@
       "checked_cycle": 6
     },
     "teorth/erdosproblems": {
-      "head": "4e84787c36a12cf71d6c52d4de3924fc5bd5a195",
+      "head": "76848eddd25687dfc69bb26bec740c35c4a9c6b4",
       "seen_claims": [],
       "openai_fork": false,
       "meta": {
@@ -13852,12 +13164,12 @@
         "html_url": "https://github.com/teorth/erdosproblems",
         "default_branch": "main",
         "created_at": "2025-08-31T16:20:38Z",
-        "pushed_at": "2026-10-12T19:59:27Z",
+        "pushed_at": "2026-10-12T22:24:58Z",
         "description": "A community database for the problems on the erdosproblems.com site",
         "stargazers_count": 871,
         "fork": false
       },
-      "checked_cycle": 15
+      "checked_cycle": 16
     },
     "jmsung/einstein": {
       "head": "1c31f6282300fa63385c6ba9fb36a3db7130cf7f",
@@ -15010,7 +14322,7 @@
         "fork": true,
         "_openai_fork": true
       },
-      "checked_cycle": 15
+      "checked_cycle": 16
     },
     "getkono/spargen": {
       "head": "21a5cb1d19eb34f71e421f1a62aa94f9df0192ab",
@@ -15109,7 +14421,7 @@
       "checked_cycle": 7
     },
     "katopz/katgpt-rs": {
-      "head": "170f26adec3f96cd83f80459409c54ab50f78afa",
+      "head": "29038059ffe8d2d46b852e307644f38ed0ef9417",
       "seen_claims": [
         "e5fdf879ea28d696475dbc83a1141014f27fd588b2b528cdcbf1547353ef9727",
         "3819185e808b3e193c761a3184c1392e6eb17c7c4542e21f4e0b6baa62dd9e87",
@@ -15122,7 +14434,10 @@
         "ef42447b9400f7df3e1e92305a28610e8e27db518768c03f3285285ac3527e48",
         "b78020495585b0c8e1ffb07d4254aed07c765ebd8d11d3db1b60f6bf77e35c4d",
         "7bf94ff50f5ffdb8418902d0276ad92c7e12b6414809dde54f99683b8a49e24d",
-        "ddee9078ab5d1c374622697b3d0eeb6ce9500ff73ce8325244159f920c88006c"
+        "ddee9078ab5d1c374622697b3d0eeb6ce9500ff73ce8325244159f920c88006c",
+        "171b9448ad02f5ad88dba160c3b9da3626191be9e11004ce83038ccb276a59d7",
+        "060af551eddd59b968300ff7d813737bb7077b23ec10798d8be6164b64827a28",
+        "604b914e1f2699199c22fab9b51c272586ccd9b3b87a392c145a1e3dcfa48d82"
       ],
       "openai_fork": false,
       "meta": {
@@ -15130,12 +14445,12 @@
         "html_url": "https://github.com/katopz/katgpt-rs",
         "default_branch": "develop",
         "created_at": "2026-05-04T16:56:32Z",
-        "pushed_at": "2026-10-12T21:34:30Z",
+        "pushed_at": "2026-10-13T00:51:51Z",
         "description": "A neuro-symbolic micro-Transformer with speculative decoding, constraint pruning, recurrent attention, and adaptive test-time scaling \u2014 built in Rust.",
         "stargazers_count": 138,
         "fork": false
       },
-      "checked_cycle": 15
+      "checked_cycle": 16
     },
     "avalonalex/patina": {
       "head": "1202e1c63f53cfd41bfd54928decb87a1700585b",
@@ -20466,12 +19781,12 @@
         "html_url": "https://github.com/djtroyal/perdura-reliability",
         "default_branch": "main",
         "created_at": "2026-03-23T22:22:33Z",
-        "pushed_at": "2026-10-12T21:30:00Z",
+        "pushed_at": "2026-10-12T23:05:36Z",
         "description": null,
         "stargazers_count": 0,
         "fork": false
       },
-      "checked_cycle": 15
+      "checked_cycle": 16
     },
     "zsicheng0214/tracelite.ai": {
       "head": "361d96ae3a04aacc7a0cf76b2447013b526274d0",
@@ -20570,7 +19885,7 @@
       "checked_cycle": 15
     },
     "sdss/lvmdrp": {
-      "head": "aaa960cb5f055d0d8116c4e27ec069a965016016",
+      "head": "705d490b85e97e7ec76c3636607bf3147ce9eb40",
       "seen_claims": [
         "618e61617c523fc20080c2c36345aba982710d72b87e5f8eb383ce37769f0a75"
       ],
@@ -20580,12 +19895,12 @@
         "html_url": "https://github.com/sdss/lvmdrp",
         "default_branch": "master",
         "created_at": "2019-11-22T14:46:39Z",
-        "pushed_at": "2026-10-12T16:13:14Z",
+        "pushed_at": "2026-10-13T00:01:57Z",
         "description": "Local Volume Mapper (LVM) Data Reduction Pipeline",
         "stargazers_count": 4,
         "fork": false
       },
-      "checked_cycle": 14
+      "checked_cycle": 16
     },
     "Shahana-06/breachpath": {
       "head": "21fb3a9209781edf743cf3e4eb6e75947ad939f1",
@@ -20881,9 +20196,10 @@
       "checked_cycle": 11
     },
     "chrisaacson69/sci-fi-trading-voyage": {
-      "head": "b1dca4ab1b861d65306bbb20b249d916486262e0",
+      "head": "fa35ff686652623cd71a247e074b763706780a97",
       "seen_claims": [
-        "9b87bfe42e303b78f337a1895ec6c773737aa55632e0aa45fd027e98f9d762b6"
+        "9b87bfe42e303b78f337a1895ec6c773737aa55632e0aa45fd027e98f9d762b6",
+        "1a13b1034e32e5fb19f6d997bdc6438c00060b601fd05f80b19e2931493762cc"
       ],
       "openai_fork": false,
       "meta": {
@@ -20891,12 +20207,12 @@
         "html_url": "https://github.com/chrisaacson69/sci-fi-trading-voyage",
         "default_branch": "master",
         "created_at": "2026-10-06T19:09:56Z",
-        "pushed_at": "2026-10-11T03:21:10Z",
+        "pushed_at": "2026-10-13T00:37:28Z",
         "description": "Trade-route calculator for Sci-Fi Trading Voyage: ranks two-stop round trips by profit/hr",
         "stargazers_count": 0,
         "fork": false
       },
-      "checked_cycle": 9
+      "checked_cycle": 16
     },
     "Eamo5/dishonored-bevy": {
       "head": "c1ef280a1ec5d151f7db131eb7d3c16ca2e2adf7",
@@ -20933,7 +20249,7 @@
       "checked_cycle": 9
     },
     "savannahmckay97/Trading-Decision-Automation-Lab": {
-      "head": "76dbb5d07529c0f5048874b71cf6d72d64525170",
+      "head": "845bc34d3ce00bb2b0f6e90f3ce2e24e55984e77",
       "seen_claims": [
         "0b5243fd59e7a5e9ac3a8af8c103aab38cb94509df88f7794ec536836693dbc6"
       ],
@@ -20943,12 +20259,12 @@
         "html_url": "https://github.com/savannahmckay97/Trading-Decision-Automation-Lab",
         "default_branch": "main",
         "created_at": "2026-09-17T17:42:47Z",
-        "pushed_at": "2026-10-12T21:51:19Z",
+        "pushed_at": "2026-10-12T22:44:56Z",
         "description": null,
         "stargazers_count": 1,
         "fork": false
       },
-      "checked_cycle": 15
+      "checked_cycle": 16
     },
     "liu-ming-hua/running_page": {
       "head": "022d553c5b9bb037f211695a2d3949edb13a4a9c",
@@ -21088,7 +20404,7 @@
       "checked_cycle": 9
     },
     "P-h-r-e-a-k/LBAAssembler": {
-      "head": "28f692f391d611849a47760f1fcb97172dacecfb",
+      "head": "6bab119c4621be8ada15216a28faf372c08e4895",
       "seen_claims": [],
       "openai_fork": false,
       "meta": {
@@ -21096,12 +20412,12 @@
         "html_url": "https://github.com/P-h-r-e-a-k/LBAAssembler",
         "default_branch": "main",
         "created_at": "2026-09-15T21:54:21Z",
-        "pushed_at": "2026-10-12T20:32:40Z",
+        "pushed_at": "2026-10-12T22:11:44Z",
         "description": null,
         "stargazers_count": 0,
         "fork": false
       },
-      "checked_cycle": 15
+      "checked_cycle": 16
     },
     "SwayRider/routerservice": {
       "head": "9f40fd2f919fe0c55b4c7746b8f90ab4c42841a0",
@@ -21156,7 +20472,7 @@
       "checked_cycle": 9
     },
     "Kiddeke/running_page": {
-      "head": "e99a8334b6f1899ff1d1f5ac991a11c6785f9d9f",
+      "head": "ad99e61c55daaa5431e147223aa97f610bf5200f",
       "seen_claims": [],
       "openai_fork": false,
       "meta": {
@@ -21164,12 +20480,12 @@
         "html_url": "https://github.com/Kiddeke/running_page",
         "default_branch": "master",
         "created_at": "2026-06-22T18:54:40Z",
-        "pushed_at": "2026-10-12T13:53:31Z",
+        "pushed_at": "2026-10-13T00:10:28Z",
         "description": "Make your own running home page",
         "stargazers_count": 0,
         "fork": false
       },
-      "checked_cycle": 13
+      "checked_cycle": 16
     },
     "wl2279/run": {
       "head": "5dc1cb1a8a29e1723afc8ef1a28c2b475dcc6a82",
@@ -21222,7 +20538,7 @@
       "checked_cycle": 9
     },
     "WOuHS/pengxiang-running_page-master": {
-      "head": "23c5c97f6aa753cb3f454606e6a9a5657f6eb11e",
+      "head": "cd3346329e42e6c1e88c79ef62467786a9f0201d",
       "seen_claims": [
         "22ec2ffa0ad9069193ed9c734edbe96e8c203fc933d58afa04556d0cfc1cdb4a"
       ],
@@ -21232,15 +20548,15 @@
         "html_url": "https://github.com/WOuHS/pengxiang-running_page-master",
         "default_branch": "master",
         "created_at": "2024-08-08T13:33:46Z",
-        "pushed_at": "2026-10-11T20:45:42Z",
+        "pushed_at": "2026-10-12T23:25:10Z",
         "description": null,
         "stargazers_count": 0,
         "fork": false
       },
-      "checked_cycle": 9
+      "checked_cycle": 16
     },
     "andyoung009/running_page": {
-      "head": "4163f67a8d289a2631f8ee0c68ba375b45ef8378",
+      "head": "febc3f10ad7690124c4a60124aefa768407accbe",
       "seen_claims": [],
       "openai_fork": false,
       "meta": {
@@ -21248,12 +20564,12 @@
         "html_url": "https://github.com/andyoung009/running_page",
         "default_branch": "master",
         "created_at": "2026-01-03T14:32:38Z",
-        "pushed_at": "2026-10-11T19:54:39Z",
+        "pushed_at": "2026-10-12T22:43:15Z",
         "description": null,
         "stargazers_count": 0,
         "fork": false
       },
-      "checked_cycle": 9
+      "checked_cycle": 16
     },
     "apangasa/wtca-fitness-bot": {
       "head": "4a5037e0adc8ff4064fc1c3ef47e34a80729451c",
@@ -21488,12 +20804,12 @@
         "html_url": "https://github.com/regis57/ZenithBoard",
         "default_branch": "main",
         "created_at": "2026-10-04T20:36:20Z",
-        "pushed_at": "2026-10-12T20:56:51Z",
+        "pushed_at": "2026-10-12T22:36:35Z",
         "description": "ADSB Flight Info",
         "stargazers_count": 1,
         "fork": false
       },
-      "checked_cycle": 15
+      "checked_cycle": 16
     },
     "animagram-jp/rectgrid": {
       "head": "3cd8c9752ff566ea4ed9cd9420aa11fa2edef042",
@@ -22136,7 +21452,7 @@
         "fork": true,
         "_openai_fork": true
       },
-      "checked_cycle": 15
+      "checked_cycle": 16
     },
     "sahiil444/Machine-Learning": {
       "head": "4c8fdd469ba8753351d424ff806401c81935052d",
@@ -22478,7 +21794,7 @@
       "checked_cycle": 10
     },
     "postlink-group/postlink": {
-      "head": "0fb4e0ade98e705e31ededffeb891ca314dfc665",
+      "head": "be5e6218367171b5ae7c1d39b1355c6d319bf4b9",
       "seen_claims": [],
       "openai_fork": false,
       "meta": {
@@ -22486,12 +21802,12 @@
         "html_url": "https://github.com/postlink-group/postlink",
         "default_branch": "main",
         "created_at": "2025-11-03T17:31:05Z",
-        "pushed_at": "2026-10-11T18:07:11Z",
+        "pushed_at": "2026-10-13T00:39:46Z",
         "description": "Post-Linkage Data Analysis in R",
         "stargazers_count": 3,
         "fork": false
       },
-      "checked_cycle": 10
+      "checked_cycle": 16
     },
     "imrpittala/SCT_DS_2": {
       "head": "e4d6ab9d348702eca2b0a04acad3f7af53948410",
@@ -22814,7 +22130,7 @@
       "checked_cycle": 10
     },
     "w84april/thug2": {
-      "head": "0e9f1b207ebfe6febf92e560bc931a83e6b42ece",
+      "head": "9ee9efc91cb3e1e7e90dcd9dba7221de9602776f",
       "seen_claims": [
         "091b7e52311d0093b617fa524682b3cbf81f060335f29b980c6c73b2baa8eac0",
         "00344496248d6959a3dfb80000b7cffd131754d17b29ce08e52941686e24670d",
@@ -22826,12 +22142,12 @@
         "html_url": "https://github.com/w84april/thug2",
         "default_branch": "main",
         "created_at": "2026-10-11T21:54:09Z",
-        "pushed_at": "2026-10-12T21:50:18Z",
+        "pushed_at": "2026-10-12T23:28:46Z",
         "description": null,
         "stargazers_count": 0,
         "fork": false
       },
-      "checked_cycle": 15
+      "checked_cycle": 16
     },
     "archer266/GENESIS": {
       "head": "2d57cfc215a27d6d13f6d9c6c3d2e6953f23c47a",
@@ -23302,12 +22618,12 @@
         "html_url": "https://github.com/Degiacomi-Lab/RESDY",
         "default_branch": "main",
         "created_at": "2021-07-11T16:04:20Z",
-        "pushed_at": "2026-10-12T21:14:38Z",
+        "pushed_at": "2026-10-12T22:21:01Z",
         "description": "an extensive featurization toolkit of protein sidechain structure and properties for classification tasks",
         "stargazers_count": 2,
         "fork": false
       },
-      "checked_cycle": 15
+      "checked_cycle": 16
     },
     "PeterSlijkhuis/StatLab": {
       "head": "eebec132717f870e10b5ae2763d078b8f5886f4a",
@@ -23560,7 +22876,7 @@
         "fork": true,
         "_openai_fork": true
       },
-      "checked_cycle": 15
+      "checked_cycle": 16
     },
     "ajw1111/Assignment-1-DHG502": {
       "head": "7d863216476baab6c5224aaa05a6b56fe1071b2b",
@@ -23579,7 +22895,7 @@
       "checked_cycle": 13
     },
     "rwb/ccjs710": {
-      "head": "058a60e602ad1ac0a9cdb1b36f322a6de6ca9500",
+      "head": "fe36054b2c9cd646038ce8354013fccc962bf9b8",
       "seen_claims": [],
       "openai_fork": false,
       "meta": {
@@ -23587,12 +22903,12 @@
         "html_url": "https://github.com/rwb/ccjs710",
         "default_branch": "main",
         "created_at": "2026-09-03T18:52:11Z",
-        "pushed_at": "2026-10-12T19:00:01Z",
+        "pushed_at": "2026-10-13T00:23:49Z",
         "description": "CCJS 710-0101 Advanced Statistics Methods - Limited Dependent Variables",
         "stargazers_count": 0,
         "fork": false
       },
-      "checked_cycle": 15
+      "checked_cycle": 16
     },
     "shanishsh/general-preprocessing-web": {
       "head": "1905b35d5778475821521bd78305ad95326bdc85",
@@ -23819,7 +23135,7 @@
       "checked_cycle": 13
     },
     "AxiomMath/DedekindZetaZeroFree": {
-      "head": "284348a4f46a7f1ed8cc20964c157d7a0e88439d",
+      "head": "896b6774bdc04a2817877c333878d9b6738eb543",
       "seen_claims": [
         "a3ab22e0516339ab7961c063e39a3c86a6055e1c4f97e5a27b8f1658c247681f"
       ],
@@ -23829,12 +23145,12 @@
         "html_url": "https://github.com/AxiomMath/DedekindZetaZeroFree",
         "default_branch": "main",
         "created_at": "2026-10-12T18:06:30Z",
-        "pushed_at": "2026-10-12T18:06:35Z",
+        "pushed_at": "2026-10-12T22:36:32Z",
         "description": "Lean 4 formalization of a uniform zero-free region for Dedekind zeta functions: \u03b6_K(s) \u2260 0 for Re(s) > 1 \u2212 1/6000",
-        "stargazers_count": 0,
+        "stargazers_count": 1,
         "fork": false
       },
-      "checked_cycle": 14
+      "checked_cycle": 16
     },
     "shazia28/RLWE_PUF_ARMOR_PQ": {
       "head": "ce9489be2793d2ae63976f50fde1aebdbf2377c1",
@@ -24013,7 +23329,7 @@
       "checked_cycle": 15
     },
     "Kerinjo/mathdeck": {
-      "head": "fb0e99c629c11c8435a9e1e2067366b0eb4feb25",
+      "head": "dbc639d790b07ef8d5422c916ca925b88265d335",
       "seen_claims": [
         "40ac077f63bfb3bf8d7f56cefcbdd50dcd85f5853e7ddd7a49ea6f68e5e4185c"
       ],
@@ -24023,12 +23339,12 @@
         "html_url": "https://github.com/Kerinjo/mathdeck",
         "default_branch": "master",
         "created_at": "2026-10-12T19:31:48Z",
-        "pushed_at": "2026-10-12T21:28:34Z",
+        "pushed_at": "2026-10-12T23:01:06Z",
         "description": "math sloptware",
         "stargazers_count": 0,
         "fork": false
       },
-      "checked_cycle": 15
+      "checked_cycle": 16
     },
     "samjd-zz/UIRA": {
       "head": "368d51125e3b6b31636cf6235e1bbe42d66da250",
@@ -24151,14 +23467,150 @@
         "fork": false
       },
       "checked_cycle": 15
+    },
+    "rohithreddybc/MedAgentCheck": {
+      "head": "43dc23801a60719a2b1ca0fc2a41ca9f12832338",
+      "seen_claims": [],
+      "openai_fork": false,
+      "meta": {
+        "full_name": "rohithreddybc/MedAgentCheck",
+        "html_url": "https://github.com/rohithreddybc/MedAgentCheck",
+        "default_branch": "master",
+        "created_at": "2026-10-05T06:02:47Z",
+        "pushed_at": "2026-10-13T00:22:16Z",
+        "description": "MedAgentCheck: an agent-specific validity and reliability checklist for medical/clinical AI agent benchmarks, with a quote-verified automated scorer (extends MedCheck)",
+        "stargazers_count": 0,
+        "fork": false
+      },
+      "checked_cycle": 16
+    },
+    "incrediblecrab/erdos-1186": {
+      "head": "8a9381f3a810637a947b6c606c61de42ca67c26d",
+      "seen_claims": [
+        "fce507fe16b342c36ae9699c1d959abdb04eaec05b8f8fe798f17f3b80f0e48d"
+      ],
+      "openai_fork": false,
+      "meta": {
+        "full_name": "incrediblecrab/erdos-1186",
+        "html_url": "https://github.com/incrediblecrab/erdos-1186",
+        "default_branch": "main",
+        "created_at": "2026-09-22T20:17:24Z",
+        "pushed_at": "2026-10-12T23:29:26Z",
+        "description": "Erdos problem #1186: bounds for delta_k, the density of monochromatic k-term APs forced in any 2-colouring of {1,...,n}. Open. Certified improvements to delta_5 (20.8%), delta~_4 (2.8%) and delta~_5 (10.6%), a first bound for delta_6, all re-derived in exact rational arithmetic.",
+        "stargazers_count": 0,
+        "fork": false
+      },
+      "checked_cycle": 16
+    },
+    "itiv-kit/cnn-parted": {
+      "head": "5b02b4f71acca4bf4479697cf8e08480602063c2",
+      "seen_claims": [],
+      "openai_fork": false,
+      "meta": {
+        "full_name": "itiv-kit/cnn-parted",
+        "html_url": "https://github.com/itiv-kit/cnn-parted",
+        "default_branch": "main",
+        "created_at": "2023-03-03T14:02:16Z",
+        "pushed_at": "2026-10-12T22:10:32Z",
+        "description": null,
+        "stargazers_count": 6,
+        "fork": false
+      },
+      "checked_cycle": 16
+    },
+    "pmalo46/1kMileRace": {
+      "head": "6282afd357c4ec05119258369ad4a8aa220521ac",
+      "seen_claims": [],
+      "openai_fork": false,
+      "meta": {
+        "full_name": "pmalo46/1kMileRace",
+        "html_url": "https://github.com/pmalo46/1kMileRace",
+        "default_branch": "main",
+        "created_at": "2026-10-06T18:30:37Z",
+        "pushed_at": "2026-10-13T00:32:53Z",
+        "description": null,
+        "stargazers_count": 0,
+        "fork": false
+      },
+      "checked_cycle": 16
+    },
+    "atilasabreuu-maker/Lego-v9.1": {
+      "head": "0ccb63a6a570480f5833dfceb34eafc202b1153f",
+      "seen_claims": [
+        "fa2568658a1993d1fbf0f5a1f812abc5e4200042d0483bfceec97e9763715a16"
+      ],
+      "openai_fork": false,
+      "meta": {
+        "full_name": "atilasabreuu-maker/Lego-v9.1",
+        "html_url": "https://github.com/atilasabreuu-maker/Lego-v9.1",
+        "default_branch": "main",
+        "created_at": "2026-10-12T23:39:57Z",
+        "pushed_at": "2026-10-12T23:42:21Z",
+        "description": null,
+        "stargazers_count": 0,
+        "fork": false
+      },
+      "checked_cycle": 16
+    },
+    "atilasabreuu-maker/Lego-v9-": {
+      "head": "70b822699e0f333f2891c458042c7bb72c0624c6",
+      "seen_claims": [
+        "fa2568658a1993d1fbf0f5a1f812abc5e4200042d0483bfceec97e9763715a16"
+      ],
+      "openai_fork": false,
+      "meta": {
+        "full_name": "atilasabreuu-maker/Lego-v9-",
+        "html_url": "https://github.com/atilasabreuu-maker/Lego-v9-",
+        "default_branch": "main",
+        "created_at": "2026-10-12T23:29:26Z",
+        "pushed_at": "2026-10-12T23:30:06Z",
+        "description": null,
+        "stargazers_count": 0,
+        "fork": false
+      },
+      "checked_cycle": 16
+    },
+    "atilasabreuu-maker/Lego-v7-teste": {
+      "head": "e3d810b01c4132ad64629140a921e2938ff69580",
+      "seen_claims": [
+        "7272c547f13ea46202bbf1f3410699ee644c04a3ee22fa127cab6d158f16ef01"
+      ],
+      "openai_fork": false,
+      "meta": {
+        "full_name": "atilasabreuu-maker/Lego-v7-teste",
+        "html_url": "https://github.com/atilasabreuu-maker/Lego-v7-teste",
+        "default_branch": "main",
+        "created_at": "2026-10-12T23:11:01Z",
+        "pushed_at": "2026-10-12T23:14:00Z",
+        "description": null,
+        "stargazers_count": 0,
+        "fork": false
+      },
+      "checked_cycle": 16
+    },
+    "sanitaravel/starship-orbit-visualizer": {
+      "head": "d64a3c2a1c8405bbcc676ba8f5ada47826e3a2ea",
+      "seen_claims": [],
+      "openai_fork": false,
+      "meta": {
+        "full_name": "sanitaravel/starship-orbit-visualizer",
+        "html_url": "https://github.com/sanitaravel/starship-orbit-visualizer",
+        "default_branch": "main",
+        "created_at": "2026-10-12T22:01:40Z",
+        "pushed_at": "2026-10-12T22:01:50Z",
+        "description": "Interactive Starship orbit visualizer: ground tracks, 3D globe, day/night terminator and 60 FPS playback (Dash/Plotly)",
+        "stargazers_count": 0,
+        "fork": false
+      },
+      "checked_cycle": 16
     }
   },
   "other_bounds_checkpoint": {
     "version": 1,
-    "cycle": 15,
+    "cycle": 16,
     "search_cursor": 0,
     "fork_page": 1,
-    "fork_since": "2026-10-09T21:49:10Z",
+    "fork_since": "2026-10-10T00:49:04Z",
     "pending": [
       {
         "full_name": "slitsey/catalan-irrationality-measure",
@@ -24669,20 +24121,30 @@
         "description": null,
         "stargazers_count": 0,
         "fork": false
+      },
+      {
+        "full_name": "ikonstas70/ikonstas70",
+        "html_url": "https://github.com/ikonstas70/ikonstas70",
+        "default_branch": "main",
+        "created_at": "2026-06-02T15:32:18Z",
+        "pushed_at": "2026-10-12T22:31:08Z",
+        "description": "Ioannis Alexander Konstas \u2014 Founder IT Solutions USA \u00b7 Cybersecurity \u00b7 Infrastructure \u00b7 Cryptography \u00b7 Network Automation",
+        "stargazers_count": 0,
+        "fork": false
       }
     ]
   },
   "other_bounds_usage": {
-    "requests": 260,
-    "elapsed_seconds": 206.629,
+    "requests": 241,
+    "elapsed_seconds": 186.146,
     "request_limit": 360,
     "seconds_limit": 360,
-    "repositories_checked": 80,
-    "pending_repositories": 51,
-    "starting_pending_repositories": 50,
+    "repositories_checked": 73,
+    "pending_repositories": 52,
+    "starting_pending_repositories": 51,
     "starting_pending_forks": 0,
     "pending_forks": 0,
-    "untouched_forks_skipped": 233,
+    "untouched_forks_skipped": 226,
     "forks_without_changed_files": 0,
     "forks_with_changed_files": 0
   },
@@ -24690,17 +24152,17 @@
     "eumemic/exact-dft-bounds": {
       "bound": "607/1250000",
       "source_commit": "6f87d1a0c9ae462cdcb2034a1361c87623221e66",
-      "checked_at": "2026-10-12T21:49:10.635699+00:00"
+      "checked_at": "2026-10-13T00:49:04.248361+00:00"
     },
     "shea256/fourier-transform-below-nlogn": {
       "bound": "2466337/2000000000",
       "source_commit": "9749945f0f3f7fa0edb22065c786f7106953f1db",
-      "checked_at": "2026-10-12T21:49:10.635699+00:00"
+      "checked_at": "2026-10-13T00:49:04.248361+00:00"
     },
     "jacobalansussman/wht-power-saving-lean": {
       "bound": "4381239/5000000000",
       "source_commit": "9c94857bbaee886f8649edee0bc2d3c738f9555e",
-      "checked_at": "2026-10-12T21:49:10.635699+00:00"
+      "checked_at": "2026-10-13T00:49:04.248361+00:00"
     },
     "Swapnil-jain/threesum-derand": {
       "bound": [
@@ -24708,7 +24170,7 @@
         "2995943/1000000"
       ],
       "source_commit": "48adbc585f666a37003c700f97c89f3e73c570ce",
-      "checked_at": "2026-10-12T21:49:10.635699+00:00"
+      "checked_at": "2026-10-13T00:49:04.248361+00:00"
     }
   },
   "crocswap_pr_states": {
@@ -24928,12 +24390,12 @@
       "updated_at": "2026-10-11T09:15:24Z"
     },
     "275": {
-      "revision": "968d83756482b0921393c07737fc0d9ba45690d2303b340d65fd06144f928085",
-      "pending_revision": "968d83756482b0921393c07737fc0d9ba45690d2303b340d65fd06144f928085",
-      "next_file_page": 9,
-      "head": "a65780b0d5664c33da16e704de4d6f228a7b816b",
+      "revision": null,
+      "pending_revision": "6821a3a6372e9fbb805cc47c97eabf474fed869c6500ee81a97e03fe85925ce3",
+      "next_file_page": 4,
+      "head": "e819106ee098953be69cdac9aff47bdece567bc4",
       "seen_claims": [],
-      "updated_at": "2026-10-12T06:27:10Z"
+      "updated_at": "2026-10-12T22:37:57Z"
     },
     "347": {
       "revision": null,
@@ -25018,7 +24480,7 @@
     "376": {
       "revision": null,
       "pending_revision": "c3081e88fcba5b7f4cb785831fb44c2f4c8f54b4aefc9bc7c1b9704d98ab8bfa",
-      "next_file_page": 22,
+      "next_file_page": 25,
       "head": "5522b4edf9748ccda787df81f0a83eda83cdc4e8",
       "seen_claims": [
         "fcc3efb5cfd44748dc6974f4dfa72ad00ff5a45f26afe00e6953614419646315",
@@ -25157,7 +24619,7 @@
     "409": {
       "revision": null,
       "pending_revision": "d5364de431a9b068d20fc7cb84e26320abb3a8af89475c1274402af2b3473046",
-      "next_file_page": 7,
+      "next_file_page": 10,
       "head": "212e03d7665d08fc6a037d3e33612cb7fc60874d",
       "seen_claims": [
         "40c1eab4e83c191a03ad51f0c5dcf06c1ced9878255986e2a10a63bd389de05a",
@@ -25169,7 +24631,7 @@
     "406": {
       "revision": null,
       "pending_revision": "6183fc47fa59472cd31ca5beab5b71e31e1c8b41a15a26f17865b17c5fce4a23",
-      "next_file_page": 9,
+      "next_file_page": 12,
       "head": "5d0d8dff39db99f922ead6d11963aa643511e3ee",
       "seen_claims": [
         "40c1eab4e83c191a03ad51f0c5dcf06c1ced9878255986e2a10a63bd389de05a",
@@ -25197,7 +24659,7 @@
     "403": {
       "revision": null,
       "pending_revision": "1154d0a92a5eef7b89f62bd15b1d1842ac48b9709626289ac63666192cb3eb2c",
-      "next_file_page": 7,
+      "next_file_page": 10,
       "head": "4e3ef5fe92652b1a740b32cbea90d0fea678062e",
       "seen_claims": [
         "40c1eab4e83c191a03ad51f0c5dcf06c1ced9878255986e2a10a63bd389de05a",
@@ -25225,7 +24687,7 @@
     "405": {
       "revision": null,
       "pending_revision": "a3386b8e897fc329198513a9cfb84f2eb2c9750b431f28a2740f70d3623a3482",
-      "next_file_page": 7,
+      "next_file_page": 10,
       "head": "66bc6cbfd0f93bcb88f7e36205ae8b160c9e5845",
       "seen_claims": [
         "40c1eab4e83c191a03ad51f0c5dcf06c1ced9878255986e2a10a63bd389de05a",
@@ -25237,7 +24699,7 @@
     "404": {
       "revision": null,
       "pending_revision": "38521bd7a9e90b88d8076829c4eddda15f1537708372a14137f64563c9a40a84",
-      "next_file_page": 7,
+      "next_file_page": 10,
       "head": "12f488264cdd74a3b60d0fb534f4955792384f5c",
       "seen_claims": [
         "40c1eab4e83c191a03ad51f0c5dcf06c1ced9878255986e2a10a63bd389de05a",
@@ -25485,9 +24947,9 @@
       "updated_at": "2026-10-11T11:59:38Z"
     },
     "422": {
-      "revision": null,
+      "revision": "b924d99c4142cf2e8593bd0e091671e4d97a25f3333ec465f28870d9306ff206",
       "pending_revision": "b924d99c4142cf2e8593bd0e091671e4d97a25f3333ec465f28870d9306ff206",
-      "next_file_page": 19,
+      "next_file_page": 20,
       "head": "dc7a552857c04f936daad0dc8e8b0164e5797f1a",
       "seen_claims": [
         "40c1eab4e83c191a03ad51f0c5dcf06c1ced9878255986e2a10a63bd389de05a",
@@ -25500,7 +24962,7 @@
     "429": {
       "revision": null,
       "pending_revision": "9b35911627ddc12fa427f3e23ed27b82a7cceefd5d4b901cc14208256a7c9cf9",
-      "next_file_page": 16,
+      "next_file_page": 19,
       "head": "b25cbe3350e32efb211508c1dd41a134770fba16",
       "seen_claims": [
         "40c1eab4e83c191a03ad51f0c5dcf06c1ced9878255986e2a10a63bd389de05a",
@@ -25575,9 +25037,9 @@
       "updated_at": "2026-10-11T10:51:15Z"
     },
     "418": {
-      "revision": null,
+      "revision": "67b6bb50f82d4a0b571b19de1d25bffffbcb5b8ecd00f44b60902c40c7e678d0",
       "pending_revision": "67b6bb50f82d4a0b571b19de1d25bffffbcb5b8ecd00f44b60902c40c7e678d0",
-      "next_file_page": 16,
+      "next_file_page": 19,
       "head": "ff8737920a4bb1a910eb069a5f86db6efdefa589",
       "seen_claims": [
         "40c1eab4e83c191a03ad51f0c5dcf06c1ced9878255986e2a10a63bd389de05a",
@@ -25596,9 +25058,9 @@
       "updated_at": "2026-10-11T10:40:46Z"
     },
     "415": {
-      "revision": null,
+      "revision": "c6cad07789fa84c1cf9a38796b53503bb20ebf841a306114d1af270572248d19",
       "pending_revision": "c6cad07789fa84c1cf9a38796b53503bb20ebf841a306114d1af270572248d19",
-      "next_file_page": 16,
+      "next_file_page": 19,
       "head": "4ad1ef5c67e9943d21ee8c13325ca5705546ae28",
       "seen_claims": [
         "40c1eab4e83c191a03ad51f0c5dcf06c1ced9878255986e2a10a63bd389de05a",
@@ -25617,9 +25079,9 @@
       "updated_at": "2026-10-11T10:24:33Z"
     },
     "413": {
-      "revision": null,
+      "revision": "f32d802f2c9c83b4ccbef2313866f674a700220606e518cc804bddf1961ebbb7",
       "pending_revision": "f32d802f2c9c83b4ccbef2313866f674a700220606e518cc804bddf1961ebbb7",
-      "next_file_page": 16,
+      "next_file_page": 18,
       "head": "cacb1f486a2ef5a184829b7f4d0cc4e357b47001",
       "seen_claims": [
         "40c1eab4e83c191a03ad51f0c5dcf06c1ced9878255986e2a10a63bd389de05a",
@@ -25782,7 +25244,7 @@
     "473": {
       "revision": null,
       "pending_revision": "59ccc147edfae75a6971cb01f986cff57b7469a0031ef6cf960041ce688abfc7",
-      "next_file_page": 25,
+      "next_file_page": 28,
       "head": "c26b3cc74d0203948f973a41d38340116c79dab8",
       "seen_claims": [
         "94e9bec3a47a21c95f7a727ee96b0188786ca731e58e59ba473884244ce7f180",
@@ -26117,9 +25579,9 @@
       "updated_at": "2026-10-11T20:57:04Z"
     },
     "491": {
-      "revision": null,
+      "revision": "6a8142bb8064e512cdfd2eaf30b469874f65dec68a53b3939d4dd865ea02aca5",
       "pending_revision": "6a8142bb8064e512cdfd2eaf30b469874f65dec68a53b3939d4dd865ea02aca5",
-      "next_file_page": 25,
+      "next_file_page": 26,
       "head": "996f67f7c21b8e56b4a2b0174c419ce48c480414",
       "seen_claims": [
         "94e9bec3a47a21c95f7a727ee96b0188786ca731e58e59ba473884244ce7f180",
@@ -26921,9 +26383,9 @@
       "updated_at": "2026-10-12T07:19:03Z"
     },
     "455": {
-      "revision": null,
+      "revision": "7795d514947186de92ce1b8faaf4745d7b01a8bb75277255126b28f96445d5fb",
       "pending_revision": "7795d514947186de92ce1b8faaf4745d7b01a8bb75277255126b28f96445d5fb",
-      "next_file_page": 16,
+      "next_file_page": 17,
       "head": "f76fc4e36030d4e00b4cbb83b1dbc661a0974c4e",
       "seen_claims": [
         "40c1eab4e83c191a03ad51f0c5dcf06c1ced9878255986e2a10a63bd389de05a",
@@ -27266,12 +26728,12 @@
       "updated_at": "2026-10-11T09:57:46Z"
     },
     "626": {
-      "revision": null,
+      "revision": "84a9e14d89ebaee9bc31fddd4a0a51e0fbb1646afe8571eefadfa64f1057b7e7",
       "pending_revision": "84a9e14d89ebaee9bc31fddd4a0a51e0fbb1646afe8571eefadfa64f1057b7e7",
-      "next_file_page": 4,
+      "next_file_page": 7,
       "head": "660de893d27bb7abd1d5b01b1640207528a5c851",
       "seen_claims": [],
-      "updated_at": "2026-10-12T21:53:17Z"
+      "updated_at": "2026-10-12T22:36:46Z"
     },
     "625": {
       "revision": "d0f11c019196dce5e799830fbce3fbeba7860acf58300adccd7c02ad3a0a6e54",
@@ -27322,9 +26784,9 @@
       "updated_at": "2026-10-12T21:01:43Z"
     },
     "616": {
-      "revision": null,
+      "revision": "45f17231fef51bbf6dc20e837fa0ddcc3dc7bbbda53d8ace8d845e2156f59e47",
       "pending_revision": "45f17231fef51bbf6dc20e837fa0ddcc3dc7bbbda53d8ace8d845e2156f59e47",
-      "next_file_page": 4,
+      "next_file_page": 6,
       "head": "5611a9048e4388bb2f330520796379926084c69e",
       "seen_claims": [],
       "updated_at": "2026-10-12T21:01:43Z"
@@ -27364,32 +26826,166 @@
       "updated_at": "2026-10-12T20:30:37Z"
     },
     "619": {
-      "revision": null,
+      "revision": "1feb373852e7a1be53026835f61465f975451002d77ddb41af7c8173ad5bd1bc",
       "pending_revision": "1feb373852e7a1be53026835f61465f975451002d77ddb41af7c8173ad5bd1bc",
-      "next_file_page": 4,
+      "next_file_page": 6,
       "head": "9879380b4e9fd922842a35cb3edefd712debfdac",
       "seen_claims": [],
-      "updated_at": "2026-10-12T20:23:43Z"
+      "updated_at": "2026-10-12T22:36:46Z"
+    },
+    "642": {
+      "revision": null,
+      "pending_revision": "52bb32bc7f692d454db9d1c444c2e6574daa8de739fffec213bd1f629d45ab9e",
+      "next_file_page": 4,
+      "head": "d1154e23e13d85fdbf64d4b41fa20bb0f56a428f",
+      "seen_claims": [],
+      "updated_at": "2026-10-13T00:46:54Z"
+    },
+    "640": {
+      "revision": null,
+      "pending_revision": "34208ff1b731850374e05dca0537debb1b19dc02c54a4bff93d623e3c13dfe08",
+      "next_file_page": 4,
+      "head": "8ef4414fc65c8189f37fc43dc51915cb565d041e",
+      "seen_claims": [],
+      "updated_at": "2026-10-13T00:42:54Z"
+    },
+    "641": {
+      "revision": "fad6775d52896d73264f9d777147c021240dd4533e42b0711caa6d9b6615c7c9",
+      "pending_revision": "fad6775d52896d73264f9d777147c021240dd4533e42b0711caa6d9b6615c7c9",
+      "next_file_page": 2,
+      "head": "ff580ea5407aa427d64233523e46ee0afe24a766",
+      "seen_claims": [],
+      "updated_at": "2026-10-13T00:36:30Z"
+    },
+    "639": {
+      "revision": null,
+      "pending_revision": "7af3cc23d8aba9a1b811a2cda82ceafa2808f3219b63168b0df8916d024ac01c",
+      "next_file_page": 4,
+      "head": "a374528ad44924951514067c3e104b7afb0e54c3",
+      "seen_claims": [],
+      "updated_at": "2026-10-13T00:31:26Z"
+    },
+    "638": {
+      "revision": null,
+      "pending_revision": "0668b8a0334201e87627754c503471f35e660ed57e0d2dc2104bb19b747f5ba8",
+      "next_file_page": 4,
+      "head": "a77f4a358b5129cda3e510a11a7f9a818aba5274",
+      "seen_claims": [],
+      "updated_at": "2026-10-13T00:19:13Z"
+    },
+    "628": {
+      "revision": "8ff2384aa39b3d64d262504ef0220766029491a7da54a2d837dc4f26450d72ce",
+      "pending_revision": "8ff2384aa39b3d64d262504ef0220766029491a7da54a2d837dc4f26450d72ce",
+      "next_file_page": 3,
+      "head": "0768f97d06c623b8211e651543c66135796b62bf",
+      "seen_claims": [],
+      "updated_at": "2026-10-13T00:00:33Z"
+    },
+    "636": {
+      "revision": null,
+      "pending_revision": "fe289a1f0b9ef46e5429b1cb3ea9187793da1d05e1776a17e3bda5ddbe2f74f8",
+      "next_file_page": 4,
+      "head": "679621828a85bac68af869fb0e55b54508e6b14b",
+      "seen_claims": [],
+      "updated_at": "2026-10-12T23:58:45Z"
+    },
+    "637": {
+      "revision": "650fd51eba14ac5b25a5b1fdd4a16665c327e4bb589f737afcacf611288c287a",
+      "pending_revision": "650fd51eba14ac5b25a5b1fdd4a16665c327e4bb589f737afcacf611288c287a",
+      "next_file_page": 2,
+      "head": "4edb0dda99c495141cc56ae6e8a74e632a74db8a",
+      "seen_claims": [],
+      "updated_at": "2026-10-12T23:56:53Z"
+    },
+    "635": {
+      "revision": "433727926de676e888a1902376a8ff50ec396da16fbc671e25390135089d616e",
+      "pending_revision": "433727926de676e888a1902376a8ff50ec396da16fbc671e25390135089d616e",
+      "next_file_page": 2,
+      "head": "a6895a69f8ad98ab45777b03e9e6f48888c39f6f",
+      "seen_claims": [],
+      "updated_at": "2026-10-12T23:41:56Z"
+    },
+    "634": {
+      "revision": "119f2970e533ba5b20acfb57702be3a2d6503e502c7f3974d2bf6bf01f162595",
+      "pending_revision": "119f2970e533ba5b20acfb57702be3a2d6503e502c7f3974d2bf6bf01f162595",
+      "next_file_page": 2,
+      "head": "189b5771bc1792d5038105463e476e30cb6eb58c",
+      "seen_claims": [
+        "71b4b05ad016b2a41c20273d91f186ebed1c31cbaea819e3f20c03820ee76057"
+      ],
+      "updated_at": "2026-10-12T23:39:00Z"
+    },
+    "633": {
+      "revision": "4cb99751b63abc00a3dcfea298463ad8e7ce715605a471dc177ab1585de2626e",
+      "pending_revision": "4cb99751b63abc00a3dcfea298463ad8e7ce715605a471dc177ab1585de2626e",
+      "next_file_page": 3,
+      "head": "dc14a57d17c63b0e427a5623ef23a2459bc196e9",
+      "seen_claims": [],
+      "updated_at": "2026-10-12T23:22:05Z"
+    },
+    "632": {
+      "revision": null,
+      "pending_revision": "bc3b4f6400d8b6308d851f25c5856f79fe9fbbc23e8c73527a24f64a26f58c9e",
+      "next_file_page": 4,
+      "head": "22d0e6e4d21711420b95d5a47d3cb8b6226de717",
+      "seen_claims": [],
+      "updated_at": "2026-10-12T23:15:58Z"
+    },
+    "631": {
+      "revision": "2e6f84606cb5458ab1bfdf72cd8b6940727b815117462bc7eb4df8550b98cebc",
+      "pending_revision": "2e6f84606cb5458ab1bfdf72cd8b6940727b815117462bc7eb4df8550b98cebc",
+      "next_file_page": 2,
+      "head": "fb893b5ee1317c2da3b297e6fe78eca0857d1a76",
+      "seen_claims": [],
+      "updated_at": "2026-10-12T23:12:30Z"
+    },
+    "630": {
+      "revision": "1021891fbb3ce212a24475b86e63e02454b58fc8e949c53fc1f7ce642455e6f5",
+      "pending_revision": "1021891fbb3ce212a24475b86e63e02454b58fc8e949c53fc1f7ce642455e6f5",
+      "next_file_page": 2,
+      "head": "11a7cc98f8a9ef5192720bc37b45cf2c8369777a",
+      "seen_claims": [],
+      "updated_at": "2026-10-12T23:10:17Z"
+    },
+    "629": {
+      "revision": "12d8988c9ef85312ac5e408c04a5cf603e287bd71a19b71d88764942b43f636a",
+      "pending_revision": "12d8988c9ef85312ac5e408c04a5cf603e287bd71a19b71d88764942b43f636a",
+      "next_file_page": 2,
+      "head": "9f3b92d06ba876ce7101238882d35565993eca57",
+      "seen_claims": [],
+      "updated_at": "2026-10-12T23:06:38Z"
+    },
+    "627": {
+      "revision": "4db0ffbb9eba1869edda0039412f2e620c5dd6a3e603aa720f92e9d59a437555",
+      "pending_revision": "4db0ffbb9eba1869edda0039412f2e620c5dd6a3e603aa720f92e9d59a437555",
+      "next_file_page": 4,
+      "head": "f95308a9afa5adc071fe75c8cd7feec172503d4f",
+      "seen_claims": [],
+      "updated_at": "2026-10-12T22:38:57Z"
     }
   },
   "crocswap_prs_checked": [
+    642,
+    640,
+    641,
+    639,
+    638,
+    628,
+    636,
+    637,
+    635,
+    634,
+    633,
+    632,
+    631,
+    630,
+    629,
+    627,
+    275,
     626,
-    625,
-    618,
-    624,
-    623,
-    615,
-    617,
-    616,
-    614,
-    622,
-    621,
-    620,
     619,
-    540,
+    616,
     473,
-    515,
-    504,
     491,
     376,
     455,
@@ -27402,10 +26998,6 @@
     406,
     403,
     405,
-    404,
-    396,
-    401,
-    400,
-    395
+    404
   ]
 }
