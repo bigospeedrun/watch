@@ -100,7 +100,10 @@ def save(path,value):
         json.dump(value,f,indent=2,ensure_ascii=False);f.write('\n')
     os.replace(temp,path)
 
-def run(api,root=ROOT,dry_run=False,now=None,rng=None,sample=SAMPLE):
+def run(api,root=None,dry_run=False,now=None,rng=None,sample=SAMPLE):
+    # Resolve ROOT at call time; a default bound at definition time ignores a
+    # patched ROOT and made a test read the live cursor (2026-10-14 cycle stop).
+    root=root or ROOT
     now=now or datetime.now(timezone.utc);rng=rng or random.Random()
     state=load(root/STATE,{'last_seen':'0','consumed':[]})
     consumed=set(state['consumed'])

@@ -80,26 +80,41 @@ full search.
 cd "$(git rev-parse --show-toplevel)"
 flock -n .git/poll.lock bash <<'SH'
 set -eu
+# A step that stops the cycle alerts Lead once (cycle_alert.py dedupes by step
+# until it passes again). STEP and LOG name the running command.
+STEP=preflight;LOG=.git/watch-preflight.log;ALERTED=0
+trap 'rc=$?; if [ "$rc" -ne 0 ] && [ "$ALERTED" = 0 ]; then python3 cycle_alert.py fail "$STEP" "$LOG" "$rc" >> .git/cycle-alert.log 2>&1 || echo "Cycle failure alert not delivered; see .git/cycle-alert.log" >&2; fi' EXIT
 if test "$(git branch --show-current)" != main; then
-  echo 'Watch cycles require branch main; stop without changing branches.' >&2
+  echo 'Watch cycles require branch main; stop without changing branches.' | tee "$LOG" >&2
   exit 1
 fi
 if test -n "$(git status --porcelain)"; then
+  { echo 'Worktree has edits; leave them untouched and stop.'; git status --porcelain; } > "$LOG"
   echo 'Worktree has edits; leave them untouched and stop.' >&2
   exit 1
 fi
 cp people-watch.json .git/watch-previous-people.json
 cp pivot-watch.json .git/watch-previous-pivot.json
-python3 -m unittest test_people_watch test_pivot_watch test_watch_policy test_other_bounds_watch test_crocswap_pr_watch test_refresh_health test_discord_watch test_problem_selection_watch > .git/watch-tests.log 2>&1
-if ! python3 discord_watch.py > .git/discord-watch.log 2>&1; then
+STEP=tests;LOG=.git/watch-tests.log
+python3 -m unittest test_people_watch test_pivot_watch test_watch_policy test_other_bounds_watch test_crocswap_pr_watch test_refresh_health test_discord_watch test_problem_selection_watch test_cycle_alert > "$LOG" 2>&1
+if python3 discord_watch.py > .git/discord-watch.log 2>&1; then
+  python3 cycle_alert.py ok discord-intake >> .git/cycle-alert.log 2>&1 || true
+else
   echo "Discord intake incomplete; retain sanitized progress and retry next cycle." >&2
+  python3 cycle_alert.py fail discord-intake .git/discord-watch.log 1 --continued >> .git/cycle-alert.log 2>&1 || true
 fi
-if ! python3 problem_selection_watch.py > .git/problem-selection.log 2>&1; then
+if python3 problem_selection_watch.py > .git/problem-selection.log 2>&1; then
+  python3 cycle_alert.py ok problem-selection >> .git/cycle-alert.log 2>&1 || true
+else
   echo "Problem selection digest incomplete; cursor kept, retry next cycle." >&2
+  python3 cycle_alert.py fail problem-selection .git/problem-selection.log 1 --continued >> .git/cycle-alert.log 2>&1 || true
 fi
-python3 people_watch.py > .git/people-watch.log 2>&1
-python3 pivot_watch.py > .git/pivot-watch.log 2>&1
-python3 - <<'PY'
+STEP=people-watch;LOG=.git/people-watch.log
+python3 people_watch.py > "$LOG" 2>&1
+STEP=pivot-watch;LOG=.git/pivot-watch.log
+python3 pivot_watch.py > "$LOG" 2>&1
+STEP=alert-candidates;LOG=.git/watch-alert-candidates.log
+python3 - > "$LOG" 2>&1 <<'PY'
 import json
 from pathlib import Path
 from pivot_watch import alert_candidate
@@ -112,33 +127,33 @@ alerts=[r for r in watch['candidates'] if alert_candidate(r,known,changed)]
 Path('.git/watch-alert-candidates.json').write_text(json.dumps(alerts,indent=2)+'\n')
 print('Checked',watch['checked_at'],'candidate alerts',len(alerts))
 PY
-git diff --check
+cat "$LOG"
+STEP=commit;LOG=.git/watch-git.log
+git diff --check > "$LOG" 2>&1
 if ! git diff --quiet -- people-watch.json pivot-watch.json discord-submissions.json; then
   git add -- people-watch.json pivot-watch.json discord-submissions.json
-  git commit -m "Update GitHub watches $(date -u +%Y-%m-%dT%H:%M:%SZ)" -- people-watch.json pivot-watch.json discord-submissions.json
+  git commit -m "Update GitHub watches $(date -u +%Y-%m-%dT%H:%M:%SZ)" -- people-watch.json pivot-watch.json discord-submissions.json >> "$LOG" 2>&1
 fi
-if ! git -c push.followTags=false push origin main:refs/heads/main > .git/watch-push.log 2>&1; then
-  python3 - <<'PY'
-from datetime import datetime, timezone
-from poll import office, LEAD
-stamp=datetime.now(timezone.utc).isoformat(timespec='seconds')
-result=office(f'/api/agents/{LEAD}/messages', {'text':
-    stamp+': Watch push failed for main to bigospeedrun/watch. Local commits are retained; '
-    'the next successful cycle will retry. Inspect .git/watch-push.log.'})
-assert result.get('messageId'), 'Push failure alert delivery was not confirmed'
-PY
-  exit 1
-fi
+STEP=push;LOG=.git/watch-push.log
+# The push alert goes through cycle_alert.py too: once, until a push succeeds.
+git -c push.followTags=false push origin main:refs/heads/main > "$LOG" 2>&1
+python3 cycle_alert.py ok preflight tests people-watch pivot-watch alert-candidates commit push >> .git/cycle-alert.log 2>&1 || true
 SH
 ```
 
 A lock conflict means another cycle is running: do not start duplicate work.
 On a failed test or command, inspect the corresponding `.git/*.log`. Do not reset,
 stash, repair unrelated code, or claim full coverage. Preserve partial output for
-review. A push failure must be reported to Lead by the block above. If that
-notification fails, retain the log and report the delivery failure through the
-scheduler. Other command failures or coverage warnings alone are not lead alerts.
-The next cron cycle can retry. The cron execution record retains the failure.
+review. The block above alerts Lead by itself when a step fails: a step that
+stops the cycle (preflight, tests, people-watch, pivot-watch, alert-candidates,
+commit, push) or a skipped intake (discord-intake, problem-selection). Each
+alert names the step, the exit status, the last log line and the log path.
+`cycle_alert.py` records each alerted step in the local `.git/cycle-alerted.json`
+and sends nothing more for it until that step passes, then one "passed again"
+line. Do not send these alerts yourself. If an alert is not delivered,
+`.git/cycle-alert.log` says so; report that delivery failure through the
+scheduler. Coverage warnings alone are not lead alerts. The next cron cycle
+retries.
 
 ## Discord submissions
 
@@ -383,7 +398,7 @@ API lookup of bigospeedrun/site data at a pinned main commit can resolve it.
 ## Notify Lead, or end silently
 
 Send a message only for a reviewed research lead, an unreported hourly
-workflow failure, a Discord submission or content-unavailable alert, or a push failure as specified above. For a research lead, Use the
+workflow failure, a Discord submission or content-unavailable alert, or a cycle step failure (sent by the block above; do not resend it). For a research lead, Use the
 same format as poll.py (one message grouping all qualifying leads):
 
 `CHECKED_AT: Possible new bound race or problem pivot; README signals need review: REPO_URL (PROBLEM_GUESS); REPO_URL (PROBLEM_GUESS)`
@@ -410,4 +425,4 @@ PYCODE
 The token belongs only in the localhost Authorization header. Never print it or
 send it to GitHub. Check that the response has `messageId` before treating the
 alert as delivered. Do not send success reports, coverage summaries or an
-all-clear message. If there is no qualifying research, workflow-failure, or push-failure alert, end silently.
+all-clear message. If there is no qualifying research or workflow-failure alert, end silently.

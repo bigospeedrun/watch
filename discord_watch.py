@@ -74,7 +74,10 @@ class Discord:
     def react(self,message):
         self.request('channels/'+self.channel+'/messages/'+message+'/reactions/'+quote('👀',safe='')+'/@me','PUT')
 
-def run(api,notify,root=ROOT,dry_run=False):
+def run(api,notify,root=None,dry_run=False):
+    # Resolve ROOT at call time; a default bound at definition time ignores a
+    # patched ROOT and made a test read the live cursor (2026-10-14 cycle stop).
+    root=root or ROOT
     state=load(root/PRIVATE,{'last_seen':'0','messages':{},'content_alerted':False})
     public=load(root/PUBLIC,{'submissions':[]})
     api.check_channel()

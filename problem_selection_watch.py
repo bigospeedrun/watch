@@ -83,7 +83,10 @@ def save(path,value):
         os.chmod(temp,0o600);json.dump(value,f);f.write('\n')
     os.replace(temp,path)
 
-def run(api,notify,root=ROOT,dry_run=False):
+def run(api,notify,root=None,dry_run=False):
+    # Resolve ROOT at call time; a default bound at definition time ignores a
+    # patched ROOT and made a test read the live cursor (2026-10-14 cycle stop).
+    root=root or ROOT
     state=load(root/STATE);cursor=state['last_seen']
     api.check_channel()
     rows=[];after=cursor;status='ok'
