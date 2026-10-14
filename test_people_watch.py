@@ -22,6 +22,15 @@ class PeopleWatchTests(unittest.TestCase):
             hits=json.loads((root/'people-watch.json').read_text())['hits']
             self.assertEqual([h['url'] for h in hits],['https://github.com/CrocSwap/integer-mult-bounds/pull/2'])
 
+    def test_listed_repos_include_live_site_registry(self):
+        with tempfile.TemporaryDirectory(dir=git_state_dir()) as tmp:
+            root=Path(tmp)/'bigospeedrun-data';site=Path(tmp)/'bigospeedrun-site'/'data'
+            root.mkdir();(root/'registry.json').write_text(json.dumps({'repositories':[{'repo':'CrocSwap/integer-mult-bounds'}]}))
+            with patch.object(people_watch,'ROOT',root):
+                self.assertEqual(people_watch.listed_repos(),{'crocswap/integer-mult-bounds'})
+                site.mkdir(parents=True);(site/'registry.json').write_text(json.dumps({'repositories':[{'repo':'Hugin-Hilbert/rectangular-matmul-rings'}]}))
+                self.assertEqual(people_watch.listed_repos(),{'crocswap/integer-mult-bounds','hugin-hilbert/rectangular-matmul-rings'})
+
     def test_event_scope(self):
         def event(kind,repo,payload):return {'type':kind,'repo':{'name':repo},'payload':payload}
         known={'crocswap/integer-mult-bounds'}

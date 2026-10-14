@@ -9,6 +9,17 @@ from watch_policy import wht_only, board_fork, HOURLY_REPOS, hourly_imported, vi
 ROOT=Path(__file__).resolve().parent
 WORDS=re.compile(r'bound|kappa|exponent|speedrun|fourier|(?:^|[- /])dft|(?:^|[- /])fft|3sum|threesum|apsp|subset.sum|shortest.path|matrix.mult|integer.mult|walsh|hadamard',re.I)
 
+def listed_repos():
+    """Lowercase repos in the local snapshot plus the live site registry.
+
+    The local registry.json is an old snapshot. The live Relevant repos list is
+    the sibling site's data/registry.json; read it, never modify it.
+    """
+    repos={r['repo'].lower() for r in json.loads((ROOT/'registry.json').read_text())['repositories']}
+    site=ROOT.parent/'bigospeedrun-site'/'data'/'registry.json'
+    if site.exists():repos.update(r['repo'].lower() for r in json.loads(site.read_text())['repositories'])
+    return repos
+
 def classify(event, watched):
     kind=event['type'];payload=event.get('payload',{});repo=event.get('repo',{}).get('name')
     if not repo:return None
@@ -28,7 +39,7 @@ def main():
     for login,count in counts.most_common(config['active_author_count']):
         users.setdefault(login,dict(github=login,confirmation='CrocSwap PR author login in saved GitHub API submissions',evidence_url='https://github.com/CrocSwap/integer-mult-bounds/pulls'))
         users[login]['crocswap_pr_count']=count
-    watched={r['repo'].lower() for r in json.loads((ROOT/'registry.json').read_text())['repositories']}
+    watched=listed_repos()
     watched.update(r['repo'].lower() for r in json.loads((ROOT/'pivot-watchlist.json').read_text())['repositories'])
     prior=json.loads((ROOT/'people-watch.json').read_text()) if (ROOT/'people-watch.json').exists() else {}
     prior_users=prior.get('users',{});state={};hits=[];errors=[];warnings=[]
@@ -78,7 +89,7 @@ def main():
             rank=10*bool(WORDS.search(repo+' '+(title or '')+' '+(payload.get('description') or '')))+20*(kind in ('new-repository','branch-outside-watchlist'))+2*(kind=='new-bound-pr')
             hits.append(dict(event_id=event['id'],actor=login,kind=kind,repo=repo,url=url,created_at=event['created_at'],title=title,head=payload.get('head') if kind=='push-outside-watchlist' else None,rank=rank,relevance='bound-related lead; inspect source' if rank>=10 else 'unknown; inspect source'))
             if body:hits[-1]['body']=body
-    board={r['repo'].lower() for r in json.loads((ROOT/'registry.json').read_text())['repositories']}
+    board=listed_repos()
     repo_cache={};filtered=[]
     for hit in hits:
         # Reuse event/body data; the bounded direct PR pass covers missing bodies.

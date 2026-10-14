@@ -343,7 +343,9 @@ not just the repository URL. Do not deduplicate different PRs by repo name.
 The local board snapshots are historical context; do not
 import or overwrite them. The pivot watch also reads the sibling site's
 `data/registry.json` to suppress new-source alerts for repositories already
-listed under Relevant repos. A detected bound change remains eligible for
+listed under Relevant repos. The people watch reads it too for its watched
+and board repositories. That file is the live registry; the local
+`registry.json` here is an old snapshot. A detected bound change remains eligible for
 review. If board membership is uncertain, a read-only GitHub
 API lookup of bigospeedrun/site data at a pinned main commit can resolve it.
 
