@@ -89,7 +89,9 @@ class OtherBoundsTests(unittest.TestCase):
         self.assertEqual(len(second['checkpoint']['pending']),500)
 
     def test_search_cursor_resumes_after_discovery_quota(self):
-        config=[o.FAMILIES['003'],o.FAMILIES['005']];queries=[]
+        # Rotation covers every distinct alias, not only the first per family.
+        config=[dict(family='003',title='Q',aliases=['quasi Riemann','quasi-Riemann','QuasiRiemann'],repo='a/q',baseline_commit='b'*40),
+                dict(family='005',title='C',aliases=['Catalan constant'],repo='a/c',baseline_commit='b'*40)];queries=[]
         def api(path,params=None,**kwargs):
             if path.endswith('/forks'):return []
             if path=='search/repositories':
@@ -98,8 +100,8 @@ class OtherBoundsTests(unittest.TestCase):
         with patch.object(o,'CONFIG',config),patch.object(o,'DISCOVERY_REQUESTS',2),patch.object(o,'api',api),patch('watch_budget.time.sleep'):
             first=o.collect('2026-10-10',{'other_bounds_checkpoint':{'search_cursor':1}})
             second=o.collect('2026-10-10',{'other_bounds_checkpoint':first['checkpoint']})
-        self.assertEqual(first['checkpoint']['search_cursor'],0)
-        self.assertIn(config[1]['aliases'][0],queries[0]);self.assertIn(config[0]['aliases'][0],queries[1])
+        self.assertEqual(first['checkpoint']['search_cursor'],2);self.assertEqual(second['checkpoint']['search_cursor'],0)
+        self.assertEqual([q.split('"')[1] for q in queries],['QuasiRiemann','Catalan constant'])
 
     def test_unfinished_reviewed_sources_precede_completed_source_rechecks(self):
         config=[dict(family='187',repo=n,baseline_commit='base',aliases=['Snaky']) for n in ['a/snaky','b/snaky']]

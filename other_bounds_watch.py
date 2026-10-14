@@ -18,6 +18,16 @@ def family_configs():
     # A family can list several repos; match and search each family once.
     return list({r['family']:r for r in CONFIG}.values())
 
+def search_phrases():
+    # Search every distinct alias, not only the first: a repo can use only a
+    # later phrase (shea256 says "binary matrix removal", 2026-10-14).
+    pairs=[]
+    for cfg in family_configs():
+        seen=set()
+        for alias in cfg['aliases']:
+            if normalize(alias) not in seen:seen.add(normalize(alias));pairs.append((cfg,alias))
+    return pairs
+
 def family_matches(text):
     normalized=normalize(text)
     return [r['family'] for r in family_configs() if any(normalize(a) in normalized for a in r['aliases']) or re.search(r'\bfamily\s*#?\s*0*'+str(int(r['family']))+r'\b',text,re.I)]
@@ -128,11 +138,11 @@ def collect(since,previous,people_hits=(),search=True):
             except BudgetExhausted as error:errors.append(str(error));break
             except (RuntimeError,ValueError) as error:errors.append(str(error));break
         # Round-robin family searches retain their position if discovery is cut short.
-        searches=family_configs()
+        searches=search_phrases()
         for _ in range(len(searches)):
             if not discovery_ready():break
-            cfg=searches[search_cursor%len(searches)]
-            q='"'+' '.join(cfg['aliases'][0].split())+'"'+f' in:name,description,readme pushed:>={since} fork:false'
+            cfg,alias=searches[search_cursor%len(searches)]
+            q='"'+' '.join(alias.split())+'"'+f' in:name,description,readme pushed:>={since} fork:false'
             queries.append(q)
             try:
                 result=budget.get('search/repositories',{'q':q,'sort':'updated','order':'desc','per_page':100})
