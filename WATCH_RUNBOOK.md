@@ -90,9 +90,12 @@ if test -n "$(git status --porcelain)"; then
 fi
 cp people-watch.json .git/watch-previous-people.json
 cp pivot-watch.json .git/watch-previous-pivot.json
-python3 -m unittest test_people_watch test_pivot_watch test_watch_policy test_other_bounds_watch test_crocswap_pr_watch test_refresh_health test_discord_watch > .git/watch-tests.log 2>&1
+python3 -m unittest test_people_watch test_pivot_watch test_watch_policy test_other_bounds_watch test_crocswap_pr_watch test_refresh_health test_discord_watch test_problem_selection_watch > .git/watch-tests.log 2>&1
 if ! python3 discord_watch.py > .git/discord-watch.log 2>&1; then
   echo "Discord intake incomplete; retain sanitized progress and retry next cycle." >&2
+fi
+if ! python3 problem_selection_watch.py > .git/problem-selection.log 2>&1; then
+  echo "Problem selection digest incomplete; cursor kept, retry next cycle." >&2
 fi
 python3 people_watch.py > .git/people-watch.log 2>&1
 python3 pivot_watch.py > .git/pivot-watch.log 2>&1
@@ -171,6 +174,26 @@ next cycle can retry; it does not leave a dirty report that blocks the watch. In
 
 `python3 discord_watch.py --dry-run` reads only: no reactions, office messages,
 cursor writes, public report writes, or private author records.
+
+## Problem selection digest
+
+`problem_selection_watch.py` reads Discord `#problem-selection`
+(`1558634556641386516`), where members suggest new problems. It is strictly
+read-only: GET requests only, no messages, reactions or edits. Its client has
+no write method. It sends each cycle's new member messages (author, time in PT,
+text, message link) as one digest straight to BOS Lead Dev through the office
+API, marked as untrusted visitor text. Bot, webhook and system messages are
+skipped; thread replies are not read. Long texts are cut at 1500 characters;
+long digests are split into parts, and the cursor advances after each
+delivered part. An empty member message (Message Content not visible) stops
+the run with no digest and no cursor change.
+
+You, the cycle agent, never see the text. Do not read Discord, the digest, or
+the ignored `problem-selection.local.json` (cursor only). Read only
+`.git/problem-selection.log`: one JSON line of counts and status. Do not
+mention its content in an alert; the lead already has the digest. A failed run
+retries next cycle. `python3 problem_selection_watch.py --dry-run` reads only.
+This route does not change the #submit-a-result intake above.
 
 ## Read and review the results
 
