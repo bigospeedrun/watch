@@ -208,6 +208,29 @@ class OtherBoundsTests(unittest.TestCase):
         self.assertEqual(len(result['candidates']),1);self.assertIn('19',result['candidates'][0]['source_claim_evidence'][0])
         self.assertEqual(result['errors'],[])
 
+    def test_second_repo_of_a_family_is_watched_without_alias_in_readme(self):
+        # Family 190 lists erebos and shea256 (2026-10-14); one search per family.
+        cfgs=[{'family':'190','title':'Ordered matrix removal','aliases':['ordered matrix removal'],'repo':r,'baseline_commit':'b'*40}
+              for r in ['erebos/removal','shea/binary-removal']]
+        with patch.object(o,'CONFIG',cfgs):
+            self.assertEqual(o.family_matches('ordered matrix removal'),['190'])
+            self.assertEqual(len(o.family_configs()),1)
+        queries=[]
+        def api(path,params=None,**kwargs):
+            if path=='search/repositories':queries.append(params['q']);return {'items':[],'total_count':0}
+            if path.endswith('/forks'):return []
+            if '/compare/' in path:return {'files':[]}
+            if '/commits/' in path:return {'sha':'a'*40}
+            name=path.removeprefix('repos/');return dict(full_name=name,html_url='https://github.com/'+name,default_branch='main')
+        def content(repo,path,pin,**kwargs):
+            if repo=='shea/binary-removal':return b'Pattern bound: 12 cells.' if pin=='b'*40 else b'New bound: 9 cells.'
+            return b'Ordered matrix removal bound: 16 cells.'
+        with patch.object(o,'CONFIG',cfgs),patch.object(o,'api',api),patch.object(o,'content',content),patch('watch_budget.time.sleep'):
+            result=o.collect('2026-10-10',{})
+        self.assertEqual(len(queries),1)
+        self.assertEqual([(c['repo'],c['source_claim_evidence']) for c in result['candidates']],[('shea/binary-removal',['New bound: 9 cells.'])])
+        self.assertEqual(result['errors'],[])
+
     def test_api_failure_preserves_prior_claim_state(self):
         previous={'other_bound_states':{'person/math':{'head':'a'*40,'seen_claims':['known'],'openai_fork':True}}}
         with patch.object(o,'CONFIG',[]),patch.object(o,'api',side_effect=RuntimeError('GitHub unavailable')):

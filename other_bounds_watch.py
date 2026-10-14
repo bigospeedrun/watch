@@ -14,9 +14,13 @@ FORK_PAGES_PER_CYCLE=5
 
 def normalize(text):return re.sub(r'[^a-z0-9]+',' ',text.lower()).strip()
 
+def family_configs():
+    # A family can list several repos; match and search each family once.
+    return list({r['family']:r for r in CONFIG}.values())
+
 def family_matches(text):
     normalized=normalize(text)
-    return [r['family'] for r in CONFIG if any(normalize(a) in normalized for a in r['aliases']) or re.search(r'\bfamily\s*#?\s*0*'+str(int(r['family']))+r'\b',text,re.I)]
+    return [r['family'] for r in family_configs() if any(normalize(a) in normalized for a in r['aliases']) or re.search(r'\bfamily\s*#?\s*0*'+str(int(r['family']))+r'\b',text,re.I)]
 
 def other_problem(text):return bool(family_matches(text))
 
@@ -124,16 +128,17 @@ def collect(since,previous,people_hits=(),search=True):
             except BudgetExhausted as error:errors.append(str(error));break
             except (RuntimeError,ValueError) as error:errors.append(str(error));break
         # Round-robin family searches retain their position if discovery is cut short.
-        for _ in range(len(CONFIG)):
+        searches=family_configs()
+        for _ in range(len(searches)):
             if not discovery_ready():break
-            cfg=CONFIG[search_cursor%len(CONFIG)]
+            cfg=searches[search_cursor%len(searches)]
             q='"'+' '.join(cfg['aliases'][0].split())+'"'+f' in:name,description,readme pushed:>={since} fork:false'
             queries.append(q)
             try:
                 result=budget.get('search/repositories',{'q':q,'sort':'updated','order':'desc','per_page':100})
                 if result.get('incomplete_results') or result['total_count']>100:truncated.append(dict(query=q,total_count=result['total_count']))
                 for meta in result['items']:add(meta)
-                search_cursor=(search_cursor+1)%len(CONFIG)
+                search_cursor=(search_cursor+1)%len(searches)
                 budget.pause(2.1)
             except BudgetExhausted as error:errors.append(str(error));break
             except (RuntimeError,ValueError) as error:
@@ -196,7 +201,10 @@ def collect(since,previous,people_hits=(),search=True):
                 if len(diff.get('files',[]))>=300:truncated.append(dict(query=repo+' upstream diff',total_count='at least 300 files'))
             else:
                 text=budget.read(repo,'README.md',head).decode('utf-8',errors='replace')
-                families=family_matches(repo+' '+(meta.get('description') or '')+'\n'+text)
+                # A watched repo always counts for its configured family, even when
+                # its README does not use a family alias.
+                families=list(dict.fromkeys(family_matches(repo+' '+(meta.get('description') or '')+'\n'+text)+
+                    [cfg['family'] for cfg in CONFIG if cfg['repo']==repo]))
                 additions=[(family,scoped_claims(text,family)) for family in families]
                 base=old.get('head') or next((cfg['baseline_commit'] for cfg in CONFIG if cfg['repo']==repo),None)
                 if base and base!=head:
