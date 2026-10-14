@@ -183,7 +183,7 @@ Read `.git/people-watch.log`, `.git/pivot-watch.log`, and
   leads here too: the pivot watch does not seed its candidates from `new-bound-pr`.
 - `pivot-watch.json`: `checked_at`, `candidates`, `watched_repositories`,
   `board_bound_states`, `other_bound_states`, `other_bounds_checkpoint`,
-  `other_bounds_usage`, `crocswap_pr_states`,
+  `other_bounds_usage`, `crocswap_pr_states`, `family_pr_states`,
   `crocswap_prs_checked`, `related`, `errors`, and `truncated_queries`. Candidate
   rows include repo URL, stars, creation/push dates, problem guess, README pin,
   evidence lines and race/pivot/source flags. `new_commit` alone is not an alert.
@@ -286,6 +286,14 @@ Copied dependency trees (`inputs`, `vendor`, `vendored`, `third_party` and
 `node_modules` directories) are excluded. Their inherited theorems do not
 state a new claim by the PR author. A claim placed only in one of these
 directories can be missed; inspect the author's body and research notes.
+
+The same route first reads PRs on two Other bounds upstreams whose claims
+arrive as fork PRs: `GTimG/QuasiRiemannTracker` (family 003) and
+`rohanarun/van-der-waerden-refinement` (family 160). It reads every open PR,
+whatever its update time, plus all PRs updated in the 72-hour window, by every
+author. Every claim there counts for that repo's family. Only titles, bodies
+and added Markdown and TeX lines are read, not Lean diffs. These PRs use at most 24 of the 80 GETs; CrocSwap gets the rest.
+Their signatures are in `family_pr_states`, keyed by repo and PR number.
 
 This route stores numerical claim signatures per PR and problem in
 `crocswap_pr_states`. A repeated claim or prose-only change stays silent;

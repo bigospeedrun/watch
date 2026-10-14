@@ -2,6 +2,7 @@ import unittest
 import subprocess
 from unittest.mock import patch
 from crocswap_pr_watch import collect, source_claims, REPO
+import crocswap_pr_watch as cw
 from pivot_watch import alert_candidate
 import github_read
 
@@ -129,5 +130,51 @@ class CrocSwapPRTests(unittest.TestCase):
         with patch('github_read.time.monotonic',return_value=100),patch('github_read.subprocess.run',return_value=response) as run,patch('github_read.time.sleep') as sleep:
             with self.assertRaises(RuntimeError):github_read.api('repos/test/repo',deadline=220)
         self.assertEqual(run.call_count,1);sleep.assert_not_called()
+
+class FamilyPRTests(unittest.TestCase):
+    VDW='rohanarun/van-der-waerden-refinement';QRT='GTimG/QuasiRiemannTracker'
+    def fake(self,prs,calls):
+        def api(path,params,**kwargs):
+            calls.append((path,params.get('state')))
+            repo='/'.join(path.split('/')[1:3])
+            if path.endswith('/pulls'):
+                rows=[p for p in prs.get(repo,[]) if params['state']=='all' or p['state']=='open']
+                return rows if params.get('page',1)==1 else []
+            return [dict(filename='notes.md',status='added',patch='+Exact coefficient bound 1/19 for the cover.\n+Fourier transform bound 0.5.'),
+                    dict(filename='Proof.lean',status='added',patch='+theorem cover_bound : (1 / 19 : ℝ) ≤ 2 := by')]
+        return api
+
+    def test_open_pr_outside_window_gets_family_label(self):
+        # artuskg's 1/19 sat in open PR #4 for 3 days (2026-10-14).
+        old_open=pull(4,body='Add a certificate cover.',title='Coefficient 1/19',state='open',updated_at='2026-10-01T00:00:00Z',
+                      html_url=f'https://github.com/{self.VDW}/pull/4',user={'login':'artuskg'})
+        old_closed=pull(3,body='Bound 1/24.',state='closed',updated_at='2026-10-01T00:00:00Z')
+        calls=[]
+        with patch('crocswap_pr_watch.api',side_effect=self.fake({self.VDW:[old_open,old_closed]},calls)):
+            result=cw.collect_all(SINCE,{})
+        rows=[r for r in result['candidates'] if r['repo']==self.VDW]
+        self.assertEqual([(r['pr_number'],r['other_family'],r['evidence']) for r in rows],[(4,'160',['recent-family-pr'])])
+        # Cross-board words count for the repo's family; Lean diffs are not read.
+        self.assertIn('Fourier transform bound 0.5.',rows[0]['source_claim_evidence'])
+        self.assertFalse(any('theorem' in line for line in rows[0]['source_claim_evidence']))
+        self.assertTrue(alert_candidate(rows[0],set(),set()))
+        self.assertIn('4',result['family_states'][self.VDW]);self.assertNotIn('3',result['family_states'][self.VDW])
+        self.assertIn(('repos/'+REPO+'/pulls','all'),calls)
+        # An unchanged PR is skipped on the next cycle: no files request.
+        calls.clear()
+        with patch('crocswap_pr_watch.api',side_effect=self.fake({self.VDW:[old_open]},calls)):
+            again=cw.collect_all(SINCE,{'family_pr_states':result['family_states']})
+        self.assertEqual(again['candidates'],[]);self.assertFalse(any('/files' in c[0] for c in calls))
+
+    def test_family_share_of_budget_leaves_rest_for_crocswap(self):
+        many=[pull(n,body='Proof notes.',state='open',html_url=f'https://github.com/{self.QRT}/pull/{n}') for n in range(1,41)]
+        calls=[]
+        with patch('crocswap_pr_watch.api',side_effect=self.fake({self.QRT:many,REPO:[pull(900)]},calls)):
+            result=cw.collect_all(SINCE,{})
+        family_calls=[c for c in calls if not c[0].startswith('repos/'+REPO)]
+        self.assertEqual(len(family_calls),cw.FAMILY_MAX_REQUESTS)
+        self.assertIn(('repos/'+REPO+'/pulls/900/files',None),calls)
+        self.assertLessEqual(result['requests'],cw.MAX_REQUESTS)
+        self.assertTrue(any(t['query']==self.QRT+' PR inspection budget' for t in result['truncated']))
 
 if __name__=='__main__':unittest.main()

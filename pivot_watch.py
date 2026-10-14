@@ -7,7 +7,7 @@ from fractions import Fraction
 from github_read import api, pages, content
 from other_bounds_watch import collect as collect_other_bounds, FAMILIES
 from watch_policy import wht_only, hourly_imported, new_research_source, visible_problem
-from crocswap_pr_watch import collect as collect_crocswap_prs
+from crocswap_pr_watch import collect_all as collect_crocswap_prs
 ROOT=Path(__file__).resolve().parent
 SITE_ROOT=ROOT.parent/'bigospeedrun-site'
 CORE=['matrix multiplication','integer multiplication','DFT','FFT','3SUM','threesum','APSP','subset sum','discrete Fourier transform']
@@ -174,8 +174,10 @@ def main():
     prs=collect_crocswap_prs(since,previous)
     result['candidates'].extend(prs['candidates'])
     result['crocswap_pr_states']=prs['states']
+    result['family_pr_states']=prs['family_states']
     result['crocswap_prs_checked']=prs['checked']
     result['errors'].extend(prs['errors']);result['truncated_queries'].extend(prs['truncated'])
+    result['coverage_note']+=' Family upstream PRs (GTimG/QuasiRiemannTracker, rohanarun/van-der-waerden-refinement): every open PR plus all PRs updated within 72 hours, first, at most 24 of the 80 PR GETs.'
     result['coverage_note']+=' Recent CrocSwap PRs: all authors and states, updated within 72 hours; inspect cross-problem claims in PR bodies and added Markdown, TeX and Lean lines. At most 1000 PRs and 300 files per PR; incomplete reads are retried.'
     path=ROOT/'pivot-watch.json';temp=path.with_suffix('.tmp');temp.write_text(json.dumps(result,indent=2)+'\n');temp.replace(path)
     print('Checked',result['checked_at'],'window',since)

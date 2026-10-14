@@ -15,8 +15,13 @@ FORK_PAGES_PER_CYCLE=5
 def normalize(text):return re.sub(r'[^a-z0-9]+',' ',text.lower()).strip()
 
 def family_configs():
-    # A family can list several repos; match and search each family once.
-    return list({r['family']:r for r in CONFIG}.values())
+    # A family can list several repos; match and search each family once, with
+    # the union of its entries' aliases (entries need not repeat each alias).
+    merged={}
+    for r in CONFIG:
+        m=merged.setdefault(r['family'],dict(r,aliases=[]))
+        m['aliases']+=[a for a in r['aliases'] if a not in m['aliases']]
+    return list(merged.values())
 
 def search_phrases():
     # Search every distinct alias, not only the first: a repo can use only a

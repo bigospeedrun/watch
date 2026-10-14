@@ -210,6 +210,15 @@ class OtherBoundsTests(unittest.TestCase):
         self.assertEqual(len(result['candidates']),1);self.assertIn('19',result['candidates'][0]['source_claim_evidence'][0])
         self.assertEqual(result['errors'],[])
 
+    def test_family_aliases_are_the_union_of_its_entries(self):
+        cfgs=[dict(family='190',title='O',aliases=['ordered matrix removal'],repo='a/x',baseline_commit='b'*40),
+              dict(family='190',title='O',aliases=['binary matrix removal','ordered matrix removal'],repo='b/y',baseline_commit='b'*40)]
+        with patch.object(o,'CONFIG',cfgs):
+            self.assertEqual(o.family_configs()[0]['aliases'],['ordered matrix removal','binary matrix removal'])
+            self.assertEqual([a for _,a in o.search_phrases()],['ordered matrix removal','binary matrix removal'])
+            self.assertEqual(o.family_matches('an ordered binary matrix removal repo'),['190'])
+        self.assertEqual(cfgs[0]['aliases'],['ordered matrix removal'])
+
     def test_second_repo_of_a_family_is_watched_without_alias_in_readme(self):
         # Family 190 lists erebos and shea256 (2026-10-14); one search per family.
         cfgs=[{'family':'190','title':'Ordered matrix removal','aliases':['ordered matrix removal'],'repo':r,'baseline_commit':'b'*40}
