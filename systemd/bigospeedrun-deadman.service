@@ -1,0 +1,10 @@
+[Unit]
+Description=Big O Speedrun dead-man check (stale or failed automation alerts BOS Lead Dev)
+
+[Service]
+Type=oneshot
+WorkingDirectory=%h/nil/bigospeedrun-data
+Environment=PATH=%h/.local/bin:/usr/local/bin:/usr/bin:/bin
+ExecStart=/usr/bin/python3 %h/nil/bigospeedrun-data/deadman.py
+StandardOutput=journal
+StandardError=journal

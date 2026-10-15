@@ -1,0 +1,10 @@
+[Unit]
+Description=Run the Big O Speedrun dead-man check each hour
+
+[Timer]
+OnCalendar=*-*-* *:37:00
+Persistent=true
+Unit=bigospeedrun-deadman.service
+
+[Install]
+WantedBy=timers.target

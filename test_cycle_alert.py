@@ -20,6 +20,7 @@ class CycleAlertTests(unittest.TestCase):
         self.assertEqual(c.ok(['tests'],self.send,self.root),'cleared tests')
         self.assertIn('tests passed again',self.sent[2])
         self.assertEqual(set(json.loads((self.root/c.STATE).read_text())),{'discord-intake'})
+        self.assertEqual(set(json.loads((self.root/c.LAST_OK).read_text())),{'tests'})
         self.assertEqual(c.ok(['tests'],self.send,self.root),'nothing to clear');self.assertEqual(len(self.sent),3)
         c.fail('tests',str(self.log),'1',False,self.send,self.root);self.assertEqual(len(self.sent),4)
 

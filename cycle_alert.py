@@ -7,6 +7,9 @@
 State: .git/cycle-alerted.json (local, untracked) maps each alerted step to its
 first alert time. A step is recorded only after the office confirms delivery,
 so a failed delivery retries next cycle; a repeated failure stays silent.
+`ok` also records each passed step's time in .git/cycle-last-ok.json, which the
+independent dead-man check (deadman.py) reads; the final call of a cycle names
+the pseudo-step `cycle`.
 """
 import json
 import re
@@ -16,6 +19,7 @@ from pathlib import Path
 
 ROOT=Path(__file__).resolve().parent
 STATE='.git/cycle-alerted.json'
+LAST_OK='.git/cycle-last-ok.json'
 
 def last_line(log):
     try:lines=[l for l in Path(log).read_text(errors='replace').splitlines() if l.strip()]
@@ -42,8 +46,15 @@ def fail(step,log,status,continued,send,root=None):
     state[step]=stamp;save(root,state)
     return 'alerted'
 
+def record_ok(steps,root):
+    path=root/LAST_OK
+    last=json.loads(path.read_text()) if path.exists() else {}
+    stamp=datetime.now(timezone.utc).isoformat(timespec='seconds')
+    last.update({s:stamp for s in steps})
+    tmp=path.with_name(path.name+'.tmp');tmp.write_text(json.dumps(last,indent=2)+'\n');tmp.replace(path)
+
 def ok(steps,send,root=None):
-    root=root or ROOT;state=load(root)
+    root=root or ROOT;record_ok(steps,root);state=load(root)
     cleared=[s for s in steps if s in state]
     if not cleared:return 'nothing to clear'
     stamp=datetime.now(timezone.utc).isoformat(timespec='seconds')

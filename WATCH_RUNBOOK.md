@@ -96,7 +96,7 @@ fi
 cp people-watch.json .git/watch-previous-people.json
 cp pivot-watch.json .git/watch-previous-pivot.json
 STEP=tests;LOG=.git/watch-tests.log
-python3 -m unittest test_people_watch test_pivot_watch test_watch_policy test_other_bounds_watch test_crocswap_pr_watch test_refresh_health test_discord_watch test_problem_selection_watch test_cycle_alert > "$LOG" 2>&1
+python3 -m unittest test_people_watch test_pivot_watch test_watch_policy test_other_bounds_watch test_crocswap_pr_watch test_refresh_health test_discord_watch test_problem_selection_watch test_cycle_alert test_deadman > "$LOG" 2>&1
 if python3 discord_watch.py > .git/discord-watch.log 2>&1; then
   python3 cycle_alert.py ok discord-intake >> .git/cycle-alert.log 2>&1 || true
 else
@@ -108,6 +108,16 @@ if python3 problem_selection_watch.py > .git/problem-selection.log 2>&1; then
 else
   echo "Problem selection digest incomplete; cursor kept, retry next cycle." >&2
   python3 cycle_alert.py fail problem-selection .git/problem-selection.log 1 --continued >> .git/cycle-alert.log 2>&1 || true
+fi
+# Cross-check the hourly dead-man timer once it is installed: its state file
+# must be fresher than 2 h.
+if test -f "$HOME/.config/systemd/user/bigospeedrun-deadman.timer"; then
+  if test -n "$(find .git/deadman-state.json -mmin -120 2>/dev/null)"; then
+    python3 cycle_alert.py ok deadman >> .git/cycle-alert.log 2>&1 || true
+  else
+    echo 'deadman-state.json older than 2 h or missing; see journalctl --user -u bigospeedrun-deadman.service' > .git/deadman-check.log
+    python3 cycle_alert.py fail deadman .git/deadman-check.log 1 --continued >> .git/cycle-alert.log 2>&1 || true
+  fi
 fi
 STEP=people-watch;LOG=.git/people-watch.log
 python3 people_watch.py > "$LOG" 2>&1
@@ -137,7 +147,7 @@ fi
 STEP=push;LOG=.git/watch-push.log
 # The push alert goes through cycle_alert.py too: once, until a push succeeds.
 git -c push.followTags=false push origin main:refs/heads/main > "$LOG" 2>&1
-python3 cycle_alert.py ok preflight tests people-watch pivot-watch alert-candidates commit push >> .git/cycle-alert.log 2>&1 || true
+python3 cycle_alert.py ok preflight tests people-watch pivot-watch alert-candidates commit push cycle >> .git/cycle-alert.log 2>&1 || true
 SH
 ```
 
@@ -154,6 +164,22 @@ line. Do not send these alerts yourself. If an alert is not delivered,
 `.git/cycle-alert.log` says so; report that delivery failure through the
 scheduler. Coverage warnings alone are not lead alerts. The next cron cycle
 retries.
+
+## Dead-man check
+
+`deadman.py` runs each hour at :37 from the systemd user timer
+`bigospeedrun-deadman.timer` (`bigospeedrun-deadman.service`; unit files in
+`systemd/`). It does not run inside this cycle or any Isomux cronjob. It checks:
+the watch cycle (`cycle` in `.git/cycle-last-ok.json` < 4 h), the Discord
+intake and problem-selection steps (< 4 h), the site `refresh-data.yml`
+workflow (latest completed run succeeded, newest success < 2 h, GitHub GET
+only), `bigospeedrun-submissions.service` (last run ok, timer fired < 75 min)
+and the cronjob "BOS chatbot gap review" (completed run < 26 h, from
+`~/.isomux/cronjobs`, read-only). A failing item alerts BOS Lead Dev once
+through a signed Isomux webhook (`.git/deadman.json`), then once on recovery.
+If the lead cannot be reached, the alert goes to `.git/deadman-alerts.log` and
+the next hourly run retries. `python3 deadman.py --dry-run` prints item status
+only. This cycle cross-checks the timer through `.git/deadman-state.json`.
 
 ## Discord submissions
 
