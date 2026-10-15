@@ -21,7 +21,8 @@ class Fake:
     def refresh_runs(self):return self.runs
     def systemd(self,unit,*props):return self.service if unit.endswith('.service') else self.timer
     def cron_runs(self,job):return self.cron
-    installed=False;digest_ok=None
+    installed=False;digest_ok=None;stalled=()
+    def stalled_sources(self):return list(self.stalled)
     def unit_installed(self,unit):return self.installed
     def digest_last_ok(self,name):return self.digest_ok
 
@@ -35,7 +36,7 @@ class DeadmanTests(unittest.TestCase):
 
     def test_all_healthy_sends_nothing(self):
         report=self.run_at(Fake())
-        self.assertEqual(set(report),{'watch-cycle','discord-intake','problem-selection','site-refresh','verifier-submissions','chatbot-gap-review'})
+        self.assertEqual(set(report),{'watch-cycle','discord-intake','problem-selection','site-refresh','verifier-submissions','chatbot-gap-review','watch-sources'})
         self.assertTrue(all(v=='ok' for v in report.values()));self.assertEqual(self.sent,[])
 
     def test_each_simulated_stale_or_failed_state_is_caught(self):
@@ -44,6 +45,7 @@ class DeadmanTests(unittest.TestCase):
         f=Fake();del f.marks['cycle'];f.marks['push']=iso(4.5);cases['watch-cycle ']=f
         f=Fake();del f.marks['discord-intake'];cases['discord-intake']=f
         f=Fake();f.marks['problem-selection']=iso(4.1);cases['problem-selection']=f
+        f=Fake();f.stalled=['slitsey/catalan-irrationality-measure'];cases['watch-sources']=f
         f=Fake();f.runs[0]['conclusion']='failure';cases['site-refresh']=f
         f=Fake();f.runs=[dict(r,created_at=iso(3)) for r in f.runs];cases['site-refresh ']=f
         f=Fake();f.service['Result']='exit-code';f.service['ExecMainStatus']='1';cases['verifier-submissions']=f

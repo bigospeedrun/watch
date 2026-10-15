@@ -242,6 +242,56 @@ class OtherBoundsTests(unittest.TestCase):
         self.assertEqual([(c['repo'],c['source_claim_evidence']) for c in result['candidates']],[('shea/binary-removal',['New bound: 9 cells.'])])
         self.assertEqual(result['errors'],[])
 
+    def test_rewritten_history_still_reads_the_new_readme_claim(self):
+        # slitsey/catalan-irrationality-measure, 2026-10-12..15: the stored head 41531d6
+        # was orphaned by a history rewrite, compare returned 404 "No common ancestor"
+        # every cycle, and the 7891..1281 records were never read. Real README lines.
+        repo='slitsey/catalan-irrationality-measure'
+        cfg={'family':'005','title':'Irrationality of Catalan’s constant','aliases':['Catalan irrationality','Catalan constant'],'repo':repo,'baseline_commit':'5'*40}
+        old_readme=("# An irrationality measure for Catalan's constant\n\n> `|G - a/b| > b^(-8720)`.\n>\n"
+                    "> So the irrationality exponent of `G` is at most `8720`. With Chebyshev's bounds in place of\n"
+                    "> the prime number theorem in the final step, the argument gives `b^(-24850)`.\n")
+        new_readme=("# An irrationality measure for Catalan's constant\n\n> `a` and every sufficiently large integer `b`,\n>\n"
+                    "> `|G - a/b| > b^(-1281)`.\n>\n"
+                    "> So the irrationality exponent of `G` is at most `1281`. With Chebyshev's bounds in place of\n"
+                    "> the prime number theorem in the final step, the argument gives `b^(-3662)`.\n")
+        orphan='4'*40;head='c'*40
+        meta=dict(full_name=repo,html_url='https://github.com/'+repo,default_branch='main',pushed_at='2026-10-14T01:14:32Z')
+        seen=o.claim_key('005',o.scoped_claims(old_readme,'005'))
+        previous={'other_bound_states':{repo:{'head':orphan,'seen_claims':[seen],'meta':meta,'checked_cycle':8}}}
+        def api(path,params=None,**kwargs):
+            if '/compare/' in path:raise RuntimeError(f'GitHub GET failed: repos/{repo}/compare/{orphan}...{head} (exit 1)')
+            return {'sha':head}
+        with patch.object(o,'CONFIG',[cfg]),patch.object(o,'api',api),patch.object(o,'content',return_value=new_readme.encode()):
+            result=o.collect('2026-10-13',previous,search=False)
+        rows=[r for r in result['candidates'] if r['repo']==repo]
+        self.assertEqual(len(rows),1);self.assertIn('> `|G - a/b| > b^(-1281)`.',rows[0]['source_claim_evidence'])
+        self.assertTrue(alert_candidate(rows[0],set(),set()))
+        self.assertEqual(result['states'][repo]['head'],head)
+        self.assertTrue(any('history may be rewritten' in e for e in result['errors']))
+
+    def test_repo_without_readme_is_not_stalled(self):
+        # karirogg/QuasiRiemannTracker (a fork without README.md) failed every cycle, 2026-10-15.
+        repo='karirogg/QuasiRiemannTracker'
+        cfg={'family':'003','title':'Q','aliases':['quasi Riemann'],'repo':repo,'baseline_commit':'b'*40}
+        meta=dict(full_name=repo,html_url='https://github.com/'+repo,default_branch='main')
+        def api(path,params=None,**kwargs):
+            if path.endswith('/git/trees/'+'a'*40):return {'tree':[{'path':'proofs'},{'path':'src'}]}
+            if '/compare/' in path:return {'files':[dict(filename='proofs/notes.md',status='added',patch='+Quasi Riemann zero-free bound 0.87486 improved.')]}
+            return {'sha':'a'*40}
+        def content(repo,path,pin,**kwargs):raise RuntimeError('GitHub GET failed: contents/README.md (exit 1)')
+        with patch.object(o,'CONFIG',[cfg]),patch.object(o,'api',api),patch.object(o,'content',content):
+            result=o.collect('2026-10-13',{'other_bound_states':{repo:{'head':'b'*40,'meta':meta}}},search=False)
+        self.assertEqual(result['states'][repo]['head'],'a'*40)
+        self.assertEqual([r['source_claim_evidence'] for r in result['candidates']],[['Quasi Riemann zero-free bound 0.87486 improved.']])
+        # A README that exists but cannot be read now is transient: the head does not move.
+        def api2(path,params=None,**kwargs):
+            if '/git/trees/' in path:return {'tree':[{'path':'README.md'}]}
+            return {'sha':'a'*40}
+        with patch.object(o,'CONFIG',[cfg]),patch.object(o,'api',api2),patch.object(o,'content',content):
+            result=o.collect('2026-10-13',{'other_bound_states':{repo:{'head':'b'*40,'meta':meta}}},search=False)
+        self.assertEqual(result['states'].get(repo,{}).get('head'),'b'*40)
+
     def test_api_failure_preserves_prior_claim_state(self):
         previous={'other_bound_states':{'person/math':{'head':'a'*40,'seen_claims':['known'],'openai_fork':True}}}
         with patch.object(o,'CONFIG',[]),patch.object(o,'api',side_effect=RuntimeError('GitHub unavailable')):

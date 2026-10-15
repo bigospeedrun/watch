@@ -215,7 +215,15 @@ def collect(since,previous,people_hits=(),search=True):
                         additions.append((family,scoped_claims(added,family,True)))
                 if len(diff.get('files',[]))>=300:truncated.append(dict(query=repo+' upstream diff',total_count='at least 300 files'))
             else:
-                text=budget.read(repo,'README.md',head).decode('utf-8',errors='replace')
+                try:text=budget.read(repo,'README.md',head).decode('utf-8',errors='replace')
+                except BudgetExhausted:raise
+                except RuntimeError:
+                    # A repo without README.md (karirogg's fork, 2026-10-15) failed this
+                    # read every cycle and stalled. Read on only when the tree shows
+                    # no README; otherwise treat the failure as transient.
+                    tree=budget.get(f'repos/{repo}/git/trees/{head}')
+                    if any(e.get('path')=='README.md' for e in tree.get('tree',[])):raise
+                    text=''
                 # A watched repo always counts for its configured family, even when
                 # its README does not use a family alias.
                 families=list(dict.fromkeys(family_matches(repo+' '+(meta.get('description') or '')+'\n'+text)+
@@ -223,7 +231,15 @@ def collect(since,previous,people_hits=(),search=True):
                 additions=[(family,scoped_claims(text,family)) for family in families]
                 base=old.get('head') or next((cfg['baseline_commit'] for cfg in CONFIG if cfg['repo']==repo),None)
                 if base and base!=head:
-                    diff=budget.get(f'repos/{repo}/compare/{base}...{head}')
+                    try:diff=budget.get(f'repos/{repo}/compare/{base}...{head}')
+                    except BudgetExhausted:raise
+                    except RuntimeError:
+                        # A rewritten history has no common ancestor with the stored
+                        # head, so this compare fails every cycle. Before 2026-10-16 the
+                        # repo then stalled: slitsey's Catalan records (Oct 12-13) were
+                        # never read. Keep the README claims at head and move on.
+                        errors.append(f'{repo}: compare from {base[:7]} failed (history may be rewritten); README read at {head[:7]}')
+                        diff={'files':[]}
                     for f in diff.get('files',[]):
                         if f['filename']=='README.md' or f.get('status')=='removed' or not re.search(r'\.(?:md|tex)$',f['filename']):continue
                         if 'patch' not in f:errors.append(repo+': missing diff patch '+f['filename']);continue

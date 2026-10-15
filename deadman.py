@@ -11,6 +11,9 @@ Items:
                        succeeded and newest success < 2 h (GitHub GET only)
   verifier-submissions bigospeedrun-submissions.service last run ok and its
                        timer triggered < 75 min ago (systemctl --user show)
+  watch-sources        every other-bounds watchlist repo was checked within the
+                       last 2 cycles (pivot-watch.json); a repo that errors every
+                       cycle stalled silently before 2026-10-16 (slitsey Catalan)
   prove2me-digest      #prove2me reader (bigospeedrun-prove2me.timer) last ran ok
                        < 2 h; checked once that timer unit is installed
   chatbot-gap-review   Isomux cronjob "BOS chatbot gap review" completed a run
@@ -74,6 +77,11 @@ class Sources:
                            capture_output=True,text=True,timeout=30)
         if out.returncode:raise RuntimeError('systemctl show failed for '+unit)
         return dict(line.split('=',1) for line in out.stdout.splitlines() if '=' in line)
+    def stalled_sources(self):
+        report=json.loads((self.root/'pivot-watch.json').read_text())
+        cycle=report['other_bounds_checkpoint']['cycle'];states=report.get('other_bound_states',{})
+        repos=dict.fromkeys(c['repo'] for c in json.loads((self.root/'other-bounds-watchlist.json').read_text())['families'])
+        return [r for r in repos if (states.get(r,{}).get('checked_cycle') or 0)<cycle-2]
     def digest_last_ok(self,name):
         path=self.root/f'{name}.local.json'
         return parse(json.loads(path.read_text()).get('last_ok')) if path.exists() else None
@@ -125,6 +133,12 @@ def check(src,now,to_time=systemd_time):
         else:results['verifier-submissions']=(True,None,ended,link)
     except Exception as error:
         results['verifier-submissions']=(False,'cannot read systemd state: '+type(error).__name__,None,'systemctl --user status bigospeedrun-submissions.timer')
+    try:
+        stalled=src.stalled_sources()
+        results['watch-sources']=(not stalled,f"{len(stalled)} watched repo(s) not checked for over 2 cycles: {', '.join(stalled[:5])}" if stalled else None,
+                                  None if stalled else now,'~/nil/bigospeedrun-data/pivot-watch.json (errors)')
+    except Exception as error:
+        results['watch-sources']=(False,'cannot read pivot-watch.json: '+type(error).__name__,None,'~/nil/bigospeedrun-data/pivot-watch.json')
     if src.unit_installed('bigospeedrun-prove2me.timer'):
         good=src.digest_last_ok('prove2me');fresh=bool(good and now-good<2*H)
         results['prove2me-digest']=(fresh,None if fresh else 'no successful #prove2me read in the last 2 h',good,
