@@ -11,6 +11,8 @@ Items:
                        succeeded and newest success < 2 h (GitHub GET only)
   verifier-submissions bigospeedrun-submissions.service last run ok and its
                        timer triggered < 75 min ago (systemctl --user show)
+  prove2me-digest      #prove2me reader (bigospeedrun-prove2me.timer) last ran ok
+                       < 2 h; checked once that timer unit is installed
   chatbot-gap-review   Isomux cronjob "BOS chatbot gap review" completed a run
                        without error < 26 h ago (~/.isomux/cronjobs, read-only)
 
@@ -72,6 +74,10 @@ class Sources:
                            capture_output=True,text=True,timeout=30)
         if out.returncode:raise RuntimeError('systemctl show failed for '+unit)
         return dict(line.split('=',1) for line in out.stdout.splitlines() if '=' in line)
+    def digest_last_ok(self,name):
+        path=self.root/f'{name}.local.json'
+        return parse(json.loads(path.read_text()).get('last_ok')) if path.exists() else None
+    def unit_installed(self,unit):return (Path.home()/'.config/systemd/user'/unit).exists()
     def cron_runs(self,job):
         path=CRONJOBS/job/'runs.json'
         return json.loads(path.read_text()) if path.exists() else []
@@ -119,6 +125,10 @@ def check(src,now,to_time=systemd_time):
         else:results['verifier-submissions']=(True,None,ended,link)
     except Exception as error:
         results['verifier-submissions']=(False,'cannot read systemd state: '+type(error).__name__,None,'systemctl --user status bigospeedrun-submissions.timer')
+    if src.unit_installed('bigospeedrun-prove2me.timer'):
+        good=src.digest_last_ok('prove2me');fresh=bool(good and now-good<2*H)
+        results['prove2me-digest']=(fresh,None if fresh else 'no successful #prove2me read in the last 2 h',good,
+                                    'journalctl --user -u bigospeedrun-prove2me.service')
     try:
         runs=src.cron_runs(GAP_REVIEW_JOB)
         ok=[r for r in runs if r.get('status')=='completed' and not r.get('errorReason')]
@@ -132,7 +142,9 @@ def check(src,now,to_time=systemd_time):
         results['chatbot-gap-review']=(False,'cannot read cronjob runs: '+type(error).__name__,None,f'~/.isomux/cronjobs/{GAP_REVIEW_JOB}/runs.json')
     return results
 
-def webhook_send(root):
+def webhook_send(root,event='deadman'):
+    # Isomux passes only the rule's args to the agent (payload.text here), in a
+    # message capped at 4000 characters; keep payload text well below that.
     config_path=root/CONFIG
     def send(payload):
         if not config_path.exists():raise RuntimeError('dead-man webhook not configured')
@@ -141,7 +153,7 @@ def webhook_send(root):
         body=json.dumps(payload).encode()
         signature='sha256='+hmac.new(secret,body,hashlib.sha256).hexdigest()
         request=urllib.request.Request(config['hook_url'],data=body,method='POST',headers={
-            'Content-Type':'application/json',config['signature_header']:signature,config['event_header']:'deadman'})
+            'Content-Type':'application/json',config['signature_header']:signature,config['event_header']:event})
         with urllib.request.urlopen(request,timeout=30) as response:
             if response.status>=300:raise RuntimeError(f'webhook HTTP {response.status}')
     return send

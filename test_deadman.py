@@ -21,6 +21,9 @@ class Fake:
     def refresh_runs(self):return self.runs
     def systemd(self,unit,*props):return self.service if unit.endswith('.service') else self.timer
     def cron_runs(self,job):return self.cron
+    installed=False;digest_ok=None
+    def unit_installed(self,unit):return self.installed
+    def digest_last_ok(self,name):return self.digest_ok
 
 class DeadmanTests(unittest.TestCase):
     def setUp(self):
@@ -50,6 +53,12 @@ class DeadmanTests(unittest.TestCase):
         f=Fake();f.cron.append(dict(status='failed',errorReason='session crashed',startedAt=(NOW-timedelta(hours=1)).timestamp()*1000));cases['chatbot-gap-review ']=f
         for item,src in cases.items():
             with self.subTest(item=item):self.assertEqual(self.failing(src),{item.strip()})
+
+    def test_prove2me_digest_checked_only_once_its_timer_is_installed(self):
+        f=Fake();self.assertNotIn('prove2me-digest',d.check(f,NOW))
+        f.installed=True;f.digest_ok=NOW-timedelta(hours=1);self.assertEqual(self.failing(f),set())
+        f.digest_ok=NOW-timedelta(hours=2.5);self.assertEqual(self.failing(f),{'prove2me-digest'})
+        f.digest_ok=None;self.assertEqual(self.failing(f),{'prove2me-digest'})
 
     def test_push_marker_counts_as_a_full_cycle(self):
         f=Fake();del f.marks['cycle'];f.marks['push']=iso(1)

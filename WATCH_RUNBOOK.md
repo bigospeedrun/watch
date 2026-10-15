@@ -236,6 +236,16 @@ mention its content in an alert; the lead already has the digest. A failed run
 retries next cycle. `python3 problem_selection_watch.py --dry-run` reads only.
 This route does not change the #submit-a-result intake above.
 
+The same script reads the private `#prove2me` channel (`1560124932518580245`,
+the channel with prove2.me) every hour at :07, outside this cycle, from the
+systemd user timer `bigospeedrun-prove2me.timer`
+(`problem_selection_watch.py --channel prove2me --via webhook`). A systemd unit
+has no office token, so it delivers through the signed Isomux webhook
+(`.git/deadman.json`, event `digest`, payload kind `bos-digest`) in parts below
+the 4000-character webhook message cap. Its cursor and last good run are in the
+ignored `prove2me.local.json`; the dead-man check alerts when that run is older
+than 2 h. Same safety rules: GET only, untrusted text, never read by agents.
+
 ## Read and review the results
 
 Read `.git/people-watch.log`, `.git/pivot-watch.log`, and

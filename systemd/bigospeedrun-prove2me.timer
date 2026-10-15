@@ -1,0 +1,10 @@
+[Unit]
+Description=Read Discord #prove2me each hour for BOS Lead Dev
+
+[Timer]
+OnCalendar=*-*-* *:07:00
+Persistent=true
+Unit=bigospeedrun-prove2me.service
+
+[Install]
+WantedBy=timers.target

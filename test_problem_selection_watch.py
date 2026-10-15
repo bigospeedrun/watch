@@ -35,7 +35,7 @@ class ProblemSelectionTests(unittest.TestCase):
             self.assertIn('[attachments: omv.pdf]',text)
             for skipped in ('bot text','webhook text'):self.assertNotIn(skipped,text)
             state=(root/w.STATE).read_text()
-            self.assertEqual(json.loads(state),{'last_seen':'5'});self.assertNotIn('Grothendieck',state)
+            self.assertEqual(json.loads(state)['last_seen'],'5');self.assertIn('last_ok',json.loads(state));self.assertNotIn('Grothendieck',state)
             self.assertEqual(oct((root/w.STATE).stat().st_mode&0o777),'0o600')
             # Nothing new: no digest, cursor kept.
             self.assertEqual(w.run(api,lambda *a:sent.append(a),root)['delivered'],0);self.assertEqual(len(sent),1)
@@ -78,11 +78,42 @@ class ProblemSelectionTests(unittest.TestCase):
         out=io.StringIO()
         with tempfile.TemporaryDirectory() as tmp:
             (Path(tmp)/'.git').mkdir();(Path(tmp)/'.git/watch-office.json').write_text('{}')
-            with patch.object(w,'Discord',lambda config:API([msg(1,'secret suggestion')])),patch.object(w,'ROOT',Path(tmp)),\
+            with patch.object(w,'Discord',lambda config,*a:API([msg(1,'secret suggestion')])),patch.object(w,'ROOT',Path(tmp)),\
                  patch('sys.argv',['x','--dry-run']),contextlib.redirect_stdout(out):
                 w.main()
         self.assertNotIn('secret',out.getvalue());self.assertIn('"delivered": 1',out.getvalue())
         public=[n for n in dir(w.Discord) if not n.startswith('_')]
         self.assertEqual(sorted(public),['check_channel','messages','request'])
+
+    def test_prove2me_has_own_cursor_link_and_header(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp);sent=[]
+            (root/w.STATE).write_text(json.dumps({'last_seen':'99'}))  # problem-selection cursor is not used
+            result=w.run(API([msg(1,'integration question')]),lambda text,key:sent.append((text,key)),root,name='prove2me')
+            self.assertEqual(result['delivered'],1)
+            text,key=sent[0];self.assertTrue(text.startswith('Discord #prove2me digest (1 new message)'));self.assertEqual(key,'prove2me-1-1')
+            self.assertIn('/1560124932518580245/1',text);self.assertIn('UNTRUSTED VISITOR TEXT',text)
+            self.assertEqual(json.loads((root/'prove2me.local.json').read_text())['last_seen'],'1')
+            self.assertEqual(json.loads((root/w.STATE).read_text()),{'last_seen':'99'})
+
+    def test_webhook_parts_fit_the_isomux_message_cap(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            sent=[]
+            w.run(API([msg(i,'line '*300) for i in range(1,9)]),lambda text,key:sent.append(text),Path(tmp),name='prove2me',limit=w.WEBHOOK_CHUNK)
+            self.assertGreater(len(sent),1)
+            for text in sent:self.assertLess(len(json.dumps(text)),4000-500)
+
+    def test_main_via_webhook_sends_digest_kind(self):
+        payloads=[];out=io.StringIO()
+        def webhook_send(root,event):
+            self.assertEqual(event,'digest');return payloads.append
+        with tempfile.TemporaryDirectory() as tmp:
+            (Path(tmp)/'.git').mkdir();(Path(tmp)/'.git/watch-office.json').write_text('{}')
+            with patch.object(w,'Discord',lambda config,*a:API([msg(1,'hello from prove2.me')])),patch.object(w,'ROOT',Path(tmp)),\
+                 patch('deadman.webhook_send',webhook_send),patch('sys.argv',['x','--channel','prove2me','--via','webhook']),contextlib.redirect_stdout(out):
+                w.main()
+            self.assertTrue((Path(tmp)/'prove2me.local.json').exists())
+        self.assertEqual([(p['kind'],p['channel']) for p in payloads],[('bos-digest','prove2me')])
+        self.assertIn('hello from prove2.me',payloads[0]['text']);self.assertNotIn('hello',out.getvalue())
 
 if __name__=='__main__':unittest.main()
