@@ -96,7 +96,7 @@ fi
 cp people-watch.json .git/watch-previous-people.json
 cp pivot-watch.json .git/watch-previous-pivot.json
 STEP=tests;LOG=.git/watch-tests.log
-python3 -m unittest test_people_watch test_pivot_watch test_watch_policy test_other_bounds_watch test_crocswap_pr_watch test_refresh_health test_discord_watch test_problem_selection_watch test_cycle_alert test_deadman > "$LOG" 2>&1
+python3 -m unittest test_people_watch test_pivot_watch test_watch_policy test_other_bounds_watch test_crocswap_pr_watch test_refresh_health test_discord_watch test_problem_selection_watch test_cycle_alert test_deadman test_lean_target_watch > "$LOG" 2>&1
 if python3 discord_watch.py > .git/discord-watch.log 2>&1; then
   python3 cycle_alert.py ok discord-intake >> .git/cycle-alert.log 2>&1 || true
 else
@@ -108,6 +108,12 @@ if python3 problem_selection_watch.py > .git/problem-selection.log 2>&1; then
 else
   echo "Problem selection digest incomplete; cursor kept, retry next cycle." >&2
   python3 cycle_alert.py fail problem-selection .git/problem-selection.log 1 --continued >> .git/cycle-alert.log 2>&1 || true
+fi
+if python3 lean_target_watch.py > .git/lean-target-watch.log 2>&1; then
+  python3 cycle_alert.py ok lean-target >> .git/cycle-alert.log 2>&1 || true
+else
+  echo "Lean target watch incomplete; retry next cycle." >&2
+  python3 cycle_alert.py fail lean-target .git/lean-target-watch.log 1 --continued >> .git/cycle-alert.log 2>&1 || true
 fi
 # Cross-check the hourly dead-man timer once it is installed: its state file
 # must be fresher than 2 h.
@@ -164,6 +170,20 @@ line. Do not send these alerts yourself. If an alert is not delivered,
 `.git/cycle-alert.log` says so; report that delivery failure through the
 scheduler. Coverage warnings alone are not lead alerts. The next cron cycle
 retries.
+
+## Integer multiplication Lean target
+
+`lean_target_watch.py` (Nil ask, 2026-10-15) watches
+`platypii/integer-mult-bounds-lean`. When its head changes, it downloads the
+source tarball with one GitHub API GET and reads README.md and every `.lean`
+file in memory; nothing is extracted or run. It alerts BOS Lead Dev itself,
+once per finding, with the commit link, when: the README stops calling the
+native multitape target `IntegerMultBounds.Machine.EndToEnd` (saving 83/10^12)
+open, or its Status section changes and names it; a Lean declaration has type
+`EndToEnd` (with or without `sorry` in its file); the README kappa changes
+(2^-37 when the watch started); or a FinTM2-to-multitape simulation declaration
+or file appears. State is in the local `.git/lean-target-watch.json`; the log
+holds counts only. Do not resend its alerts.
 
 ## Dead-man check
 
