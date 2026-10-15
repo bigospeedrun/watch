@@ -38,6 +38,7 @@ class DeadmanTests(unittest.TestCase):
     def test_each_simulated_stale_or_failed_state_is_caught(self):
         cases={}
         f=Fake();f.marks['cycle']=iso(5);cases['watch-cycle']=f
+        f=Fake();del f.marks['cycle'];f.marks['push']=iso(4.5);cases['watch-cycle ']=f
         f=Fake();del f.marks['discord-intake'];cases['discord-intake']=f
         f=Fake();f.marks['problem-selection']=iso(4.1);cases['problem-selection']=f
         f=Fake();f.runs[0]['conclusion']='failure';cases['site-refresh']=f
@@ -49,6 +50,10 @@ class DeadmanTests(unittest.TestCase):
         f=Fake();f.cron.append(dict(status='failed',errorReason='session crashed',startedAt=(NOW-timedelta(hours=1)).timestamp()*1000));cases['chatbot-gap-review ']=f
         for item,src in cases.items():
             with self.subTest(item=item):self.assertEqual(self.failing(src),{item.strip()})
+
+    def test_push_marker_counts_as_a_full_cycle(self):
+        f=Fake();del f.marks['cycle'];f.marks['push']=iso(1)
+        self.assertEqual(self.failing(f),set())
 
     def test_one_alert_per_item_then_one_recovery(self):
         stale=Fake();stale.runs[0]['conclusion']='failure'

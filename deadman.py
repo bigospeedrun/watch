@@ -86,13 +86,15 @@ def check(src,now,to_time=systemd_time):
     """Return {item: (ok, problem, last_good, link)}."""
     results={}
     last=src.last_ok()
-    def marker(item,key,logname,hours,link):
-        good=parse(last.get(key)) or (src.log_ok_time(logname) if logname else None)
+    def marker(item,keys,logname,hours,link):
+        good=max((parse(last[k]) for k in keys if last.get(k)),default=None) or (src.log_ok_time(logname) if logname else None)
         fresh=bool(good and now-good<hours*H)
         results[item]=(fresh,None if fresh else f'no passed run in the last {hours} h',good,link)
-    marker('watch-cycle','cycle',None,4,'~/nil/bigospeedrun-data/.git/cycle-alert.log and .git/*.log')
-    marker('discord-intake','discord-intake','discord-watch.log',4,'~/nil/bigospeedrun-data/.git/discord-watch.log')
-    marker('problem-selection','problem-selection','problem-selection.log',4,'~/nil/bigospeedrun-data/.git/problem-selection.log')
+    # 'push' is the last step of the set -e cycle block, so its pass means a full
+    # cycle; blocks pasted before 7a77095 record 'push' but not 'cycle'.
+    marker('watch-cycle',('cycle','push'),None,4,'~/nil/bigospeedrun-data/.git/cycle-alert.log and .git/*.log')
+    marker('discord-intake',('discord-intake',),'discord-watch.log',4,'~/nil/bigospeedrun-data/.git/discord-watch.log')
+    marker('problem-selection',('problem-selection',),'problem-selection.log',4,'~/nil/bigospeedrun-data/.git/problem-selection.log')
     try:
         runs=src.refresh_runs()
         done=[r for r in runs if r.get('status')=='completed']
