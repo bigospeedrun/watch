@@ -292,6 +292,25 @@ class OtherBoundsTests(unittest.TestCase):
             result=o.collect('2026-10-13',{'other_bound_states':{repo:{'head':'b'*40,'meta':meta}}},search=False)
         self.assertEqual(result['states'].get(repo,{}).get('head'),'b'*40)
 
+    def test_first_check_of_a_repo_without_readme_is_not_stalled(self):
+        # karirogg/QuasiRiemannTracker had no state yet: the first-run baseline README read
+        # also 404'd and was not guarded by 64a3b09, so the repo stayed stalled (cycle 38).
+        repo='karirogg/QuasiRiemannTracker'
+        cfg={'family':'003','title':'Q','aliases':['quasi Riemann'],'repo':repo,'baseline_commit':'b'*40}
+        trees=[]
+        def api(path,params=None,**kwargs):
+            if '/git/trees/' in path:trees.append(path.rsplit('/',1)[1]);return {'tree':[{'path':'proofs'},{'path':'src'}]}
+            if '/compare/' in path:return {'files':[dict(filename='proofs/notes.md',status='added',patch='+Quasi Riemann zero-free bound 0.87486 improved.')]}
+            if path=='repos/'+repo:return dict(full_name=repo,html_url='https://github.com/'+repo,default_branch='main')
+            return {'sha':'a'*40}
+        def content(repo,path,pin,**kwargs):raise RuntimeError('GitHub GET failed: contents/README.md (exit 1)')
+        with patch.object(o,'CONFIG',[cfg]),patch.object(o,'api',api),patch.object(o,'content',content):
+            result=o.collect('2026-10-13',{},search=False)
+        self.assertEqual(result['errors'],[])
+        self.assertEqual(result['states'][repo]['head'],'a'*40)
+        self.assertEqual(sorted(set(trees)),['a'*40,'b'*40])
+        self.assertEqual([r['source_claim_evidence'] for r in result['candidates']],[['Quasi Riemann zero-free bound 0.87486 improved.']])
+
     def test_api_failure_preserves_prior_claim_state(self):
         previous={'other_bound_states':{'person/math':{'head':'a'*40,'seen_claims':['known'],'openai_fork':True}}}
         with patch.object(o,'CONFIG',[]),patch.object(o,'api',side_effect=RuntimeError('GitHub unavailable')):

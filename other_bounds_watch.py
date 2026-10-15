@@ -79,6 +79,20 @@ def candidate(meta,head,family,lines,old,kind):
     row=dict(repo=meta['full_name'],url=meta['html_url'],stars=meta.get('stargazers_count',0),created_at=meta.get('created_at'),pushed_at=meta.get('pushed_at'),description=meta.get('description'),problem_guess=f'Family {family}: {label}',rank=20,evidence=[kind],readme_commit=head,source_claim_evidence=lines[:6],claim_signature=key,other_family=family if family in FAMILIES else None,openai_fork_improvement=kind=='openai-math-fork',stated_bound_changed=True,likely_tracked_source=True,likely_new_race=False,likely_pivot=False,on_board=False)
     return row,key
 
+def readme(budget,repo,ref):
+    """README.md text at ref, or '' when the tree at ref has no README.md.
+
+    A repo without README.md (karirogg's fork, 2026-10-15) failed this read every
+    cycle and stalled. Both the head read and the first-run baseline read use this;
+    the baseline read was missed at first (64a3b09), so the repo stayed stalled.
+    A failure while README.md exists is transient and raises."""
+    try:return budget.read(repo,'README.md',ref).decode('utf-8',errors='replace')
+    except BudgetExhausted:raise
+    except RuntimeError:
+        tree=budget.get(f'repos/{repo}/git/trees/{ref}')
+        if any(e.get('path')=='README.md' for e in tree.get('tree',[])):raise
+        return ''
+
 def compact_meta(meta):
     keys=('full_name','html_url','default_branch','created_at','pushed_at','description','stargazers_count','fork','_openai_fork')
     result={key:meta[key] for key in keys if key in meta}
@@ -215,15 +229,7 @@ def collect(since,previous,people_hits=(),search=True):
                         additions.append((family,scoped_claims(added,family,True)))
                 if len(diff.get('files',[]))>=300:truncated.append(dict(query=repo+' upstream diff',total_count='at least 300 files'))
             else:
-                try:text=budget.read(repo,'README.md',head).decode('utf-8',errors='replace')
-                except BudgetExhausted:raise
-                except RuntimeError:
-                    # A repo without README.md (karirogg's fork, 2026-10-15) failed this
-                    # read every cycle and stalled. Read on only when the tree shows
-                    # no README; otherwise treat the failure as transient.
-                    tree=budget.get(f'repos/{repo}/git/trees/{head}')
-                    if any(e.get('path')=='README.md' for e in tree.get('tree',[])):raise
-                    text=''
+                text=readme(budget,repo,head)
                 # A watched repo always counts for its configured family, even when
                 # its README does not use a family alias.
                 families=list(dict.fromkeys(family_matches(repo+' '+(meta.get('description') or '')+'\n'+text)+
@@ -251,7 +257,7 @@ def collect(since,previous,people_hits=(),search=True):
                 if not old:
                     for cfg in CONFIG:
                         if cfg['repo']!=repo:continue
-                        baseline=budget.read(repo,'README.md',cfg['baseline_commit']).decode('utf-8',errors='replace')
+                        baseline=readme(budget,repo,cfg['baseline_commit'])
                         key=claim_key(cfg['family'],scoped_claims(baseline,cfg['family']))
                         if key:seen.append(key)
             for family,lines in additions:
