@@ -16,7 +16,7 @@ class Fake:
         self.service={'Result':'success','ExecMainStatus':'0','ExecMainExitTimestamp':systemd(0.3,now)}
         self.timer={'LastTriggerUSec':systemd(0.3,now),'ActiveState':'active'}
         self.cron=[dict(status='completed',errorReason=None,startedAt=(now-timedelta(hours=8)).timestamp()*1000)]
-        self.vps=vps_fixture(now);self.vps_error=None;self.memory={}
+        self.vps=vps_fixture(now);self.vps['board']=board_section(now);self.vps_error=None;self.memory={}
     def last_ok(self):return self.marks
     def log_ok_time(self,name):return None
     def refresh_runs(self):return self.runs
@@ -67,7 +67,7 @@ class DeadmanTests(unittest.TestCase):
 
     def test_all_healthy_sends_nothing(self):
         report=self.run_at(Fake())
-        self.assertEqual(set(report),{'watch-cycle','discord-intake','problem-selection','site-refresh','verifier-submissions','chatbot-gap-review','watch-sources','vps-deploy'})
+        self.assertEqual(set(report),{'watch-cycle','discord-intake','problem-selection','site-refresh','verifier-submissions','chatbot-gap-review','watch-sources','vps-deploy','vps-board'})
         self.assertTrue(all(v=='ok' for v in report.values()));self.assertEqual(self.sent,[])
 
     def test_each_simulated_stale_or_failed_state_is_caught(self):
@@ -163,7 +163,7 @@ class VpsDeployTests(unittest.TestCase):
                'failed':with_status(result='failed'),'rollback_failed':with_status(result='rollback_failed'),
                'stopped result':with_status(result='stopped'),'stopped marker':with_status(stopped=True),
                'refused':with_status(result='refused'),'rolled back':with_status(result='rolled_back'),'tick errors':with_status(result='tick_error',tick_error_since=iso(1.5)),'units error':with_status(units='error'),'units absent':with_status(units='absent'),
-               'last attempt failed':with_status(last_attempt={'at':iso(0.5),'target':'abc','result':'rollback_failed'}),
+               'failed target':with_status(result='failed_target'),
                'waiting a day':with_status(waiting=True,waiting_since=iso(25))}
         f=Fake();f.vps['containers']['bigospeedrun-site-1']['health']='unhealthy';cases['unhealthy']=f
         f=Fake();f.vps['containers']['bigospeedrun-egress-1']={'present':False};cases['missing container']=f
@@ -230,8 +230,12 @@ class BoardTests(unittest.TestCase):
         report=d.check(f,NOW)
         for item in ('vps-board','board-https','board-cert','board-backup'):self.assertNotIn(item,report)
 
-    def test_the_check_is_off_in_the_repo_until_the_rehearsals(self):
-        self.assertFalse(self.flag)
+    def test_the_check_is_on_after_the_rehearsals(self):
+        self.assertTrue(self.flag)
+
+    def test_an_old_failed_attempt_is_fine_once_up_to_date(self):
+        f=self.live();f.vps['board']['auto_deploy']['last_attempt']={'at':iso(2),'target':'bad','result':'rolled_back'}
+        self.assertNotIn('vps-board',self.failing(f))
 
     def test_one_ssh_read_per_run(self):
         f=self.live();calls=[];read=f.vps_health
@@ -253,7 +257,7 @@ class BoardTests(unittest.TestCase):
         cases={}
         f=self.live();f.vps['board']['auto_deploy']['result']='rolled_back';cases['rolled back']=f
         f=self.live();f.vps['board']['auto_deploy']['result']='manual_deploy_needed';cases['manual']=f
-        f=self.live();f.vps['board']['auto_deploy']['last_attempt']={'at':iso(0.5),'target':'abc','result':'manual_deploy_needed'};cases['manual attempt']=f
+        f=self.live();f.vps['board']['auto_deploy']['result']='failed_target';cases['failed target']=f
         f=self.live();f.vps['board']['auto_deploy']['tick_at']=iso(1);cases['stale tick']=f
         f=self.live();f.vps['board']['auto_deploy']={'missing':True};cases['no status']=f
         f=self.live();f.vps['board']['containers']['bigospeedrun-board-board-api-1']['health']='unhealthy';cases['api unhealthy']=f

@@ -20,7 +20,7 @@ Items:
                        without error < 26 h ago (~/.isomux/cronjobs, read-only)
   vps-deploy           self-hosted site on the VPS, read through the forced-command
                        login boshealth (status.json + the site and egress containers):
-                       last tick < 45 min, no failed/rolled_back/rollback_failed/stopped/refused
+                       last tick < 45 min, no failed/failed_target/rolled_back/rollback_failed/stopped/refused
                        result, not held or waiting for over 1 day, ticks not erring for 1 h, units ok, containers running
                        and healthy. One failed read is tolerated; two in a row alert.
   vps-board            the race board on the VPS, the same rules on the "board" section of
@@ -70,11 +70,13 @@ GAP_REVIEW_JOB='3f73daae'
 # the pinned known_hosts entry, so no address is written here.
 VPS_SECRETS=Path.home()/'nil/bigospeedrun-notes/secrets'
 VPS_MEMORY='.git/vps-health.json'
-VPS_BAD_RESULTS={'failed','rolled_back','rollback_failed','stopped','refused','manual_deploy_needed'}
+# failed_target: the newest green commit failed and stays unretried; every tick shows it until a
+# newer commit. A past attempt alone (last_attempt) is not a problem once a tick is up_to_date.
+VPS_BAD_RESULTS={'failed','failed_target','rolled_back','rollback_failed','stopped','refused','manual_deploy_needed'}
 VPS_LINK='ssh boshealth (VPS /opt/bigospeedrun/auto-deploy/status.json); runbook ~/nil/bigospeedrun-notes/phase-c-staging-plan.md'
 # vps-board is checked only after the board's deploy rehearsals (phase E plan, E2): they
 # leave rolled_back and manual_deploy_needed results on purpose. Set True in that commit.
-BOARD_DEPLOY_CHECK=False
+BOARD_DEPLOY_CHECK=True
 BOARD_MEMORY='.git/board-health.json'
 BOARD_HOST='board.bigospeedrun.com'
 BOARD_FEED=f'https://{BOARD_HOST}/board/api/posts?board=3sum&limit=1'
@@ -203,8 +205,7 @@ def vps_deploy(data,now,memory):
     else:
         tick=parse(status.get('tick_at'))
         if not tick or now-tick>=45*timedelta(minutes=1):problems.append(f'last deploy tick {pt(tick)}')
-        last=(status.get('last_attempt') or {}).get('result')
-        bad=[r for r in (status.get('result'),last) if r in VPS_BAD_RESULTS]
+        bad=[status['result']] if status.get('result') in VPS_BAD_RESULTS else []
         if status.get('stopped'):bad.append('stopped')
         if bad:problems.append('deploy '+'/'.join(dict.fromkeys(bad)))
         if status.get('held'):
