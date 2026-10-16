@@ -31,6 +31,18 @@ class Fake:
         return self.vps
     def vps_memory(self):return dict(self.memory)
     def remember_vps(self,memory):self.memory=dict(memory)
+    # The board is not live by default: no DNS, no certificate, no backup store yet.
+    board_code=OSError('board.bigospeedrun.com does not resolve');cert_days=OSError('no certificate for the name');backup=None
+    board_mem={}
+    def board_https(self):
+        if isinstance(self.board_code,Exception):raise self.board_code
+        return self.board_code
+    def board_cert_days(self):
+        if isinstance(self.cert_days,Exception):raise self.cert_days
+        return self.cert_days
+    def board_backup(self):return self.backup
+    def board_memory(self):return json.loads(json.dumps(self.board_mem))
+    def remember_board(self,memory):self.board_mem=json.loads(json.dumps(memory))
 
 def vps_fixture(now=NOW):
     """The boshealth read output shape (bos-health-read, 2026-10-15), healthy."""
@@ -191,5 +203,72 @@ class VpsDeployTests(unittest.TestCase):
         alerts=[p for p in self.sent if p['item']=='vps-deploy']
         self.assertEqual([p['event'] for p in alerts],['alert','recovered'])
         self.assertNotIn('boshealth.key',json.dumps(self.sent))
+
+def board_section(now=NOW):
+    """The "board" section of bos-health-read v2 (2026-10-16), healthy."""
+    status=dict(vps_fixture(now)['auto_deploy'],deployed='7de9531')
+    names=[f'bigospeedrun-board-board-{s}-1' for s in ('db','api','auth','egress')]
+    return {'auto_deploy':status,'containers':{n:{'present':True,'status':'running','health':None if n.endswith('egress-1') else 'healthy',
+                                                   'started_at':iso(1,now),'restart_count':0} for n in names}}
+
+class BoardTests(unittest.TestCase):
+    def live(self):
+        f=Fake();f.vps['board']=board_section();f.board_code=200;f.cert_days=80.0;f.backup=(0,'FRESH OK product=bigospeedrun-board')
+        return f
+    def failing(self,src,now=NOW):return {k for k,(ok,*_) in d.check(src,now).items() if not ok}
+
+    def test_not_live_yet_checks_nothing(self):
+        report=d.check(Fake(),NOW)
+        for item in ('vps-board','board-https','board-cert','board-backup'):self.assertNotIn(item,report)
+
+    def test_live_and_healthy(self):
+        f=self.live();report=d.check(f,NOW)
+        for item in ('vps-board','board-https','board-cert','board-backup'):self.assertTrue(report[item][0],item)
+        self.assertEqual(self.failing(f),set())
+
+    def test_board_deploy_states_use_the_site_rules(self):
+        cases={}
+        f=self.live();f.vps['board']['auto_deploy']['result']='rolled_back';cases['rolled back']=f
+        f=self.live();f.vps['board']['auto_deploy']['result']='manual_deploy_needed';cases['manual']=f
+        f=self.live();f.vps['board']['auto_deploy']['tick_at']=iso(1);cases['stale tick']=f
+        f=self.live();f.vps['board']['auto_deploy']={'missing':True};cases['no status']=f
+        f=self.live();f.vps['board']['containers']['bigospeedrun-board-board-api-1']['health']='unhealthy';cases['api unhealthy']=f
+        f=self.live();f.vps['board']['containers']['bigospeedrun-board-board-db-1']={'present':False};cases['db missing']=f
+        for name,src in cases.items():
+            with self.subTest(name):self.assertEqual(self.failing(src),{'vps-board'})
+
+    def test_a_board_section_that_disappears_alerts(self):
+        f=self.live();d.check(f,NOW)
+        del f.vps['board'];self.assertEqual(self.failing(f),{'vps-board'})
+
+    def test_https_alerts_on_the_second_bad_run(self):
+        f=self.live();d.check(f,NOW)
+        f.board_code=502;self.assertEqual(self.failing(f),set())
+        ok,problem,*_=d.check(f,NOW)['board-https'];self.assertFalse(ok);self.assertIn('502',problem)
+        f.board_code=200;self.assertTrue(d.check(f,NOW)['board-https'][0])
+        f.board_code=OSError('timeout');d.check(f,NOW);self.assertIn('board-https',self.failing(f))
+
+    def test_certificate_under_21_days_or_two_failed_handshakes(self):
+        f=self.live();f.cert_days=20.4
+        ok,problem,*_=d.check(f,NOW)['board-cert'];self.assertFalse(ok);self.assertIn('20 days',problem)
+        f=self.live();d.check(f,NOW);f.cert_days=OSError('handshake')
+        self.assertEqual(self.failing(f),set());self.assertEqual(self.failing(f),{'board-cert'})
+
+    def test_backup_freshness(self):
+        f=self.live();d.check(f,NOW)
+        f.backup=(1,'FRESH FAIL product=bigospeedrun-board reason=stale');ok,problem,*_=d.check(f,NOW)['board-backup']
+        self.assertFalse(ok);self.assertIn('no fresh backup',problem)
+        f.backup=(2,'DESKTOP FAIL reason=unreachable');self.assertIn('desktop',d.check(f,NOW)['board-backup'][1])
+        f.backup=None;self.assertIn('no backup store',d.check(f,NOW)['board-backup'][1])
+
+    def test_read_failures_keep_then_alert_for_the_board_too(self):
+        f=self.live();d.check(f,NOW)
+        f.vps_error=RuntimeError('boshealth read exited 255')
+        self.assertTrue(d.check(f,NOW)['vps-board'][0])
+        ok,problem,*_=d.check(f,NOW)['vps-board'];self.assertFalse(ok);self.assertIn('2 reads in a row',problem)
+
+    def test_the_site_item_ignores_the_board_section(self):
+        f=self.live();f.vps['board']['containers']['bigospeedrun-board-board-api-1']['status']='exited'
+        report=d.check(f,NOW);self.assertTrue(report['vps-deploy'][0]);self.assertFalse(report['vps-board'][0])
 
 if __name__=='__main__':unittest.main()

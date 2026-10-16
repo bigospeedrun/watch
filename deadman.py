@@ -23,6 +23,16 @@ Items:
                        last tick < 45 min, no failed/rolled_back/rollback_failed/stopped/refused
                        result, not held or waiting for over 1 day, ticks not erring for 1 h, units ok, containers running
                        and healthy. One failed read is tolerated; two in a row alert.
+  vps-board            the race board on the VPS, the same rules on the "board" section of
+                       the same read (its own status.json and its db/api/auth/egress
+                       containers); checked once the read has shown that section
+  board-https          GET the board feed through Cloudflare: not 200 on 2 runs in a row
+  board-cert           TLS handshake to the VPS with SNI board.bigospeedrun.com: the
+                       origin certificate expires in under 21 days, or 2 failed handshakes
+  board-backup         vpsbackup.py fresh bigospeedrun-board exits non-zero (no fresh copy
+                       on auntie, or the desktop copy failed)
+                       The three board-* items arm themselves on their first success (the
+                       board goes live in steps), and from then on a failure alerts.
 
 A failing item messages BOS Lead Dev once (item, problem, last good time in PT,
 log or run link), then once more when it recovers. Messages go through a signed
@@ -34,7 +44,11 @@ import argparse
 import hashlib
 import hmac
 import json
+import socket
+import ssl
 import subprocess
+import time
+import urllib.error
 import urllib.request
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
@@ -51,8 +65,13 @@ GAP_REVIEW_JOB='3f73daae'
 # the pinned known_hosts entry, so no address is written here.
 VPS_SECRETS=Path.home()/'nil/bigospeedrun-notes/secrets'
 VPS_MEMORY='.git/vps-health.json'
-VPS_BAD_RESULTS={'failed','rolled_back','rollback_failed','stopped','refused'}
+VPS_BAD_RESULTS={'failed','rolled_back','rollback_failed','stopped','refused','manual_deploy_needed'}
 VPS_LINK='ssh boshealth (VPS /opt/bigospeedrun/auto-deploy/status.json); runbook ~/nil/bigospeedrun-notes/phase-c-staging-plan.md'
+BOARD_MEMORY='.git/board-health.json'
+BOARD_HOST='board.bigospeedrun.com'
+BOARD_FEED=f'https://{BOARD_HOST}/board/api/posts?board=3sum&limit=1'
+BOARD_LINK='ssh boshealth (VPS /opt/bigospeedrun-board/auto-deploy/status.json); runbook ~/nil/bigospeedrun-notes/phase-e-board-deploy-plan.md'
+VPS_BACKUP=Path.home()/'nil/wallgame/ops-private/vps-backup'
 PT=ZoneInfo('America/Los_Angeles')
 H=timedelta(hours=1)
 
@@ -100,10 +119,13 @@ class Sources:
     def cron_runs(self,job):
         path=CRONJOBS/job/'runs.json'
         return json.loads(path.read_text()) if path.exists() else []
+    def vps_host(self):
+        host=(VPS_SECRETS/'boshealth.known_hosts').read_text().split()[0]
+        if host.startswith('|'):raise RuntimeError('hashed known_hosts entry')
+        return host
     def vps_health(self):
         known=VPS_SECRETS/'boshealth.known_hosts'
-        host=known.read_text().split()[0]
-        if host.startswith('|'):raise RuntimeError('hashed known_hosts entry')
+        host=self.vps_host()
         # The forced command takes no command; stderr is dropped so nothing about the key is printed.
         out=subprocess.run(['ssh','-F','/dev/null','-T','-i',str(VPS_SECRETS/'boshealth.key'),'-o','IdentitiesOnly=yes',
                             '-o','IdentityAgent=none','-o','PreferredAuthentications=publickey','-o','BatchMode=yes',
@@ -118,6 +140,31 @@ class Sources:
     def remember_vps(self,memory):
         if not self.persist:return
         path=self.root/VPS_MEMORY;tmp=path.with_name(path.name+'.tmp')
+        tmp.write_text(json.dumps(memory,indent=2)+'\n');tmp.replace(path)
+    def board_https(self):
+        request=urllib.request.Request(BOARD_FEED,headers={'User-Agent':'bos-deadman/1','Accept':'application/json'})
+        try:
+            with urllib.request.urlopen(request,timeout=30) as response:return response.status
+        except urllib.error.HTTPError as error:return error.code
+    def board_cert_days(self):
+        # Only the TLS handshake: the origin's cloudflare_only gate aborts after it, and no
+        # HTTP request is sent. The default context checks the chain and the name.
+        with socket.create_connection((self.vps_host(),443),timeout=20) as raw:
+            with ssl.create_default_context().wrap_socket(raw,server_hostname=BOARD_HOST) as tls:
+                cert=tls.getpeercert()
+        return (ssl.cert_time_to_seconds(cert['notAfter'])-time.time())/86400
+    def board_backup(self):
+        """(exit code, first line) of vpsbackup.py fresh, or None before the first pull."""
+        if not (VPS_BACKUP/'store'/'bigospeedrun-board').is_dir():return None
+        out=subprocess.run(['python3','-I',str(VPS_BACKUP/'vpsbackup.py'),'fresh','bigospeedrun-board'],
+                           capture_output=True,text=True,timeout=300)
+        return out.returncode,((out.stdout.strip().splitlines() or [''])[0])[:200]
+    def board_memory(self):
+        path=self.root/BOARD_MEMORY
+        return json.loads(path.read_text()) if path.exists() else {}
+    def remember_board(self,memory):
+        if not self.persist:return
+        path=self.root/BOARD_MEMORY;tmp=path.with_name(path.name+'.tmp')
         tmp.write_text(json.dumps(memory,indent=2)+'\n');tmp.replace(path)
 
 def systemd_time(value):
@@ -213,21 +260,67 @@ def check(src,now,to_time=systemd_time):
         else:results['chatbot-gap-review']=(True,None,good,link)
     except Exception as error:
         results['chatbot-gap-review']=(False,'cannot read cronjob runs: '+type(error).__name__,None,f'~/.isomux/cronjobs/{GAP_REVIEW_JOB}/runs.json')
-    memory=src.vps_memory()
+    memory=src.vps_memory();board=src.board_memory();data=None
     try:
         data=src.vps_health()
     except Exception as error:
         # One failed read keeps the last verdict; the second in a row alerts.
         memory['read_failures']=memory.get('read_failures',0)+1
-        if memory['read_failures']>=2:results['vps-deploy']=(False,f"cannot read the VPS status ({memory['read_failures']} reads in a row): "+type(error).__name__,None,VPS_LINK)
+        unread=f"cannot read the VPS status ({memory['read_failures']} reads in a row): "+type(error).__name__
+        if memory['read_failures']>=2:results['vps-deploy']=(False,unread,None,VPS_LINK)
         else:results['vps-deploy']=(memory.get('last_ok',True),memory.get('last_problem'),None,VPS_LINK)
+        if board.get('seen'):
+            if memory['read_failures']>=2:results['vps-board']=(False,unread,None,BOARD_LINK)
+            else:results['vps-board']=(board.get('last_ok',True),board.get('last_problem'),None,BOARD_LINK)
     else:
         memory['read_failures']=0
         ok,problem=vps_deploy(data,now,memory)
         memory['last_ok']=ok;memory['last_problem']=problem
         results['vps-deploy']=(ok,problem,now if ok else None,VPS_LINK)
+        if isinstance(data.get('board'),dict):
+            board['seen']=True
+            ok,problem=vps_deploy(data['board'],now,board.setdefault('deploy',{}))
+            board['last_ok']=ok;board['last_problem']=problem
+            results['vps-board']=(ok,problem,now if ok else None,BOARD_LINK)
+        elif board.get('seen'):
+            results['vps-board']=(False,'the VPS health read has no board section',None,BOARD_LINK)
     src.remember_vps(memory)
+    board_checks(src,now,board,results)
+    src.remember_board(board)
     return results
+
+def board_checks(src,now,board,results):
+    """board-https, board-cert and board-backup: each arms itself on its first success."""
+    try:code=src.board_https()
+    except Exception as error:code=type(error).__name__
+    if code==200:
+        board['https_armed']=True;board['https_failures']=0
+        results['board-https']=(True,None,now,BOARD_FEED)
+    elif board.get('https_armed'):
+        board['https_failures']=board.get('https_failures',0)+1
+        bad=board['https_failures']>=2
+        results['board-https']=(not bad,f"the board feed answered {code} on {board['https_failures']} runs in a row" if bad else None,None,BOARD_FEED)
+    link='TLS handshake to the VPS with SNI '+BOARD_HOST+'; journalctl -u wg-caddy on the VPS'
+    try:days=src.board_cert_days()
+    except Exception as error:days=None;why=type(error).__name__
+    if days is not None:
+        board['cert_armed']=True;board['cert_failures']=0
+        results['board-cert']=(days>=21,None if days>=21 else f'the origin certificate expires in {days:.0f} days',now if days>=21 else None,link)
+    elif board.get('cert_armed'):
+        board['cert_failures']=board.get('cert_failures',0)+1
+        bad=board['cert_failures']>=2
+        results['board-cert']=(not bad,f"the origin TLS handshake failed on {board['cert_failures']} runs in a row: {why}" if bad else None,None,link)
+    link='python3 -I ~/nil/wallgame/ops-private/vps-backup/vpsbackup.py fresh bigospeedrun-board; journalctl --user -u vps-backup@bigospeedrun-board'
+    try:fresh=src.board_backup()
+    except Exception as error:fresh=(None,'cannot run vpsbackup.py: '+type(error).__name__)
+    if fresh is None:
+        if board.get('backup_armed'):results['board-backup']=(False,'no backup store for bigospeedrun-board on auntie',None,link)
+    else:
+        code,line=fresh
+        if code==0:board['backup_armed']=True
+        if code==0 or board.get('backup_armed'):
+            problem=None if code==0 else ('the desktop copy failed: ' if code==2 else 'no fresh backup: ')+line
+            results['board-backup']=(code==0,problem,now if code==0 else None,link)
 
 def webhook_send(root,event='deadman'):
     # Isomux passes only the rule's args to the agent (payload.text here), in a
