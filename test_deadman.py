@@ -146,7 +146,7 @@ class VpsDeployTests(unittest.TestCase):
         cases={
                'failed':with_status(result='failed'),'rollback_failed':with_status(result='rollback_failed'),
                'stopped result':with_status(result='stopped'),'stopped marker':with_status(stopped=True),
-               'refused':with_status(result='refused'),'rolled back':with_status(result='rolled_back'),
+               'refused':with_status(result='refused'),'rolled back':with_status(result='rolled_back'),'tick errors':with_status(result='tick_error',tick_error_since=iso(1.5)),'units error':with_status(units='error'),'units absent':with_status(units='absent'),
                'last attempt failed':with_status(last_attempt={'at':iso(0.5),'target':'abc','result':'rollback_failed'}),
                'waiting a day':with_status(waiting=True,waiting_since=iso(25))}
         f=Fake();f.vps['containers']['bigospeedrun-site-1']['health']='unhealthy';cases['unhealthy']=f
@@ -159,6 +159,8 @@ class VpsDeployTests(unittest.TestCase):
             self.assertFalse(ok,name);self.assertTrue(problem,name)
         ok,problem,good,_=self.item(Fake());self.assertTrue(ok);self.assertIsNone(problem);self.assertEqual(good,NOW)
         ok,*_=self.item(with_status(waiting=True,waiting_since=iso(20)));self.assertTrue(ok)
+        ok,*_=self.item(with_status(result='tick_error',tick_error_since=iso(0.5)));self.assertTrue(ok)
+        ok,*_=self.item(with_status(result='locked',units='unchecked'));self.assertTrue(ok)
 
     def test_held_alerts_only_after_a_day(self):
         f=Fake();f.vps['auto_deploy']['held']=True

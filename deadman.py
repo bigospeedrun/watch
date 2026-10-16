@@ -21,7 +21,7 @@ Items:
   vps-deploy           self-hosted site on the VPS, read through the forced-command
                        login boshealth (status.json + the site and egress containers):
                        last tick < 45 min, no failed/rolled_back/rollback_failed/stopped/refused
-                       result, not held or waiting for over 1 day, containers running
+                       result, not held or waiting for over 1 day, ticks not erring for 1 h, units ok, containers running
                        and healthy. One failed read is tolerated; two in a row alert.
 
 A failing item messages BOS Lead Dev once (item, problem, last good time in PT,
@@ -144,6 +144,11 @@ def vps_deploy(data,now,memory):
         else:memory.pop('held_since',None)
         waiting=parse(status.get('waiting_since'))
         if status.get('waiting') and waiting and now-waiting>=24*H:problems.append(f'green commit waiting since {pt(waiting)}')
+        erring=parse(status.get('tick_error_since'))
+        if erring and now-erring>=H:problems.append(f'ticks failing since {pt(erring)}')
+        # A tick that found the lock taken ends before the unit check, so its units stay 'unchecked'.
+        if status.get('units')!='ok' and not (status.get('result')=='locked' and status.get('units')=='unchecked'):
+            problems.append(f"units {status.get('units')}")
     for name,c in sorted((data.get('containers') or {}).items()):
         if not c.get('present') or c.get('error') or c.get('status')!='running' or c.get('health') not in (None,'healthy'):
             problems.append(f"{name} {'missing' if not c.get('present') else str(c.get('status'))+'/'+str(c.get('health'))}")
