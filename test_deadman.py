@@ -16,6 +16,7 @@ class Fake:
         self.service={'Result':'success','ExecMainStatus':'0','ExecMainExitTimestamp':systemd(0.3,now)}
         self.timer={'LastTriggerUSec':systemd(0.3,now),'ActiveState':'active'}
         self.cron=[dict(status='completed',errorReason=None,startedAt=(now-timedelta(hours=8)).timestamp()*1000)]
+        self.vps=vps_fixture(now);self.vps_error=None;self.memory={}
     def last_ok(self):return self.marks
     def log_ok_time(self,name):return None
     def refresh_runs(self):return self.runs
@@ -25,6 +26,20 @@ class Fake:
     def stalled_sources(self):return list(self.stalled)
     def unit_installed(self,unit):return self.installed
     def digest_last_ok(self,name):return self.digest_ok
+    def vps_health(self):
+        if self.vps_error:raise self.vps_error
+        return self.vps
+    def vps_memory(self):return dict(self.memory)
+    def remember_vps(self,memory):self.memory=dict(memory)
+
+def vps_fixture(now=NOW):
+    """The boshealth read output shape (bos-health-read, 2026-10-15), healthy."""
+    return {'generated_at':iso(0,now),
+            'auto_deploy':{'tick_at':iso(0.05,now),'deployed':'bee5335','result':'up_to_date','phase':'select','target':None,
+                           'stopped':False,'held':False,'waiting':False,'waiting_since':None,'tick_error_since':None,'units':'ok',
+                           'last_attempt':{'at':iso(1,now),'target':'bee5335','result':'deployed'}},
+            'containers':{'bigospeedrun-site-1':{'present':True,'status':'running','health':'healthy','started_at':iso(1,now),'restart_count':0},
+                          'bigospeedrun-egress-1':{'present':True,'status':'running','health':None,'started_at':iso(1,now),'restart_count':0}}}
 
 class DeadmanTests(unittest.TestCase):
     def setUp(self):
@@ -36,7 +51,7 @@ class DeadmanTests(unittest.TestCase):
 
     def test_all_healthy_sends_nothing(self):
         report=self.run_at(Fake())
-        self.assertEqual(set(report),{'watch-cycle','discord-intake','problem-selection','site-refresh','verifier-submissions','chatbot-gap-review','watch-sources'})
+        self.assertEqual(set(report),{'watch-cycle','discord-intake','problem-selection','site-refresh','verifier-submissions','chatbot-gap-review','watch-sources','vps-deploy'})
         self.assertTrue(all(v=='ok' for v in report.values()));self.assertEqual(self.sent,[])
 
     def test_each_simulated_stale_or_failed_state_is_caught(self):
@@ -114,5 +129,65 @@ class DeadmanTests(unittest.TestCase):
         d.webhook_send(self.root)(dict(kind='bos-deadman',text='t'));server.server_close()
         self.assertEqual(got['sig'],'sha256='+hmac.new(b's3cret',got['body'],hashlib.sha256).hexdigest())
         self.assertEqual(got['event'],'deadman');self.assertEqual(json.loads(got['body'])['kind'],'bos-deadman')
+
+
+class VpsDeployTests(unittest.TestCase):
+    def setUp(self):
+        self.tmp=tempfile.TemporaryDirectory();self.root=Path(self.tmp.name);(self.root/'.git').mkdir();self.sent=[]
+    def tearDown(self):self.tmp.cleanup()
+    def item(self,src,now=NOW):
+        src.vps['auto_deploy']['tick_at']=src.vps['auto_deploy'].get('tick_at') and iso(0.05,now)  # the timer keeps ticking
+        return d.check(src,now)['vps-deploy']
+
+    def test_each_bad_state_alerts(self):
+        def with_status(**kw):
+            f=Fake();f.vps['auto_deploy'].update(kw);return f
+        stale=Fake();stale.vps['auto_deploy']['tick_at']=iso(0.8)
+        cases={
+               'failed':with_status(result='failed'),'rollback_failed':with_status(result='rollback_failed'),
+               'stopped result':with_status(result='stopped'),'stopped marker':with_status(stopped=True),
+               'refused':with_status(result='refused'),
+               'last attempt failed':with_status(last_attempt={'at':iso(0.5),'target':'abc','result':'rollback_failed'}),
+               'waiting a day':with_status(waiting=True,waiting_since=iso(25))}
+        f=Fake();f.vps['containers']['bigospeedrun-site-1']['health']='unhealthy';cases['unhealthy']=f
+        f=Fake();f.vps['containers']['bigospeedrun-egress-1']={'present':False};cases['missing container']=f
+        f=Fake();f.vps['containers']['bigospeedrun-site-1']['status']='restarting';cases['restarting']=f
+        f=Fake();f.vps['auto_deploy']={'missing':True};cases['no status']=f
+        ok,problem,*_=d.check(stale,NOW)['vps-deploy'];self.assertFalse(ok);self.assertIn('last deploy tick',problem)
+        for name,src in cases.items():
+            ok,problem,*_=self.item(src)
+            self.assertFalse(ok,name);self.assertTrue(problem,name)
+        ok,problem,good,_=self.item(Fake());self.assertTrue(ok);self.assertIsNone(problem);self.assertEqual(good,NOW)
+        ok,*_=self.item(with_status(waiting=True,waiting_since=iso(20)));self.assertTrue(ok)
+
+    def test_held_alerts_only_after_a_day(self):
+        f=Fake();f.vps['auto_deploy']['held']=True
+        self.assertTrue(self.item(f)[0])
+        self.assertTrue(self.item(f,NOW+timedelta(hours=23))[0])
+        ok,problem,*_=self.item(f,NOW+timedelta(hours=24.5));self.assertFalse(ok);self.assertIn('held since',problem)
+        f.vps['auto_deploy']['held']=False;self.assertTrue(self.item(f,NOW+timedelta(hours=25))[0]);self.assertNotIn('held_since',f.memory)
+
+    def test_one_failed_read_is_tolerated_two_alert(self):
+        f=Fake();f.vps_error=RuntimeError('boshealth read exited 255')
+        self.assertTrue(self.item(f)[0]);self.assertEqual(f.memory['read_failures'],1)
+        ok,problem,*_=self.item(f);self.assertFalse(ok);self.assertIn('2 reads in a row',problem)
+        f.vps_error=None;self.assertTrue(self.item(f)[0]);self.assertEqual(f.memory['read_failures'],0)
+
+    def test_single_failed_read_keeps_a_failing_verdict(self):
+        f=Fake();f.vps['auto_deploy']['result']='failed'
+        self.assertFalse(self.item(f)[0])
+        f.vps_error=RuntimeError('x');ok,problem,*_=self.item(f);self.assertFalse(ok);self.assertIn('failed',problem)
+
+    def test_alert_once_then_recovered_line(self):
+        f=Fake();f.vps['containers']['bigospeedrun-site-1']['health']='unhealthy'
+        d.run(f,self.sent.append,self.root,NOW);d.run(f,self.sent.append,self.root,NOW+timedelta(hours=1))
+        alerts=[p for p in self.sent if p['item']=='vps-deploy']
+        self.assertEqual([p['event'] for p in alerts],['alert'])
+        f.vps['containers']['bigospeedrun-site-1']['health']='healthy';f.vps['auto_deploy']['tick_at']=iso(0.05,NOW+timedelta(hours=2))
+        f.marks={k:iso(1,NOW+timedelta(hours=2)) for k in f.marks}
+        d.run(f,self.sent.append,self.root,NOW+timedelta(hours=2))
+        alerts=[p for p in self.sent if p['item']=='vps-deploy']
+        self.assertEqual([p['event'] for p in alerts],['alert','recovered'])
+        self.assertNotIn('boshealth.key',json.dumps(self.sent))
 
 if __name__=='__main__':unittest.main()

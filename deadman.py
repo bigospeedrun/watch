@@ -18,6 +18,11 @@ Items:
                        < 2 h; checked once that timer unit is installed
   chatbot-gap-review   Isomux cronjob "BOS chatbot gap review" completed a run
                        without error < 26 h ago (~/.isomux/cronjobs, read-only)
+  vps-deploy           self-hosted site on the VPS, read through the forced-command
+                       login boshealth (status.json + the site and egress containers):
+                       last tick < 45 min, no failed/rollback_failed/stopped/refused
+                       result, not held or waiting for over 1 day, containers running
+                       and healthy. One failed read is tolerated; two in a row alert.
 
 A failing item messages BOS Lead Dev once (item, problem, last good time in PT,
 log or run link), then once more when it recovers. Messages go through a signed
@@ -42,6 +47,12 @@ CONFIG='.git/deadman.json'
 LAST_OK='.git/cycle-last-ok.json'
 CRONJOBS=Path.home()/'.isomux/cronjobs'
 GAP_REVIEW_JOB='3f73daae'
+# The boshealth key and pinned host key stay outside the repo; the host comes from
+# the pinned known_hosts entry, so no address is written here.
+VPS_SECRETS=Path.home()/'nil/bigospeedrun-notes/secrets'
+VPS_MEMORY='.git/vps-health.json'
+VPS_BAD_RESULTS={'failed','rollback_failed','stopped','refused'}
+VPS_LINK='ssh boshealth (VPS /opt/bigospeedrun/auto-deploy/status.json); runbook ~/nil/bigospeedrun-notes/phase-c-staging-plan.md'
 PT=ZoneInfo('America/Los_Angeles')
 H=timedelta(hours=1)
 
@@ -55,7 +66,7 @@ def parse(stamp):
 
 class Sources:
     """Read-only views of the checked systems. Tests replace these methods."""
-    def __init__(self,root):self.root=root
+    def __init__(self,root,persist=True):self.root=root;self.persist=persist
     def last_ok(self):
         path=self.root/LAST_OK
         return json.loads(path.read_text()) if path.exists() else {}
@@ -89,12 +100,54 @@ class Sources:
     def cron_runs(self,job):
         path=CRONJOBS/job/'runs.json'
         return json.loads(path.read_text()) if path.exists() else []
+    def vps_health(self):
+        known=VPS_SECRETS/'boshealth.known_hosts'
+        host=known.read_text().split()[0]
+        if host.startswith('|'):raise RuntimeError('hashed known_hosts entry')
+        # The forced command takes no command; stderr is dropped so nothing about the key is printed.
+        out=subprocess.run(['ssh','-F','/dev/null','-T','-i',str(VPS_SECRETS/'boshealth.key'),'-o','IdentitiesOnly=yes',
+                            '-o','BatchMode=yes','-o','StrictHostKeyChecking=yes','-o','UserKnownHostsFile='+str(known),
+                            '-o','ConnectTimeout=20','boshealth@'+host],
+                           stdin=subprocess.DEVNULL,capture_output=True,text=True,timeout=60)
+        if out.returncode:raise RuntimeError(f'boshealth read exited {out.returncode}')
+        return json.loads(out.stdout)
+    def vps_memory(self):
+        path=self.root/VPS_MEMORY
+        return json.loads(path.read_text()) if path.exists() else {}
+    def remember_vps(self,memory):
+        if not self.persist:return
+        path=self.root/VPS_MEMORY;tmp=path.with_name(path.name+'.tmp')
+        tmp.write_text(json.dumps(memory,indent=2)+'\n');tmp.replace(path)
 
 def systemd_time(value):
     # systemctl prints e.g. "Thu 2026-10-15 02:47:34 CEST"; "n/a" when never run.
     if not value or value=='n/a':return None
     out=subprocess.run(['date','-u','-d',value,'+%Y-%m-%dT%H:%M:%SZ'],capture_output=True,text=True,timeout=10)
     return parse(out.stdout.strip()) if out.returncode==0 else None
+
+def vps_deploy(data,now,memory):
+    """(ok, problem) for the VPS deploy status; updates memory (held_since)."""
+    problems=[];status=data.get('auto_deploy') or {}
+    if status.get('missing') or status.get('malformed') or not status:
+        problems.append('status.json '+('missing' if status.get('missing') else 'unreadable'))
+    else:
+        tick=parse(status.get('tick_at'))
+        if not tick or now-tick>=45*timedelta(minutes=1):problems.append(f'last deploy tick {pt(tick)}')
+        last=(status.get('last_attempt') or {}).get('result')
+        bad=[r for r in (status.get('result'),last) if r in VPS_BAD_RESULTS]
+        if status.get('stopped'):bad.append('stopped')
+        if bad:problems.append('deploy '+'/'.join(dict.fromkeys(bad)))
+        if status.get('held'):
+            since=parse(memory.setdefault('held_since',now.isoformat(timespec='seconds')))
+            if now-since>=24*H:problems.append(f'held since {pt(since)}')
+        else:memory.pop('held_since',None)
+        waiting=parse(status.get('waiting_since'))
+        if status.get('waiting') and waiting and now-waiting>=24*H:problems.append(f'green commit waiting since {pt(waiting)}')
+    for name,c in sorted((data.get('containers') or {}).items()):
+        if not c.get('present') or c.get('error') or c.get('status')!='running' or c.get('health') not in (None,'healthy'):
+            problems.append(f"{name} {'missing' if not c.get('present') else str(c.get('status'))+'/'+str(c.get('health'))}")
+    if not data.get('containers'):problems.append('no container states')
+    return not problems,('; '.join(problems)[:300] or None)
 
 def check(src,now,to_time=systemd_time):
     """Return {item: (ok, problem, last_good, link)}."""
@@ -154,6 +207,20 @@ def check(src,now,to_time=systemd_time):
         else:results['chatbot-gap-review']=(True,None,good,link)
     except Exception as error:
         results['chatbot-gap-review']=(False,'cannot read cronjob runs: '+type(error).__name__,None,f'~/.isomux/cronjobs/{GAP_REVIEW_JOB}/runs.json')
+    memory=src.vps_memory()
+    try:
+        data=src.vps_health()
+    except Exception as error:
+        # One failed read keeps the last verdict; the second in a row alerts.
+        memory['read_failures']=memory.get('read_failures',0)+1
+        if memory['read_failures']>=2:results['vps-deploy']=(False,f"cannot read the VPS status ({memory['read_failures']} reads in a row): "+type(error).__name__,None,VPS_LINK)
+        else:results['vps-deploy']=(memory.get('last_ok',True),memory.get('last_problem'),None,VPS_LINK)
+    else:
+        memory['read_failures']=0
+        ok,problem=vps_deploy(data,now,memory)
+        memory['last_ok']=ok;memory['last_problem']=problem
+        results['vps-deploy']=(ok,problem,now if ok else None,VPS_LINK)
+    src.remember_vps(memory)
     return results
 
 def webhook_send(root,event='deadman'):
@@ -207,7 +274,7 @@ def main():
     parser=argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument('--dry-run',action='store_true',help='check only: print item status, send and write nothing')
     args=parser.parse_args()
-    src=Sources(ROOT);now=datetime.now(timezone.utc)
+    src=Sources(ROOT,persist=not args.dry_run);now=datetime.now(timezone.utc)
     if args.dry_run:
         for item,(ok,problem,good,link) in check(src,now).items():
             print(f"{item}: {'ok' if ok else 'FAILING: '+problem}; last good {pt(good)}")
