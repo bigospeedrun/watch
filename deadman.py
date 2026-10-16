@@ -20,7 +20,7 @@ Items:
                        without error < 26 h ago (~/.isomux/cronjobs, read-only)
   vps-deploy           self-hosted site on the VPS, read through the forced-command
                        login boshealth (status.json + the site and egress containers):
-                       last tick < 45 min, no failed/rollback_failed/stopped/refused
+                       last tick < 45 min, no failed/rolled_back/rollback_failed/stopped/refused
                        result, not held or waiting for over 1 day, containers running
                        and healthy. One failed read is tolerated; two in a row alert.
 
@@ -51,7 +51,7 @@ GAP_REVIEW_JOB='3f73daae'
 # the pinned known_hosts entry, so no address is written here.
 VPS_SECRETS=Path.home()/'nil/bigospeedrun-notes/secrets'
 VPS_MEMORY='.git/vps-health.json'
-VPS_BAD_RESULTS={'failed','rollback_failed','stopped','refused'}
+VPS_BAD_RESULTS={'failed','rolled_back','rollback_failed','stopped','refused'}
 VPS_LINK='ssh boshealth (VPS /opt/bigospeedrun/auto-deploy/status.json); runbook ~/nil/bigospeedrun-notes/phase-c-staging-plan.md'
 PT=ZoneInfo('America/Los_Angeles')
 H=timedelta(hours=1)
@@ -106,7 +106,8 @@ class Sources:
         if host.startswith('|'):raise RuntimeError('hashed known_hosts entry')
         # The forced command takes no command; stderr is dropped so nothing about the key is printed.
         out=subprocess.run(['ssh','-F','/dev/null','-T','-i',str(VPS_SECRETS/'boshealth.key'),'-o','IdentitiesOnly=yes',
-                            '-o','BatchMode=yes','-o','StrictHostKeyChecking=yes','-o','UserKnownHostsFile='+str(known),
+                            '-o','IdentityAgent=none','-o','PreferredAuthentications=publickey','-o','BatchMode=yes',
+                            '-o','StrictHostKeyChecking=yes','-o','UserKnownHostsFile='+str(known),'-o','GlobalKnownHostsFile=/dev/null',
                             '-o','ConnectTimeout=20','boshealth@'+host],
                            stdin=subprocess.DEVNULL,capture_output=True,text=True,timeout=60)
         if out.returncode:raise RuntimeError(f'boshealth read exited {out.returncode}')

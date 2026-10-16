@@ -146,7 +146,7 @@ class VpsDeployTests(unittest.TestCase):
         cases={
                'failed':with_status(result='failed'),'rollback_failed':with_status(result='rollback_failed'),
                'stopped result':with_status(result='stopped'),'stopped marker':with_status(stopped=True),
-               'refused':with_status(result='refused'),
+               'refused':with_status(result='refused'),'rolled back':with_status(result='rolled_back'),
                'last attempt failed':with_status(last_attempt={'at':iso(0.5),'target':'abc','result':'rollback_failed'}),
                'waiting a day':with_status(waiting=True,waiting_since=iso(25))}
         f=Fake();f.vps['containers']['bigospeedrun-site-1']['health']='unhealthy';cases['unhealthy']=f
