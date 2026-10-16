@@ -275,6 +275,9 @@ class BoardTests(unittest.TestCase):
         f.board_code=200;self.assertTrue(d.check(f,NOW)['board-https'][0])
         f.board_code=OSError('timeout');d.check(f,NOW);self.assertIn('board-https',self.failing(f))
 
+    def test_https_reads_the_feed_at_the_root_of_the_board_host(self):
+        self.assertEqual(d.BOARD_FEED,'https://board.bigospeedrun.com/api/posts?board=3sum&limit=1')
+
     def test_certificate_under_21_days_or_two_failed_handshakes(self):
         f=self.live();f.cert_days=20.4
         ok,problem,*_=d.check(f,NOW)['board-cert'];self.assertFalse(ok);self.assertIn('20 days',problem)

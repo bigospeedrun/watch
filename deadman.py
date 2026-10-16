@@ -79,7 +79,7 @@ VPS_LINK='ssh boshealth (VPS /opt/bigospeedrun/auto-deploy/status.json); runbook
 BOARD_DEPLOY_CHECK=True
 BOARD_MEMORY='.git/board-health.json'
 BOARD_HOST='board.bigospeedrun.com'
-BOARD_FEED=f'https://{BOARD_HOST}/board/api/posts?board=3sum&limit=1'
+BOARD_FEED=f'https://{BOARD_HOST}/api/posts?board=3sum&limit=1'   # the board is at the root of its host (board 21648c1)
 BOARD_LINK='ssh boshealth (VPS /opt/bigospeedrun-board/auto-deploy/status.json); runbook ~/nil/bigospeedrun-notes/phase-e-board-deploy-plan.md'
 VPS_BACKUP=Path.home()/'nil/wallgame/ops-private/vps-backup'
 PT=ZoneInfo('America/Los_Angeles')
