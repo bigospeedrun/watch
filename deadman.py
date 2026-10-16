@@ -24,8 +24,11 @@ Items:
                        result, not held or waiting for over 1 day, ticks not erring for 1 h, units ok, containers running
                        and healthy. One failed read is tolerated; two in a row alert.
   vps-board            the race board on the VPS, the same rules on the "board" section of
-                       the same read (its own status.json and its db/api/auth/egress
-                       containers); checked once the read has shown that section
+                       the same boshealth read (one ssh per run; its own status.json and its
+                       db/api/auth/egress containers), plus a wait for an off-box backup
+                       before a migration (phase backup) over 1 h. Off until BOARD_DEPLOY_CHECK
+                       is True (set after the deploy rehearsals, plan E2); then a missing
+                       board section alerts
   board-https          GET the board feed through Cloudflare: not 200 on 2 runs in a row
   board-cert           TLS handshake to the VPS with SNI board.bigospeedrun.com: the
                        origin certificate expires in under 21 days, or 2 failed handshakes
@@ -67,6 +70,9 @@ VPS_SECRETS=Path.home()/'nil/bigospeedrun-notes/secrets'
 VPS_MEMORY='.git/vps-health.json'
 VPS_BAD_RESULTS={'failed','rolled_back','rollback_failed','stopped','refused','manual_deploy_needed'}
 VPS_LINK='ssh boshealth (VPS /opt/bigospeedrun/auto-deploy/status.json); runbook ~/nil/bigospeedrun-notes/phase-c-staging-plan.md'
+# vps-board is checked only after the board's deploy rehearsals (phase E plan, E2): they
+# leave rolled_back and manual_deploy_needed results on purpose. Set True in that commit.
+BOARD_DEPLOY_CHECK=False
 BOARD_MEMORY='.git/board-health.json'
 BOARD_HOST='board.bigospeedrun.com'
 BOARD_FEED=f'https://{BOARD_HOST}/board/api/posts?board=3sum&limit=1'
@@ -191,6 +197,8 @@ def vps_deploy(data,now,memory):
         else:memory.pop('held_since',None)
         waiting=parse(status.get('waiting_since'))
         if status.get('waiting') and waiting and now-waiting>=24*H:problems.append(f'green commit waiting since {pt(waiting)}')
+        elif status.get('waiting') and status.get('phase')=='backup' and waiting and now-waiting>=H:
+            problems.append(f'waiting for an off-box backup before a migration since {pt(waiting)}')
         erring=parse(status.get('tick_error_since'))
         if erring and now-erring>=H:problems.append(f'ticks failing since {pt(erring)}')
         # A tick that found the lock taken ends before the unit check, so its units stay 'unchecked'.
@@ -269,7 +277,7 @@ def check(src,now,to_time=systemd_time):
         unread=f"cannot read the VPS status ({memory['read_failures']} reads in a row): "+type(error).__name__
         if memory['read_failures']>=2:results['vps-deploy']=(False,unread,None,VPS_LINK)
         else:results['vps-deploy']=(memory.get('last_ok',True),memory.get('last_problem'),None,VPS_LINK)
-        if board.get('seen'):
+        if BOARD_DEPLOY_CHECK:
             if memory['read_failures']>=2:results['vps-board']=(False,unread,None,BOARD_LINK)
             else:results['vps-board']=(board.get('last_ok',True),board.get('last_problem'),None,BOARD_LINK)
     else:
@@ -277,12 +285,11 @@ def check(src,now,to_time=systemd_time):
         ok,problem=vps_deploy(data,now,memory)
         memory['last_ok']=ok;memory['last_problem']=problem
         results['vps-deploy']=(ok,problem,now if ok else None,VPS_LINK)
-        if isinstance(data.get('board'),dict):
-            board['seen']=True
+        if BOARD_DEPLOY_CHECK and isinstance(data.get('board'),dict):
             ok,problem=vps_deploy(data['board'],now,board.setdefault('deploy',{}))
             board['last_ok']=ok;board['last_problem']=problem
             results['vps-board']=(ok,problem,now if ok else None,BOARD_LINK)
-        elif board.get('seen'):
+        elif BOARD_DEPLOY_CHECK:
             results['vps-board']=(False,'the VPS health read has no board section',None,BOARD_LINK)
     src.remember_vps(memory)
     board_checks(src,now,board,results)

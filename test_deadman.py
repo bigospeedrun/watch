@@ -212,14 +212,33 @@ def board_section(now=NOW):
                                                    'started_at':iso(1,now),'restart_count':0} for n in names}}
 
 class BoardTests(unittest.TestCase):
+    def setUp(self):
+        self.flag=d.BOARD_DEPLOY_CHECK;d.BOARD_DEPLOY_CHECK=True
+    def tearDown(self):d.BOARD_DEPLOY_CHECK=self.flag
     def live(self):
         f=Fake();f.vps['board']=board_section();f.board_code=200;f.cert_days=80.0;f.backup=(0,'FRESH OK product=bigospeedrun-board')
         return f
     def failing(self,src,now=NOW):return {k for k,(ok,*_) in d.check(src,now).items() if not ok}
 
     def test_not_live_yet_checks_nothing(self):
-        report=d.check(Fake(),NOW)
+        d.BOARD_DEPLOY_CHECK=False
+        f=Fake();f.vps['board']=board_section();f.vps['board']['auto_deploy']['result']='rolled_back'   # a rehearsal
+        report=d.check(f,NOW)
         for item in ('vps-board','board-https','board-cert','board-backup'):self.assertNotIn(item,report)
+
+    def test_the_check_is_off_in_the_repo_until_the_rehearsals(self):
+        self.assertFalse(self.flag)
+
+    def test_one_ssh_read_per_run(self):
+        f=self.live();calls=[];read=f.vps_health
+        f.vps_health=lambda:calls.append(1) or read()
+        d.check(f,NOW);self.assertEqual(calls,[1])
+
+    def test_a_long_wait_for_the_premigration_backup_alerts(self):
+        f=self.live();f.vps['board']['auto_deploy'].update(result='waiting',phase='backup',waiting=True,waiting_since=iso(0.5))
+        self.assertEqual(self.failing(f),set())
+        f.vps['board']['auto_deploy']['waiting_since']=iso(1.5)
+        ok,problem,*_=d.check(f,NOW)['vps-board'];self.assertFalse(ok);self.assertIn('off-box backup',problem)
 
     def test_live_and_healthy(self):
         f=self.live();report=d.check(f,NOW)
@@ -230,6 +249,7 @@ class BoardTests(unittest.TestCase):
         cases={}
         f=self.live();f.vps['board']['auto_deploy']['result']='rolled_back';cases['rolled back']=f
         f=self.live();f.vps['board']['auto_deploy']['result']='manual_deploy_needed';cases['manual']=f
+        f=self.live();f.vps['board']['auto_deploy']['last_attempt']={'at':iso(0.5),'target':'abc','result':'manual_deploy_needed'};cases['manual attempt']=f
         f=self.live();f.vps['board']['auto_deploy']['tick_at']=iso(1);cases['stale tick']=f
         f=self.live();f.vps['board']['auto_deploy']={'missing':True};cases['no status']=f
         f=self.live();f.vps['board']['containers']['bigospeedrun-board-board-api-1']['health']='unhealthy';cases['api unhealthy']=f
@@ -237,9 +257,8 @@ class BoardTests(unittest.TestCase):
         for name,src in cases.items():
             with self.subTest(name):self.assertEqual(self.failing(src),{'vps-board'})
 
-    def test_a_board_section_that_disappears_alerts(self):
-        f=self.live();d.check(f,NOW)
-        del f.vps['board'];self.assertEqual(self.failing(f),{'vps-board'})
+    def test_a_missing_board_section_alerts_once_the_check_is_on(self):
+        f=self.live();del f.vps['board'];self.assertEqual(self.failing(f),{'vps-board'})
 
     def test_https_alerts_on_the_second_bad_run(self):
         f=self.live();d.check(f,NOW)
