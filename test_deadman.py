@@ -41,6 +41,10 @@ class Fake:
         if isinstance(self.cert_days,Exception):raise self.cert_days
         return self.cert_days
     def board_backup(self):return self.backup
+    ack_log=None
+    def board_ack_log(self):
+        if isinstance(self.ack_log,Exception):raise self.ack_log
+        return self.ack_log
     def board_memory(self):return json.loads(json.dumps(self.board_mem))
     def remember_board(self,memory):self.board_mem=json.loads(json.dumps(memory))
 
@@ -279,6 +283,31 @@ class BoardTests(unittest.TestCase):
         self.assertFalse(ok);self.assertIn('no fresh backup',problem)
         f.backup=(2,'DESKTOP FAIL reason=unreachable');self.assertIn('desktop',d.check(f,NOW)['board-backup'][1])
         f.backup=None;self.assertIn('no backup store',d.check(f,NOW)['board-backup'][1])
+
+    def test_backup_alerts_when_the_newest_ack_failed(self):
+        ok_line='2026-10-15T00:10:00Z bigospeedrun-board ACK OK sha256=%s: the VPS wrote its pull marker\n'%('a'*64)
+        fail_line='2026-10-15T00:20:00Z bigospeedrun-board ACK FAIL ssh exit=3: no marker\n'
+        pull_line='2026-10-15T00:19:00Z bigospeedrun-board PULL OK artifact=20261015T001900Z\n'
+        f=self.live();f.ack_log=None;self.assertTrue(d.check(f,NOW)['board-backup'][0])   # no log yet: no ACK information
+        f.ack_log=ok_line+pull_line+fail_line+'2026-10-15T00:21:00Z bigospeedrun-board PRUNE kept=1 removed=0\n'
+        ok,problem,good,_=d.check(f,NOW)['board-backup'];self.assertFalse(ok);self.assertIn('ACK FAIL',problem);self.assertIsNone(good)
+        f.ack_log=fail_line+ok_line.replace('00:10','00:30');self.assertTrue(d.check(f,NOW)['board-backup'][0])   # a later OK clears it
+        f.ack_log=fail_line;f.backup=(1,'FRESH FAIL reason=stale')
+        problem=d.check(f,NOW)['board-backup'][1];self.assertIn('no fresh backup',problem);self.assertIn('ACK FAIL',problem)
+        # Not armed yet (no fresh copy ever): an ACK FAIL alone does not alert.
+        f=self.live();f.backup=(1,'FRESH FAIL reason=none');f.ack_log=fail_line
+        self.assertNotIn('board-backup',d.check(f,NOW))
+        f=self.live();f.ack_log=OSError('denied');self.assertFalse(d.check(f,NOW)['board-backup'][0])
+
+    def test_held_board_with_an_old_tick_error_since_is_not_ticks_failing(self):
+        f=self.live();f.vps['board']['auto_deploy'].update(result='held',held=True,tick_error_since=iso(5))
+        ok,problem,*_=d.check(f,NOW)['vps-board'];self.assertTrue(ok,problem)
+        for result in ('locked','stopped'):
+            f.vps['board']['auto_deploy'].update(result=result,held=False)
+            self.assertNotIn('ticks failing',d.check(f,NOW)['vps-board'][1] or '')
+        f.vps['board']['auto_deploy'].update(result='tick_error',stopped=False)
+        ok,problem,*_=d.check(f,NOW)['vps-board'];self.assertFalse(ok);self.assertIn('ticks failing',problem)
+        f.vps['board']['auto_deploy']['tick_error_since']=iso(0.5);self.assertTrue(d.check(f,NOW)['vps-board'][0])
 
     def test_read_failures_keep_then_alert_for_the_board_too(self):
         f=self.live();d.check(f,NOW)

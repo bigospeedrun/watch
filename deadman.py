@@ -33,7 +33,9 @@ Items:
   board-cert           TLS handshake to the VPS with SNI board.bigospeedrun.com: the
                        origin certificate expires in under 21 days, or 2 failed handshakes
   board-backup         vpsbackup.py fresh bigospeedrun-board exits non-zero (no fresh copy
-                       on auntie, or the desktop copy failed)
+                       on auntie, or the desktop copy failed), or the newest ACK line in its
+                       pull log (store/bigospeedrun-board.log) is ACK FAIL: the VPS did not
+                       confirm its pull marker. No log yet = no ACK information.
                        The three board-* items arm themselves on their first success (the
                        board goes live in steps), and from then on a failure alerts.
 
@@ -165,6 +167,10 @@ class Sources:
         out=subprocess.run(['python3','-I',str(VPS_BACKUP/'vpsbackup.py'),'fresh','bigospeedrun-board'],
                            capture_output=True,text=True,timeout=300)
         return out.returncode,((out.stdout.strip().splitlines() or [''])[0])[:200]
+    def board_ack_log(self):
+        """The board's pull log that vpsbackup.py appends to (ACK OK / ACK FAIL lines), or None if it is missing."""
+        path=VPS_BACKUP/'store'/'bigospeedrun-board.log'
+        return path.read_text(errors='replace') if path.exists() else None
     def board_memory(self):
         path=self.root/BOARD_MEMORY
         return json.loads(path.read_text()) if path.exists() else {}
@@ -172,6 +178,16 @@ class Sources:
         if not self.persist:return
         path=self.root/BOARD_MEMORY;tmp=path.with_name(path.name+'.tmp')
         tmp.write_text(json.dumps(memory,indent=2)+'\n');tmp.replace(path)
+
+def newest_ack(log):
+    """('OK'|'FAIL', time or None) of the newest ACK line vpsbackup.py wrote, or None."""
+    for line in reversed((log or '').splitlines()):
+        words=line.split()
+        if len(words)>=4 and words[1]=='bigospeedrun-board' and words[2]=='ACK' and words[3] in ('OK','FAIL'):
+            try:when=parse(words[0])
+            except ValueError:when=None
+            return words[3],when
+    return None
 
 def systemd_time(value):
     # systemctl prints e.g. "Thu 2026-10-15 02:47:34 CEST"; "n/a" when never run.
@@ -199,7 +215,8 @@ def vps_deploy(data,now,memory):
         if status.get('waiting') and waiting and now-waiting>=24*H:problems.append(f'green commit waiting since {pt(waiting)}')
         elif status.get('waiting') and status.get('phase')=='backup' and waiting and now-waiting>=H:
             problems.append(f'waiting for an off-box backup before a migration since {pt(waiting)}')
-        erring=parse(status.get('tick_error_since'))
+        # tick_error_since can outlive the error in a held/locked/stopped status; only a tick_error result counts.
+        erring=parse(status.get('tick_error_since')) if status.get('result')=='tick_error' else None
         if erring and now-erring>=H:problems.append(f'ticks failing since {pt(erring)}')
         # A tick that found the lock taken ends before the unit check, so its units stay 'unchecked'.
         if status.get('units')!='ok' and not (status.get('result')=='locked' and status.get('units')=='unchecked'):
@@ -317,7 +334,7 @@ def board_checks(src,now,board,results):
         board['cert_failures']=board.get('cert_failures',0)+1
         bad=board['cert_failures']>=2
         results['board-cert']=(not bad,f"the origin TLS handshake failed on {board['cert_failures']} runs in a row: {why}" if bad else None,None,link)
-    link='python3 -I ~/nil/wallgame/ops-private/vps-backup/vpsbackup.py fresh bigospeedrun-board; journalctl --user -u vps-backup@bigospeedrun-board'
+    link='python3 -I ~/nil/wallgame/ops-private/vps-backup/vpsbackup.py fresh bigospeedrun-board; journalctl --user -u vps-backup@bigospeedrun-board; grep ACK ~/nil/wallgame/ops-private/vps-backup/store/bigospeedrun-board.log'
     try:fresh=src.board_backup()
     except Exception as error:fresh=(None,'cannot run vpsbackup.py: '+type(error).__name__)
     if fresh is None:
@@ -326,8 +343,12 @@ def board_checks(src,now,board,results):
         code,line=fresh
         if code==0:board['backup_armed']=True
         if code==0 or board.get('backup_armed'):
-            problem=None if code==0 else ('the desktop copy failed: ' if code==2 else 'no fresh backup: ')+line
-            results['board-backup']=(code==0,problem,now if code==0 else None,link)
+            problems=[] if code==0 else [('the desktop copy failed: ' if code==2 else 'no fresh backup: ')+line]
+            try:ack=newest_ack(src.board_ack_log())
+            except Exception as error:ack=None;problems.append('cannot read the board pull log: '+type(error).__name__)
+            if ack and ack[0]=='FAIL':
+                problems.append(f'the newest pull was not acknowledged (ACK FAIL at {pt(ack[1])}): the VPS wrote no pull marker')
+            results['board-backup']=(not problems,'; '.join(problems)[:300] or None,None if problems else now,link)
 
 def webhook_send(root,event='deadman'):
     # Isomux passes only the rule's args to the agent (payload.text here), in a
