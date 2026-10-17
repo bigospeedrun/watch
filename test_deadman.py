@@ -132,6 +132,30 @@ class DeadmanTests(unittest.TestCase):
         self.assertTrue(problem.isascii());self.assertNotIn('\n',problem);self.assertNotIn('\\n',problem)
         self.assertLess(len(problem),600);self.assertIn('\\xe9',problem)
 
+    def test_soft_step_failures_in_a_held_run_do_not_fail_site_refresh(self):
+        f=Fake();f.runs[0]['conclusion']='failure'
+        self.p2m_run(f,f.runs[0]['html_url'],import_ok=False)
+        f.steps[f.runs[0]['html_url']].append(dict(name='Post Discord record notifications',conclusion='failure'))
+        self.assertEqual(self.failing(f),{'prove2me-import'})
+        # A failed soft step alone does not make a failed run a success.
+        f.steps[f.runs[0]['html_url']]=[dict(name='Post Discord record notifications',conclusion='failure'),dict(name=d.PROVE2ME_STEP,conclusion='success')]
+        self.assertIn('site-refresh',self.failing(f))
+
+    def test_a_new_prove2me_reason_alerts_again_and_the_same_reason_does_not(self):
+        f=Fake();f.runs[0]['conclusion']='failure'
+        self.p2m_run(f,f.runs[0]['html_url'],import_ok=False)
+        f.p2m_state={'boards':{'apsp':{'status':'held','reason':'first reason'}}}
+        self.run_at(f);self.run_at(f)
+        alerts=[p for p in self.sent if p.get('item')=='prove2me-import']
+        self.assertEqual(len(alerts),1)
+        f.p2m_state={'boards':{'apsp':{'status':'held','reason':'second reason'}}}
+        self.run_at(f)
+        alerts=[p for p in self.sent if p.get('item')=='prove2me-import']
+        self.assertEqual(len(alerts),2);self.assertIn('second reason',alerts[1]['text'])
+        self.p2m_run(f,f.runs[0]['html_url']);f.runs[0]['conclusion']='success'
+        self.run_at(f)
+        self.assertEqual([p['event'] for p in self.sent if p.get('item')=='prove2me-import'],['alert','alert','recovered'])
+
     def test_a_parse_failure_or_crash_alerts_without_a_held_board(self):
         f=Fake();f.runs[0]['conclusion']='failure'
         self.p2m_run(f,f.runs[0]['html_url'],import_ok=False)

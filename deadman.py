@@ -89,6 +89,11 @@ PROVE2ME_MEMORY='.git/prove2me-import.json'
 PROVE2ME_STEP='Import reviewed prove2.me results'
 PROVE2ME_FAIL_STEP='Fail the run when the prove2.me import is held'
 PROVE2ME_STEPS={PROVE2ME_STEP,PROVE2ME_FAIL_STEP}
+# continue-on-error steps of refresh-data.yml: they never fail a run on their own.
+SOFT_STEPS={'Refresh direct submission issues and PRs','Refresh public author profiles','Plan Discord record notifications',
+            'Post Discord record notifications','Plan X record notifications','Commit X reservations before sending','Post X record notifications'}
+# Items whose alert repeats when the problem text changes during one failing period.
+REALERT_ON_CHANGE={'prove2me-import'}
 BOARD_HOST='board.bigospeedrun.com'
 BOARD_FEED=f'https://{BOARD_HOST}/api/posts?board=3sum&limit=1'   # the board is at the root of its host (board 21648c1)
 BOARD_LINK='ssh boshealth (VPS /opt/bigospeedrun-board/auto-deploy/status.json); runbook ~/nil/bigospeedrun-notes/phase-e-board-deploy-plan.md'
@@ -308,7 +313,8 @@ def check(src,now,to_time=systemd_time):
         # A run that failed only in the prove2.me steps is a refresh success; prove2me-import reports it.
         def succeeded(run,index):
             if run.get('conclusion')=='success':return True
-            return run.get('conclusion')=='failure' and index<6 and bool(failed_steps(run)) and set(failed_steps(run))<=PROVE2ME_STEPS
+            failed=set(failed_steps(run)) if run.get('conclusion')=='failure' and index<6 else set()
+            return PROVE2ME_FAIL_STEP in failed and failed<=PROVE2ME_STEPS|SOFT_STEPS
         wins=[r for i,r in enumerate(done) if succeeded(r,i)]
         good=parse(wins[0]['created_at']) if wins else None
         latest=done[0] if done else None
@@ -445,7 +451,7 @@ def run(src,send,root=None,now=None):
         good_pt=pt(parse(entry.get('last_good')))
         if ok and entry.get('alerted'):
             payload=dict(kind='bos-deadman',event='recovered',item=item,text=f'Dead-man check: {item} recovered (last good {good_pt}).')
-        elif not ok and not entry.get('alerted'):
+        elif not ok and (not entry.get('alerted') or (item in REALERT_ON_CHANGE and entry.get('problem')!=problem)):
             payload=dict(kind='bos-deadman',event='alert',item=item,problem=problem,last_good=good_pt,link=link,
                          text=f'Dead-man check: {item} is failing or stale: {problem}. Last good: {good_pt}. See: {link}.')
         else:
@@ -454,6 +460,8 @@ def run(src,send,root=None,now=None):
         if payload:
             try:
                 send(payload);entry['alerted']=not ok;entry.pop('local_only',None)
+                if ok:entry.pop('problem',None)
+                else:entry['problem']=problem
                 status+=', '+payload['event']+' sent'
             except Exception as error:
                 # Lead unreachable: keep the item unsent and leave a local trace once per episode.
