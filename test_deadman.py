@@ -80,6 +80,10 @@ class Fake:
     def remember_issues(self,memory):self.issue_mem=dict(memory)
     def remember_parity(self,memory):self.parity_mem=dict(memory)
     def remember_prove2me(self,memory):self.p2m_mem=dict(memory)
+    review=([],[])
+    def review_state(self):
+        if isinstance(self.review,Exception):raise self.review
+        return self.review
 
 def vps_fixture(now=NOW):
     """The boshealth read output shape (bos-health-read, 2026-10-15), healthy."""
@@ -196,6 +200,31 @@ class DeadmanTests(unittest.TestCase):
         self.assertEqual(self.failing(f),{'prove2me-import'})
         f.runs=[dict(r,created_at=iso(3)) for r in f.runs]
         self.assertEqual(self.failing(f),{'prove2me-import','site-refresh'})
+
+    def review_run(self,f,url,waiting=True,other_failure=False):
+        f.steps=dict(f.steps,**{url:[dict(name='Validate refreshed bundle',conclusion='failure' if other_failure else 'success'),
+                                    dict(name=d.REVIEW_FAIL_STEP,conclusion='failure' if waiting else 'success')]})
+
+    def test_review_wait_names_each_wait_and_does_not_fail_site_refresh(self):
+        f=Fake();self.assertNotIn('review-wait',d.check(f,NOW))  # Older runs have no such step.
+        f.runs[0]['conclusion']='failure';self.review_run(f,f.runs[0]['html_url'])
+        f.review=([{'board':'3sum','id':'direct-issue-14','score':'1921/1000'}],[{'pr':3115,'reason':'The PR adds no single research package CLAIM.json.'}])
+        result=d.check(f,NOW)
+        self.assertEqual(self.failing(f),{'review-wait'})
+        self.assertIn('hold 3sum direct-issue-14 score 1921/1000',result['review-wait'][1])
+        self.assertIn('CrocSwap #3115: The PR adds no single',result['review-wait'][1])
+        # A real refresh fault in the same run still fails site-refresh.
+        self.review_run(f,f.runs[0]['html_url'],other_failure=True)
+        self.assertEqual(self.failing(f),{'review-wait','site-refresh'})
+        f.review=RuntimeError('404');self.review_run(f,f.runs[0]['html_url'])
+        self.assertIn('cannot read data/review-holds.json',d.check(f,NOW)['review-wait'][1])
+
+    def test_a_new_wait_alerts_again_and_recovery_is_reported(self):
+        f=Fake();f.runs[0]['conclusion']='failure';self.review_run(f,f.runs[0]['html_url'])
+        f.review=([],[{'pr':3115,'reason':'r1'}]);self.run_at(f);self.run_at(f)
+        f.review=([],[{'pr':3115,'reason':'r1'},{'pr':3123,'reason':'r2'}]);self.run_at(f)
+        self.review_run(f,f.runs[0]['html_url'],waiting=False);f.runs[0]['conclusion']='success';self.run_at(f)
+        self.assertEqual([p['event'] for p in self.sent if p.get('item')=='review-wait'],['alert','alert','recovered'])
 
     def test_race_parity_names_each_missing_or_extra_board_and_channel(self):
         f=Fake();self.assertEqual(d.check(f,NOW)['race-parity'][:2],(True,None))

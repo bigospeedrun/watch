@@ -22,6 +22,13 @@ Items:
                        in the prove2.me steps counts as a success for site-refresh. Arms
                        itself on the first run with the import step; from then on a run
                        without the step alerts
+  review-wait          the 'Fail the run while a result waits for lead review' step of the
+                       newest completed site refresh run did not fail. When it failed, the
+                       alert names each wait from data/review-holds.json (implausible jump
+                       holds) and data/claim-review.json (CrocSwap claims) on main, and
+                       repeats when that set changes. A run that failed only in this step
+                       (or the prove2.me steps) counts as a success for site-refresh, so a
+                       wait does not hide a refresh fault
   race-parity          Nil rule 2026-10-16: every race listed on bigospeedrun.com (each
                        problem in the public chat-knowledge.json and each Other bounds row)
                        has exactly one board on board.bigospeedrun.com (its llms.txt) and
@@ -111,11 +118,12 @@ PARITY_LINK='~/nil/bigospeedrun-site/README.md (Adding a race); board.bigospeedr
 PROVE2ME_STEP='Import reviewed prove2.me results'
 PROVE2ME_FAIL_STEP='Fail the run when the prove2.me import is held'
 PROVE2ME_STEPS={PROVE2ME_STEP,PROVE2ME_FAIL_STEP}
+REVIEW_FAIL_STEP='Fail the run while a result waits for lead review'
 # continue-on-error steps of refresh-data.yml: they never fail a run on their own.
 SOFT_STEPS={'Refresh direct submission issues and PRs','Refresh public author profiles','Plan Discord record notifications',
             'Post Discord record notifications','Plan X record notifications','Commit X reservations before sending','Post X record notifications'}
 # Items whose alert repeats when the problem text changes during one failing period.
-REALERT_ON_CHANGE={'prove2me-import','race-parity','stale-issues'}
+REALERT_ON_CHANGE={'prove2me-import','race-parity','stale-issues','review-wait'}
 ISSUE_REPOS=('bigospeedrun/site','bigospeedrun/board','bigospeedrun/verifier','bigospeedrun/watch')
 ISSUE_MEMORY='.git/stale-issues.json'
 ISSUE_LINK='GitHub issues of bigospeedrun/site, board, verifier and watch'
@@ -168,6 +176,13 @@ class Sources:
                            capture_output=True,text=True,timeout=60)
         if out.returncode:raise RuntimeError('GitHub contents request failed')
         return json.loads(out.stdout)
+    def review_state(self):
+        def raw(path):
+            out=subprocess.run(['gh','api','-X','GET',f'repos/bigospeedrun/site/contents/{path}','-H','Accept: application/vnd.github.raw'],
+                               capture_output=True,text=True,timeout=60)
+            if out.returncode:raise RuntimeError('GitHub contents request failed')
+            return json.loads(out.stdout)
+        return raw('data/review-holds.json').get('holds',[]),raw('data/claim-review.json').get('queue',[])
     def site_races(self):
         request=urllib.request.Request(SITE_RACES,headers={'User-Agent':'bos-deadman/1','Accept':'application/json'})
         with urllib.request.urlopen(request,timeout=30) as response:return races_from(json.loads(response.read(5*1024*1024)))
@@ -436,6 +451,24 @@ def prove2me_check(src,latest,results):
         problem='import held or failed; cannot read data/prove2me.json: '+type(error).__name__
     results['prove2me-import']=(False,safe_text(problem,500)+' (review data/prove2me-trust.json)',None,link)
 
+def review_check(src,latest,results):
+    link=(latest or {}).get('html_url') or 'https://github.com/bigospeedrun/site/actions/workflows/refresh-data.yml'
+    try:
+        names={s['name']:s.get('conclusion') for s in src.run_steps(latest)} if latest else {}
+    except Exception as error:
+        results['review-wait']=(False,'cannot read the refresh run steps: '+type(error).__name__,None,link);return
+    if REVIEW_FAIL_STEP not in names:return  # Runs before 2026-10-17 have no such step.
+    if names[REVIEW_FAIL_STEP]!='failure':
+        results['review-wait']=(True,None,parse(latest.get('created_at')),link);return
+    try:
+        holds,queue=src.review_state()
+        waits=[f"hold {safe_text(h.get('board'),30)} {safe_text(h.get('id'),60)} score {safe_text(h.get('score'),40)}" for h in holds[:10]]
+        waits+=[f"CrocSwap #{safe_text(q.get('pr'),10)}: {safe_text(q.get('reason'),160)}" for q in queue[:10]]
+        problem=(f'{len(holds)} hold(s), {len(queue)} claim(s) wait: '+'; '.join(waits)) if waits else 'review step failed with no wait listed (read the run log)'
+    except Exception as error:
+        problem='waits for lead review; cannot read data/review-holds.json or data/claim-review.json: '+type(error).__name__
+    results['review-wait']=(False,safe_text(problem,900)+' (decide in data/review-decisions.json)',None,link)
+
 def check(src,now,to_time=systemd_time):
     """Return {item: (ok, problem, last_good, link)}."""
     results={}
@@ -456,11 +489,12 @@ def check(src,now,to_time=systemd_time):
         def failed_steps(run):
             if id(run) not in steps:steps[id(run)]=[s['name'] for s in src.run_steps(run) if s.get('conclusion')=='failure']
             return steps[id(run)]
-        # A run that failed only in the prove2.me steps is a refresh success; prove2me-import reports it.
+        # A run that failed only in the prove2.me or lead review steps is a refresh success;
+        # prove2me-import and review-wait report those.
         def succeeded(run,index):
             if run.get('conclusion')=='success':return True
             failed=set(failed_steps(run)) if run.get('conclusion')=='failure' and index<6 else set()
-            return PROVE2ME_FAIL_STEP in failed and failed<=PROVE2ME_STEPS|SOFT_STEPS
+            return bool(failed&{PROVE2ME_FAIL_STEP,REVIEW_FAIL_STEP}) and failed<=PROVE2ME_STEPS|SOFT_STEPS|{REVIEW_FAIL_STEP}
         wins=[r for i,r in enumerate(done) if succeeded(r,i)]
         good=parse(wins[0]['created_at']) if wins else None
         latest=done[0] if done else None
@@ -472,6 +506,7 @@ def check(src,now,to_time=systemd_time):
         latest=None
         results['site-refresh']=(False,'cannot read GitHub runs: '+type(error).__name__,None,'https://github.com/bigospeedrun/site/actions/workflows/refresh-data.yml')
     prove2me_check(src,latest,results)
+    review_check(src,latest,results)
     parity_check(src,now,results)
     if src.unit_installed('bigospeedrun-race-channels.timer'):
         good=src.race_channels_last_ok();fresh=bool(good and now-good<2*H)
