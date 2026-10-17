@@ -184,7 +184,9 @@ class Sources:
             return json.loads(out.stdout)
         try:platypii=raw('data/platypii-lean.json')
         except RuntimeError:platypii={}  # Sites before the platypii check have no such file.
-        return raw('data/review-holds.json').get('holds',[]),raw('data/claim-review.json').get('queue',[]),platypii
+        try:intake=raw('data/sources/intake.json')
+        except RuntimeError:intake={}
+        return raw('data/review-holds.json').get('holds',[]),raw('data/claim-review.json').get('queue',[]),platypii,intake
     def site_races(self):
         request=urllib.request.Request(SITE_RACES,headers={'User-Agent':'bos-deadman/1','Accept':'application/json'})
         with urllib.request.urlopen(request,timeout=30) as response:return races_from(json.loads(response.read(5*1024*1024)))
@@ -465,9 +467,11 @@ def review_check(src,latest,results):
     try:
         holds,queue,*rest=src.review_state()
         platypii=rest[0] if rest else {}
+        intake=rest[1] if len(rest)>1 else {}
         waits=[f"hold {safe_text(h.get('board'),30)} {safe_text(h.get('id'),60)} score {safe_text(h.get('score'),40)}" for h in holds[:10]]
         waits+=[f"CrocSwap #{safe_text(q.get('pr'),10)}: {safe_text(q.get('reason'),160)}" for q in queue[:10]]
         if (platypii or {}).get('status')=='held':waits.append('platypii Lean note held: '+safe_text(platypii.get('reason'),200))
+        if (intake or {}).get('pulls_incomplete'):waits.append('CrocSwap PR list incomplete: '+safe_text(intake.get('pulls_incomplete'),200))
         problem=(f'{len(holds)} hold(s), {len(queue)} claim(s) wait: '+'; '.join(waits)) if waits else 'review step failed with no wait listed (read the run log)'
     except Exception as error:
         problem='waits for lead review; cannot read data/review-holds.json or data/claim-review.json: '+type(error).__name__
