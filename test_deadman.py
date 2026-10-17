@@ -124,6 +124,14 @@ class DeadmanTests(unittest.TestCase):
         self.p2m_run(f,f.runs[0]['html_url'],import_ok=False,other_failure=True)
         self.assertEqual(self.failing(f),{'prove2me-import','site-refresh'})
 
+    def test_held_reasons_are_ascii_one_line_and_capped(self):
+        f=Fake();f.runs[0]['conclusion']='failure'
+        self.p2m_run(f,f.runs[0]['html_url'],import_ok=False)
+        f.p2m_state={'boards':{'apsp\n::x':{'status':'held','reason':'é\n::error::'+'x'*900}}}
+        problem=d.check(f,NOW)['prove2me-import'][1]
+        self.assertTrue(problem.isascii());self.assertNotIn('\n',problem);self.assertNotIn('\\n',problem)
+        self.assertLess(len(problem),600);self.assertIn('\\xe9',problem)
+
     def test_a_parse_failure_or_crash_alerts_without_a_held_board(self):
         f=Fake();f.runs[0]['conclusion']='failure'
         self.p2m_run(f,f.runs[0]['html_url'],import_ok=False)

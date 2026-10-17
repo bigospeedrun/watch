@@ -256,6 +256,12 @@ def vps_deploy(data,now,memory):
     if not data.get('containers'):problems.append('no container states')
     return not problems,('; '.join(problems)[:300] or None)
 
+def safe_text(value,cap=200):
+    # data/prove2me.json reasons quote prove2.me page text: ASCII escapes, one line, capped.
+    text=ascii(str(value))[1:-1]
+    text=' '.join(text.replace('\\n',' ').replace('\\r',' ').replace('\\t',' ').split())
+    return text if len(text)<=cap else text[:cap-3]+'...'
+
 def prove2me_check(src,latest,results):
     memory=src.prove2me_memory();link=(latest or {}).get('html_url') or 'https://github.com/bigospeedrun/site/actions/workflows/refresh-data.yml'
     try:
@@ -273,11 +279,11 @@ def prove2me_check(src,latest,results):
         return
     try:
         boards=src.prove2me_state().get('boards',{})
-        held=[f"{slug}: {b.get('reason')}" for slug,b in sorted(boards.items()) if b.get('status')=='held']
+        held=[f"{safe_text(slug,40)}: {safe_text(b.get('reason'))}" for slug,b in sorted(boards.items())[:10] if isinstance(b,dict) and b.get('status')=='held']
         problem='import held for '+'; '.join(held) if held else 'import step failed without a held board (parse or crash; read the run log)'
     except Exception as error:
         problem='import held or failed; cannot read data/prove2me.json: '+type(error).__name__
-    results['prove2me-import']=(False,problem[:400]+' (review data/prove2me-trust.json)',None,link)
+    results['prove2me-import']=(False,safe_text(problem,500)+' (review data/prove2me-trust.json)',None,link)
 
 def check(src,now,to_time=systemd_time):
     """Return {item: (ok, problem, last_good, link)}."""
