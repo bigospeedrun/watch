@@ -22,6 +22,13 @@ Items:
                        in the prove2.me steps counts as a success for site-refresh. Arms
                        itself on the first run with the import step; from then on a run
                        without the step alerts
+  race-parity          Nil rule 2026-10-16: every race listed on bigospeedrun.com (each
+                       problem in the public chat-knowledge.json and each Other bounds row)
+                       has exactly one board on board.bigospeedrun.com (its llms.txt) and
+                       exactly one text channel in the Discord categories Big O or Other
+                       bounds, named as the race's site name in slug form (race_channel_name).
+                       Alerts on a missing or extra board or channel, naming each one. GET
+                       only; one failed read is tolerated, two in a row alert
   chatbot-gap-review   Isomux cronjob "BOS chatbot gap review" completed a run
                        without error < 26 h ago (~/.isomux/cronjobs, read-only)
   vps-deploy           self-hosted site on the VPS, read through the forced-command
@@ -55,6 +62,7 @@ import argparse
 import hashlib
 import hmac
 import json
+import re
 import socket
 import ssl
 import subprocess
@@ -85,6 +93,13 @@ VPS_LINK='ssh boshealth (VPS /opt/bigospeedrun/auto-deploy/status.json); runbook
 BOARD_DEPLOY_CHECK=True
 BOARD_MEMORY='.git/board-health.json'
 PROVE2ME_MEMORY='.git/prove2me-import.json'
+PARITY_MEMORY='.git/race-parity.json'
+SITE_RACES='https://bigospeedrun.com/chat-knowledge.json'
+BOARD_LIST=f'https://board.bigospeedrun.com/llms.txt'
+WATCH_OFFICE='.git/watch-office.json'
+# Discord race categories (guild in .git/watch-office.json): problems, then Other bounds rows.
+RACE_CATEGORIES={'1558629622558756944':'Big O','1558688026207584347':'Other bounds'}
+PARITY_LINK='~/nil/bigospeedrun-site/README.md (Adding a race); board.bigospeedrun.com/llms.txt; Discord categories Big O and Other bounds'
 # Step names in bigospeedrun/site .github/workflows/refresh-data.yml.
 PROVE2ME_STEP='Import reviewed prove2.me results'
 PROVE2ME_FAIL_STEP='Fail the run when the prove2.me import is held'
@@ -93,7 +108,7 @@ PROVE2ME_STEPS={PROVE2ME_STEP,PROVE2ME_FAIL_STEP}
 SOFT_STEPS={'Refresh direct submission issues and PRs','Refresh public author profiles','Plan Discord record notifications',
             'Post Discord record notifications','Plan X record notifications','Commit X reservations before sending','Post X record notifications'}
 # Items whose alert repeats when the problem text changes during one failing period.
-REALERT_ON_CHANGE={'prove2me-import'}
+REALERT_ON_CHANGE={'prove2me-import','race-parity'}
 BOARD_HOST='board.bigospeedrun.com'
 BOARD_FEED=f'https://{BOARD_HOST}/api/posts?board=3sum&limit=1'   # the board is at the root of its host (board 21648c1)
 BOARD_LINK='ssh boshealth (VPS /opt/bigospeedrun-board/auto-deploy/status.json); runbook ~/nil/bigospeedrun-notes/phase-e-board-deploy-plan.md'
@@ -138,6 +153,26 @@ class Sources:
                            capture_output=True,text=True,timeout=60)
         if out.returncode:raise RuntimeError('GitHub contents request failed')
         return json.loads(out.stdout)
+    def site_races(self):
+        request=urllib.request.Request(SITE_RACES,headers={'User-Agent':'bos-deadman/1','Accept':'application/json'})
+        with urllib.request.urlopen(request,timeout=30) as response:return races_from(json.loads(response.read(5*1024*1024)))
+    def board_slugs(self):
+        request=urllib.request.Request(BOARD_LIST,headers={'User-Agent':'bos-deadman/1'})
+        with urllib.request.urlopen(request,timeout=30) as response:return boards_from(response.read(5*1024*1024).decode())
+    def discord_channels(self):
+        config=json.loads((self.root/WATCH_OFFICE).read_text())
+        token=Path(config['discord_token_file']).read_text().strip()
+        request=urllib.request.Request(f"https://discord.com/api/v10/guilds/{config['discord_guild']}/channels",
+                                       headers={'Authorization':'Bot '+token,'User-Agent':'DiscordBot (https://bigospeedrun.com, 1)'})
+        with urllib.request.urlopen(request,timeout=30) as response:
+            return [dict(id=c.get('id'),name=c.get('name'),type=c.get('type'),parent_id=c.get('parent_id')) for c in json.loads(response.read())]
+    def parity_memory(self):
+        path=self.root/PARITY_MEMORY
+        return json.loads(path.read_text()) if path.exists() else {}
+    def remember_parity(self,memory):
+        if not self.persist:return
+        path=self.root/PARITY_MEMORY;tmp=path.with_name(path.name+'.tmp')
+        tmp.write_text(json.dumps(memory,indent=2)+'\n');tmp.replace(path)
     def prove2me_memory(self):
         path=self.root/PROVE2ME_MEMORY
         return json.loads(path.read_text()) if path.exists() else {}
@@ -261,6 +296,57 @@ def vps_deploy(data,now,memory):
     if not data.get('containers'):problems.append('no container states')
     return not problems,('; '.join(problems)[:300] or None)
 
+def race_channel_name(title):
+    # Discord channel name of a race: its site name in slug form ("Catalan’s constant" -> catalans-constant).
+    text=title.lower().replace('\u2019','').replace("'",'')
+    return re.sub(r'[^a-z0-9]+','-',text).strip('-')
+
+def races_from(knowledge):
+    """[(board slug, channel name, category)] of the races listed on the site, in site order."""
+    races=[]
+    for p in knowledge.get('problems',[]):
+        m=re.fullmatch(r'/([a-z0-9][a-z0-9-]*)',p.get('path',''))
+        if m:races.append((m[1],race_channel_name(p.get('name') or p['title']),'Big O'))
+    for r in knowledge.get('otherBounds',{}).get('rows',[]):
+        m=re.fullmatch(r'/other/([a-z0-9][a-z0-9-]*)',r.get('path',''))
+        if m:races.append(('other-'+m[1],race_channel_name(r['title']),'Other bounds'))
+    if not races:raise ValueError('no races in the site data')
+    return races
+
+def boards_from(llms):
+    return re.findall(r'(?m)^- \[[^\]]*\]\(https://board\.bigospeedrun\.com/([a-z0-9][a-z0-9-]*)\)',llms)
+
+def parity_problems(races,boards,channels):
+    problems=[]
+    want={slug for slug,_,_ in races}
+    for slug in sorted(want-set(boards)):problems.append('no board for '+slug)
+    for slug in sorted({b for b in boards if boards.count(b)>1}):problems.append('two boards named '+slug)
+    for slug in sorted(set(boards)-want):problems.append('extra board '+slug)
+    have={}
+    for c in channels:
+        if c.get('type')==0 and c.get('parent_id') in RACE_CATEGORIES:have.setdefault((RACE_CATEGORIES[c['parent_id']],c.get('name')),[]).append(c)
+    expected={(category,name):slug for slug,name,category in races}
+    for (category,name),slug in expected.items():
+        count=len(have.get((category,name),[]))
+        if count==0:problems.append(f'no Discord channel #{name} in {category} for {slug}')
+        elif count>1:problems.append(f'{count} Discord channels #{name} in {category}')
+    for key in sorted(set(have)-set(expected)):problems.append(f'extra Discord channel #{key[1]} in {key[0]}')
+    return problems
+
+def parity_check(src,now,results):
+    memory=src.parity_memory()
+    try:
+        problems=parity_problems(src.site_races(),src.board_slugs(),src.discord_channels())
+    except Exception as error:
+        memory['read_failures']=memory.get('read_failures',0)+1
+        if memory['read_failures']>=2:results['race-parity']=(False,f"cannot read the race lists ({memory['read_failures']} runs in a row): "+type(error).__name__,None,PARITY_LINK)
+        else:results['race-parity']=(memory.get('last_ok',True),memory.get('last_problem'),None,PARITY_LINK)
+        src.remember_parity(memory);return
+    memory['read_failures']=0
+    problem=safe_text('; '.join(problems),500) if problems else None
+    memory['last_ok']=not problems;memory['last_problem']=problem;src.remember_parity(memory)
+    results['race-parity']=(not problems,problem,None if problems else now,PARITY_LINK)
+
 def safe_text(value,cap=200):
     # data/prove2me.json reasons quote prove2.me page text: ASCII escapes, one line, capped.
     text=ascii(str(value))[1:-1]
@@ -326,6 +412,7 @@ def check(src,now,to_time=systemd_time):
         latest=None
         results['site-refresh']=(False,'cannot read GitHub runs: '+type(error).__name__,None,'https://github.com/bigospeedrun/site/actions/workflows/refresh-data.yml')
     prove2me_check(src,latest,results)
+    parity_check(src,now,results)
     try:
         service=src.systemd('bigospeedrun-submissions.service','Result','ExecMainStatus','ExecMainExitTimestamp')
         timer=src.systemd('bigospeedrun-submissions.timer','LastTriggerUSec','ActiveState')

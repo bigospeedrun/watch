@@ -17,6 +17,7 @@ class Fake:
         self.timer={'LastTriggerUSec':systemd(0.3,now),'ActiveState':'active'}
         self.cron=[dict(status='completed',errorReason=None,startedAt=(now-timedelta(hours=8)).timestamp()*1000)]
         self.vps=vps_fixture(now);self.vps['board']=board_section(now);self.vps_error=None;self.memory={}
+        self.knowledge=json.loads(json.dumps(self.knowledge));self.boards=list(self.boards);self.channels=[dict(c) for c in self.channels]
     def last_ok(self):return self.marks
     def log_ok_time(self,name):return None
     def refresh_runs(self):return self.runs
@@ -54,6 +55,22 @@ class Fake:
         if isinstance(self.p2m_state,Exception):raise self.p2m_state
         return self.p2m_state
     def prove2me_memory(self):return dict(self.p2m_mem)
+    # Race parity: one problem and one Other bounds row, each with a board and a channel.
+    knowledge={'problems':[{'path':'/exact-dft','name':'Fourier Transform','title':'Exact discrete Fourier transform'}],
+               'otherBounds':{'rows':[{'path':'/other/catalan','title':'Catalan\u2019s constant'}]}}
+    boards=['exact-dft','other-catalan']
+    channels=[dict(id='1',name='fourier-transform',type=0,parent_id='1558629622558756944'),
+              dict(id='2',name='catalans-constant',type=0,parent_id='1558688026207584347'),
+              dict(id='3',name='general',type=0,parent_id='1558629621208186970'),
+              dict(id='4',name='Other bounds',type=4,parent_id=None)]
+    parity_error=None;parity_mem={}
+    def site_races(self):
+        if self.parity_error:raise self.parity_error
+        return d.races_from(self.knowledge)
+    def board_slugs(self):return list(self.boards)
+    def discord_channels(self):return [dict(c) for c in self.channels]
+    def parity_memory(self):return dict(self.parity_mem)
+    def remember_parity(self,memory):self.parity_mem=dict(memory)
     def remember_prove2me(self,memory):self.p2m_mem=dict(memory)
 
 def vps_fixture(now=NOW):
@@ -75,7 +92,7 @@ class DeadmanTests(unittest.TestCase):
 
     def test_all_healthy_sends_nothing(self):
         report=self.run_at(Fake())
-        self.assertEqual(set(report),{'watch-cycle','discord-intake','problem-selection','site-refresh','verifier-submissions','chatbot-gap-review','watch-sources','vps-deploy','vps-board'})
+        self.assertEqual(set(report),{'watch-cycle','discord-intake','problem-selection','site-refresh','verifier-submissions','chatbot-gap-review','watch-sources','vps-deploy','vps-board','race-parity'})
         self.assertTrue(all(v=='ok' for v in report.values()));self.assertEqual(self.sent,[])
 
     def test_each_simulated_stale_or_failed_state_is_caught(self):
@@ -171,6 +188,41 @@ class DeadmanTests(unittest.TestCase):
         self.assertEqual(self.failing(f),{'prove2me-import'})
         f.runs=[dict(r,created_at=iso(3)) for r in f.runs]
         self.assertEqual(self.failing(f),{'prove2me-import','site-refresh'})
+
+    def test_race_parity_names_each_missing_or_extra_board_and_channel(self):
+        f=Fake();self.assertEqual(d.check(f,NOW)['race-parity'][:2],(True,None))
+        f.knowledge['otherBounds']['rows'].append({'path':'/other/snaky','title':'Snaky'})
+        problem=d.check(f,NOW)['race-parity'][1]
+        self.assertIn('no board for other-snaky',problem);self.assertIn('no Discord channel #snaky in Other bounds for other-snaky',problem)
+        f=Fake();f.boards.append('other-old');f.channels.append(dict(id='9',name='old-race',type=0,parent_id='1558629622558756944'))
+        problem=d.check(f,NOW)['race-parity'][1]
+        self.assertIn('extra board other-old',problem);self.assertIn('extra Discord channel #old-race in Big O',problem)
+        f=Fake();f.channels.append(dict(f.channels[0],id='8'))
+        self.assertIn('2 Discord channels #fourier-transform in Big O',d.check(f,NOW)['race-parity'][1])
+        # A channel in the wrong category, or a renamed race, is a gap until the channel matches.
+        f=Fake();f.knowledge['problems'][0]['name']='Fourier'
+        problem=d.check(f,NOW)['race-parity'][1]
+        self.assertIn('no Discord channel #fourier in Big O for exact-dft',problem);self.assertIn('extra Discord channel #fourier-transform',problem)
+
+    def test_race_parity_tolerates_one_failed_read_and_alerts_on_two(self):
+        f=Fake();f.parity_error=OSError('down')
+        self.assertNotIn('race-parity',self.failing(f))
+        self.assertIn('race-parity',self.failing(f))
+        f.parity_error=None;self.assertNotIn('race-parity',self.failing(f))
+
+    def test_a_new_parity_gap_alerts_again(self):
+        f=Fake();f.boards.remove('other-catalan')
+        self.run_at(f);self.run_at(f)
+        f.channels=[c for c in f.channels if c['name']!='fourier-transform']
+        self.run_at(f)
+        self.assertEqual([p['event'] for p in self.sent if p.get('item')=='race-parity'],['alert','alert'])
+
+    def test_race_channel_names_follow_the_site_names(self):
+        for title,name in [('Fourier Transform','fourier-transform'),('Catalan\u2019s constant','catalans-constant'),('3SUM','3sum'),
+                           ('Spin-one Haldane gap','spin-one-haldane-gap'),('One-sample matroid prophet inequality','one-sample-matroid-prophet-inequality')]:
+            self.assertEqual(d.race_channel_name(title),name)
+        llms='### Problems\n\n- [3SUM](https://board.bigospeedrun.com/3sum): race page x\n- [Catalan](https://board.bigospeedrun.com/other-catalan): y\n- How an agent reads: https://board.bigospeedrun.com/llms.txt\n'
+        self.assertEqual(d.boards_from(llms),['3sum','other-catalan'])
 
     def test_push_marker_counts_as_a_full_cycle(self):
         f=Fake();del f.marks['cycle'];f.marks['push']=iso(1)
