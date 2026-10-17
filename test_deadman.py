@@ -216,6 +216,8 @@ class DeadmanTests(unittest.TestCase):
         # A real refresh fault in the same run still fails site-refresh.
         self.review_run(f,f.runs[0]['html_url'],other_failure=True)
         self.assertEqual(self.failing(f),{'review-wait','site-refresh'})
+        f.review=([],[],{'status':'held','reason':'bbbbbbb: Statement.lean changed'})
+        self.assertIn('platypii Lean note held: bbbbbbb: Statement.lean changed',d.check(f,NOW)['review-wait'][1])
         f.review=RuntimeError('404');self.review_run(f,f.runs[0]['html_url'])
         self.assertIn('cannot read data/review-holds.json',d.check(f,NOW)['review-wait'][1])
 
