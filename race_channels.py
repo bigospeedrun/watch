@@ -52,7 +52,9 @@ class Discord:
             'Authorization': 'Bot ' + self.token_file.read_text().strip(),
             'User-Agent': 'DiscordBot (https://bigospeedrun.com, 1)', 'Content-Type': 'application/json'})
         with urllib.request.urlopen(request, timeout=30) as response:
-            return json.loads(response.read())
+            raw = response.read()
+        # The bulk position update answers 204 with no body.
+        return json.loads(raw) if raw.strip() else None
 
     def channels(self):
         return [dict(id=c.get('id'), name=c.get('name'), type=c.get('type'), parent_id=c.get('parent_id'), position=c.get('position'))

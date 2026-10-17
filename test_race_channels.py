@@ -88,6 +88,14 @@ class RaceChannelTests(unittest.TestCase):
             rc.run(self.root, self.discord, broken, lambda: self.boards, self.dispatch, NOW)
         self.assertFalse((self.root / rc.STATE).exists())
 
+    def test_an_empty_204_answer_is_not_an_error(self):
+        from unittest import mock
+        (self.root / '.git' / 'watch-office.json').write_text(json.dumps(dict(discord_guild='g', discord_token_file=str(self.root / 'token'))))
+        (self.root / 'token').write_text('x')
+        response = mock.MagicMock(); response.__enter__.return_value.read.return_value = b''
+        with mock.patch('urllib.request.urlopen', return_value=response):
+            self.assertIsNone(rc.Discord(self.root).order([(1, '2')]))
+
 
 if __name__ == '__main__':
     unittest.main()
