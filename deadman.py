@@ -16,6 +16,12 @@ Items:
                        cycle stalled silently before 2026-10-16 (slitsey Catalan)
   prove2me-digest      #prove2me reader (bigospeedrun-prove2me.timer) last ran ok
                        < 2 h; checked once that timer unit is installed
+  prove2me-import      the prove2.me import step of the newest completed site refresh
+                       run (data/prove2me_import.py) did not fail; a held board names
+                       its reason from data/prove2me.json on main. A run that failed only
+                       in the prove2.me steps counts as a success for site-refresh. Arms
+                       itself on the first run with the import step; from then on a run
+                       without the step alerts
   chatbot-gap-review   Isomux cronjob "BOS chatbot gap review" completed a run
                        without error < 26 h ago (~/.isomux/cronjobs, read-only)
   vps-deploy           self-hosted site on the VPS, read through the forced-command
@@ -78,6 +84,11 @@ VPS_LINK='ssh boshealth (VPS /opt/bigospeedrun/auto-deploy/status.json); runbook
 # leave rolled_back and manual_deploy_needed results on purpose. Set True in that commit.
 BOARD_DEPLOY_CHECK=True
 BOARD_MEMORY='.git/board-health.json'
+PROVE2ME_MEMORY='.git/prove2me-import.json'
+# Step names in bigospeedrun/site .github/workflows/refresh-data.yml.
+PROVE2ME_STEP='Import reviewed prove2.me results'
+PROVE2ME_FAIL_STEP='Fail the run when the prove2.me import is held'
+PROVE2ME_STEPS={PROVE2ME_STEP,PROVE2ME_FAIL_STEP}
 BOARD_HOST='board.bigospeedrun.com'
 BOARD_FEED=f'https://{BOARD_HOST}/api/posts?board=3sum&limit=1'   # the board is at the root of its host (board 21648c1)
 BOARD_LINK='ssh boshealth (VPS /opt/bigospeedrun-board/auto-deploy/status.json); runbook ~/nil/bigospeedrun-notes/phase-e-board-deploy-plan.md'
@@ -112,6 +123,23 @@ class Sources:
                            capture_output=True,text=True,timeout=60)
         if out.returncode:raise RuntimeError('GitHub runs request failed')
         return json.loads(out.stdout)['workflow_runs']
+    def run_steps(self,run):
+        out=subprocess.run(['gh','api','-X','GET',f"repos/bigospeedrun/site/actions/runs/{int(run['id'])}/jobs"],
+                           capture_output=True,text=True,timeout=60)
+        if out.returncode:raise RuntimeError('GitHub jobs request failed')
+        return [dict(name=s.get('name'),conclusion=s.get('conclusion')) for job in json.loads(out.stdout)['jobs'] for s in job.get('steps',[])]
+    def prove2me_state(self):
+        out=subprocess.run(['gh','api','-X','GET','repos/bigospeedrun/site/contents/data/prove2me.json','-H','Accept: application/vnd.github.raw'],
+                           capture_output=True,text=True,timeout=60)
+        if out.returncode:raise RuntimeError('GitHub contents request failed')
+        return json.loads(out.stdout)
+    def prove2me_memory(self):
+        path=self.root/PROVE2ME_MEMORY
+        return json.loads(path.read_text()) if path.exists() else {}
+    def remember_prove2me(self,memory):
+        if not self.persist:return
+        path=self.root/PROVE2ME_MEMORY;tmp=path.with_name(path.name+'.tmp')
+        tmp.write_text(json.dumps(memory,indent=2)+'\n');tmp.replace(path)
     def systemd(self,unit,*props):
         out=subprocess.run(['systemctl','--user','show',unit,'--no-pager']+[f'-p{p}' for p in props],
                            capture_output=True,text=True,timeout=30)
@@ -228,6 +256,29 @@ def vps_deploy(data,now,memory):
     if not data.get('containers'):problems.append('no container states')
     return not problems,('; '.join(problems)[:300] or None)
 
+def prove2me_check(src,latest,results):
+    memory=src.prove2me_memory();link=(latest or {}).get('html_url') or 'https://github.com/bigospeedrun/site/actions/workflows/refresh-data.yml'
+    try:
+        if latest is None:raise RuntimeError('no completed refresh run')
+        names={s['name']:s.get('conclusion') for s in src.run_steps(latest)}
+    except Exception as error:
+        if memory.get('armed'):results['prove2me-import']=(False,'cannot read the refresh run steps: '+type(error).__name__,None,link)
+        return
+    if PROVE2ME_STEP not in names:
+        if memory.get('armed'):results['prove2me-import']=(False,'the newest refresh run has no prove2.me import step',None,link)
+        return
+    memory['armed']=True;src.remember_prove2me(memory)
+    if 'failure' not in (names.get(PROVE2ME_STEP),names.get(PROVE2ME_FAIL_STEP)):
+        results['prove2me-import']=(True,None,parse(latest.get('created_at')),link)
+        return
+    try:
+        boards=src.prove2me_state().get('boards',{})
+        held=[f"{slug}: {b.get('reason')}" for slug,b in sorted(boards.items()) if b.get('status')=='held']
+        problem='import held for '+'; '.join(held) if held else 'import step failed without a held board (parse or crash; read the run log)'
+    except Exception as error:
+        problem='import held or failed; cannot read data/prove2me.json: '+type(error).__name__
+    results['prove2me-import']=(False,problem[:400]+' (review data/prove2me-trust.json)',None,link)
+
 def check(src,now,to_time=systemd_time):
     """Return {item: (ok, problem, last_good, link)}."""
     results={}
@@ -244,15 +295,25 @@ def check(src,now,to_time=systemd_time):
     try:
         runs=src.refresh_runs()
         done=[r for r in runs if r.get('status')=='completed']
-        wins=[r for r in done if r.get('conclusion')=='success']
+        steps={}
+        def failed_steps(run):
+            if id(run) not in steps:steps[id(run)]=[s['name'] for s in src.run_steps(run) if s.get('conclusion')=='failure']
+            return steps[id(run)]
+        # A run that failed only in the prove2.me steps is a refresh success; prove2me-import reports it.
+        def succeeded(run,index):
+            if run.get('conclusion')=='success':return True
+            return run.get('conclusion')=='failure' and index<6 and bool(failed_steps(run)) and set(failed_steps(run))<=PROVE2ME_STEPS
+        wins=[r for i,r in enumerate(done) if succeeded(r,i)]
         good=parse(wins[0]['created_at']) if wins else None
         latest=done[0] if done else None
         if not latest:results['site-refresh']=(False,'no completed refresh run',good,'https://github.com/bigospeedrun/site/actions/workflows/refresh-data.yml')
-        elif latest.get('conclusion')!='success':results['site-refresh']=(False,f"latest run {latest.get('conclusion')}",good,latest.get('html_url'))
+        elif not succeeded(latest,0):results['site-refresh']=(False,f"latest run {latest.get('conclusion')}",good,latest.get('html_url'))
         elif not good or now-good>=2*H:results['site-refresh']=(False,'no successful run in the last 2 h',good,latest.get('html_url'))
         else:results['site-refresh']=(True,None,good,latest.get('html_url'))
     except Exception as error:
+        latest=None
         results['site-refresh']=(False,'cannot read GitHub runs: '+type(error).__name__,None,'https://github.com/bigospeedrun/site/actions/workflows/refresh-data.yml')
+    prove2me_check(src,latest,results)
     try:
         service=src.systemd('bigospeedrun-submissions.service','Result','ExecMainStatus','ExecMainExitTimestamp')
         timer=src.systemd('bigospeedrun-submissions.timer','LastTriggerUSec','ActiveState')

@@ -47,6 +47,14 @@ class Fake:
         return self.ack_log
     def board_memory(self):return json.loads(json.dumps(self.board_mem))
     def remember_board(self,memory):self.board_mem=json.loads(json.dumps(memory))
+    # Refresh run steps by run URL; runs from before the prove2.me import have no such step.
+    steps={};p2m_state={'boards':{}};p2m_mem={}
+    def run_steps(self,run):return self.steps.get(run['html_url'],[dict(name='Refresh data through GitHub GET requests',conclusion='success')])
+    def prove2me_state(self):
+        if isinstance(self.p2m_state,Exception):raise self.p2m_state
+        return self.p2m_state
+    def prove2me_memory(self):return dict(self.p2m_mem)
+    def remember_prove2me(self,memory):self.p2m_mem=dict(memory)
 
 def vps_fixture(now=NOW):
     """The boshealth read output shape (bos-health-read, 2026-10-15), healthy."""
@@ -92,6 +100,45 @@ class DeadmanTests(unittest.TestCase):
         f.installed=True;f.digest_ok=NOW-timedelta(hours=1);self.assertEqual(self.failing(f),set())
         f.digest_ok=NOW-timedelta(hours=2.5);self.assertEqual(self.failing(f),{'prove2me-digest'})
         f.digest_ok=None;self.assertEqual(self.failing(f),{'prove2me-digest'})
+
+    def p2m_run(self,f,url,import_ok=True,fail_step=None,other_failure=False):
+        steps=[dict(name='Validate refreshed bundle',conclusion='failure' if other_failure else 'success'),
+               dict(name=d.PROVE2ME_STEP,conclusion='success' if import_ok else 'failure'),
+               dict(name=d.PROVE2ME_FAIL_STEP,conclusion=fail_step or ('skipped' if import_ok else 'failure'))]
+        f.steps=dict(f.steps,**{url:steps})
+
+    def test_prove2me_import_arms_on_its_first_step_and_then_alerts_without_it(self):
+        f=Fake();self.assertNotIn('prove2me-import',d.check(f,NOW))
+        self.p2m_run(f,f.runs[0]['html_url'])
+        self.assertEqual(d.check(f,NOW)['prove2me-import'][0],True);self.assertTrue(f.p2m_mem['armed'])
+        f.steps={};self.assertEqual(self.failing(f),{'prove2me-import'})
+
+    def test_a_held_import_alerts_with_its_reason_and_does_not_fail_site_refresh(self):
+        f=Fake();f.runs[0]['conclusion']='failure';f.runs[0]['id']=2
+        self.p2m_run(f,f.runs[0]['html_url'],import_ok=False)
+        f.p2m_state={'boards':{'apsp':{'status':'held','reason':'unreviewed proved entry 2.99 (mission m9)'},'3sum':{'status':'ok'}}}
+        result=d.check(f,NOW)
+        self.assertEqual(self.failing(f),{'prove2me-import'})
+        self.assertIn('apsp: unreviewed proved entry 2.99',result['prove2me-import'][1])
+        # Another failed step is still a refresh failure.
+        self.p2m_run(f,f.runs[0]['html_url'],import_ok=False,other_failure=True)
+        self.assertEqual(self.failing(f),{'prove2me-import','site-refresh'})
+
+    def test_a_parse_failure_or_crash_alerts_without_a_held_board(self):
+        f=Fake();f.runs[0]['conclusion']='failure'
+        self.p2m_run(f,f.runs[0]['html_url'],import_ok=False)
+        self.assertIn('without a held board',d.check(f,NOW)['prove2me-import'][1])
+        f.p2m_state=RuntimeError('404')
+        self.assertIn('cannot read data/prove2me.json',d.check(f,NOW)['prove2me-import'][1])
+        self.assertNotIn('site-refresh',self.failing(f))
+
+    def test_held_runs_still_count_for_site_refresh_freshness(self):
+        f=Fake()
+        for run in f.runs:
+            run['conclusion']='failure';self.p2m_run(f,run['html_url'],import_ok=False)
+        self.assertEqual(self.failing(f),{'prove2me-import'})
+        f.runs=[dict(r,created_at=iso(3)) for r in f.runs]
+        self.assertEqual(self.failing(f),{'prove2me-import','site-refresh'})
 
     def test_push_marker_counts_as_a_full_cycle(self):
         f=Fake();del f.marks['cycle'];f.marks['push']=iso(1)
