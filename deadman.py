@@ -29,6 +29,8 @@ Items:
                        bounds, named as the race's site name in slug form (race_channel_name).
                        Alerts on a missing or extra board or channel, naming each one. GET
                        only; one failed read is tolerated, two in a row alert
+  race-channels        race_channels.py (bigospeedrun-race-channels.timer) last ran ok < 2 h;
+                       checked once that timer unit is installed
   stale-issues         Nil rule: no GitHub issue stays open in bigospeedrun/site, board,
                        verifier or watch. Alerts on each issue open for 24 h or more (repo,
                        number, title, age, link), and again when that set of issues changes
@@ -198,6 +200,9 @@ class Sources:
         if not self.persist:return
         path=self.root/ISSUE_MEMORY;tmp=path.with_name(path.name+'.tmp')
         tmp.write_text(json.dumps(memory,indent=2)+'\n');tmp.replace(path)
+    def race_channels_last_ok(self):
+        path=self.root/'.git/race-channels.json'
+        return parse(json.loads(path.read_text()).get('last_ok')) if path.exists() else None
     def parity_memory(self):
         path=self.root/PARITY_MEMORY
         return json.loads(path.read_text()) if path.exists() else {}
@@ -468,6 +473,10 @@ def check(src,now,to_time=systemd_time):
         results['site-refresh']=(False,'cannot read GitHub runs: '+type(error).__name__,None,'https://github.com/bigospeedrun/site/actions/workflows/refresh-data.yml')
     prove2me_check(src,latest,results)
     parity_check(src,now,results)
+    if src.unit_installed('bigospeedrun-race-channels.timer'):
+        good=src.race_channels_last_ok();fresh=bool(good and now-good<2*H)
+        results['race-channels']=(fresh,None if fresh else 'no passed race channel run in the last 2 h',good,
+                                  'journalctl --user -u bigospeedrun-race-channels.service')
     issue_check(src,now,results)
     try:
         service=src.systemd('bigospeedrun-submissions.service','Result','ExecMainStatus','ExecMainExitTimestamp')

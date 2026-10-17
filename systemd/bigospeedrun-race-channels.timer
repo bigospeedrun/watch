@@ -1,0 +1,10 @@
+[Unit]
+Description=Give each race listed on bigospeedrun.com its Discord channel, each hour
+
+[Timer]
+OnCalendar=*-*-* *:27:00
+Persistent=true
+Unit=bigospeedrun-race-channels.service
+
+[Install]
+WantedBy=timers.target

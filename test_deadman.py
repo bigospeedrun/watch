@@ -17,7 +17,7 @@ class Fake:
         self.timer={'LastTriggerUSec':systemd(0.3,now),'ActiveState':'active'}
         self.cron=[dict(status='completed',errorReason=None,startedAt=(now-timedelta(hours=8)).timestamp()*1000)]
         self.vps=vps_fixture(now);self.vps['board']=board_section(now);self.vps_error=None;self.memory={}
-        self.issues={};self.knowledge=json.loads(json.dumps(self.knowledge));self.boards=list(self.boards);self.channels=[dict(c) for c in self.channels]
+        self.channels_ok=now-timedelta(hours=0.5);self.issues={};self.knowledge=json.loads(json.dumps(self.knowledge));self.boards=list(self.boards);self.channels=[dict(c) for c in self.channels]
     def last_ok(self):return self.marks
     def log_ok_time(self,name):return None
     def refresh_runs(self):return self.runs
@@ -70,6 +70,8 @@ class Fake:
     def board_slugs(self):return list(self.boards)
     def discord_channels(self):return [dict(c) for c in self.channels]
     def parity_memory(self):return dict(self.parity_mem)
+    channels_ok=None
+    def race_channels_last_ok(self):return self.channels_ok
     issues={};issue_error=None;issue_mem={}
     def open_issues(self,repo):
         if self.issue_error:raise self.issue_error
@@ -254,6 +256,12 @@ class DeadmanTests(unittest.TestCase):
     def test_issue_read_failures_alert_on_the_second_run(self):
         f=Fake();f.issue_error=RuntimeError('GitHub issues request failed')
         self.assertNotIn('stale-issues',self.failing(f));self.assertIn('stale-issues',self.failing(f))
+
+    def test_race_channels_checked_only_once_its_timer_is_installed(self):
+        f=Fake();self.assertNotIn('race-channels',d.check(f,NOW))
+        f.installed=True;f.digest_ok=NOW;f.channels_ok=NOW-timedelta(hours=1)
+        self.assertNotIn('race-channels',self.failing(f))
+        f.channels_ok=NOW-timedelta(hours=2.5);self.assertIn('race-channels',self.failing(f))
 
     def test_push_marker_counts_as_a_full_cycle(self):
         f=Fake();del f.marks['cycle'];f.marks['push']=iso(1)

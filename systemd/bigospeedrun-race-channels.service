@@ -1,0 +1,10 @@
+[Unit]
+Description=Big O Speedrun race channels (creates the Discord channel of each new listed race; create only)
+
+[Service]
+Type=oneshot
+WorkingDirectory=%h/nil/bigospeedrun-data
+Environment=PATH=%h/.local/bin:/usr/local/bin:/usr/bin:/bin
+ExecStart=/usr/bin/python3 %h/nil/bigospeedrun-data/race_channels.py
+StandardOutput=journal
+StandardError=journal
