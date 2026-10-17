@@ -29,6 +29,11 @@ Items:
                        bounds, named as the race's site name in slug form (race_channel_name).
                        Alerts on a missing or extra board or channel, naming each one. GET
                        only; one failed read is tolerated, two in a row alert
+  stale-issues         Nil rule: no GitHub issue stays open in bigospeedrun/site, board,
+                       verifier or watch. Alerts on each issue open for 24 h or more (repo,
+                       number, title, age, link), and again when that set of issues changes
+                       (a new age alone does not alert). GET only; one failed read is
+                       tolerated, two in a row alert
   chatbot-gap-review   Isomux cronjob "BOS chatbot gap review" completed a run
                        without error < 26 h ago (~/.isomux/cronjobs, read-only)
   vps-deploy           self-hosted site on the VPS, read through the forced-command
@@ -108,7 +113,15 @@ PROVE2ME_STEPS={PROVE2ME_STEP,PROVE2ME_FAIL_STEP}
 SOFT_STEPS={'Refresh direct submission issues and PRs','Refresh public author profiles','Plan Discord record notifications',
             'Post Discord record notifications','Plan X record notifications','Commit X reservations before sending','Post X record notifications'}
 # Items whose alert repeats when the problem text changes during one failing period.
-REALERT_ON_CHANGE={'prove2me-import','race-parity'}
+REALERT_ON_CHANGE={'prove2me-import','race-parity','stale-issues'}
+ISSUE_REPOS=('bigospeedrun/site','bigospeedrun/board','bigospeedrun/verifier','bigospeedrun/watch')
+ISSUE_MEMORY='.git/stale-issues.json'
+ISSUE_LINK='GitHub issues of bigospeedrun/site, board, verifier and watch'
+
+def alert_key(item,problem):
+    # The text that decides a repeat alert: for stale-issues, the issue set without the ages.
+    if item=='stale-issues' and problem:return re.sub(r' open [0-9]+ d [0-9]+ h','',problem)
+    return problem
 BOARD_HOST='board.bigospeedrun.com'
 BOARD_FEED=f'https://{BOARD_HOST}/api/posts?board=3sum&limit=1'   # the board is at the root of its host (board 21648c1)
 BOARD_LINK='ssh boshealth (VPS /opt/bigospeedrun-board/auto-deploy/status.json); runbook ~/nil/bigospeedrun-notes/phase-e-board-deploy-plan.md'
@@ -166,6 +179,25 @@ class Sources:
                                        headers={'Authorization':'Bot '+token,'User-Agent':'DiscordBot (https://bigospeedrun.com, 1)'})
         with urllib.request.urlopen(request,timeout=30) as response:
             return [dict(id=c.get('id'),name=c.get('name'),type=c.get('type'),parent_id=c.get('parent_id')) for c in json.loads(response.read())]
+    def open_issues(self,repo):
+        out=subprocess.run(['gh','api','-X','GET',f'repos/{repo}/issues','-f','state=open','-f','per_page=100','--paginate'],
+                           capture_output=True,text=True,timeout=60)
+        if out.returncode:raise RuntimeError('GitHub issues request failed')
+        # --paginate prints one JSON array per page.
+        items=[];decoder=json.JSONDecoder();text=out.stdout.strip();index=0
+        while index<len(text):
+            page,index=decoder.raw_decode(text,index)
+            items+=page
+            while index<len(text) and text[index].isspace():index+=1
+        return [dict(number=i.get('number'),title=i.get('title'),html_url=i.get('html_url'),created_at=i.get('created_at'))
+                for i in items if 'pull_request' not in i]
+    def issue_memory(self):
+        path=self.root/ISSUE_MEMORY
+        return json.loads(path.read_text()) if path.exists() else {}
+    def remember_issues(self,memory):
+        if not self.persist:return
+        path=self.root/ISSUE_MEMORY;tmp=path.with_name(path.name+'.tmp')
+        tmp.write_text(json.dumps(memory,indent=2)+'\n');tmp.replace(path)
     def parity_memory(self):
         path=self.root/PARITY_MEMORY
         return json.loads(path.read_text()) if path.exists() else {}
@@ -347,6 +379,29 @@ def parity_check(src,now,results):
     memory['last_ok']=not problems;memory['last_problem']=problem;src.remember_parity(memory)
     results['race-parity']=(not problems,problem,None if problems else now,PARITY_LINK)
 
+def issue_check(src,now,results):
+    memory=src.issue_memory()
+    try:
+        stale=[]
+        for repo in ISSUE_REPOS:
+            for issue in src.open_issues(repo):
+                opened=parse(issue['created_at'])
+                if opened and now-opened>=24*H:stale.append((opened,repo,issue))
+    except Exception as error:
+        memory['read_failures']=memory.get('read_failures',0)+1
+        if memory['read_failures']>=2:results['stale-issues']=(False,f"cannot read the issues ({memory['read_failures']} runs in a row): "+type(error).__name__,None,ISSUE_LINK)
+        else:results['stale-issues']=(memory.get('last_ok',True),memory.get('last_problem'),None,ISSUE_LINK)
+        src.remember_issues(memory);return
+    memory['read_failures']=0
+    parts=[]
+    for opened,repo,issue in sorted(stale,key=lambda s:(s[1],s[2]['number'] or 0))[:10]:
+        hours=int((now-opened)/H)
+        parts.append(f"{repo.split('/')[1]}#{int(issue['number'])} \"{safe_text(issue.get('title'),60)}\" open {hours//24} d {hours%24} h {safe_text(issue.get('html_url'),100)}")
+    if len(stale)>10:parts.append(f'and {len(stale)-10} more')
+    problem=(f'{len(stale)} issue(s) open for 24 h or more: '+'; '.join(parts)) if stale else None
+    memory['last_ok']=not stale;memory['last_problem']=problem;src.remember_issues(memory)
+    results['stale-issues']=(not stale,problem,None if stale else now,ISSUE_LINK)
+
 def safe_text(value,cap=200):
     # data/prove2me.json reasons quote prove2.me page text: ASCII escapes, one line, capped.
     text=ascii(str(value))[1:-1]
@@ -413,6 +468,7 @@ def check(src,now,to_time=systemd_time):
         results['site-refresh']=(False,'cannot read GitHub runs: '+type(error).__name__,None,'https://github.com/bigospeedrun/site/actions/workflows/refresh-data.yml')
     prove2me_check(src,latest,results)
     parity_check(src,now,results)
+    issue_check(src,now,results)
     try:
         service=src.systemd('bigospeedrun-submissions.service','Result','ExecMainStatus','ExecMainExitTimestamp')
         timer=src.systemd('bigospeedrun-submissions.timer','LastTriggerUSec','ActiveState')
@@ -538,7 +594,7 @@ def run(src,send,root=None,now=None):
         good_pt=pt(parse(entry.get('last_good')))
         if ok and entry.get('alerted'):
             payload=dict(kind='bos-deadman',event='recovered',item=item,text=f'Dead-man check: {item} recovered (last good {good_pt}).')
-        elif not ok and (not entry.get('alerted') or (item in REALERT_ON_CHANGE and entry.get('problem')!=problem)):
+        elif not ok and (not entry.get('alerted') or (item in REALERT_ON_CHANGE and alert_key(item,entry.get('problem'))!=alert_key(item,problem))):
             payload=dict(kind='bos-deadman',event='alert',item=item,problem=problem,last_good=good_pt,link=link,
                          text=f'Dead-man check: {item} is failing or stale: {problem}. Last good: {good_pt}. See: {link}.')
         else:

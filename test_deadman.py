@@ -17,7 +17,7 @@ class Fake:
         self.timer={'LastTriggerUSec':systemd(0.3,now),'ActiveState':'active'}
         self.cron=[dict(status='completed',errorReason=None,startedAt=(now-timedelta(hours=8)).timestamp()*1000)]
         self.vps=vps_fixture(now);self.vps['board']=board_section(now);self.vps_error=None;self.memory={}
-        self.knowledge=json.loads(json.dumps(self.knowledge));self.boards=list(self.boards);self.channels=[dict(c) for c in self.channels]
+        self.issues={};self.knowledge=json.loads(json.dumps(self.knowledge));self.boards=list(self.boards);self.channels=[dict(c) for c in self.channels]
     def last_ok(self):return self.marks
     def log_ok_time(self,name):return None
     def refresh_runs(self):return self.runs
@@ -70,6 +70,12 @@ class Fake:
     def board_slugs(self):return list(self.boards)
     def discord_channels(self):return [dict(c) for c in self.channels]
     def parity_memory(self):return dict(self.parity_mem)
+    issues={};issue_error=None;issue_mem={}
+    def open_issues(self,repo):
+        if self.issue_error:raise self.issue_error
+        return [dict(i) for i in self.issues.get(repo,[])]
+    def issue_memory(self):return dict(self.issue_mem)
+    def remember_issues(self,memory):self.issue_mem=dict(memory)
     def remember_parity(self,memory):self.parity_mem=dict(memory)
     def remember_prove2me(self,memory):self.p2m_mem=dict(memory)
 
@@ -92,7 +98,7 @@ class DeadmanTests(unittest.TestCase):
 
     def test_all_healthy_sends_nothing(self):
         report=self.run_at(Fake())
-        self.assertEqual(set(report),{'watch-cycle','discord-intake','problem-selection','site-refresh','verifier-submissions','chatbot-gap-review','watch-sources','vps-deploy','vps-board','race-parity'})
+        self.assertEqual(set(report),{'watch-cycle','discord-intake','problem-selection','site-refresh','verifier-submissions','chatbot-gap-review','watch-sources','vps-deploy','vps-board','race-parity','stale-issues'})
         self.assertTrue(all(v=='ok' for v in report.values()));self.assertEqual(self.sent,[])
 
     def test_each_simulated_stale_or_failed_state_is_caught(self):
@@ -223,6 +229,31 @@ class DeadmanTests(unittest.TestCase):
             self.assertEqual(d.race_channel_name(title),name)
         llms='### Problems\n\n- [3SUM](https://board.bigospeedrun.com/3sum): race page x\n- [Catalan](https://board.bigospeedrun.com/other-catalan): y\n- How an agent reads: https://board.bigospeedrun.com/llms.txt\n'
         self.assertEqual(d.boards_from(llms),['3sum','other-catalan'])
+
+    def issue(self,number,hours,title='Lean submission'):
+        return dict(number=number,title=title,html_url=f'https://github.com/bigospeedrun/verifier/issues/{number}',created_at=iso(hours))
+
+    def test_issues_open_24_h_or_more_alert_with_name_link_and_age(self):
+        f=Fake();f.issues={'bigospeedrun/verifier':[self.issue(4,23.5)]}
+        self.assertNotIn('stale-issues',self.failing(f))
+        f.issues={'bigospeedrun/verifier':[self.issue(4,49),self.issue(5,2)],'bigospeedrun/site':[dict(self.issue(2,24),html_url='https://github.com/bigospeedrun/site/issues/2')]}
+        problem=d.check(f,NOW)['stale-issues'][1]
+        self.assertIn('2 issue(s) open for 24 h or more',problem)
+        self.assertIn('verifier#4 "Lean submission" open 2 d 1 h https://github.com/bigospeedrun/verifier/issues/4',problem)
+        self.assertIn('site#2',problem);self.assertNotIn('#5',problem)
+
+    def test_issue_titles_are_sanitized_and_ages_alone_do_not_realert(self):
+        f=Fake();f.issues={'bigospeedrun/watch':[self.issue(7,30,'\u00e9\n::error::'+'x'*300)]}
+        problem=d.check(f,NOW)['stale-issues'][1]
+        self.assertTrue(problem.isascii());self.assertNotIn('\n',problem);self.assertLess(len(problem),400)
+        self.run_at(f,NOW);self.run_at(f,NOW+timedelta(hours=1))
+        f.issues['bigospeedrun/watch'].append(self.issue(8,25));self.run_at(f,NOW+timedelta(hours=2))
+        f.issues={};self.run_at(f,NOW+timedelta(hours=3))
+        self.assertEqual([p['event'] for p in self.sent if p.get('item')=='stale-issues'],['alert','alert','recovered'])
+
+    def test_issue_read_failures_alert_on_the_second_run(self):
+        f=Fake();f.issue_error=RuntimeError('GitHub issues request failed')
+        self.assertNotIn('stale-issues',self.failing(f));self.assertIn('stale-issues',self.failing(f))
 
     def test_push_marker_counts_as_a_full_cycle(self):
         f=Fake();del f.marks['cycle'];f.marks['push']=iso(1)
