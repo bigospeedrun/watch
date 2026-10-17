@@ -8,7 +8,9 @@ race channel: a text channel in category Big O (problems) or Other bounds (Other
 rows), named by deadman.race_channel_name, with no permission overwrites, so it has the
 permissions of its category.
 
-It only creates. It never deletes, renames or moves a channel. When a race category holds
+It only creates. It never deletes or renames a channel, and never moves one to another
+category. After it creates a channel, it sorts the race channels of that category in the
+site's order (positions only). When a race category holds
 a channel that no listed race explains (a renamed or removed race), it creates nothing, so
 a rename never makes a second channel; the race-parity dead-man item alerts the lead, and
 a person renames or deletes the channel. It creates at most MAX_CREATE channels in one run;
@@ -53,8 +55,12 @@ class Discord:
             return json.loads(response.read())
 
     def channels(self):
-        return [dict(id=c.get('id'), name=c.get('name'), type=c.get('type'), parent_id=c.get('parent_id'))
+        return [dict(id=c.get('id'), name=c.get('name'), type=c.get('type'), parent_id=c.get('parent_id'), position=c.get('position'))
                 for c in self.call(f'guilds/{self.guild}/channels')]
+
+    def order(self, ids):
+        # One bulk position update: the given channels in this order, from the first position.
+        self.call(f'guilds/{self.guild}/channels', 'PATCH', [dict(id=i, position=n) for n, i in ids])
 
     def create(self, name, category):
         # No permission_overwrites: the channel has the permissions of its category.
@@ -78,6 +84,16 @@ def plan(races, channels):
     return missing, None
 
 
+def site_order(races, channels, category):
+    """[(position, id)] for the race channels of one category, in the site's order, from the
+    category's lowest current position."""
+    ids = {c['name']: c for c in channels if c.get('type') == 0 and d.RACE_CATEGORIES.get(c.get('parent_id')) == category}
+    ordered = [ids[name] for _, name, cat in races if cat == category and name in ids]
+    positions = [c['position'] for c in ordered if isinstance(c.get('position'), int)]
+    base = min(positions) if positions else 0
+    return [(base + n, c['id']) for n, c in enumerate(ordered)]
+
+
 def run(root, discord, site_races, board_slugs, dispatch, now=None, dry_run=False):
     now = now or datetime.now(timezone.utc)
     state_path = root / STATE
@@ -92,6 +108,9 @@ def run(root, discord, site_races, board_slugs, dispatch, now=None, dry_run=Fals
             continue
         made = discord.create(name, category)
         report['created'].append(dict(name=made['name'], id=made['id'], category=category, slug=slug))
+    for category in sorted({c['category'] for c in report['created'] if not c.get('dry_run')}):
+        report['ordered'] = report.get('ordered', []) + [category]
+        discord.order(site_order(races, discord.channels(), category))
     no_board = sorted({slug for slug, _, _ in races} - set(board_slugs()))
     if no_board:
         last = d.parse(state.get('board_sync_at'))
