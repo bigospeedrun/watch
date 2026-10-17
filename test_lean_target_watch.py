@@ -23,20 +23,36 @@ BASE=[('IntegerMultBounds/MathlibTM2/Bridge.lean','theorem statement_of_endToEnd
       ('IntegerMultBounds/Machine.lean','def EndToEnd : Prop :=\n  True\n')]
 
 class Repo:
-    def __init__(self):self.head='a'*40;self.readme=README;self.files=list(BASE);self.fetches=0
-    def get(self,path,params=None):return {'sha':self.head}
+    def __init__(self):self.head='a'*40;self.readme=README;self.files=list(BASE);self.fetches=0;self.history=[(self.head,README)]
+    def get(self,path,params=None):
+        if '/compare/' in path:
+            base,head=path.split('/compare/')[1].split('...')
+            shas=[c for c,_ in self.history];return {'commits':[{'sha':c} for c in shas[shas.index(base)+1:shas.index(head)+1]]}
+        return {'sha':self.head}
+    def readme_at(self,sha):return dict(self.history)[sha]
     def fetch(self,sha):self.fetches+=1;return self.readme,self.files
     def commit(self,n,readme=None,files=None):
         self.head=str(n)*40
         if readme is not None:self.readme=readme
         if files is not None:self.files=list(BASE)+files
+        self.history.append((self.head,self.readme))
 
 class LeanTargetTests(unittest.TestCase):
     def setUp(self):
         self.tmp=tempfile.TemporaryDirectory();self.root=Path(self.tmp.name);(self.root/'.git').mkdir()
         self.repo=Repo();self.sent=[]
     def tearDown(self):self.tmp.cleanup()
-    def run_once(self,dry=False):return w.run(self.repo.get,self.repo.fetch,lambda t,k:self.sent.append(t),self.root,dry)
+    def run_once(self,dry=False):return w.run(self.repo.get,self.repo.fetch,lambda t,k:self.sent.append(t),self.root,dry,self.repo.readme_at)
+
+    def test_a_kappa_between_two_cycles_is_reported_with_its_commit(self):
+        # 2026-10-17: 36261/2^48 -> 3213/2^44 (a80551f) -> 14229/2^46 within one 3-hour gap.
+        self.run_once()
+        self.repo.commit(2,README.replace('2^-37','3213/2^44'));self.repo.commit(3);self.repo.commit(4,README.replace('2^-37','14229/2^46'))
+        self.run_once()
+        self.assertEqual(len(self.sent),1)
+        self.assertIn('from 2^-37 to 3213/2^44 at '+'2'*10,self.sent[0])
+        self.assertIn('from 3213/2^44 to 14229/2^46',self.sent[0])
+        self.repo.commit(5);self.run_once();self.assertEqual(len(self.sent),1)
 
     def test_baseline_is_silent_and_unchanged_head_is_not_fetched(self):
         self.assertEqual(self.run_once()['alerts'],0)

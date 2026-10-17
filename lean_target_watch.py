@@ -9,7 +9,10 @@ commit, when:
      83/10^12) looks proved: the README stops calling it open, its Status section
      changes and names the target, or a Lean declaration has type EndToEnd
      (the alert says whether that file contains sorry);
-  2. the proved kappa in the README changes (2^-37 when this watch started);
+  2. the proved kappa in the README changes (2^-37 when this watch started), including
+     values that came and went between two cycles: the watch reads README.md at each
+     commit since the last seen head (3213/2^44 lived 19:40-21:11Z on 2026-10-17,
+     between the 19:04Z and 22:04Z cycles, and was missed);
   3. a Lean proof of the FinTM2-to-multitape simulation appears: a declaration
      from FinTM2 or MathlibTM2.Statement to Machine or EndToEnd, or a file named
      for that simulation.
@@ -26,7 +29,8 @@ import re
 import subprocess
 import tarfile
 from pathlib import Path
-from github_read import api
+from github_read import api, content
+MAX_WALK=30  # newest commits read between two cycles (one contents GET each)
 
 ROOT=Path(__file__).resolve().parent
 STATE='.git/lean-target-watch.json'
@@ -102,7 +106,13 @@ def snapshot(readme):
     return dict(kappa=kappa(readme),target_open=target_open(readme),status=status,
                 status_hash=hashlib.sha256(status.encode()).hexdigest()[:16])
 
-def run(get,fetch,notify,root=None,dry_run=False):
+def walk_kappas(get,readme_at,old_head,head):
+    """[(sha, kappa)] for the commits after old_head up to head, oldest first: the README
+    kappa at each (at most MAX_WALK newest, head excluded: the tarball covers it)."""
+    commits=[c['sha'] for c in get(f'repos/{REPO}/compare/{old_head}...{head}').get('commits',[])]
+    return [(sha,kappa(readme_at(sha))) for sha in commits[-MAX_WALK-1:-1]]
+
+def run(get,fetch,notify,root=None,dry_run=False,readme_at=None):
     root=root or ROOT;path=root/STATE
     state=json.loads(path.read_text()) if path.exists() else {}
     head=get(f'repos/{REPO}/commits/HEAD')['sha']
@@ -111,7 +121,16 @@ def run(get,fetch,notify,root=None,dry_run=False):
     if not readme or not files:raise ValueError('README or Lean files missing from the tarball')
     new=snapshot(readme)
     old=state.get('readme') or {'kappa':BASE_KAPPA,'target_open':True}
-    signals=readme_signals(old,new)+tree_signals(files)
+    signals=[]
+    # Values between the last seen head and this one, each with the commit that first had it.
+    if state.get('head') and readme_at:
+        previous=old.get('kappa')
+        for sha,value in walk_kappas(get,readme_at,state['head'],head):
+            if value and value!=previous:
+                signals.append(('kappa:'+value,f'README kappa changed from {previous} to {value} at {sha[:10]} (between two watch cycles)'))
+                previous=value
+        old=dict(old,kappa=previous)
+    signals+=readme_signals(old,new)+tree_signals(files)
     sent=set(state.get('sent',[]))
     fresh=list(dict((k,t) for k,t in signals if k not in sent).items())
     if fresh and not dry_run:
@@ -131,7 +150,8 @@ def main():
         from poll import office,LEAD
         result=office(f'/api/agents/{LEAD}/messages',{'text':text,'clientMessageId':identity})
         if not result.get('messageId'):raise RuntimeError('Alert delivery unconfirmed')
-    try:print(json.dumps(run(api,tarball,notify,dry_run=args.dry_run)))
+    readme_at=lambda sha:content(REPO,'README.md',sha).decode('utf-8','replace')
+    try:print(json.dumps(run(api,tarball,notify,dry_run=args.dry_run,readme_at=readme_at)))
     except Exception as error:
         print('Lean target watch failed: '+type(error).__name__)
         raise SystemExit(1)
