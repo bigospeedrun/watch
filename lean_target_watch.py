@@ -107,10 +107,21 @@ def snapshot(readme):
                 status_hash=hashlib.sha256(status.encode()).hexdigest()[:16])
 
 def walk_kappas(get,readme_at,old_head,head):
-    """[(sha, kappa)] for the commits after old_head up to head, oldest first: the README
-    kappa at each (at most MAX_WALK newest, head excluded: the tarball covers it)."""
-    commits=[c['sha'] for c in get(f'repos/{REPO}/compare/{old_head}...{head}').get('commits',[])]
-    return [(sha,kappa(readme_at(sha))) for sha in commits[-MAX_WALK-1:-1]]
+    """([(sha, kappa)], skipped) for the commits after old_head up to head, oldest first:
+    the README kappa at each of the MAX_WALK newest (head excluded: the tarball covers
+    it); skipped counts older commits not read. A commit whose README cannot be read gives
+    kappa None; a failed compare (for example after a force-push) gives no walk."""
+    try:
+        commits=[c['sha'] for c in get(f'repos/{REPO}/compare/{old_head}...{head}').get('commits',[])]
+    except Exception:
+        return [],0
+    walk=commits[:-1]
+    out=[]
+    for sha in walk[-MAX_WALK:]:
+        try:value=kappa(readme_at(sha))
+        except Exception:value=None
+        out.append((sha,value))
+    return out,max(0,len(walk)-MAX_WALK)
 
 def run(get,fetch,notify,root=None,dry_run=False,readme_at=None):
     root=root or ROOT;path=root/STATE
@@ -125,7 +136,10 @@ def run(get,fetch,notify,root=None,dry_run=False,readme_at=None):
     # Values between the last seen head and this one, each with the commit that first had it.
     if state.get('head') and readme_at:
         previous=old.get('kappa')
-        for sha,value in walk_kappas(get,readme_at,state['head'],head):
+        walked,skipped=walk_kappas(get,readme_at,state['head'],head)
+        if skipped:
+            signals.append(('skipped:'+head,f'{skipped} earlier commits since the last cycle were not read for README kappa values'))
+        for sha,value in walked:
             if value and value!=previous:
                 signals.append(('kappa:'+value,f'README kappa changed from {previous} to {value} at {sha[:10]} (between two watch cycles)'))
                 previous=value

@@ -42,7 +42,7 @@ class LeanTargetTests(unittest.TestCase):
         self.tmp=tempfile.TemporaryDirectory();self.root=Path(self.tmp.name);(self.root/'.git').mkdir()
         self.repo=Repo();self.sent=[]
     def tearDown(self):self.tmp.cleanup()
-    def run_once(self,dry=False):return w.run(self.repo.get,self.repo.fetch,lambda t,k:self.sent.append(t),self.root,dry,self.repo.readme_at)
+    def run_once(self,dry=False):return w.run(self.repo.get,self.repo.fetch,lambda t,k:self.sent.append(t),self.root,dry,lambda sha:self.repo.readme_at(sha))
 
     def test_a_kappa_between_two_cycles_is_reported_with_its_commit(self):
         # 2026-10-17: 36261/2^48 -> 3213/2^44 (a80551f) -> 14229/2^46 within one 3-hour gap.
@@ -53,6 +53,23 @@ class LeanTargetTests(unittest.TestCase):
         self.assertIn('from 2^-37 to 3213/2^44 at '+'2'*10,self.sent[0])
         self.assertIn('from 3213/2^44 to 14229/2^46',self.sent[0])
         self.repo.commit(5);self.run_once();self.assertEqual(len(self.sent),1)
+
+    def test_walk_survives_bad_reads_and_names_skipped_commits(self):
+        self.run_once()
+        self.repo.commit(2,README.replace('2^-37','2^-36'));self.repo.commit(3,README.replace('2^-37','2^-35'))
+        real=self.repo.readme_at
+        def flaky(sha):
+            if sha=='2'*40:raise RuntimeError('GitHub GET failed (HTTP 404)')
+            return real(sha)
+        self.repo.readme_at=flaky;self.repo.commit(4,README.replace('2^-37','2^-34'))
+        self.run_once()
+        self.assertIn('from 2^-37 to 2^-35 at '+'3'*10,self.sent[-1]);self.assertIn('from 2^-35 to 2^-34',self.sent[-1])
+        old=w.MAX_WALK;w.MAX_WALK=1
+        try:
+            self.repo.readme_at=real;self.repo.commit(5);self.repo.commit(6);self.repo.commit(7,README.replace('2^-37','2^-33'))
+            self.run_once()
+            self.assertIn('1 earlier commits since the last cycle were not read',self.sent[-1])
+        finally:w.MAX_WALK=old
 
     def test_baseline_is_silent_and_unchanged_head_is_not_fetched(self):
         self.assertEqual(self.run_once()['alerts'],0)
