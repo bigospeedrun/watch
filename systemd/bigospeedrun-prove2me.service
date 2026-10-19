@@ -1,5 +1,5 @@
 [Unit]
-Description=Big O Speedrun #prove2me reader, every 5 minutes (read-only Discord reader, sends new messages to BOS Lead Dev)
+Description=Big O Speedrun #prove2me reader, every minute (read-only Discord reader, sends new messages to BOS Lead Dev)
 
 [Service]
 Type=oneshot
