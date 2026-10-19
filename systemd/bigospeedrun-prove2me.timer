@@ -1,8 +1,9 @@
 [Unit]
-Description=Read Discord #prove2me each hour for BOS Lead Dev
+Description=Read Discord #prove2me every 5 minutes for BOS Lead Dev
 
 [Timer]
-OnCalendar=*-*-* *:07:00
+OnCalendar=*-*-* *:00/5:00
+AccuracySec=5s
 Persistent=true
 Unit=bigospeedrun-prove2me.service
 

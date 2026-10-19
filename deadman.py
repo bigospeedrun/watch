@@ -14,7 +14,7 @@ Items:
   watch-sources        every other-bounds watchlist repo was checked within the
                        last 2 cycles (pivot-watch.json); a repo that errors every
                        cycle stalled silently before 2026-10-16 (slitsey Catalan)
-  prove2me-digest      #prove2me reader (bigospeedrun-prove2me.timer) last ran ok
+  prove2me-digest      #prove2me reader (bigospeedrun-prove2me.timer, every 5 min) last ran ok
                        < 2 h; checked once that timer unit is installed
   prove2me-import      the prove2.me import step of the newest completed site refresh
                        run (data/prove2me_import.py) did not fail; a held board names
