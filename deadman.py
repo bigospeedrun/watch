@@ -16,18 +16,20 @@ Items:
                        cycle stalled silently before 2026-10-16 (slitsey Catalan)
   prove2me-digest      #prove2me reader (bigospeedrun-prove2me.timer, every minute) last ran ok
                        < 2 h; checked once that timer unit is installed
-  prove2me-import      the prove2.me import step of the newest completed site refresh
-                       run (data/prove2me_import.py) did not fail; a held board names
-                       its reason from data/prove2me.json on main. A run that failed only
-                       in the prove2.me steps counts as a success for site-refresh. Arms
-                       itself on the first run with the import step; from then on a run
-                       without the step alerts
-  review-wait          the 'Fail the run while a result waits for lead review' step of the
-                       newest completed site refresh run did not fail. When it failed, the
-                       alert names each wait from data/review-holds.json (implausible jump
-                       holds) and data/claim-review.json (CrocSwap claims) on main, and
-                       repeats when that set changes. A run that failed only in this step
-                       (or the prove2.me steps) counts as a success for site-refresh, so a
+  prove2me-import      no board in data/prove2me.json on main is held (the alert names each
+                       reason), and the prove2.me import step of the newest completed site
+                       refresh run did not fail. Since 2026-10-20 a hold does not fail the
+                       run, so the alert comes from that file, not from the run. A run that
+                       failed only in the prove2.me steps counts as a success for
+                       site-refresh. Arms itself on the first run with the import step; from
+                       then on a run without the step alerts
+  review-wait          nothing waits for the lead in data/review-holds.json (implausible
+                       jump holds), data/claim-review.json (CrocSwap claims),
+                       data/platypii-lean.json (held note) or data/sources/intake.json
+                       (incomplete PR list) on main; the alert names each wait and repeats
+                       when that set changes. Since 2026-10-20 a wait does not fail the run,
+                       so the alert comes from these files. A failed review step (a real
+                       error) alerts too, and counts as a success for site-refresh, so a
                        wait does not hide a refresh fault
   race-parity          Nil rule 2026-10-16: every race listed on bigospeedrun.com (each
                        problem in the public chat-knowledge.json and each Other bounds row)
@@ -116,9 +118,13 @@ RACE_CATEGORIES={'1558629622558756944':'Big O','1558688026207584347':'Other boun
 PARITY_LINK='~/nil/bigospeedrun-site/README.md (Adding a race); board.bigospeedrun.com/llms.txt; Discord categories Big O and Other bounds'
 # Step names in bigospeedrun/site .github/workflows/refresh-data.yml.
 PROVE2ME_STEP='Import reviewed prove2.me results'
-PROVE2ME_FAIL_STEP='Fail the run when the prove2.me import is held'
-PROVE2ME_STEPS={PROVE2ME_STEP,PROVE2ME_FAIL_STEP}
+# Since 2026-10-20 a wait or hold does not fail the run (Nil gets an email for each red
+# run): the steps were renamed and fail only on a real error. Old names stay for older runs.
+PROVE2ME_FAIL_STEP='Fail the run when the prove2.me import failed'
+PROVE2ME_FAIL_STEPS={PROVE2ME_FAIL_STEP,'Fail the run when the prove2.me import is held'}
+PROVE2ME_STEPS={PROVE2ME_STEP}|PROVE2ME_FAIL_STEPS
 REVIEW_FAIL_STEP='Fail the run while a result waits for lead review'
+REVIEW_STEPS={REVIEW_FAIL_STEP,'List results that wait for lead review'}
 # continue-on-error steps of refresh-data.yml: they never fail a run on their own.
 SOFT_STEPS={'Refresh direct submission issues and PRs','Refresh public author profiles','Plan Discord record notifications',
             'Post Discord record notifications','Plan X record notifications','Commit X reservations before sending','Post X record notifications'}
@@ -444,15 +450,16 @@ def prove2me_check(src,latest,results):
         if memory.get('armed'):results['prove2me-import']=(False,'the newest refresh run has no prove2.me import step',None,link)
         return
     memory['armed']=True;src.remember_prove2me(memory)
-    if 'failure' not in (names.get(PROVE2ME_STEP),names.get(PROVE2ME_FAIL_STEP)):
-        results['prove2me-import']=(True,None,parse(latest.get('created_at')),link)
-        return
+    failed='failure' in [names.get(step) for step in (PROVE2ME_STEP,*sorted(PROVE2ME_FAIL_STEPS))]
     try:
         boards=src.prove2me_state().get('boards',{})
         held=[f"{safe_text(slug,40)}: {safe_text(b.get('reason'))}" for slug,b in sorted(boards.items())[:10] if isinstance(b,dict) and b.get('status')=='held']
-        problem='import held for '+'; '.join(held) if held else 'import step failed without a held board (parse or crash; read the run log)'
+        problem='import held for '+'; '.join(held) if held else 'import step failed without a held board (parse or crash; read the run log)' if failed else None
     except Exception as error:
-        problem='import held or failed; cannot read data/prove2me.json: '+type(error).__name__
+        problem='cannot read data/prove2me.json: '+type(error).__name__
+    if not problem:
+        results['prove2me-import']=(True,None,parse(latest.get('created_at')),link)
+        return
     results['prove2me-import']=(False,safe_text(problem,500)+' (review data/prove2me-trust.json)',None,link)
 
 def review_check(src,latest,results):
@@ -461,9 +468,8 @@ def review_check(src,latest,results):
         names={s['name']:s.get('conclusion') for s in src.run_steps(latest)} if latest else {}
     except Exception as error:
         results['review-wait']=(False,'cannot read the refresh run steps: '+type(error).__name__,None,link);return
-    if REVIEW_FAIL_STEP not in names:return  # Runs before 2026-10-17 have no such step.
-    if names[REVIEW_FAIL_STEP]!='failure':
-        results['review-wait']=(True,None,parse(latest.get('created_at')),link);return
+    step=next((name for name in REVIEW_STEPS if name in names),None)
+    if not step:return  # Runs before 2026-10-17 have no such step.
     try:
         holds,queue,*rest=src.review_state()
         platypii=rest[0] if rest else {}
@@ -472,9 +478,12 @@ def review_check(src,latest,results):
         waits+=[f"CrocSwap #{safe_text(q.get('pr'),10)}: {safe_text(q.get('reason'),160)}" for q in queue[:10]]
         if (platypii or {}).get('status')=='held':waits.append('platypii Lean note held: '+safe_text(platypii.get('reason'),200))
         if (intake or {}).get('pulls_incomplete'):waits.append('CrocSwap PR list incomplete: '+safe_text(intake.get('pulls_incomplete'),200))
-        problem=(f'{len(holds)} hold(s), {len(queue)} claim(s) wait: '+'; '.join(waits)) if waits else 'review step failed with no wait listed (read the run log)'
+        problem=((f'{len(holds)} hold(s), {len(queue)} claim(s) wait: '+'; '.join(waits)) if waits else
+                 'review step failed with no wait listed (read the run log)' if names[step]=='failure' else None)
     except Exception as error:
-        problem='waits for lead review; cannot read data/review-holds.json or data/claim-review.json: '+type(error).__name__
+        problem='cannot read data/review-holds.json or data/claim-review.json: '+type(error).__name__
+    if not problem:
+        results['review-wait']=(True,None,parse(latest.get('created_at')),link);return
     results['review-wait']=(False,safe_text(problem,900)+' (decide in data/review-decisions.json)',None,link)
 
 def check(src,now,to_time=systemd_time):
@@ -502,7 +511,7 @@ def check(src,now,to_time=systemd_time):
         def succeeded(run,index):
             if run.get('conclusion')=='success':return True
             failed=set(failed_steps(run)) if run.get('conclusion')=='failure' and index<6 else set()
-            return bool(failed&{PROVE2ME_FAIL_STEP,REVIEW_FAIL_STEP}) and failed<=PROVE2ME_STEPS|SOFT_STEPS|{REVIEW_FAIL_STEP}
+            return bool(failed&(PROVE2ME_FAIL_STEPS|REVIEW_STEPS)) and failed<=PROVE2ME_STEPS|SOFT_STEPS|REVIEW_STEPS
         wins=[r for i,r in enumerate(done) if succeeded(r,i)]
         good=parse(wins[0]['created_at']) if wins else None
         latest=done[0] if done else None

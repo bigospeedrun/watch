@@ -181,7 +181,7 @@ class DeadmanTests(unittest.TestCase):
         self.run_at(f)
         alerts=[p for p in self.sent if p.get('item')=='prove2me-import']
         self.assertEqual(len(alerts),2);self.assertIn('second reason',alerts[1]['text'])
-        self.p2m_run(f,f.runs[0]['html_url']);f.runs[0]['conclusion']='success'
+        self.p2m_run(f,f.runs[0]['html_url']);f.runs[0]['conclusion']='success';f.p2m_state={'boards':{'apsp':{'status':'ok'}}}
         self.run_at(f)
         self.assertEqual([p['event'] for p in self.sent if p.get('item')=='prove2me-import'],['alert','alert','recovered'])
 
@@ -227,8 +227,28 @@ class DeadmanTests(unittest.TestCase):
         f=Fake();f.runs[0]['conclusion']='failure';self.review_run(f,f.runs[0]['html_url'])
         f.review=([],[{'pr':3115,'reason':'r1'}]);self.run_at(f);self.run_at(f)
         f.review=([],[{'pr':3115,'reason':'r1'},{'pr':3123,'reason':'r2'}]);self.run_at(f)
-        self.review_run(f,f.runs[0]['html_url'],waiting=False);f.runs[0]['conclusion']='success';self.run_at(f)
+        self.review_run(f,f.runs[0]['html_url'],waiting=False);f.runs[0]['conclusion']='success';f.review=([],[]);self.run_at(f)
         self.assertEqual([p['event'] for p in self.sent if p.get('item')=='review-wait'],['alert','alert','recovered'])
+
+    def test_a_wait_in_a_green_run_alerts_from_the_files(self):
+        # 2026-10-20: a wait or hold no longer fails the run (Nil gets an email for each red
+        # run). The alert comes from the files on main; site-refresh stays green.
+        f=Fake();url=f.runs[0]['html_url']
+        f.steps={url:[dict(name='List results that wait for lead review',conclusion='success'),dict(name=d.PROVE2ME_STEP,conclusion='success'),
+                      dict(name=d.PROVE2ME_FAIL_STEP,conclusion='skipped')]}
+        self.assertEqual(self.failing(f),set())
+        f.review=([],[{'pr':4076,'reason':'Claude reads the PR text as no new kappa claim.'}])
+        f.p2m_state={'boards':{'apsp':{'status':'held','reason':'unreviewed proved entry 2.99'}}}
+        result=d.check(f,NOW)
+        self.assertEqual(self.failing(f),{'review-wait','prove2me-import'})
+        self.assertIn('CrocSwap #4076: Claude reads',result['review-wait'][1]);self.assertIn('apsp: unreviewed proved entry 2.99',result['prove2me-import'][1])
+        # A real error in either step alerts without a wait, and site-refresh still counts the run.
+        f.review=([],[]);f.p2m_state={'boards':{}};f.runs[0]['conclusion']='failure'
+        f.steps[url]=[dict(name='List results that wait for lead review',conclusion='failure'),dict(name=d.PROVE2ME_STEP,conclusion='failure'),
+                      dict(name=d.PROVE2ME_FAIL_STEP,conclusion='failure')]
+        result=d.check(f,NOW)
+        self.assertEqual(self.failing(f),{'review-wait','prove2me-import'})
+        self.assertIn('review step failed with no wait listed',result['review-wait'][1]);self.assertIn('without a held board',result['prove2me-import'][1])
 
     def test_race_parity_names_each_missing_or_extra_board_and_channel(self):
         f=Fake();self.assertEqual(d.check(f,NOW)['race-parity'][:2],(True,None))
