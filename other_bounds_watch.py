@@ -1,5 +1,6 @@
 """Data-only discovery of Other bounds claims and OpenAI math fork improvements."""
 import hashlib,json,re,time
+from fractions import Fraction
 from pathlib import Path
 from urllib.parse import quote
 from github_read import api,content
@@ -72,8 +73,12 @@ def claim_key(family,lines):
     values=sorted(set(tuple(re.findall(r'\d+(?:\.\d+)?|[≤≥<>/=+^−-]',line)) for line in lines))
     return hashlib.sha256(json.dumps([family,values],sort_keys=True).encode()).hexdigest() if values else None
 
-def candidate(meta,head,family,lines,old,kind):
-    key=claim_key(family,lines)
+def bound_key(family,value):
+    # The claim key of a configured stated bound: only its value counts.
+    return claim_key(family,[f'stated bound {Fraction(value)}'])
+
+def candidate(meta,head,family,lines,old,kind,key=None):
+    key=key or claim_key(family,lines)
     if not key or key in old.get('seen_claims',[]):return None,key
     label=FAMILIES[family]['title'] if family in FAMILIES else 'OpenAI family '+family
     row=dict(repo=meta['full_name'],url=meta['html_url'],stars=meta.get('stargazers_count',0),created_at=meta.get('created_at'),pushed_at=meta.get('pushed_at'),description=meta.get('description'),problem_guess=f'Family {family}: {label}',rank=20,evidence=[kind],readme_commit=head,source_claim_evidence=lines[:6],claim_signature=key,other_family=family if family in FAMILIES else None,openai_fork_improvement=kind=='openai-math-fork',stated_bound_changed=True,likely_tracked_source=True,likely_new_race=False,likely_pivot=False,on_board=False)
@@ -226,7 +231,7 @@ def collect(since,previous,people_hits=(),search=True):
                     families+=[m.zfill(3) for m in re.findall(r'(?:^|/)(\d{3})(?:[-_/]|$)',f['filename'])]
                     if not families and ('preprints/' in f['filename'] or re.search(r'OpenAI|family|challenge',added,re.I)) and claim_lines(added,True):families=['unmapped']
                     for family in sorted(set(x.zfill(3) for x in families)):
-                        additions.append((family,scoped_claims(added,family,True)))
+                        additions.append((family,scoped_claims(added,family,True),None))
                 if len(diff.get('files',[]))>=300:truncated.append(dict(query=repo+' upstream diff',total_count='at least 300 files'))
             else:
                 text=readme(budget,repo,head)
@@ -234,8 +239,21 @@ def collect(since,previous,people_hits=(),search=True):
                 # its README does not use a family alias.
                 families=list(dict.fromkeys(family_matches(repo+' '+(meta.get('description') or '')+'\n'+text)+
                     [cfg['family'] for cfg in CONFIG if cfg['repo']==repo]))
-                additions=[(family,scoped_claims(text,family)) for family in families]
-                base=old.get('head') or next((cfg['baseline_commit'] for cfg in CONFIG if cfg['repo']==repo),None)
+                additions=[(family,scoped_claims(text,family),None) for family in families]
+                # A configured bound_pattern makes the stated bound the only claim of the repo.
+                # slitsey's Catalan README and notes changed companion constants (L(2,chi_-3),
+                # G +/- 5pi^2/48) twice on 2026-10-20 while G stayed b^(-740): no alert.
+                bound_cfg=next((c for c in CONFIG if c['repo']==repo and c.get('bound_pattern')),None)
+                bound=re.search(bound_cfg['bound_pattern'],text,re.M) if bound_cfg else None
+                if bound_cfg and not bound:
+                    errors.append(f'{repo}: configured bound not found in README.md at {head[:7]}; all README claims checked')
+                if bound:
+                    family=bound_cfg['family']
+                    if bound_cfg.get('reviewed_bound') and bound_key(family,bound_cfg['reviewed_bound']) not in seen:
+                        seen.append(bound_key(family,bound_cfg['reviewed_bound']))
+                    line=text[text.rfind('\n',0,bound.start())+1:].split('\n',1)[0].strip()[:1000]
+                    additions=[(family,[line],bound_key(family,bound['num']))]
+                base=None if bound else old.get('head') or next((cfg['baseline_commit'] for cfg in CONFIG if cfg['repo']==repo),None)
                 if base and base!=head:
                     try:diff=budget.get(f'repos/{repo}/compare/{base}...{head}')
                     except BudgetExhausted:raise
@@ -251,7 +269,7 @@ def collect(since,previous,people_hits=(),search=True):
                         if 'patch' not in f:errors.append(repo+': missing diff patch '+f['filename']);continue
                         added='\n'.join(line[1:] for line in f['patch'].splitlines() if line.startswith('+') and not line.startswith('+++'))
                         targets=family_matches(f['filename']+'\n'+added) or families
-                        for family in targets:additions.append((family,scoped_claims(added,family,True)))
+                        for family in targets:additions.append((family,scoped_claims(added,family,True),None))
                     if len(diff.get('files',[]))>=300:truncated.append(dict(query=repo+' claim diff',total_count='at least 300 files'))
                 # On first run, suppress the reviewed starting claim at its pin.
                 if not old:
@@ -260,8 +278,8 @@ def collect(since,previous,people_hits=(),search=True):
                         baseline=readme(budget,repo,cfg['baseline_commit'])
                         key=claim_key(cfg['family'],scoped_claims(baseline,cfg['family']))
                         if key:seen.append(key)
-            for family,lines in additions:
-                row,key=candidate(meta,head,family,lines,{'seen_claims':seen},'openai-math-fork' if is_fork else 'other-bounds')
+            for family,lines,key in additions:
+                row,key=candidate(meta,head,family,lines,{'seen_claims':seen},'openai-math-fork' if is_fork else 'other-bounds',key)
                 if key and key not in seen:seen.append(key)
                 if row:rows.append(row)
             state[repo]=dict(head=head,seen_claims=seen,openai_fork=bool(is_fork),meta=meta,checked_cycle=cycle)

@@ -270,6 +270,40 @@ class OtherBoundsTests(unittest.TestCase):
         self.assertEqual(result['states'][repo]['head'],head)
         self.assertTrue(any('history may be rewritten' in e for e in result['errors']))
 
+    def test_configured_bound_alerts_only_when_the_stated_bound_changes(self):
+        # slitsey/catalan-irrationality-measure, 2026-10-20 07:04Z and 10:04Z: two alerts on
+        # companion constants (L(2,chi_-3), G +/- 5pi^2/48) while G stayed b^(-740). Real README lines.
+        repo='slitsey/catalan-irrationality-measure'
+        cfg={'family':'005','title':'Irrationality of Catalan’s constant','aliases':['Catalan irrationality','Catalan constant'],'repo':repo,'baseline_commit':'5'*40,
+             'bound_pattern':r'\|G\s*-\s*a/b\|\s*>\s*b\^\(-\s*(?P<num>\d+(?:\.\d+)?)\)','reviewed_bound':'740'}
+        def readme(g,companion):
+            return ("# An irrationality measure for Catalan's constant\n\n> `a` and every sufficiently large integer `b`,\n>\n"
+                    f"> `|G - a/b| > b^(-{g})`.\n>\n> So the irrationality exponent of `G` is at most `{g}`. Chebyshev's bounds\n\n"
+                    "## Companion result: G ± 5π²/48 and L(2, χ₋₃)\n\n"
+                    f"- μ(G − 5π²/48) ≤ {companion};\n- μ(L(2, χ₋₃)) ≤ 18.50 (earlier 23.82 and 21.16 exports retained).\n")
+        meta=dict(full_name=repo,html_url='https://github.com/'+repo,default_branch='main',pushed_at='2026-10-20T09:00:00Z')
+        # State before this change: the key of the whole README at the 07:04Z head.
+        previous={'other_bound_states':{repo:{'head':'a'*40,'seen_claims':[o.claim_key('005',o.scoped_claims(readme(740,38.35),'005'))],'meta':meta,'checked_cycle':8}}}
+        def run(text,previous,head):
+            def api(path,params=None,**kwargs):
+                if '/compare/' in path:return {'files':[{'filename':'paper/catalan.tex','status':'modified','patch':'+lowers the exponent from about $50.0$ to $38.35$ for Catalan constant.'}]}
+                return {'sha':head}
+            with patch.object(o,'CONFIG',[cfg]),patch.object(o,'api',api),patch.object(o,'content',return_value=text.encode()):
+                result=o.collect('2026-10-20',previous,search=False)
+            return [r for r in result['candidates'] if r['repo']==repo],result
+        # Companion constants change, G stays 740 (reviewed): silent, also for the .tex diff.
+        rows,result=run(readme(740,34.74),previous,'b'*40);self.assertEqual(rows,[])
+        previous={'other_bound_states':result['states']}
+        # G itself changes: one alert with the G line, then silent at the same value.
+        rows,result=run(readme(700,34.74),previous,'c'*40)
+        self.assertEqual(len(rows),1);self.assertEqual(rows[0]['source_claim_evidence'],['> `|G - a/b| > b^(-700)`.'])
+        self.assertTrue(alert_candidate(rows[0],set(),set()))
+        rows,result=run(readme(700,30.1),{'other_bound_states':result['states']},'d'*40);self.assertEqual(rows,[])
+        # A README without the configured statement alerts on all its claims and logs why.
+        rows,result=run(readme(700,30.1).replace('|G - a/b| >','|G-p/q| >'),{'other_bound_states':result['states']},'e'*40)
+        self.assertTrue(any('> `|G-p/q| > b^(-700)`.' in r['source_claim_evidence'] for r in rows))
+        self.assertTrue(any('configured bound not found' in e for e in result['errors']))
+
     def test_repo_without_readme_is_not_stalled(self):
         # karirogg/QuasiRiemannTracker (a fork without README.md) failed every cycle, 2026-10-15.
         repo='karirogg/QuasiRiemannTracker'
