@@ -11,6 +11,9 @@ Items:
                        succeeded and newest success < 2 h (GitHub GET only)
   verifier-submissions bigospeedrun-submissions.service last run ok and its
                        timer triggered < 75 min ago (systemctl --user show)
+  unanswered-submissions every verifier submission issue and PR open 45 min or more has a
+                       github-actions reply; alerts once per item (issue #35 had none for 10 h,
+                       2026-10-21). stale-issues also reads PRs.
   watch-errors         no error in pivot-watch.json names a watchlist repo (other-bounds and
                        pivot watchlists). Alerts once per new error string, never again
                        for the same string in one failing episode, and sends one recovery
@@ -140,14 +143,20 @@ SOFT_STEPS={'Refresh direct submission issues and PRs','Refresh public author pr
             'Post Discord record notifications','Plan X record notifications','Commit X reservations before sending','Post X record notifications'}
 # Items whose problem is a set of strings joined by SET_SEP: an alert lists only strings not
 # alerted yet in this failing period, and a repeated string never alerts again.
-SET_ITEMS={'watch-errors'}
+SET_ITEMS={'watch-errors','unanswered-submissions'}
 SET_SEP='\n'
 WATCH_ERRORS_LINK='~/nil/bigospeedrun-data/pivot-watch.json (errors)'
 # Items whose alert repeats when the problem text changes during one failing period.
 REALERT_ON_CHANGE={'prove2me-import','race-parity','stale-issues','review-wait'}
 ISSUE_REPOS=('bigospeedrun/site','bigospeedrun/board','bigospeedrun/verifier','bigospeedrun/watch')
 ISSUE_MEMORY='.git/stale-issues.json'
-ISSUE_LINK='GitHub issues of bigospeedrun/site, board, verifier and watch'
+ISSUE_LINK='GitHub issues and PRs of bigospeedrun/site, board, verifier and watch'
+# A submission issue or PR in the verifier must get a bot reply: the selector replies at its next
+# scan (every 30 min, or at once on an issue open or edit). Issue #35 had none for 10 h (2026-10-21).
+SUBMISSION_REPO='bigospeedrun/verifier'
+SUBMISSION_TITLE='[Lean submission]'
+REPLY_LIMIT=timedelta(minutes=45)
+REPLY_LINK='https://github.com/bigospeedrun/verifier/issues (open items without a github-actions reply)'
 
 def alert_key(item,problem):
     # The text that decides a repeat alert: for stale-issues, the issue set without the ages.
@@ -232,8 +241,16 @@ class Sources:
             page,index=decoder.raw_decode(text,index)
             items+=page
             while index<len(text) and text[index].isspace():index+=1
-        return [dict(number=i.get('number'),title=i.get('title'),html_url=i.get('html_url'),created_at=i.get('created_at'))
-                for i in items if 'pull_request' not in i]
+        # Pull requests count too: "nothing in bigospeedrun/* stays open indefinitely" (Nil), and
+        # verifier PRs from 2026-10-15 stayed open unseen when only issues were read (2026-10-21).
+        return [dict(number=i.get('number'),title=i.get('title'),html_url=i.get('html_url'),created_at=i.get('created_at'),
+                     pr='pull_request' in i) for i in items]
+    def bot_replied(self,repo,number):
+        out=subprocess.run(['gh','api','-X','GET',f'repos/{repo}/issues/{int(number)}/comments','-f','per_page=100'],
+                           capture_output=True,text=True,timeout=60)
+        if out.returncode:raise RuntimeError('GitHub comments request failed')
+        return any(c.get('user',{}).get('login')=='github-actions[bot]' and c.get('user',{}).get('type')=='Bot'
+                   for c in json.loads(out.stdout))
     def issue_memory(self):
         path=self.root/ISSUE_MEMORY
         return json.loads(path.read_text()) if path.exists() else {}
@@ -452,11 +469,27 @@ def issue_check(src,now,results):
     parts=[]
     for opened,repo,issue in sorted(stale,key=lambda s:(s[1],s[2]['number'] or 0))[:10]:
         hours=int((now-opened)/H)
-        parts.append(f"{repo.split('/')[1]}#{int(issue['number'])} \"{safe_text(issue.get('title'),60)}\" open {hours//24} d {hours%24} h {safe_text(issue.get('html_url'),100)}")
+        parts.append(f"{repo.split('/')[1]}#{int(issue['number'])}{' (PR)' if issue.get('pr') else ''} \"{safe_text(issue.get('title'),60)}\" open {hours//24} d {hours%24} h {safe_text(issue.get('html_url'),100)}")
     if len(stale)>10:parts.append(f'and {len(stale)-10} more')
-    problem=(f'{len(stale)} issue(s) open for 24 h or more: '+'; '.join(parts)) if stale else None
+    problem=(f'{len(stale)} issue(s) or PR(s) open for 24 h or more: '+'; '.join(parts)) if stale else None
     memory['last_ok']=not stale;memory['last_problem']=problem;src.remember_issues(memory)
     results['stale-issues']=(not stale,problem,None if stale else now,ISSUE_LINK)
+
+def reply_check(src,now,results):
+    """Each verifier submission issue and each verifier PR older than REPLY_LIMIT has a bot reply.
+    One string per item (no age in it), so the set item alerts once per item."""
+    try:
+        found=[]
+        for issue in src.open_issues(SUBMISSION_REPO):
+            opened=parse(issue['created_at'])
+            if not opened or now-opened<REPLY_LIMIT:continue
+            if not (issue.get('pr') or str(issue.get('title') or '').startswith(SUBMISSION_TITLE)):continue
+            if src.bot_replied(SUBMISSION_REPO,issue['number']):continue
+            found.append(f"verifier#{int(issue['number'])}{' (PR)' if issue.get('pr') else ''} \"{safe_text(issue.get('title'),60)}\" "
+                         f"has no bot reply {safe_text(issue.get('html_url'),100)}")
+        results['unanswered-submissions']=(not found,SET_SEP.join(sorted(found)) or None,None if found else now,REPLY_LINK)
+    except Exception as error:
+        results['unanswered-submissions']=(False,'cannot read the verifier issues and replies: '+type(error).__name__,None,REPLY_LINK)
 
 def safe_text(value,cap=200):
     # data/prove2me.json reasons quote prove2.me page text: ASCII escapes, one line, capped.
@@ -556,6 +589,7 @@ def check(src,now,to_time=systemd_time):
         results['race-channels']=(fresh,None if fresh else 'no passed race channel run in the last 2 h',good,
                                   'journalctl --user -u bigospeedrun-race-channels.service')
     issue_check(src,now,results)
+    reply_check(src,now,results)
     try:
         service=src.systemd('bigospeedrun-submissions.service','Result','ExecMainStatus','ExecMainExitTimestamp')
         timer=src.systemd('bigospeedrun-submissions.timer','LastTriggerUSec','ActiveState')

@@ -83,6 +83,8 @@ class Fake:
     def open_issues(self,repo):
         if self.issue_error:raise self.issue_error
         return [dict(i) for i in self.issues.get(repo,[])]
+    replied=set()
+    def bot_replied(self,repo,number):return (repo,number) in self.replied
     def issue_memory(self):return dict(self.issue_mem)
     def remember_issues(self,memory):self.issue_mem=dict(memory)
     def remember_parity(self,memory):self.parity_mem=dict(memory)
@@ -111,7 +113,7 @@ class DeadmanTests(unittest.TestCase):
 
     def test_all_healthy_sends_nothing(self):
         report=self.run_at(Fake())
-        self.assertEqual(set(report),{'watch-cycle','discord-intake','problem-selection','site-refresh','verifier-submissions','chatbot-gap-review','watch-sources','watch-errors','vps-deploy','vps-board','race-parity','stale-issues'})
+        self.assertEqual(set(report),{'watch-cycle','discord-intake','problem-selection','site-refresh','verifier-submissions','chatbot-gap-review','watch-sources','watch-errors','vps-deploy','vps-board','race-parity','stale-issues','unanswered-submissions'})
         self.assertTrue(all(v=='ok' for v in report.values()));self.assertEqual(self.sent,[])
 
     def test_each_simulated_stale_or_failed_state_is_caught(self):
@@ -343,7 +345,7 @@ class DeadmanTests(unittest.TestCase):
         self.assertNotIn('stale-issues',self.failing(f))
         f.issues={'bigospeedrun/verifier':[self.issue(4,49),self.issue(5,2)],'bigospeedrun/site':[dict(self.issue(2,24),html_url='https://github.com/bigospeedrun/site/issues/2')]}
         problem=d.check(f,NOW)['stale-issues'][1]
-        self.assertIn('2 issue(s) open for 24 h or more',problem)
+        self.assertIn('2 issue(s) or PR(s) open for 24 h or more',problem)
         self.assertIn('verifier#4 "Lean submission" open 2 d 1 h https://github.com/bigospeedrun/verifier/issues/4',problem)
         self.assertIn('site#2',problem);self.assertNotIn('#5',problem)
 
@@ -355,6 +357,31 @@ class DeadmanTests(unittest.TestCase):
         f.issues['bigospeedrun/watch'].append(self.issue(8,25));self.run_at(f,NOW+timedelta(hours=2))
         f.issues={};self.run_at(f,NOW+timedelta(hours=3))
         self.assertEqual([p['event'] for p in self.sent if p.get('item')=='stale-issues'],['alert','alert','recovered'])
+
+    def test_prs_count_as_stale_items(self):
+        f=Fake();f.issues={'bigospeedrun/verifier':[dict(self.issue(11,24*6,'Matrix multiplication statement'),pr=True)]}
+        problem=d.check(f,NOW)['stale-issues'][1]
+        self.assertIn('1 issue(s) or PR(s) open for 24 h or more',problem);self.assertIn('verifier#11 (PR) "Matrix multiplication statement" open 6 d 0 h',problem)
+
+    def test_a_submission_without_a_bot_reply_alerts_once_per_item(self):
+        # Issue #35, 2026-10-21: a form error got no reply for 10 h.
+        f=Fake();f.issues={'bigospeedrun/verifier':[self.issue(35,0.5,'[Lean submission] 3SUM: x'),self.issue(36,10,'A question'),
+                                                    dict(self.issue(37,2,'audit: y'),pr=True),self.issue(38,3,'[Lean submission] DFT: z')]}
+        f.replied={('bigospeedrun/verifier',38)}
+        ok,problem,_,_=d.check(f,NOW)['unanswered-submissions']
+        self.assertFalse(ok);self.assertNotIn('#35',problem);self.assertNotIn('#36',problem);self.assertNotIn('#38',problem)
+        self.assertIn('verifier#37 (PR) "audit: y" has no bot reply',problem)
+        f.issues['bigospeedrun/verifier'][0]=self.issue(35,10,'[Lean submission] 3SUM: x')
+        self.run_at(f,NOW);self.run_at(f,NOW+timedelta(hours=1))
+        f.replied|={('bigospeedrun/verifier',35),('bigospeedrun/verifier',37)};self.run_at(f,NOW+timedelta(hours=2))
+        events=[p['event'] for p in self.sent if p.get('item')=='unanswered-submissions']
+        self.assertEqual(events,['alert','recovered'])
+
+    def test_unreadable_replies_alert(self):
+        f=Fake();f.issues={'bigospeedrun/verifier':[self.issue(35,10,'[Lean submission] x')]}
+        f.bot_replied=lambda repo,number:(_ for _ in ()).throw(RuntimeError('down'))
+        ok,problem,_,_=d.check(f,NOW)['unanswered-submissions']
+        self.assertFalse(ok);self.assertIn('cannot read the verifier issues and replies: RuntimeError',problem)
 
     def test_issue_read_failures_alert_on_the_second_run(self):
         f=Fake();f.issue_error=RuntimeError('GitHub issues request failed')
