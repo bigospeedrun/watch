@@ -96,7 +96,7 @@ fi
 cp people-watch.json .git/watch-previous-people.json
 cp pivot-watch.json .git/watch-previous-pivot.json
 STEP=tests;LOG=.git/watch-tests.log
-python3 -m unittest test_people_watch test_pivot_watch test_watch_policy test_other_bounds_watch test_crocswap_pr_watch test_refresh_health test_discord_watch test_problem_selection_watch test_cycle_alert test_deadman test_lean_target_watch > "$LOG" 2>&1
+python3 -m unittest test_people_watch test_pivot_watch test_watch_policy test_other_bounds_watch test_crocswap_pr_watch test_refresh_health test_discord_watch test_discord_ack test_problem_selection_watch test_cycle_alert test_deadman test_lean_target_watch > "$LOG" 2>&1
 if python3 discord_watch.py > .git/discord-watch.log 2>&1; then
   python3 cycle_alert.py ok discord-intake >> .git/cycle-alert.log 2>&1 || true
 else
@@ -235,6 +235,21 @@ next cycle can retry; it does not leave a dirty report that blocks the watch. In
 
 `python3 discord_watch.py --dry-run` reads only: no reactions, office messages,
 cursor writes, public report writes, or private author records.
+
+### Acknowledging every message (Nil, 2026-10-21)
+
+`discord_ack.py` runs every minute from `bigospeedrun-discord-ack.timer` (outside the watch cycle) and
+adds the bot's eyes reaction to each new human message (type 0 or 19) in #submit-a-result, with or
+without a link. The 2026-10-21 report found messages with no reaction: `discord_watch.py` reacts only to
+a message with an accepted GitHub link (links to the `bigospeedrun` organization do not count) and only
+when the watch cycle runs. `discord_watch.py` is unchanged and keeps the link intake; both PUT the same
+reaction, which is idempotent. The acknowledger keeps the cursor, the ids of messages whose reaction
+failed and the time of the last good pass in the ignored `discord-ack.local.json`, and never the text of
+a message. It starts at the newest message on its first run. A reaction that fails for 15 minutes alerts
+BOS Lead Dev once; the dead-man item `discord-ack` alerts when the reader has not passed for 15 minutes
+or a message waited 15 minutes. `python3 discord_ack.py --dry-run` reads only. Install: copy
+`systemd/bigospeedrun-discord-ack.{service,timer}` to `~/.config/systemd/user/`, then
+`systemctl --user daemon-reload && systemctl --user enable --now bigospeedrun-discord-ack.timer`.
 
 ## Problem selection digest
 

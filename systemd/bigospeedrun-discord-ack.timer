@@ -1,0 +1,11 @@
+[Unit]
+Description=React with eyes to each new #submit-a-result message every minute
+
+[Timer]
+OnCalendar=*-*-* *:*:00
+AccuracySec=1s
+Persistent=true
+Unit=bigospeedrun-discord-ack.service
+
+[Install]
+WantedBy=timers.target

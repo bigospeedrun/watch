@@ -29,8 +29,11 @@ class Fake:
     def watch_errors(self):
         if isinstance(self.werrors,Exception):raise self.werrors
         return list(self.werrors)
-    def unit_installed(self,unit):return self.installed
-    def digest_last_ok(self,name):return self.digest_ok
+    ack_installed=False;ack_ok=None
+    def unit_installed(self,unit):return self.ack_installed if 'discord-ack' in unit else self.installed
+    ack={}
+    def ack_pending(self):return self.ack
+    def digest_last_ok(self,name):return self.ack_ok if name=='discord-ack' else self.digest_ok
     def vps_health(self):
         if self.vps_error:raise self.vps_error
         return self.vps
@@ -133,6 +136,17 @@ class DeadmanTests(unittest.TestCase):
         f.installed=True;f.digest_ok=NOW-timedelta(hours=1);self.assertEqual(self.failing(f),set())
         f.digest_ok=NOW-timedelta(hours=2.5);self.assertEqual(self.failing(f),{'prove2me-digest'})
         f.digest_ok=None;self.assertEqual(self.failing(f),{'prove2me-digest'})
+
+    def test_discord_ack_needs_a_pass_within_15_minutes_and_no_message_waiting_that_long(self):
+        f=Fake();self.assertNotIn('discord-ack',d.check(f,NOW))
+        f.ack_installed=True;f.ack_ok=NOW-timedelta(minutes=2);self.assertEqual(self.failing(f),set())
+        f.ack_ok=NOW-timedelta(minutes=16);self.assertEqual(self.failing(f),{'discord-ack'})
+        f.ack_ok=None;self.assertEqual(self.failing(f),{'discord-ack'})
+        f.ack_ok=NOW-timedelta(minutes=2)
+        f.ack={'11':(NOW-timedelta(minutes=14)).isoformat()};self.assertEqual(self.failing(f),set())
+        f.ack={'11':(NOW-timedelta(minutes=15)).isoformat(),'12':(NOW-timedelta(minutes=1)).isoformat()}
+        self.assertEqual(self.failing(f),{'discord-ack'})
+        self.assertIn('1 message(s)',d.check(f,NOW)['discord-ack'][1])
 
     def p2m_run(self,f,url,import_ok=True,fail_step=None,other_failure=False):
         steps=[dict(name='Validate refreshed bundle',conclusion='failure' if other_failure else 'success'),

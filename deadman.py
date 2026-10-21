@@ -22,6 +22,10 @@ Items:
                        cycle stalled silently before 2026-10-16 (slitsey Catalan)
   prove2me-digest      #prove2me reader (bigospeedrun-prove2me.timer, every minute) last ran ok
                        < 2 h; checked once that timer unit is installed
+  discord-ack          #submit-a-result acknowledger (bigospeedrun-discord-ack.timer, every minute,
+                       discord_ack.py) last ran ok < 15 min, and no message has waited 15 min for
+                       its eyes reaction (discord-ack.local.json); checked once that timer unit is
+                       installed (Nil, 2026-10-21: acknowledge messages quickly)
   prove2me-import      no board in data/prove2me.json on main is held (the alert names each
                        reason), and the prove2.me import step of the newest completed site
                        refresh run did not fail. Since 2026-10-20 a hold does not fail the
@@ -155,6 +159,7 @@ BOARD_LINK='ssh boshealth (VPS /opt/bigospeedrun-board/auto-deploy/status.json);
 VPS_BACKUP=Path.home()/'nil/wallgame/ops-private/vps-backup'
 PT=ZoneInfo('America/Los_Angeles')
 H=timedelta(hours=1)
+ACK_LIMIT=timedelta(minutes=15)
 
 def pt(when):
     if not when:return 'never recorded'
@@ -274,6 +279,9 @@ class Sources:
         path=self.root/f'{name}.local.json'
         return parse(json.loads(path.read_text()).get('last_ok')) if path.exists() else None
     def unit_installed(self,unit):return (Path.home()/'.config/systemd/user'/unit).exists()
+    def ack_pending(self):
+        path=self.root/'discord-ack.local.json'
+        return json.loads(path.read_text()).get('pending',{}) if path.exists() else {}
     def cron_runs(self,job):
         path=CRONJOBS/job/'runs.json'
         return json.loads(path.read_text()) if path.exists() else []
@@ -575,6 +583,12 @@ def check(src,now,to_time=systemd_time):
         good=src.digest_last_ok('prove2me');fresh=bool(good and now-good<2*H)
         results['prove2me-digest']=(fresh,None if fresh else 'no successful #prove2me read in the last 2 h',good,
                                     'journalctl --user -u bigospeedrun-prove2me.service')
+    if src.unit_installed('bigospeedrun-discord-ack.timer'):
+        good=src.digest_last_ok('discord-ack');waiting=[m for m,first in src.ack_pending().items() if now-parse(first)>=ACK_LIMIT]
+        if not good or now-good>=ACK_LIMIT:problem='the #submit-a-result acknowledger has not run ok for 15 min'
+        elif waiting:problem=f'{len(waiting)} message(s) in #submit-a-result waited 15 min for the eyes reaction (ids {", ".join(sorted(waiting,key=int)[:5])})'
+        else:problem=None
+        results['discord-ack']=(problem is None,problem,good,'journalctl --user -u bigospeedrun-discord-ack.service')
     try:
         runs=src.cron_runs(GAP_REVIEW_JOB)
         ok=[r for r in runs if r.get('status')=='completed' and not r.get('errorReason')]
