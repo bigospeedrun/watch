@@ -348,6 +348,22 @@ class OtherBoundsTests(unittest.TestCase):
         rows,_=run(readme('2 100')+'Corollary: mu(G) < 1 900.\n','g'*40,state,site_error=RuntimeError('GitHub GET failed (HTTP 404)'))
         self.assertEqual(len(rows),1);self.assertIn('Corollary: mu(G) < 1 900.',rows[0]['source_claim_evidence'])
 
+    def test_carreira_pattern_reads_these_lines_and_refuses_these(self):
+        # Reviewer probes, 2026-10-21 (FIX C): LaTeX relations \leqslant, \leqq, \lt, and the
+        # Unicode forms; a separator is refused only before a full 3-digit group.
+        pattern=next(c for c in o.CONFIG if c['repo']=='MarcosCarreira/catalan-designs')['bound_pattern']
+        read={r'mu(G) < 699':699,r'μ(G) ≤ 699.5':o.Fraction(1399,2),r'$\mu(G)\le 699$':699,r'\mu(G) \leq 699':699,r'mu(G) <= 699.':699,
+              r'mu(G) <699, improving':699,r'$\mu(G)<2\,294$':2294,r'mu(G) < 2{,}294':2294,r'mu(G) < 2 294':2294,r'mu(G) < 699 (Thm 3)':699,
+              r'$\mu (G) \le 699$':699,r'$\mu(G) < 699$.':699,r'$\mu(G)<699\,,$':699,r'$\mu(G)\leqslant 699$':699,r'$\mu(G) \lt 699$':699,
+              r'μ(G) ⩽ 699':699,r'mu(G) < 699 2nd design':699,r'$\mu(G)\leqq 699$':699,r'μ(G) ≦ 699':699}
+        for line,value in read.items():
+            with self.subTest(line=line):self.assertEqual(o.stated_values(pattern,line),[value])
+        # A power or a product is not a bound value (the scientific form is out of scope).
+        for line in [r'$\mu(G)\le10^{8}$',r'mu(G) < 1.85\times10^3',r'mu(G) < 2e3',r'mu(G) < 6.99\times10^2']:
+            with self.subTest(line=line):self.assertEqual(o.stated_values(pattern,line),[])
+        # Accepted tradeoff: an invalid group reads as its first digits, a false alert, never a miss.
+        self.assertEqual(o.stated_values(pattern,r'$\mu(G)<2\,29$'),[2])
+
     def test_a_record_stated_only_in_the_paper_alerts(self):
         # Reviewer FIX 1, 2026-10-21: the README still shows 2 294 (behind the leader 740), and
         # the .tex diff states 699: the record alerts from the diff.
