@@ -1,5 +1,5 @@
 """Data-only discovery of Other bounds claims and OpenAI math fork improvements."""
-import hashlib,json,re,time
+import base64,hashlib,json,re,time
 from fractions import Fraction
 from pathlib import Path
 from urllib.parse import quote
@@ -76,15 +76,38 @@ def claim_key(family,lines):
 SITE='bigospeedrun/site'
 SITE_BOUNDS='src/lib/other-bounds.json'
 
+# A changed file without a patch (GitHub sends none for a large diff, MarcosCarreira's
+# v2 paper, 2026-10-21) is read whole at head through its blob, up to this size.
+MAX_UNPATCHED_BYTES=8*1024*1024
+
+def changed_text(budget,repo,f,errors,whole=True):
+    """The added lines of a changed file, or None. Without a patch the file is read whole
+    from its blob at head when whole is True (Lead, 2026-10-21); a failed read is an error."""
+    if 'patch' in f:
+        return '\n'.join(line[1:] for line in f['patch'].splitlines() if line.startswith('+') and not line.startswith('+++'))
+    if not whole:
+        errors.append(repo+': missing diff patch '+f['filename']);return None
+    try:
+        if not re.fullmatch(r'[0-9a-f]{40}',str(f.get('sha',''))):raise ValueError('no blob sha')
+        blob=budget.get(f'repos/{repo}/git/blobs/{f["sha"]}')
+        if not isinstance(blob.get('size'),int) or blob['size']>MAX_UNPATCHED_BYTES:raise ValueError('file too large')
+        raw=base64.b64decode(blob['content'])
+        if hashlib.sha1(b'blob %d\0'%len(raw)+raw).hexdigest()!=f['sha']:raise ValueError('blob hash mismatch')
+        return raw.decode('utf-8',errors='replace')
+    except BudgetExhausted:raise
+    except (RuntimeError,ValueError,KeyError,TypeError,AttributeError) as error:
+        errors.append(f"{repo}: missing diff patch {f['filename']}; reading the file failed ({type(error).__name__})");return None
+
 def line_of(text,start):
     return text[text.rfind('\n',0,start)+1:].split('\n',1)[0].strip()[:1000]
 
 def stated(pattern,text):
     """(value, line) of every value the pattern's num group states, with digit grouping
-    removed ('mu(G) < 2 294', MarcosCarreira 2026-10-21). No comma: '650,700' is a list."""
+    removed ('mu(G) < 2 294', and LaTeX '$\\mu(G)<2\\,294$' in his v2 paper, 2026-10-21). No bare
+    comma: '650,700' is a list."""
     found=[]
     for match in re.finditer(pattern,text,re.M):
-        try:found.append((Fraction(re.sub(r'[\s\u2009\u202f]','',match['num'])),line_of(text,match.start())))
+        try:found.append((Fraction(re.sub(r'[\s\u2009\u202f]|\\,|\{,\}','',match['num'])),line_of(text,match.start())))
         except (ValueError,ZeroDivisionError):continue
     return found
 
@@ -252,8 +275,9 @@ def collect(since,previous,people_hits=(),search=True):
                 additions=[]
                 for f in diff.get('files',[]):
                     if f.get('status')=='removed' or not re.search(r'\.(?:md|tex|lean)$',f['filename']):continue
-                    if 'patch' not in f:errors.append(repo+': missing diff patch '+f['filename']);continue
-                    added='\n'.join(line[1:] for line in f['patch'].splitlines() if line.startswith('+') and not line.startswith('+++'))
+                    # A modified fork file read whole would carry inherited upstream text: only an added one.
+                    added=changed_text(budget,repo,f,errors,whole=f.get('status')=='added')
+                    if added is None:continue
                     families=family_matches(f['filename']+'\n'+added)
                     families+=re.findall(r'\bfamily\s*#?\s*(\d{1,3})\b',added,re.I)
                     families+=[m.zfill(3) for m in re.findall(r'(?:^|/)(\d{3})(?:[-_/]|$)',f['filename'])]
@@ -305,8 +329,8 @@ def collect(since,previous,people_hits=(),search=True):
                                     diff={'files':[]}
                                 for f in diff.get('files',[]):
                                     if f['filename']=='README.md' or f.get('status')=='removed' or not re.search(r'\.(?:md|tex)$',f['filename']):continue
-                                    if 'patch' not in f:errors.append(repo+': missing diff patch '+f['filename']);continue
-                                    found+=stated(bound_cfg['bound_pattern'],'\n'.join(line[1:] for line in f['patch'].splitlines() if line.startswith('+') and not line.startswith('+++')))
+                                    added=changed_text(budget,repo,f,errors)
+                                    if added is not None:found+=stated(bound_cfg['bound_pattern'],added)
                                 if len(diff.get('files',[]))>=300:truncated.append(dict(query=repo+' claim diff',total_count='at least 300 files'))
                         winners=[(v,line) for v,line in found if beats(v)]
                         additions=[]
@@ -336,8 +360,8 @@ def collect(since,previous,people_hits=(),search=True):
                         diff={'files':[]}
                     for f in diff.get('files',[]):
                         if f['filename']=='README.md' or f.get('status')=='removed' or not re.search(r'\.(?:md|tex)$',f['filename']):continue
-                        if 'patch' not in f:errors.append(repo+': missing diff patch '+f['filename']);continue
-                        added='\n'.join(line[1:] for line in f['patch'].splitlines() if line.startswith('+') and not line.startswith('+++'))
+                        added=changed_text(budget,repo,f,errors)
+                        if added is None:continue
                         targets=family_matches(f['filename']+'\n'+added) or families
                         for family in targets:additions.append((family,scoped_claims(added,family,True),None))
                     if len(diff.get('files',[]))>=300:truncated.append(dict(query=repo+' claim diff',total_count='at least 300 files'))

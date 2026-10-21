@@ -11,6 +11,12 @@ Items:
                        succeeded and newest success < 2 h (GitHub GET only)
   verifier-submissions bigospeedrun-submissions.service last run ok and its
                        timer triggered < 75 min ago (systemctl --user show)
+  watch-errors         no error in pivot-watch.json names a watchlist repo (other-bounds and
+                       pivot watchlists). Alerts once per new error string, never again
+                       for the same string in one failing episode, and sends one recovery
+                       line when none is left (Lead, 2026-10-21: a "missing diff patch"
+                       was only a log). Errors of repos found by search stay a log: 27 to
+                       230 a cycle on 2026-10-20/21, almost all unreadable READMEs
   watch-sources        every other-bounds watchlist repo was checked within the
                        last 2 cycles (pivot-watch.json); a repo that errors every
                        cycle stalled silently before 2026-10-16 (slitsey Catalan)
@@ -128,6 +134,11 @@ REVIEW_STEPS={REVIEW_FAIL_STEP,'List results that wait for lead review'}
 # continue-on-error steps of refresh-data.yml: they never fail a run on their own.
 SOFT_STEPS={'Refresh direct submission issues and PRs','Refresh public author profiles','Plan Discord record notifications',
             'Post Discord record notifications','Plan X record notifications','Commit X reservations before sending','Post X record notifications'}
+# Items whose problem is a set of strings joined by SET_SEP: an alert lists only strings not
+# alerted yet in this failing period, and a repeated string never alerts again.
+SET_ITEMS={'watch-errors'}
+SET_SEP='\n'
+WATCH_ERRORS_LINK='~/nil/bigospeedrun-data/pivot-watch.json (errors)'
 # Items whose alert repeats when the problem text changes during one failing period.
 REALERT_ON_CHANGE={'prove2me-import','race-parity','stale-issues','review-wait'}
 ISSUE_REPOS=('bigospeedrun/site','bigospeedrun/board','bigospeedrun/verifier','bigospeedrun/watch')
@@ -247,6 +258,13 @@ class Sources:
                            capture_output=True,text=True,timeout=30)
         if out.returncode:raise RuntimeError('systemctl show failed for '+unit)
         return dict(line.split('=',1) for line in out.stdout.splitlines() if '=' in line)
+    def watch_errors(self):
+        """The errors in pivot-watch.json that name a watchlist repo ('owner/repo: ...' or
+        'owner/repo PR #n: ...')."""
+        report=json.loads((self.root/'pivot-watch.json').read_text())
+        repos={c['repo'] for c in json.loads((self.root/'other-bounds-watchlist.json').read_text())['families']}
+        repos|={r['repo'] for r in json.loads((self.root/'pivot-watchlist.json').read_text())['repositories']}
+        return [e for e in report.get('errors',[]) if isinstance(e,str) and e.split(':',1)[0].split(' PR #',1)[0] in repos]
     def stalled_sources(self):
         report=json.loads((self.root/'pivot-watch.json').read_text())
         cycle=report['other_bounds_checkpoint']['cycle'];states=report.get('other_bound_states',{})
@@ -548,6 +566,11 @@ def check(src,now,to_time=systemd_time):
                                   None if stalled else now,'~/nil/bigospeedrun-data/pivot-watch.json (errors)')
     except Exception as error:
         results['watch-sources']=(False,'cannot read pivot-watch.json: '+type(error).__name__,None,'~/nil/bigospeedrun-data/pivot-watch.json')
+    try:
+        found=sorted({safe_text(e,300) for e in src.watch_errors()})
+        results['watch-errors']=(not found,SET_SEP.join(found) or None,None if found else now,WATCH_ERRORS_LINK)
+    except Exception as error:
+        results['watch-errors']=(False,'cannot read pivot-watch.json or the watchlists: '+type(error).__name__,None,WATCH_ERRORS_LINK)
     if src.unit_installed('bigospeedrun-prove2me.timer'):
         good=src.digest_last_ok('prove2me');fresh=bool(good and now-good<2*H)
         results['prove2me-digest']=(fresh,None if fresh else 'no successful #prove2me read in the last 2 h',good,
@@ -653,8 +676,14 @@ def run(src,send,root=None,now=None):
         entry=state.get(item,{})
         if good:entry['last_good']=good.isoformat(timespec='seconds')
         good_pt=pt(parse(entry.get('last_good')))
+        new=[]
+        if item in SET_ITEMS and not ok:
+            new=[x for x in problem.split(SET_SEP) if x not in entry.get('strings',[])]
         if ok and entry.get('alerted'):
             payload=dict(kind='bos-deadman',event='recovered',item=item,text=f'Dead-man check: {item} recovered (last good {good_pt}).')
+        elif item in SET_ITEMS and not ok:
+            payload=None if not new else dict(kind='bos-deadman',event='alert',item=item,problem='; '.join(new),last_good=good_pt,link=link,
+                         text=f'Dead-man check: {item}: {len(new)} new: '+'; '.join(new[:5])+(f' (and {len(new)-5} more)' if len(new)>5 else '')+f'. See: {link}.')
         elif not ok and (not entry.get('alerted') or (item in REALERT_ON_CHANGE and alert_key(item,entry.get('problem'))!=alert_key(item,problem))):
             payload=dict(kind='bos-deadman',event='alert',item=item,problem=problem,last_good=good_pt,link=link,
                          text=f'Dead-man check: {item} is failing or stale: {problem}. Last good: {good_pt}. See: {link}.')
@@ -664,8 +693,9 @@ def run(src,send,root=None,now=None):
         if payload:
             try:
                 send(payload);entry['alerted']=not ok;entry.pop('local_only',None)
-                if ok:entry.pop('problem',None)
+                if ok:entry.pop('problem',None);entry.pop('strings',None)
                 else:entry['problem']=problem
+                if item in SET_ITEMS and not ok:entry['strings']=sorted(set(entry.get('strings',[]))|set(new))
                 status+=', '+payload['event']+' sent'
             except Exception as error:
                 # Lead unreachable: keep the item unsent and leave a local trace once per episode.

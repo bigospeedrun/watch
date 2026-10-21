@@ -25,6 +25,10 @@ class Fake:
     def cron_runs(self,job):return self.cron
     installed=False;digest_ok=None;stalled=()
     def stalled_sources(self):return list(self.stalled)
+    werrors=[]
+    def watch_errors(self):
+        if isinstance(self.werrors,Exception):raise self.werrors
+        return list(self.werrors)
     def unit_installed(self,unit):return self.installed
     def digest_last_ok(self,name):return self.digest_ok
     def vps_health(self):
@@ -104,7 +108,7 @@ class DeadmanTests(unittest.TestCase):
 
     def test_all_healthy_sends_nothing(self):
         report=self.run_at(Fake())
-        self.assertEqual(set(report),{'watch-cycle','discord-intake','problem-selection','site-refresh','verifier-submissions','chatbot-gap-review','watch-sources','vps-deploy','vps-board','race-parity','stale-issues'})
+        self.assertEqual(set(report),{'watch-cycle','discord-intake','problem-selection','site-refresh','verifier-submissions','chatbot-gap-review','watch-sources','watch-errors','vps-deploy','vps-board','race-parity','stale-issues'})
         self.assertTrue(all(v=='ok' for v in report.values()));self.assertEqual(self.sent,[])
 
     def test_each_simulated_stale_or_failed_state_is_caught(self):
@@ -249,6 +253,38 @@ class DeadmanTests(unittest.TestCase):
         result=d.check(f,NOW)
         self.assertEqual(self.failing(f),{'review-wait','prove2me-import'})
         self.assertIn('review step failed with no wait listed',result['review-wait'][1]);self.assertIn('without a held board',result['prove2me-import'][1])
+
+    def test_watch_errors_alert_once_per_new_string_and_recover_once(self):
+        # Lead, 2026-10-21: "missing diff patch" for MarcosCarreira/catalan-designs was only a log.
+        a='MarcosCarreira/catalan-designs: missing diff patch paper/catalan_design_extension_v2.tex'
+        b='slitsey/catalan-irrationality-measure: compare from 41531d6 failed (history may be rewritten); README read at 5cdfe00'
+        f=Fake();f.werrors=[a]
+        self.run_at(f);self.run_at(f)
+        alerts=[p for p in self.sent if p.get('item')=='watch-errors']
+        self.assertEqual([p['event'] for p in alerts],['alert']);self.assertIn('1 new: '+a,alerts[0]['text'])
+        f.werrors=[a,b];self.run_at(f)            # a new string: an alert that lists only it
+        f.werrors=[b];self.run_at(f)              # a string cleared, another stays: nothing
+        f.werrors=[a,b];self.run_at(f)            # a string seen in this episode: nothing
+        alerts=[p for p in self.sent if p.get('item')=='watch-errors']
+        self.assertEqual([p['event'] for p in alerts],['alert','alert']);self.assertEqual(alerts[1]['problem'],b)
+        f.werrors=[];self.run_at(f);self.run_at(f)  # all clear: one recovery line
+        f.werrors=[a];self.run_at(f)              # a new episode alerts again
+        self.assertEqual([p['event'] for p in self.sent if p.get('item')=='watch-errors'],['alert','alert','recovered','alert'])
+        # The strings are one ASCII line each, capped, so no separator or line break leaks in.
+        f=Fake();f.werrors=['x/y: \u00e9\n::error::'+'z'*900]
+        problem=d.check(f,NOW)['watch-errors'][1]
+        self.assertTrue(problem.isascii());self.assertNotIn('\n',problem);self.assertLessEqual(len(problem),300)
+        f.werrors=RuntimeError('gone');self.assertIn('cannot read pivot-watch.json',d.check(f,NOW)['watch-errors'][1])
+
+    def test_watch_errors_reads_only_watchlist_repos(self):
+        (self.root/'pivot-watch.json').write_text(json.dumps({'errors':[
+            'MarcosCarreira/catalan-designs: missing diff patch paper/v2.tex','simon-oz/AI-News: Unsupported content: simon-oz/AI-News/README.md',
+            'eumemic/exact-dft-bounds: Configured headline bound was not found; no change inferred','GitHub search failed; query=x',
+            'CrocSwap/integer-mult-bounds PR #4270: missing diff patch research/x/ADMISSION.md']}))
+        (self.root/'other-bounds-watchlist.json').write_text(json.dumps({'families':[{'repo':'MarcosCarreira/catalan-designs'}]}))
+        (self.root/'pivot-watchlist.json').write_text(json.dumps({'repositories':[{'repo':'eumemic/exact-dft-bounds'}]}))
+        self.assertEqual(d.Sources(self.root,persist=False).watch_errors(),
+                         ['MarcosCarreira/catalan-designs: missing diff patch paper/v2.tex','eumemic/exact-dft-bounds: Configured headline bound was not found; no change inferred'])
 
     def test_race_parity_names_each_missing_or_extra_board_and_channel(self):
         f=Fake();self.assertEqual(d.check(f,NOW)['race-parity'][:2],(True,None))

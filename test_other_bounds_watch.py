@@ -375,6 +375,59 @@ class OtherBoundsTests(unittest.TestCase):
         # A list with a comma is two values, not 650700.
         self.assertEqual(o.stated_values(cfg['bound_pattern'],'mu(G) < 650,700'),[650])
 
+    def test_a_file_without_a_patch_is_read_whole_from_its_blob(self):
+        # MarcosCarreira v2, 2026-10-21: GitHub sent no patch for the large new paper, so the
+        # watch only logged "missing diff patch". Now it reads the file at head and scans it.
+        import base64,hashlib
+        repo='MarcosCarreira/catalan-designs'
+        cfg=next(c for c in o.CONFIG if c['repo']==repo)
+        paper=('\\section{Main result}\n'+'Filler line without a bound.\n'*2000+'Theorem 36. We prove $\\mu(G) \\le 699$.\n').encode()
+        blob=hashlib.sha1(b'blob %d\0'%len(paper)+paper).hexdigest()
+        site={'families':[{'slug':'catalan','direction':'lower','claims':[{'value':'740'}]}]}
+        meta=dict(full_name=repo,html_url='https://github.com/'+repo,default_branch='main',pushed_at='2026-10-21T12:00:00Z')
+        def run(blob_reply,sha=blob):
+            gets=[]
+            def content(r,path,ref,**kwargs):return json.dumps(site).encode() if r==o.SITE else b'give mu(G) < 2 294 for (36, 6, 2, 3, 2)\n'
+            def api(path,params=None,**kwargs):
+                gets.append(path)
+                if '/compare/' in path:return {'files':[{'filename':'paper/catalan_design_extension_v2.tex','status':'added','sha':sha}]}
+                if '/git/blobs/' in path:return blob_reply
+                return {'sha':'b'*40}
+            previous={'other_bound_states':{repo:{'head':'a'*40,'seen_claims':[],'meta':meta,'checked_cycle':1}}}
+            with patch.object(o,'CONFIG',[cfg]),patch.object(o,'api',api),patch.object(o,'content',content):
+                result=o.collect('2026-10-21',previous,search=False)
+            return [r for r in result['candidates'] if r['repo']==repo],result,gets
+        good={'size':len(paper),'content':base64.b64encode(paper).decode(),'encoding':'base64'}
+        rows,result,gets=run(good)
+        self.assertEqual(len(rows),1);self.assertIn('699',rows[0]['source_claim_evidence'][0])
+        self.assertIn(f'repos/{repo}/git/blobs/{blob}',gets);self.assertFalse(any('missing diff patch' in e for e in result['errors']))
+        # The real v2 paper line (LaTeX thin space as digit grouping): 2294, not 2, so no alert.
+        real=(r'With the degree bound of \cite{Litsey} and a nonvanishing lemma, the gap of the design $(36,6,2,3,2)$ then gives '
+              r'$\mu(G)<2\,294$, and that of $(96,15,6,8,5)$ gives $\mu(G)<2\,426$; \cite{Litsey} obtains $8\,127$.'+'\n'
+              # A power or a product is not a bound value (10 of 10^8, 1 of 1.85\times10^3; live run 2026-10-21).
+              r'Jha \cite{Jha} obtains $\mu(G)\le10^8$ for the design $(48,7,4,4,2)$, and the method gives about $\mu(G)<1.85\times10^3$.'+'\n').encode()
+        real_blob=hashlib.sha1(b'blob %d\0'%len(real)+real).hexdigest()
+        rows,result,_=run({'size':len(real),'content':base64.b64encode(real).decode()},real_blob)
+        self.assertEqual(rows,[]);self.assertEqual(o.stated_values(cfg['bound_pattern'],real.decode()),[2294,2426])
+        # A blob that does not match its sha, or an oversized one, is an error and is not read.
+        for reply,word in [(dict(good,content=base64.b64encode(paper+b'x').decode()),'ValueError'),(dict(good,size=o.MAX_UNPATCHED_BYTES+1),'ValueError')]:
+            rows,result,_=run(reply)
+            self.assertEqual(rows,[]);self.assertTrue(any('missing diff patch paper/catalan_design_extension_v2.tex; reading the file failed ('+word+')' in e for e in result['errors']))
+
+    def test_a_modified_fork_file_without_a_patch_is_not_read_whole(self):
+        # A modified file in an OpenAI fork carries inherited upstream text: log it, read nothing.
+        old=self.fork('person/math');new=dict(old,pushed_at='2026-10-12')
+        gets=[]
+        def api(path,params=None,**kwargs):
+            gets.append(path)
+            if path.endswith('/forks'):return [new]
+            if '/compare/' in path:return {'files':[{'filename':'notes/007.md','status':'modified','sha':'c'*40}]}
+            return {'sha':'head'}
+        with patch.object(o,'CONFIG',[]),patch.object(o,'api',api):
+            result=o.collect('2026-10-10',{'other_bounds_checkpoint':{'pending':[old]}})
+        self.assertFalse(any('/git/blobs/' in g for g in gets))
+        self.assertIn('person/math: missing diff patch notes/007.md',result['errors'])
+
     def test_repo_without_readme_is_not_stalled(self):
         # karirogg/QuasiRiemannTracker (a fork without README.md) failed every cycle, 2026-10-15.
         repo='karirogg/QuasiRiemannTracker'
