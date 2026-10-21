@@ -24,6 +24,7 @@ ROOT = Path(__file__).resolve().parent
 STATE = 'discord-ack.local.json'
 ALERT_AFTER = timedelta(minutes=15)
 PAGES = 5
+RETRIES = 25
 HUMAN_TYPES = (0, 19)  # a message and a reply
 
 
@@ -67,15 +68,17 @@ def run(api, notify, root=None, dry_run=False, now=None, sleep=time.sleep):
     if fresh:
         # A first run starts at the newest message: older ones are not this reader's job.
         newest = api.request('channels/' + api.channel + '/messages?limit=1') or []
-        state = dict(last_seen=newest[0]['id'] if newest else '0', pending={}, alerted=[], last_ok=None)
+        # One id below the newest message, so that the newest message itself (a human may have just posted it) is acknowledged.
+        state = dict(last_seen=str(int(newest[0]['id']) - 1) if newest else '0', pending={}, alerted=[], last_ok=None)
     reacted = 0
     # Retry reactions that failed before.
-    for mid in sorted(state['pending'], key=int):
-        if dry_run:
-            continue
+    # At most RETRIES of the oldest per pass, spaced like the new reactions, so a permission change that fails
+    # every reaction does not make each pass longer and hit the rate limit.
+    for mid in sorted(state['pending'], key=int)[:0 if dry_run else RETRIES]:
         if react(api, mid, sleep) is None:
             del state['pending'][mid]
             reacted += 1
+        sleep(0.3)
     cursor = state['last_seen']
     for _ in range(PAGES):
         batch = api.messages(cursor)

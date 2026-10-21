@@ -54,17 +54,39 @@ class AckTests(unittest.TestCase):
             root = Path(tmp)
             api = API([msg(1), msg(2)])
             result, _ = self.go(api, root)
-            self.assertEqual((result['first_run'], result['reacted'], api.reactions), (True, 0, []))
+            # The newest message itself is acknowledged (a human may have just posted it); older ones are not.
+            self.assertEqual((result['first_run'], result['reacted'], api.reactions), (True, 1, ['2']))
             self.assertEqual(json.loads((root / a.STATE).read_text())['last_seen'], '2')
             api.rows.append(msg(3))
             self.assertEqual(self.go(api, root)[0]['reacted'], 1)
-            self.assertEqual(api.reactions, ['3'])
+            self.assertEqual(api.reactions, ['2', '3'])
+
+    def test_retries_are_capped_and_spaced(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            api = API([msg(1)])
+            self.go(api, root)
+            api.reactions.clear()  # the first run acknowledged message 1
+            api.rows += [msg(n) for n in range(2, 62)]
+            for n in range(2, 62):
+                api.fail[str(n)] = [http(403)] * 100
+            self.go(api, root)
+            self.assertEqual(len(json.loads((root / a.STATE).read_text())['pending']), 60)
+            waits = []
+            calls = []
+            real = api.react
+            api.react = lambda mid: (calls.append(mid), real(mid))[1]
+            a.run(api, lambda *x: None, root, now=T0 + timedelta(minutes=1), sleep=waits.append)
+            self.assertEqual(len(calls), a.RETRIES)
+            self.assertEqual(calls, [str(n) for n in range(2, 2 + a.RETRIES)], 'the oldest first')
+            self.assertEqual(waits, [0.3] * a.RETRIES)
 
     def test_every_new_human_message_gets_one_reaction_and_bots_do_not(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
             api = API([msg(1)])
             self.go(api, root)
+            api.reactions.clear()  # the first run acknowledged message 1
             bot = msg(2)
             bot['author']['bot'] = True
             hook = msg(3, webhook_id='9')
@@ -83,6 +105,7 @@ class AckTests(unittest.TestCase):
             root = Path(tmp)
             api = API([msg(1)])
             self.go(api, root)
+            api.reactions.clear()  # the first run acknowledged message 1
             api.rows.append(msg(2, 'secret prose'))
             api.fail['2'] = [http(500)]
             self.go(api, root)
@@ -96,6 +119,7 @@ class AckTests(unittest.TestCase):
             root = Path(tmp)
             api = API([msg(1)])
             self.go(api, root)
+            api.reactions.clear()  # the first run acknowledged message 1
             api.rows.append(msg(2))
             api.fail['2'] = [http(403)] * 30
             result, alerts = self.go(api, root)
@@ -117,6 +141,7 @@ class AckTests(unittest.TestCase):
             root = Path(tmp)
             api = API([msg(1)])
             self.go(api, root)
+            api.reactions.clear()  # the first run acknowledged message 1
             api.rows += [msg(2), msg(3)]
             api.fail['2'] = [http(429, '2')]
             api.fail['3'] = [http(404)]
@@ -130,6 +155,7 @@ class AckTests(unittest.TestCase):
             root = Path(tmp)
             api = API([msg(1)])
             self.go(api, root)
+            api.reactions.clear()  # the first run acknowledged message 1
             api.rows.append(msg(2))
             api.fail['2'] = [URLError('down')]
             self.assertEqual(self.go(api, root)[0]['pending'], 1)
@@ -140,6 +166,7 @@ class AckTests(unittest.TestCase):
             root = Path(tmp)
             api = API([msg(1)])
             self.go(api, root)
+            api.reactions.clear()  # the first run acknowledged message 1
             api.rows.append(msg(2))
             before = (root / a.STATE).read_text()
             result = a.run(api, lambda *x: None, root, dry_run=True, now=T0, sleep=lambda s: None)
