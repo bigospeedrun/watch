@@ -73,6 +73,25 @@ def claim_key(family,lines):
     values=sorted(set(tuple(re.findall(r'\d+(?:\.\d+)?|[≤≥<>/=+^−-]',line)) for line in lines))
     return hashlib.sha256(json.dumps([family,values],sort_keys=True).encode()).hexdigest() if values else None
 
+SITE='bigospeedrun/site'
+SITE_BOUNDS='src/lib/other-bounds.json'
+
+def stated_values(pattern,text):
+    """Every value the pattern's num group states, with digit grouping removed
+    ('mu(G) < 2 294', MarcosCarreira 2026-10-21)."""
+    values=[]
+    for match in re.finditer(pattern,text,re.M):
+        try:values.append(Fraction(re.sub(r'[\s,\u2009\u202f]','',match['num'])))
+        except (ValueError,ZeroDivisionError):continue
+    return values
+
+def site_leader(budget,slug):
+    """(direction, leader value) of an Other bounds row on site main: the best claim value."""
+    families=json.loads(budget.read(SITE,SITE_BOUNDS,'main'))['families']
+    row=next(f for f in families if f['slug']==slug)
+    values=[Fraction(c['value']) for c in row['claims']]
+    return row['direction'],(min(values) if row['direction']=='lower' else max(values))
+
 def bound_key(family,value):
     # The claim key of a configured stated bound: only its value counts.
     return claim_key(family,[f'stated bound {Fraction(value)}'])
@@ -191,6 +210,7 @@ def collect(since,previous,people_hits=(),search=True):
         if i<len(forks):work.append(forks[i])
         if i<len(sources):work.append(sources[i])
     upstream_head=None
+    leaders={}
     for repo in work:
         meta=pending[repo];old=state.get(repo,{})
         seen=list(old.get('seen_claims',[]))
@@ -247,12 +267,34 @@ def collect(since,previous,people_hits=(),search=True):
                 bound=re.search(bound_cfg['bound_pattern'],text,re.M) if bound_cfg else None
                 if bound_cfg and not bound:
                     errors.append(f'{repo}: configured bound not found in README.md at {head[:7]}; all README claims checked')
-                if bound:
+                leader=None
+                values=stated_values(bound_cfg['bound_pattern'],text) if bound else []
+                if bound and not values:  # No readable value: all README claims, as without a pattern.
+                    bound=None;errors.append(f'{repo}: configured bound has no readable value in README.md at {head[:7]}; all README claims checked')
+                if bound and bound_cfg.get('beats_leader'):
+                    # Flag only a stated value that beats the row's current leader, not an author's
+                    # own improvement that stays behind it (Carreira mu(G) < 2294 vs 740, 2026-10-21).
+                    try:
+                        if bound_cfg['beats_leader'] not in leaders:leaders[bound_cfg['beats_leader']]=site_leader(budget,bound_cfg['beats_leader'])
+                        leader=leaders[bound_cfg['beats_leader']]
+                    except BudgetExhausted:raise
+                    except (RuntimeError,ValueError,KeyError,TypeError,StopIteration,ZeroDivisionError) as error:
+                        errors.append(f'{repo}: cannot read the {bound_cfg["beats_leader"]} leader from {SITE} ({type(error).__name__}); stated bound checked without it')
+                if bound and leader:
+                    direction,best_known=leader
+                    best=(min if direction=='lower' else max)(values)
+                    additions=[]
+                    if (best<best_known if direction=='lower' else best>best_known):
+                        family=bound_cfg['family']
+                        match=next(m for m in re.finditer(bound_cfg['bound_pattern'],text,re.M) if stated_values(bound_cfg['bound_pattern'],m[0])==[best])
+                        line=text[text.rfind('\n',0,match.start())+1:].split('\n',1)[0].strip()[:1000]
+                        additions=[(family,[line],bound_key(family,best))]
+                elif bound:
                     family=bound_cfg['family']
                     if bound_cfg.get('reviewed_bound') and bound_key(family,bound_cfg['reviewed_bound']) not in seen:
                         seen.append(bound_key(family,bound_cfg['reviewed_bound']))
                     line=text[text.rfind('\n',0,bound.start())+1:].split('\n',1)[0].strip()[:1000]
-                    additions=[(family,[line],bound_key(family,bound['num']))]
+                    additions=[(family,[line],bound_key(family,stated_values(bound_cfg['bound_pattern'],bound[0])[0]))]
                 base=None if bound else old.get('head') or next((cfg['baseline_commit'] for cfg in CONFIG if cfg['repo']==repo),None)
                 if base and base!=head:
                     try:diff=budget.get(f'repos/{repo}/compare/{base}...{head}')

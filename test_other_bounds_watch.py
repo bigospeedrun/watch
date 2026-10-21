@@ -304,6 +304,45 @@ class OtherBoundsTests(unittest.TestCase):
         self.assertTrue(any('> `|G-p/q| > b^(-700)`.' in r['source_claim_evidence'] for r in rows))
         self.assertTrue(any('configured bound not found' in e for e in result['errors']))
 
+    def test_a_bound_flags_only_when_it_beats_the_site_leader(self):
+        # MarcosCarreira/catalan-designs v2, 2026-10-21: mu(G) < 2 294, down from his own
+        # 2 715, while the Catalan leader is slitsey's 740. Real README lines.
+        repo='MarcosCarreira/catalan-designs'
+        cfg=next(c for c in o.CONFIG if c['repo']==repo)
+        def readme(new):
+            return ("This repository holds the note *General designs and an irrationality exponent for Catalan's constant*\n"
+                    "   (github.com/slitsey/catalan-irrationality-measure), and with nonvanishing at prime scales p whose square\n"
+                    f"   does not divide the denominator (Lemma 29), give mu(G) < {new} for (36, 6, 2, 3, 2) and mu(G) < 2 426 for\n"
+                    "Theorem 35, mu(G) < 2 715) now gives 2 294. The numbering after Section 4 has shifted by one section.\n")
+        site={'families':[{'slug':'catalan','direction':'lower','claims':[{'value':'8720'},{'value':'2715'},{'value':'740'}]}]}
+        meta=dict(full_name=repo,html_url='https://github.com/'+repo,default_branch='main',pushed_at='2026-10-21T12:00:00Z')
+        def run(text,head,previous,site_error=None):
+            def content(r,path,ref,**kwargs):
+                if r==o.SITE:
+                    if site_error:raise site_error
+                    self.assertEqual((path,ref),(o.SITE_BOUNDS,'main'));return json.dumps(site).encode()
+                return text.encode()
+            def api(path,params=None,**kwargs):
+                if '/compare/' in path:return {'files':[{'filename':'paper/main.tex','status':'modified','patch':'+we now prove mu(G) < 2 294 for Catalan constant, improving 2 715.'}]}
+                return {'sha':head}
+            with patch.object(o,'CONFIG',[cfg]),patch.object(o,'api',api),patch.object(o,'content',content):
+                result=o.collect('2026-10-21',previous,search=False)
+            return [r for r in result['candidates'] if r['repo']==repo],result
+        previous={'other_bound_states':{repo:{'head':'a'*40,'seen_claims':[],'meta':meta,'checked_cycle':1}}}
+        # His own improvement that stays behind the leader 740: silent, also for the .tex diff.
+        rows,result=run(readme('2 294'),'b'*40,previous);self.assertEqual(rows,[])
+        self.assertEqual(o.stated_values(cfg['bound_pattern'],readme('2 294')),[2294,2426,2715])
+        # A value that beats the leader: one alert with its line, then silent at the same value.
+        rows,result=run(readme('699'),'c'*40,{'other_bound_states':result['states']})
+        self.assertEqual(len(rows),1);self.assertIn('mu(G) < 699 for (36, 6, 2, 3, 2)',rows[0]['source_claim_evidence'][0])
+        rows,result=run(readme('699'),'d'*40,{'other_bound_states':result['states']});self.assertEqual(rows,[])
+        # The leader is read from the site: when it falls to 600, 699 no longer beats it.
+        site['families'][0]['claims'].append({'value':'600'})
+        rows,_=run(readme('650'),'e'*40,{'other_bound_states':result['states']});self.assertEqual(rows,[])
+        # An unreadable leader logs why and alerts on the stated bound.
+        rows,result=run(readme('2 100'),'f'*40,{'other_bound_states':result['states']},site_error=RuntimeError('GitHub GET failed (HTTP 404)'))
+        self.assertEqual(len(rows),1);self.assertTrue(any('cannot read the catalan leader' in e for e in result['errors']))
+
     def test_repo_without_readme_is_not_stalled(self):
         # karirogg/QuasiRiemannTracker (a fork without README.md) failed every cycle, 2026-10-15.
         repo='karirogg/QuasiRiemannTracker'
