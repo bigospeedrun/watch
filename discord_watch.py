@@ -16,7 +16,7 @@ PRIVATE='discord-submissions.local.json'
 class NoRedirect(HTTPRedirectHandler):
     def redirect_request(self,*args,**kwargs):return None
 
-def github_urls(content):
+def github_urls(content,include_own=False):
     urls=set()
     for token in re.findall(r'https?://[^\s<>"\x00-\x20]+',content):
         token=token.rstrip('.,;:!?)]}')
@@ -26,13 +26,16 @@ def github_urls(content):
             parts=u.path.strip('/').split('/')
             if len(parts)<2 or not re.fullmatch(r'[A-Za-z0-9](?:[A-Za-z0-9-]{0,38})',parts[0]):continue
             if not re.fullmatch(r'[A-Za-z0-9_.-]{1,100}',parts[1]) or parts[1] in ('.','..'):continue
-            if parts[0].lower()=='bigospeedrun':continue
+            if parts[0].lower()=='bigospeedrun' and not include_own:continue
             tail=parts[2:]
             if tail:
                 if tail[0]=='pull':
                     if len(tail)!=2 or not re.fullmatch(r'[1-9][0-9]*',tail[1]):continue
                 elif tail[0]=='commit':
                     if len(tail)!=2 or not re.fullmatch(r'[0-9a-fA-F]{7,40}',tail[1]):continue
+                elif tail[0]=='issues':
+                    # An issue link counts only for our own organization (the lead answers those).
+                    if not(include_own and parts[0].lower()=='bigospeedrun') or len(tail)!=2 or not re.fullmatch(r'[1-9][0-9]*',tail[1]):continue
                 elif tail[0] in ('tree','blob'):
                     if len(tail)<2 or (tail[0]=='blob' and len(tail)<3):continue
                     if any(not re.fullmatch(r'[A-Za-z0-9_.-]+',p) or p in ('.','..') for p in tail[1:]):continue
@@ -40,6 +43,8 @@ def github_urls(content):
             urls.add('https://github.com/'+'/'.join(parts))
         except ValueError:continue
     return sorted(urls)
+
+def own_url(url):return url.split('/')[3].lower()=='bigospeedrun'
 
 def excluded_message(message):
     return bool(message.get('author',{}).get('bot') or message.get('webhook_id'))
@@ -96,22 +101,33 @@ def run(api,notify,root=None,dry_run=False):
         for message in sorted(batch,key=lambda m:int(m['id'])):
             mid=message['id']
             if not re.fullmatch(r'[0-9]+',mid) or int(mid)<=int(cursor):raise ValueError('Invalid message order')
-            urls=[] if excluded_message(message) else github_urls(message.get('content',''));count+=1
-            if urls:
+            found=[] if excluded_message(message) else github_urls(message.get('content',''),include_own=True);count+=1
+            # Links to our own organization are not new races: they alert the lead (Lead, 2026-10-21: no silent
+            # pass for a PR link such as bigospeedrun/verifier/pull/27) but stay out of the public repo list.
+            urls=[u for u in found if not own_url(u)];own=[u for u in found if own_url(u)]
+            if urls or own:
                 hits+=1
                 if not dry_run:
-                    repos=sorted({repo_url(u) for u in urls})
                     record=state['messages'].setdefault(mid,dict(author_id=message['author']['id'],
                         username=message['author']['username'],urls=urls,alerted=False))
-                    # Persist sanitized evidence before any acknowledgement.
-                    if not any(r['message_id']==mid for r in public['submissions']):
-                        public['submissions'].append(dict(message_id=mid,repo_urls=repos))
-                    save(root/PUBLIC,public);save(root/PRIVATE,state)
-                    if not record['alerted']:
-                        stamp=datetime.now(timezone.utc).isoformat(timespec='seconds')
-                        notify(stamp+': Possible new bound race or problem pivot; README signals need review: '+
-                               '; '.join(u+' (Discord submission)' for u in repos),'discord-submission-'+mid)
-                        record['alerted']=True;save(root/PRIVATE,state)
+                    if urls:
+                        repos=sorted({repo_url(u) for u in urls})
+                        # Persist sanitized evidence before any acknowledgement.
+                        if not any(r['message_id']==mid for r in public['submissions']):
+                            public['submissions'].append(dict(message_id=mid,repo_urls=repos))
+                        save(root/PUBLIC,public);save(root/PRIVATE,state)
+                        if not record['alerted']:
+                            stamp=datetime.now(timezone.utc).isoformat(timespec='seconds')
+                            notify(stamp+': Possible new bound race or problem pivot; README signals need review: '+
+                                   '; '.join(u+' (Discord submission)' for u in repos),'discord-submission-'+mid)
+                            record['alerted']=True;save(root/PRIVATE,state)
+                    if own:
+                        record['own_urls']=own;save(root/PRIVATE,state)
+                        if not record.get('own_alerted'):
+                            stamp=datetime.now(timezone.utc).isoformat(timespec='seconds')
+                            notify(stamp+': A Discord message in #submit-a-result links to our own repository; read it and answer: '+
+                                   '; '.join(own)+' (Discord submission)','discord-own-'+mid)
+                            record['own_alerted']=True;save(root/PRIVATE,state)
                     api.react(mid) # PUT @me is idempotent if a prior attempt was interrupted.
             cursor=mid
             if not dry_run:
