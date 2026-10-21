@@ -409,10 +409,30 @@ class OtherBoundsTests(unittest.TestCase):
         real_blob=hashlib.sha1(b'blob %d\0'%len(real)+real).hexdigest()
         rows,result,_=run({'size':len(real),'content':base64.b64encode(real).decode()},real_blob)
         self.assertEqual(rows,[]);self.assertEqual(o.stated_values(cfg['bound_pattern'],real.decode()),[2294,2426])
-        # A blob that does not match its sha, or an oversized one, is an error and is not read.
+        # A blob that does not match its sha, or an oversized one, is not read: an error, and an
+        # alert that asks the lead to check the file by hand (Reviewer, 2026-10-21).
         for reply,word in [(dict(good,content=base64.b64encode(paper+b'x').decode()),'ValueError'),(dict(good,size=o.MAX_UNPATCHED_BYTES+1),'ValueError')]:
             rows,result,_=run(reply)
-            self.assertEqual(rows,[]);self.assertTrue(any('missing diff patch paper/catalan_design_extension_v2.tex; reading the file failed ('+word+')' in e for e in result['errors']))
+            self.assertTrue(any('missing diff patch paper/catalan_design_extension_v2.tex; reading the file failed ('+word+')' in e for e in result['errors']))
+            self.assertEqual(len(rows),1);self.assertIn('cannot read paper/catalan_design_extension_v2.tex at bbbbbbb',rows[0]['source_claim_evidence'][0])
+            self.assertTrue(alert_candidate(rows[0],set(),set()))
+
+    def test_an_unreadable_file_without_a_patch_alerts_in_the_generic_path(self):
+        # A watched repo without bound_pattern: the same read, and the same alert when it fails.
+        repo='rohitkrjha/catalan-measure'
+        cfg=next(c for c in o.CONFIG if c['repo']==repo)
+        meta=dict(full_name=repo,html_url='https://github.com/'+repo,default_branch='main',pushed_at='2026-10-21T12:00:00Z')
+        def api(path,params=None,**kwargs):
+            if '/compare/' in path:return {'files':[{'filename':'paper/big.tex','status':'added','sha':'e'*40}]}
+            if '/git/blobs/' in path:raise RuntimeError('GitHub GET failed (HTTP 500)')
+            return {'sha':'b'*40}
+        previous={'other_bound_states':{repo:{'head':'a'*40,'seen_claims':[o.claim_key('005',o.scoped_claims('# Catalan constant','005'))],'meta':meta,'checked_cycle':1}}}
+        with patch.object(o,'CONFIG',[cfg]),patch.object(o,'api',api),patch.object(o,'content',return_value=b'# Catalan constant'):
+            result=o.collect('2026-10-21',previous,search=False)
+        rows=[r for r in result['candidates'] if 'cannot read paper/big.tex' in r['source_claim_evidence'][0]]
+        self.assertEqual(len(rows),1);self.assertTrue(alert_candidate(rows[0],set(),set()))
+        # The same file and head never alerts twice: the key is stored in seen_claims.
+        self.assertIn(rows[0]['claim_signature'],result['states'][repo]['seen_claims'])
 
     def test_a_modified_fork_file_without_a_patch_is_not_read_whole(self):
         # A modified file in an OpenAI fork carries inherited upstream text: log it, read nothing.

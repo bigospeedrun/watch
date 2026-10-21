@@ -98,6 +98,13 @@ def changed_text(budget,repo,f,errors,whole=True):
     except (RuntimeError,ValueError,KeyError,TypeError,AttributeError) as error:
         errors.append(f"{repo}: missing diff patch {f['filename']}; reading the file failed ({type(error).__name__})");return None
 
+def unread(family,f,head):
+    """An alert addition for a changed file that could not be read (no patch, and the blob
+    read failed): the lead checks it by hand (Reviewer and Lead, 2026-10-21). Keyed on the
+    file and the head, not on claim_key, which would keep only the digits of the names."""
+    key=hashlib.sha256(json.dumps([family,'unread',f['filename'],head]).encode()).hexdigest()
+    return (family,[f"cannot read {f['filename']} at {head[:7]} (GitHub sent no patch and reading the file failed); check it by hand"],key)
+
 def line_of(text,start):
     return text[text.rfind('\n',0,start)+1:].split('\n',1)[0].strip()[:1000]
 
@@ -277,7 +284,11 @@ def collect(since,previous,people_hits=(),search=True):
                     if f.get('status')=='removed' or not re.search(r'\.(?:md|tex|lean)$',f['filename']):continue
                     # A modified fork file read whole would carry inherited upstream text: only an added one.
                     added=changed_text(budget,repo,f,errors,whole=f.get('status')=='added')
-                    if added is None:continue
+                    if added is None:
+                        if 'patch' not in f and f.get('status')=='added':
+                            for family in sorted(set(family_matches(f['filename'])+[m.zfill(3) for m in re.findall(r'(?:^|/)(\d{3})(?:[-_/]|$)',f['filename'])])) or ['unmapped']:
+                                additions.append(unread(family,f,head))
+                        continue
                     families=family_matches(f['filename']+'\n'+added)
                     families+=re.findall(r'\bfamily\s*#?\s*(\d{1,3})\b',added,re.I)
                     families+=[m.zfill(3) for m in re.findall(r'(?:^|/)(\d{3})(?:[-_/]|$)',f['filename'])]
@@ -313,7 +324,7 @@ def collect(since,previous,people_hits=(),search=True):
                     except (RuntimeError,ValueError,KeyError,TypeError,StopIteration,ZeroDivisionError) as error:
                         errors.append(f'{repo}: cannot read the {bound_cfg["beats_leader"]} leader from {SITE} ({type(error).__name__}); stated bound checked without it')
                 if bound and bound_cfg.get('beats_leader'):
-                    family=bound_cfg['family'];found=stated(bound_cfg['bound_pattern'],text)
+                    family=bound_cfg['family'];found=stated(bound_cfg['bound_pattern'],text);unread_files=[]
                     if leader:
                         direction,best_known=leader
                         beats=(lambda v:v<best_known) if direction=='lower' else (lambda v:v>best_known)
@@ -330,13 +341,15 @@ def collect(since,previous,people_hits=(),search=True):
                                 for f in diff.get('files',[]):
                                     if f['filename']=='README.md' or f.get('status')=='removed' or not re.search(r'\.(?:md|tex)$',f['filename']):continue
                                     added=changed_text(budget,repo,f,errors)
-                                    if added is not None:found+=stated(bound_cfg['bound_pattern'],added)
+                                    if added is None:unread_files.append(f)
+                                    else:found+=stated(bound_cfg['bound_pattern'],added)
                                 if len(diff.get('files',[]))>=300:truncated.append(dict(query=repo+' claim diff',total_count='at least 300 files'))
                         winners=[(v,line) for v,line in found if beats(v)]
                         additions=[]
                         if winners:
                             value,line=(min if direction=='lower' else max)(winners,key=lambda w:w[0])
                             additions=[(family,[line],bound_key(family,value))]
+                        additions+=[unread(family,f,head) for f in unread_files]
                     else:
                         # Leader unknown: alert when the set of stated values changes, not only the first one.
                         values=sorted({v for v,_ in found})
@@ -361,7 +374,8 @@ def collect(since,previous,people_hits=(),search=True):
                     for f in diff.get('files',[]):
                         if f['filename']=='README.md' or f.get('status')=='removed' or not re.search(r'\.(?:md|tex)$',f['filename']):continue
                         added=changed_text(budget,repo,f,errors)
-                        if added is None:continue
+                        if added is None:
+                            additions+=[unread(family,f,head) for family in families];continue
                         targets=family_matches(f['filename']+'\n'+added) or families
                         for family in targets:additions.append((family,scoped_claims(added,family,True),None))
                     if len(diff.get('files',[]))>=300:truncated.append(dict(query=repo+' claim diff',total_count='at least 300 files'))
