@@ -413,9 +413,23 @@ class OtherBoundsTests(unittest.TestCase):
         # alert that asks the lead to check the file by hand (Reviewer, 2026-10-21).
         for reply,word in [(dict(good,content=base64.b64encode(paper+b'x').decode()),'ValueError'),(dict(good,size=o.MAX_UNPATCHED_BYTES+1),'ValueError')]:
             rows,result,_=run(reply)
-            self.assertTrue(any('missing diff patch paper/catalan_design_extension_v2.tex; reading the file failed ('+word+')' in e for e in result['errors']))
+            self.assertTrue(any('missing diff patch paper/catalan_design_extension_v2.tex at bbbbbbb; reading the file failed ('+word+')' in e for e in result['errors']))
             self.assertEqual(len(rows),1);self.assertIn('cannot read paper/catalan_design_extension_v2.tex at bbbbbbb',rows[0]['source_claim_evidence'][0])
             self.assertTrue(alert_candidate(rows[0],set(),set()))
+
+    def test_a_capped_compare_of_a_watched_repo_is_an_error(self):
+        # Reviewer LOW 1, 2026-10-21: a 300-file compare went only to truncated_queries,
+        # which the dead-man watch-errors item does not read.
+        repo='rohitkrjha/catalan-measure'
+        cfg=next(c for c in o.CONFIG if c['repo']==repo)
+        meta=dict(full_name=repo,html_url='https://github.com/'+repo,default_branch='main',pushed_at='2026-10-21T12:00:00Z')
+        def api(path,params=None,**kwargs):
+            if '/compare/' in path:return {'files':[{'filename':f'notes/n{i}.txt','status':'added','patch':'+x'} for i in range(300)]}
+            return {'sha':'b'*40}
+        previous={'other_bound_states':{repo:{'head':'a'*40,'seen_claims':[],'meta':meta,'checked_cycle':1}}}
+        with patch.object(o,'CONFIG',[cfg]),patch.object(o,'api',api),patch.object(o,'content',return_value=b'# Catalan constant'):
+            result=o.collect('2026-10-21',previous,search=False)
+        self.assertIn(f'{repo}: compare capped at 300 files from aaaaaaa to bbbbbbb',result['errors'])
 
     def test_an_unreadable_file_without_a_patch_alerts_in_the_generic_path(self):
         # A watched repo without bound_pattern: the same read, and the same alert when it fails.
@@ -446,7 +460,7 @@ class OtherBoundsTests(unittest.TestCase):
         with patch.object(o,'CONFIG',[]),patch.object(o,'api',api):
             result=o.collect('2026-10-10',{'other_bounds_checkpoint':{'pending':[old]}})
         self.assertFalse(any('/git/blobs/' in g for g in gets))
-        self.assertIn('person/math: missing diff patch notes/007.md',result['errors'])
+        self.assertIn('person/math: missing diff patch notes/007.md at head',result['errors'])
 
     def test_repo_without_readme_is_not_stalled(self):
         # karirogg/QuasiRiemannTracker (a fork without README.md) failed every cycle, 2026-10-15.

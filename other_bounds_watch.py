@@ -80,13 +80,13 @@ SITE_BOUNDS='src/lib/other-bounds.json'
 # v2 paper, 2026-10-21) is read whole at head through its blob, up to this size.
 MAX_UNPATCHED_BYTES=8*1024*1024
 
-def changed_text(budget,repo,f,errors,whole=True):
+def changed_text(budget,repo,f,errors,head,whole=True):
     """The added lines of a changed file, or None. Without a patch the file is read whole
     from its blob at head when whole is True (Lead, 2026-10-21); a failed read is an error."""
     if 'patch' in f:
         return '\n'.join(line[1:] for line in f['patch'].splitlines() if line.startswith('+') and not line.startswith('+++'))
     if not whole:
-        errors.append(repo+': missing diff patch '+f['filename']);return None
+        errors.append(f"{repo}: missing diff patch {f['filename']} at {head[:7]}");return None
     try:
         if not re.fullmatch(r'[0-9a-f]{40}',str(f.get('sha',''))):raise ValueError('no blob sha')
         blob=budget.get(f'repos/{repo}/git/blobs/{f["sha"]}')
@@ -96,7 +96,7 @@ def changed_text(budget,repo,f,errors,whole=True):
         return raw.decode('utf-8',errors='replace')
     except BudgetExhausted:raise
     except (RuntimeError,ValueError,KeyError,TypeError,AttributeError) as error:
-        errors.append(f"{repo}: missing diff patch {f['filename']}; reading the file failed ({type(error).__name__})");return None
+        errors.append(f"{repo}: missing diff patch {f['filename']} at {head[:7]}; reading the file failed ({type(error).__name__})");return None
 
 def unread(family,f,head):
     """An alert addition for a changed file that could not be read (no patch, and the blob
@@ -283,7 +283,7 @@ def collect(since,previous,people_hits=(),search=True):
                 for f in diff.get('files',[]):
                     if f.get('status')=='removed' or not re.search(r'\.(?:md|tex|lean)$',f['filename']):continue
                     # A modified fork file read whole would carry inherited upstream text: only an added one.
-                    added=changed_text(budget,repo,f,errors,whole=f.get('status')=='added')
+                    added=changed_text(budget,repo,f,errors,head,whole=f.get('status')=='added')
                     if added is None:
                         if 'patch' not in f and f.get('status')=='added':
                             for family in sorted(set(family_matches(f['filename'])+[m.zfill(3) for m in re.findall(r'(?:^|/)(\d{3})(?:[-_/]|$)',f['filename'])])) or ['unmapped']:
@@ -340,10 +340,12 @@ def collect(since,previous,people_hits=(),search=True):
                                     diff={'files':[]}
                                 for f in diff.get('files',[]):
                                     if f['filename']=='README.md' or f.get('status')=='removed' or not re.search(r'\.(?:md|tex)$',f['filename']):continue
-                                    added=changed_text(budget,repo,f,errors)
+                                    added=changed_text(budget,repo,f,errors,head)
                                     if added is None:unread_files.append(f)
                                     else:found+=stated(bound_cfg['bound_pattern'],added)
-                                if len(diff.get('files',[]))>=300:truncated.append(dict(query=repo+' claim diff',total_count='at least 300 files'))
+                                if len(diff.get('files',[]))>=300:
+                                    truncated.append(dict(query=repo+' claim diff',total_count='at least 300 files'))
+                                    errors.append(f'{repo}: compare capped at 300 files from {base[:7]} to {head[:7]}')
                         winners=[(v,line) for v,line in found if beats(v)]
                         additions=[]
                         if winners:
@@ -373,12 +375,14 @@ def collect(since,previous,people_hits=(),search=True):
                         diff={'files':[]}
                     for f in diff.get('files',[]):
                         if f['filename']=='README.md' or f.get('status')=='removed' or not re.search(r'\.(?:md|tex)$',f['filename']):continue
-                        added=changed_text(budget,repo,f,errors)
+                        added=changed_text(budget,repo,f,errors,head)
                         if added is None:
                             additions+=[unread(family,f,head) for family in families];continue
                         targets=family_matches(f['filename']+'\n'+added) or families
                         for family in targets:additions.append((family,scoped_claims(added,family,True),None))
-                    if len(diff.get('files',[]))>=300:truncated.append(dict(query=repo+' claim diff',total_count='at least 300 files'))
+                    if len(diff.get('files',[]))>=300:
+                        truncated.append(dict(query=repo+' claim diff',total_count='at least 300 files'))
+                        errors.append(f'{repo}: compare capped at 300 files from {base[:7]} to {head[:7]}')
                 # On first run, suppress the reviewed starting claim at its pin.
                 if not old:
                     for cfg in CONFIG:
