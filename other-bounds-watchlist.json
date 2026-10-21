@@ -236,7 +236,7 @@
       ],
       "repo": "MarcosCarreira/catalan-designs",
       "baseline_commit": "ec231b32f94cc3ec6a3e61b717b264f8382bb4ac",
-      "bound_pattern": "(?:mu|μ|\\\\mu)\\s*\\(G\\)\\s*(?:<|≤|<=|\\\\le(?:q)?)\\s*(?P<num>\\d{1,3}(?:[ ,\\u2009\\u202f]\\d{3})+|\\d+(?:\\.\\d+)?)",
+      "bound_pattern": "(?:mu|μ|\\\\mu)\\s*\\(G\\)\\s*(?:<|≤|<=|\\\\le(?:q)?)\\s*(?P<num>\\d{1,3}(?:[ \\u2009\\u202f]\\d{3})+|\\d+(?:\\.\\d+)?)",
       "beats_leader": "catalan"
     },
     {

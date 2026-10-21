@@ -76,17 +76,25 @@ def claim_key(family,lines):
 SITE='bigospeedrun/site'
 SITE_BOUNDS='src/lib/other-bounds.json'
 
-def stated_values(pattern,text):
-    """Every value the pattern's num group states, with digit grouping removed
-    ('mu(G) < 2 294', MarcosCarreira 2026-10-21)."""
-    values=[]
+def line_of(text,start):
+    return text[text.rfind('\n',0,start)+1:].split('\n',1)[0].strip()[:1000]
+
+def stated(pattern,text):
+    """(value, line) of every value the pattern's num group states, with digit grouping
+    removed ('mu(G) < 2 294', MarcosCarreira 2026-10-21). No comma: '650,700' is a list."""
+    found=[]
     for match in re.finditer(pattern,text,re.M):
-        try:values.append(Fraction(re.sub(r'[\s,\u2009\u202f]','',match['num'])))
+        try:found.append((Fraction(re.sub(r'[\s\u2009\u202f]','',match['num'])),line_of(text,match.start())))
         except (ValueError,ZeroDivisionError):continue
-    return values
+    return found
+
+def stated_values(pattern,text):
+    return [value for value,_ in stated(pattern,text)]
 
 def site_leader(budget,slug):
-    """(direction, leader value) of an Other bounds row on site main: the best claim value."""
+    """(direction, leader value) of an Other bounds row on site main: the best claim value.
+    Numeric rows only: a row whose claim values do not parse as numbers always falls
+    back to alerting on the stated bounds."""
     families=json.loads(budget.read(SITE,SITE_BOUNDS,'main'))['families']
     row=next(f for f in families if f['slug']==slug)
     values=[Fraction(c['value']) for c in row['claims']]
@@ -280,15 +288,35 @@ def collect(since,previous,people_hits=(),search=True):
                     except BudgetExhausted:raise
                     except (RuntimeError,ValueError,KeyError,TypeError,StopIteration,ZeroDivisionError) as error:
                         errors.append(f'{repo}: cannot read the {bound_cfg["beats_leader"]} leader from {SITE} ({type(error).__name__}); stated bound checked without it')
-                if bound and leader:
-                    direction,best_known=leader
-                    best=(min if direction=='lower' else max)(values)
-                    additions=[]
-                    if (best<best_known if direction=='lower' else best>best_known):
-                        family=bound_cfg['family']
-                        match=next(m for m in re.finditer(bound_cfg['bound_pattern'],text,re.M) if stated_values(bound_cfg['bound_pattern'],m[0])==[best])
-                        line=text[text.rfind('\n',0,match.start())+1:].split('\n',1)[0].strip()[:1000]
-                        additions=[(family,[line],bound_key(family,best))]
+                if bound and bound_cfg.get('beats_leader'):
+                    family=bound_cfg['family'];found=stated(bound_cfg['bound_pattern'],text)
+                    if leader:
+                        direction,best_known=leader
+                        beats=(lambda v:v<best_known) if direction=='lower' else (lambda v:v>best_known)
+                        if not any(beats(v) for v,_ in found):
+                            # The paper can state a record before the README does (Reviewer, 2026-10-21):
+                            # read the values in the added lines of the changed .md/.tex files too.
+                            base=old.get('head') or bound_cfg['baseline_commit']
+                            if base!=head:
+                                try:diff=budget.get(f'repos/{repo}/compare/{base}...{head}')
+                                except BudgetExhausted:raise
+                                except RuntimeError:
+                                    errors.append(f'{repo}: compare from {base[:7]} failed (history may be rewritten); README read at {head[:7]}')
+                                    diff={'files':[]}
+                                for f in diff.get('files',[]):
+                                    if f['filename']=='README.md' or f.get('status')=='removed' or not re.search(r'\.(?:md|tex)$',f['filename']):continue
+                                    if 'patch' not in f:errors.append(repo+': missing diff patch '+f['filename']);continue
+                                    found+=stated(bound_cfg['bound_pattern'],'\n'.join(line[1:] for line in f['patch'].splitlines() if line.startswith('+') and not line.startswith('+++')))
+                                if len(diff.get('files',[]))>=300:truncated.append(dict(query=repo+' claim diff',total_count='at least 300 files'))
+                        winners=[(v,line) for v,line in found if beats(v)]
+                        additions=[]
+                        if winners:
+                            value,line=(min if direction=='lower' else max)(winners,key=lambda w:w[0])
+                            additions=[(family,[line],bound_key(family,value))]
+                    else:
+                        # Leader unknown: alert when the set of stated values changes, not only the first one.
+                        values=sorted({v for v,_ in found})
+                        additions=[(family,[line for _,line in found][:6],claim_key(family,['stated bounds '+' '.join(str(v) for v in values)]))]
                 elif bound:
                     family=bound_cfg['family']
                     if bound_cfg.get('reviewed_bound') and bound_key(family,bound_cfg['reviewed_bound']) not in seen:

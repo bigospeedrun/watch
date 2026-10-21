@@ -316,14 +316,14 @@ class OtherBoundsTests(unittest.TestCase):
                     "Theorem 35, mu(G) < 2 715) now gives 2 294. The numbering after Section 4 has shifted by one section.\n")
         site={'families':[{'slug':'catalan','direction':'lower','claims':[{'value':'8720'},{'value':'2715'},{'value':'740'}]}]}
         meta=dict(full_name=repo,html_url='https://github.com/'+repo,default_branch='main',pushed_at='2026-10-21T12:00:00Z')
-        def run(text,head,previous,site_error=None):
+        def run(text,head,previous,site_error=None,paper='+we now prove mu(G) < 2 294 for Catalan constant, improving 2 715.'):
             def content(r,path,ref,**kwargs):
                 if r==o.SITE:
                     if site_error:raise site_error
                     self.assertEqual((path,ref),(o.SITE_BOUNDS,'main'));return json.dumps(site).encode()
                 return text.encode()
             def api(path,params=None,**kwargs):
-                if '/compare/' in path:return {'files':[{'filename':'paper/main.tex','status':'modified','patch':'+we now prove mu(G) < 2 294 for Catalan constant, improving 2 715.'}]}
+                if '/compare/' in path:return {'files':[{'filename':'paper/main.tex','status':'modified','patch':paper}]}
                 return {'sha':head}
             with patch.object(o,'CONFIG',[cfg]),patch.object(o,'api',api),patch.object(o,'content',content):
                 result=o.collect('2026-10-21',previous,search=False)
@@ -342,6 +342,38 @@ class OtherBoundsTests(unittest.TestCase):
         # An unreadable leader logs why and alerts on the stated bound.
         rows,result=run(readme('2 100'),'f'*40,{'other_bound_states':result['states']},site_error=RuntimeError('GitHub GET failed (HTTP 404)'))
         self.assertEqual(len(rows),1);self.assertTrue(any('cannot read the catalan leader' in e for e in result['errors']))
+        # Reviewer FIX 2: with the leader unreadable, a better value on a later line (the first
+        # line unchanged) changes the set of stated values, so it alerts too.
+        state={'other_bound_states':result['states']}
+        rows,_=run(readme('2 100')+'Corollary: mu(G) < 1 900.\n','g'*40,state,site_error=RuntimeError('GitHub GET failed (HTTP 404)'))
+        self.assertEqual(len(rows),1);self.assertIn('Corollary: mu(G) < 1 900.',rows[0]['source_claim_evidence'])
+
+    def test_a_record_stated_only_in_the_paper_alerts(self):
+        # Reviewer FIX 1, 2026-10-21: the README still shows 2 294 (behind the leader 740), and
+        # the .tex diff states 699: the record alerts from the diff.
+        repo='MarcosCarreira/catalan-designs'
+        cfg=next(c for c in o.CONFIG if c['repo']==repo)
+        text="give mu(G) < 2 294 for (36, 6, 2, 3, 2) and mu(G) < 2 426 for\n"
+        site={'families':[{'slug':'catalan','direction':'lower','claims':[{'value':'740'}]}]}
+        meta=dict(full_name=repo,html_url='https://github.com/'+repo,default_branch='main',pushed_at='2026-10-21T12:00:00Z')
+        compares=[]
+        def content(r,path,ref,**kwargs):return json.dumps(site).encode() if r==o.SITE else text.encode()
+        def api(path,params=None,**kwargs):
+            if '/compare/' in path:
+                compares.append(path)
+                return {'files':[{'filename':'paper/main.tex','status':'modified','patch':'@@ -1 +1 @@\n-old\n+Theorem 36. We now prove $\\mu(G) \\le 699$ for the design (40, 6, 2).'},
+                                 {'filename':'README.md','status':'modified','patch':'+mu(G) < 5'}]}
+            return {'sha':'b'*40}
+        previous={'other_bound_states':{repo:{'head':'a'*40,'seen_claims':[],'meta':meta,'checked_cycle':1}}}
+        with patch.object(o,'CONFIG',[cfg]),patch.object(o,'api',api),patch.object(o,'content',content):
+            result=o.collect('2026-10-21',previous,search=False)
+        rows=[r for r in result['candidates'] if r['repo']==repo]
+        self.assertEqual(len(rows),1);self.assertIn('699',rows[0]['source_claim_evidence'][0])
+        self.assertEqual(rows[0]['claim_signature'],o.bound_key('005',699));self.assertEqual(len(compares),1)
+        # README.md lines in the diff are not read twice: its whole text is read at head.
+        self.assertNotIn('mu(G) < 5',rows[0]['source_claim_evidence'][0])
+        # A list with a comma is two values, not 650700.
+        self.assertEqual(o.stated_values(cfg['bound_pattern'],'mu(G) < 650,700'),[650])
 
     def test_repo_without_readme_is_not_stalled(self):
         # karirogg/QuasiRiemannTracker (a fork without README.md) failed every cycle, 2026-10-15.
