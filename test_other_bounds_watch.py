@@ -355,7 +355,9 @@ class OtherBoundsTests(unittest.TestCase):
         read={r'mu(G) < 699':699,r'μ(G) ≤ 699.5':o.Fraction(1399,2),r'$\mu(G)\le 699$':699,r'\mu(G) \leq 699':699,r'mu(G) <= 699.':699,
               r'mu(G) <699, improving':699,r'$\mu(G)<2\,294$':2294,r'mu(G) < 2{,}294':2294,r'mu(G) < 2 294':2294,r'mu(G) < 699 (Thm 3)':699,
               r'$\mu (G) \le 699$':699,r'$\mu(G) < 699$.':699,r'$\mu(G)<699\,,$':699,r'$\mu(G)\leqslant 699$':699,r'$\mu(G) \lt 699$':699,
-              r'μ(G) ⩽ 699':699,r'mu(G) < 699 2nd design':699,r'$\mu(G)\leqq 699$':699,r'μ(G) ≦ 699':699}
+              r'μ(G) ⩽ 699':699,r'mu(G) < 699 2nd design':699,r'$\mu(G)\leqq 699$':699,r'μ(G) ≦ 699':699,
+              # LaTeX spacing between the relation and the number (Reviewer LOW on 6c3db35).
+              r'$\mu(G)\leq\,699$':699,r'$\mu(G)\leq{}699$':699,r'$\mu(G)\le\;699$':699}
         for line,value in read.items():
             with self.subTest(line=line):self.assertEqual(o.stated_values(pattern,line),[value])
         # A power or a product is not a bound value (the scientific form is out of scope).
