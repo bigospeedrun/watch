@@ -68,7 +68,7 @@ invented workflow verdict. Successful runs need no message.
 
 ## Run the tests and watches
 
-Start here. This block holds the same lock as the old poll loop. It refuses dirty
+Start here. `watch_cycle.sh` holds the same lock as the old poll loop. It refuses dirty
 worktrees, saves the previous reports for comparison, runs the tests and Discord intake, then runs
 people_watch.py before pivot_watch.py. The pivot watch reads the people report.
 It commits only the three report files and pushes `main` after every successful
@@ -78,89 +78,32 @@ full search.
 
 ```bash
 cd "$(git rev-parse --show-toplevel)"
-flock -n .git/poll.lock bash <<'SH'
-set -eu
-# A step that stops the cycle alerts Lead once (cycle_alert.py dedupes by step
-# until it passes again). STEP and LOG name the running command.
-STEP=preflight;LOG=.git/watch-preflight.log;ALERTED=0
-trap 'rc=$?; if [ "$rc" -ne 0 ] && [ "$ALERTED" = 0 ]; then python3 cycle_alert.py fail "$STEP" "$LOG" "$rc" >> .git/cycle-alert.log 2>&1 || echo "Cycle failure alert not delivered; see .git/cycle-alert.log" >&2; fi' EXIT
-if test "$(git branch --show-current)" != main; then
-  echo 'Watch cycles require branch main; stop without changing branches.' | tee "$LOG" >&2
-  exit 1
-fi
-if test -n "$(git status --porcelain)"; then
-  { echo 'Worktree has edits; leave them untouched and stop.'; git status --porcelain; } > "$LOG"
-  echo 'Worktree has edits; leave them untouched and stop.' >&2
-  exit 1
-fi
-cp people-watch.json .git/watch-previous-people.json
-cp pivot-watch.json .git/watch-previous-pivot.json
-STEP=tests;LOG=.git/watch-tests.log
-python3 -m unittest test_people_watch test_pivot_watch test_watch_policy test_other_bounds_watch test_crocswap_pr_watch test_refresh_health test_discord_watch test_discord_ack test_problem_selection_watch test_cycle_alert test_deadman test_lean_target_watch test_pwn_watch > "$LOG" 2>&1
-if python3 discord_watch.py > .git/discord-watch.log 2>&1; then
-  python3 cycle_alert.py ok discord-intake >> .git/cycle-alert.log 2>&1 || true
-else
-  echo "Discord intake incomplete; retain sanitized progress and retry next cycle." >&2
-  python3 cycle_alert.py fail discord-intake .git/discord-watch.log 1 --continued >> .git/cycle-alert.log 2>&1 || true
-fi
-if python3 problem_selection_watch.py > .git/problem-selection.log 2>&1; then
-  python3 cycle_alert.py ok problem-selection >> .git/cycle-alert.log 2>&1 || true
-else
-  echo "Problem selection digest incomplete; cursor kept, retry next cycle." >&2
-  python3 cycle_alert.py fail problem-selection .git/problem-selection.log 1 --continued >> .git/cycle-alert.log 2>&1 || true
-fi
-if python3 lean_target_watch.py > .git/lean-target-watch.log 2>&1; then
-  python3 cycle_alert.py ok lean-target >> .git/cycle-alert.log 2>&1 || true
-else
-  echo "Lean target watch incomplete; retry next cycle." >&2
-  python3 cycle_alert.py fail lean-target .git/lean-target-watch.log 1 --continued >> .git/cycle-alert.log 2>&1 || true
-fi
-# Cross-check the hourly dead-man timer once it is installed: its state file
-# must be fresher than 2 h.
-if test -f "$HOME/.config/systemd/user/bigospeedrun-deadman.timer"; then
-  if test -n "$(find .git/deadman-state.json -mmin -120 2>/dev/null)"; then
-    python3 cycle_alert.py ok deadman >> .git/cycle-alert.log 2>&1 || true
-  else
-    echo 'deadman-state.json older than 2 h or missing; see journalctl --user -u bigospeedrun-deadman.service' > .git/deadman-check.log
-    python3 cycle_alert.py fail deadman .git/deadman-check.log 1 --continued >> .git/cycle-alert.log 2>&1 || true
-  fi
-fi
-STEP=people-watch;LOG=.git/people-watch.log
-python3 people_watch.py > "$LOG" 2>&1
-STEP=pivot-watch;LOG=.git/pivot-watch.log
-python3 pivot_watch.py > "$LOG" 2>&1
-STEP=alert-candidates;LOG=.git/watch-alert-candidates.log
-python3 - > "$LOG" 2>&1 <<'PY'
-import json
-from pathlib import Path
-from pivot_watch import alert_candidate
-previous=json.loads(Path('.git/watch-previous-pivot.json').read_text())
-watch=json.loads(Path('pivot-watch.json').read_text())
-known={r['repo'] for r in previous.get('candidates',[])
-       if r.get('likely_new_race') or r.get('likely_pivot') or r.get('likely_tracked_source')}
-changed={r['repo'] for r in watch.get('watched_repositories',[]) if r['new_commit']}
-alerts=[r for r in watch['candidates'] if alert_candidate(r,known,changed)]
-Path('.git/watch-alert-candidates.json').write_text(json.dumps(alerts,indent=2)+'\n')
-print('Checked',watch['checked_at'],'candidate alerts',len(alerts))
-PY
-cat "$LOG"
-STEP=commit;LOG=.git/watch-git.log
-git diff --check > "$LOG" 2>&1
-if ! git diff --quiet -- people-watch.json pivot-watch.json discord-submissions.json; then
-  git add -- people-watch.json pivot-watch.json discord-submissions.json
-  git commit -m "Update GitHub watches $(date -u +%Y-%m-%dT%H:%M:%SZ)" -- people-watch.json pivot-watch.json discord-submissions.json >> "$LOG" 2>&1
-fi
-STEP=push;LOG=.git/watch-push.log
-# The push alert goes through cycle_alert.py too: once, until a push succeeds.
-git -c push.followTags=false push origin main:refs/heads/main > "$LOG" 2>&1
-python3 cycle_alert.py ok preflight tests people-watch pivot-watch alert-candidates commit push cycle >> .git/cycle-alert.log 2>&1 || true
-SH
+systemctl --user reset-failed bos-watch-cycle 2>/dev/null || true
+date -u +%Y-%m-%dT%H:%M:%SZ > .git/cycle-started.txt
+systemd-run --user --unit=bos-watch-cycle --same-dir --quiet -E PATH -E HOME -E ISOMUX_AGENT_TOKEN \
+  flock -n .git/poll.lock bash watch_cycle.sh
 ```
+
+The cycle runs as the systemd user unit `bos-watch-cycle`, so it finishes even if this session ends.
+It takes 10 to 15 minutes, longer than one tool call may run. Wait for it in the foreground: repeat
+this command (under 10 minutes per call) until it prints `inactive` or `failed`. Never run the cycle
+or the wait in the background, and never end your turn while the unit is active.
+
+```bash
+for i in $(seq 1 18); do systemctl --user is-active --quiet bos-watch-cycle || break; sleep 30; done
+systemctl --user is-active bos-watch-cycle; journalctl --user -u bos-watch-cycle -n 20 --no-pager -o cat
+```
+
+The cycle passed when `cycle` in `.git/cycle-last-ok.json` is later than `.git/cycle-started.txt`.
+`systemd-run` refusing with "already exists" means a cycle is still running: do not start another.
+If the unit failed with status 1 and the journal shows no output from `watch_cycle.sh`, `.git/poll.lock`
+was busy (another cycle or a manual run holds it): do not start another; the next cron cycle runs.
+
 
 A lock conflict means another cycle is running: do not start duplicate work.
 On a failed test or command, inspect the corresponding `.git/*.log`. Do not reset,
 stash, repair unrelated code, or claim full coverage. Preserve partial output for
-review. The block above alerts Lead by itself when a step fails: a step that
+review. `watch_cycle.sh` alerts Lead by itself when a step fails: a step that
 stops the cycle (preflight, tests, people-watch, pivot-watch, alert-candidates,
 commit, push) or a skipped intake (discord-intake, problem-selection). Each
 alert names the step, the exit status, the last log line and the log path.
@@ -486,7 +429,7 @@ API lookup of bigospeedrun/site data at a pinned main commit can resolve it.
 ## Notify Lead, or end silently
 
 Send a message only for a reviewed research lead, an unreported hourly
-workflow failure, a Discord submission or content-unavailable alert, or a cycle step failure (sent by the block above; do not resend it). For a research lead, Use the
+workflow failure, a Discord submission or content-unavailable alert, or a cycle step failure (sent by watch_cycle.sh; do not resend it). For a research lead, Use the
 same format as poll.py (one message grouping all qualifying leads):
 
 `CHECKED_AT: Possible new bound race or problem pivot; README signals need review: REPO_URL (PROBLEM_GUESS); REPO_URL (PROBLEM_GUESS)`
