@@ -96,7 +96,7 @@ fi
 cp people-watch.json .git/watch-previous-people.json
 cp pivot-watch.json .git/watch-previous-pivot.json
 STEP=tests;LOG=.git/watch-tests.log
-python3 -m unittest test_people_watch test_pivot_watch test_watch_policy test_other_bounds_watch test_crocswap_pr_watch test_refresh_health test_discord_watch test_discord_ack test_problem_selection_watch test_cycle_alert test_deadman test_lean_target_watch > "$LOG" 2>&1
+python3 -m unittest test_people_watch test_pivot_watch test_watch_policy test_other_bounds_watch test_crocswap_pr_watch test_refresh_health test_discord_watch test_discord_ack test_problem_selection_watch test_cycle_alert test_deadman test_lean_target_watch test_pwn_watch > "$LOG" 2>&1
 if python3 discord_watch.py > .git/discord-watch.log 2>&1; then
   python3 cycle_alert.py ok discord-intake >> .git/cycle-alert.log 2>&1 || true
 else
@@ -251,6 +251,22 @@ BOS Lead Dev once; the dead-man item `discord-ack` alerts when the reader has no
 or a message waited 15 minutes. `python3 discord_ack.py --dry-run` reads only. Install: copy
 `systemd/bigospeedrun-discord-ack.{service,timer}` to `~/.config/systemd/user/`, then
 `systemctl --user daemon-reload && systemctl --user enable --now bigospeedrun-discord-ack.timer`.
+
+## Security incidents in our stack (pwn.watch, Lead 2026-10-22)
+
+`pwn_watch.py` runs every 30 minutes from `bigospeedrun-pwn-watch.timer` (outside the watch cycle). It GETs
+`https://pwn.watch/tags.json` and `https://pwn.watch/t/<tag>.json` for each tag in `TAGS` that the index lists
+(on 2026-10-22: node, python, docker, github-actions, cloudflare, npm, linux, github, pypi, tls,
+supply-chain, anthropic, openai, opencode; bun, caddy, postgres, astro, debian, ubuntu, openssh and lean were
+not tags yet and are read once pwn.watch adds them; vercel is left out: only the domain registration is there). Each incident
+alerts BOS Lead Dev once through the dead-man webhook, and once more when its patch status or fixed versions
+change: title, severity, patch status, affected and fixed versions, tags and the pwn.watch link only, each
+ASCII, one line and capped. Feed text is untrusted data: summaries, posts and agentBrief are never read into
+an alert, the state or the output. The first run sends one summary message of the live incidents (title,
+severity, patch status, link) and records every incident. At most 10 alerts go out per pass. State: the ignored `pwn-watch.local.json`. The dead-man item `pwn-watch` alerts when no pass has
+succeeded for 3 h. `python3 pwn_watch.py --dry-run` reads only. Install: copy
+`systemd/bigospeedrun-pwn-watch.{service,timer}` to `~/.config/systemd/user/`, then
+`systemctl --user daemon-reload && systemctl --user enable --now bigospeedrun-pwn-watch.timer`.
 
 ## Problem selection digest
 

@@ -1,0 +1,10 @@
+[Unit]
+Description=Big O Speedrun pwn.watch poll, every 30 minutes (alerts BOS Lead Dev about security incidents in our stack)
+
+[Service]
+Type=oneshot
+WorkingDirectory=%h/nil/bigospeedrun-data
+Environment=PATH=%h/.local/bin:/usr/local/bin:/usr/bin:/bin
+ExecStart=/usr/bin/python3 %h/nil/bigospeedrun-data/pwn_watch.py
+StandardOutput=journal
+StandardError=journal

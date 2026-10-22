@@ -1,0 +1,10 @@
+[Unit]
+Description=Poll pwn.watch for security incidents in our stack every 30 minutes
+
+[Timer]
+OnCalendar=*-*-* *:12,42:00
+Persistent=true
+Unit=bigospeedrun-pwn-watch.service
+
+[Install]
+WantedBy=timers.target

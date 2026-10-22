@@ -29,6 +29,9 @@ Items:
                        discord_ack.py) last ran ok < 15 min, and no message has waited 15 min for
                        its eyes reaction (discord-ack.local.json); checked once that timer unit is
                        installed (Nil, 2026-10-21: acknowledge messages quickly)
+  pwn-watch            pwn.watch security incident poll (bigospeedrun-pwn-watch.timer, every 30 min,
+                       pwn_watch.py) last passed < 3 h (pwn-watch.local.json); checked once that timer
+                       unit is installed (Lead, 2026-10-22)
   prove2me-import      no board in data/prove2me.json on main is held (the alert names each
                        reason), and the prove2.me import step of the newest completed site
                        refresh run did not fail. Since 2026-10-20 a hold does not fail the
@@ -623,6 +626,10 @@ def check(src,now,to_time=systemd_time):
         elif waiting:problem=f'{len(waiting)} message(s) in #submit-a-result waited 15 min for the eyes reaction (ids {", ".join(sorted(waiting,key=int)[:5])})'
         else:problem=None
         results['discord-ack']=(problem is None,problem,good,'journalctl --user -u bigospeedrun-discord-ack.service')
+    if src.unit_installed('bigospeedrun-pwn-watch.timer'):
+        good=src.digest_last_ok('pwn-watch');fresh=bool(good and now-good<3*H)
+        results['pwn-watch']=(fresh,None if fresh else 'no successful pwn.watch poll in the last 3 h',good,
+                              'journalctl --user -u bigospeedrun-pwn-watch.service')
     try:
         runs=src.cron_runs(GAP_REVIEW_JOB)
         ok=[r for r in runs if r.get('status')=='completed' and not r.get('errorReason')]
