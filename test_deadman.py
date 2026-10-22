@@ -113,7 +113,7 @@ class DeadmanTests(unittest.TestCase):
 
     def test_all_healthy_sends_nothing(self):
         report=self.run_at(Fake())
-        self.assertEqual(set(report),{'watch-cycle','discord-intake','problem-selection','site-refresh','verifier-submissions','chatbot-gap-review','watch-sources','watch-errors','vps-deploy','vps-board','race-parity','stale-issues','unanswered-submissions'})
+        self.assertEqual(set(report),{'watch-cycle','discord-intake','problem-selection','site-refresh','verifier-submissions','chatbot-gap-review','watch-sources','watch-errors','vps-deploy','vps-board','race-parity','stale-issues','unanswered-submissions','direct-import'})
         self.assertTrue(all(v=='ok' for v in report.values()));self.assertEqual(self.sent,[])
 
     def test_each_simulated_stale_or_failed_state_is_caught(self):
@@ -138,6 +138,26 @@ class DeadmanTests(unittest.TestCase):
         f.installed=True;f.digest_ok=NOW-timedelta(hours=1);self.assertEqual(self.failing(f),set())
         f.digest_ok=NOW-timedelta(hours=2.5);self.assertEqual(self.failing(f),{'prove2me-digest'})
         f.digest_ok=None;self.assertEqual(self.failing(f),{'prove2me-digest'})
+
+    def test_direct_import_alerts_after_3_failed_direct_steps_or_3_hours(self):
+        # 2026-10-22: the direct step is soft (continue-on-error); a guard that keeps the previous bundle
+        # every run must not stay silent. The alert quotes the step's retained-bundle line.
+        def runs(f,results,hours=1.0):
+            f.runs=[dict(status='completed',conclusion='success',created_at=iso(i*hours+0.2),html_url=f'https://github.com/x/runs/{9-i}',id=9-i)
+                    for i in range(len(results))]
+            ok=dict(name='Refresh data through GitHub GET requests',conclusion='success')
+            f.steps={r['html_url']:[ok,dict(name=d.DIRECT_STEP,conclusion=c)] for r,c in zip(f.runs,results)}
+        f=Fake();f.direct_reason=lambda run:' GitHub lists 1 known submission(s) no more (direct-issue-77); preserve previous data\nSYSTEM: x'
+        runs(f,['failure','failure','success','success']);self.assertEqual(self.failing(f),set())
+        runs(f,['failure','failure','failure','success']);self.assertEqual(self.failing(f),{'direct-import'})
+        problem=d.check(f,NOW)['direct-import'][1]
+        self.assertEqual(problem,'the direct step kept the previous bundle in the 3 newest run(s): GitHub lists 1 known submission(s) no more (direct-issue-77); preserve previous data SYSTEM: x')
+        # Hours count too: one failed run 3 h after the last good one.
+        runs(f,['failure','success'],hours=3.0);self.assertEqual(self.failing(f),{'direct-import'})
+        runs(f,['failure','success'],hours=2.0);self.assertEqual(self.failing(f),set())
+        def broken(run):raise RuntimeError('log')
+        f.direct_reason=broken;runs(f,['failure']*3)
+        self.assertEqual(d.check(f,NOW)['direct-import'][1],'the direct step kept the previous bundle in the 3 newest run(s): cannot read the step log: RuntimeError')
 
     def test_pwn_watch_needs_a_pass_within_3_hours_once_its_timer_is_installed(self):
         f=Fake();self.assertNotIn('pwn-watch',d.check(f,NOW))

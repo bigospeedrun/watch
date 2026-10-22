@@ -9,6 +9,12 @@ Items:
   problem-selection    last passed < 4 h (#problem-selection digest)
   site-refresh         bigospeedrun/site refresh-data.yml: latest completed run
                        succeeded and newest success < 2 h (GitHub GET only)
+  direct-import        the soft step "Refresh direct submission issues and PRs" of the site refresh
+                       (continue-on-error: a failure keeps the previous direct bundle, the run stays
+                       green) failed in the 3 newest completed runs, or has not passed for 3 h. The
+                       alert quotes the step's "previous bundle retained" line (for a known submission
+                       that GitHub no longer lists, the key to retire). Lead, 2026-10-22, after an empty
+                       issue list dropped 13 rows
   verifier-submissions bigospeedrun-submissions.service last run ok and its
                        timer triggered < 75 min ago (systemctl --user show)
   unanswered-submissions every verifier submission issue and PR open 45 min or more has a
@@ -142,7 +148,9 @@ PROVE2ME_STEPS={PROVE2ME_STEP}|PROVE2ME_FAIL_STEPS
 REVIEW_FAIL_STEP='Fail the run while a result waits for lead review'
 REVIEW_STEPS={REVIEW_FAIL_STEP,'List results that wait for lead review'}
 # continue-on-error steps of refresh-data.yml: they never fail a run on their own.
-SOFT_STEPS={'Refresh direct submission issues and PRs','Refresh public author profiles','Plan Discord record notifications',
+DIRECT_STEP='Refresh direct submission issues and PRs'
+DIRECT_LINK='https://github.com/bigospeedrun/site/actions/workflows/refresh-data.yml (step: '+DIRECT_STEP+')'
+SOFT_STEPS={DIRECT_STEP,'Refresh public author profiles','Plan Discord record notifications',
             'Post Discord record notifications','Plan X record notifications','Commit X reservations before sending','Post X record notifications'}
 # Items whose problem is a set of strings joined by SET_SEP: an alert lists only strings not
 # alerted yet in this failing period, and a repeated string never alerts again.
@@ -205,6 +213,19 @@ class Sources:
                            capture_output=True,text=True,timeout=60)
         if out.returncode:raise RuntimeError('GitHub jobs request failed')
         return [dict(name=s.get('name'),conclusion=s.get('conclusion')) for job in json.loads(out.stdout)['jobs'] for s in job.get('steps',[])]
+    def direct_reason(self,run):
+        """The "previous bundle retained" line of the direct step in this run's job log, or None."""
+        jobs=subprocess.run(['gh','api','-X','GET',f"repos/bigospeedrun/site/actions/runs/{int(run['id'])}/jobs"],
+                            capture_output=True,text=True,timeout=60)
+        if jobs.returncode:raise RuntimeError('GitHub jobs request failed')
+        for job in json.loads(jobs.stdout)['jobs']:
+            log=subprocess.run(['gh','api','-X','GET',f"repos/bigospeedrun/site/actions/jobs/{int(job['id'])}/logs"],
+                               capture_output=True,text=True,timeout=120)
+            if log.returncode:raise RuntimeError('GitHub job log request failed')
+            for line in log.stdout.splitlines():
+                if 'Direct import failed; previous bundle retained:' in line:
+                    return line.split('Direct import failed; previous bundle retained:',1)[1]
+        return None
     def prove2me_state(self):
         out=subprocess.run(['gh','api','-X','GET','repos/bigospeedrun/site/contents/data/prove2me.json','-H','Accept: application/vnd.github.raw'],
                            capture_output=True,text=True,timeout=60)
@@ -500,6 +521,22 @@ def safe_text(value,cap=200):
     text=' '.join(text.replace('\\n',' ').replace('\\r',' ').replace('\\t',' ').split())
     return text if len(text)<=cap else text[:cap-3]+'...'
 
+def direct_check(src,now,done,failed_steps,results):
+    """direct-import: the soft direct step failed in the 3 newest completed runs, or has not passed for 3 h."""
+    streak=0;good=None
+    for run in done[:6]:
+        if DIRECT_STEP in failed_steps(run):
+            if good is None:streak+=1
+        elif good is None:
+            good=parse(run['created_at'])
+    if streak>=3 or (streak and (not good or now-good>=3*H)):
+        try:reason=src.direct_reason(done[0])
+        except Exception as error:reason='cannot read the step log: '+type(error).__name__
+        problem=f'the direct step kept the previous bundle in the {streak} newest run(s)'+(f': {safe_text(reason,300)}' if reason else '')
+        results['direct-import']=(False,problem,good,done[0].get('html_url') or DIRECT_LINK)
+    else:
+        results['direct-import']=(True,None,good,DIRECT_LINK)
+
 def prove2me_check(src,latest,results):
     memory=src.prove2me_memory();link=(latest or {}).get('html_url') or 'https://github.com/bigospeedrun/site/actions/workflows/refresh-data.yml'
     try:
@@ -582,8 +619,12 @@ def check(src,now,to_time=systemd_time):
         elif not good or now-good>=2*H:results['site-refresh']=(False,'no successful run in the last 2 h',good,latest.get('html_url'))
         else:results['site-refresh']=(True,None,good,latest.get('html_url'))
     except Exception as error:
-        latest=None
+        latest=None;done=None
         results['site-refresh']=(False,'cannot read GitHub runs: '+type(error).__name__,None,'https://github.com/bigospeedrun/site/actions/workflows/refresh-data.yml')
+    if done:
+        try:direct_check(src,now,done,failed_steps,results)
+        except Exception as error:
+            results['direct-import']=(False,'cannot read the direct step of the refresh runs: '+type(error).__name__,None,DIRECT_LINK)
     prove2me_check(src,latest,results)
     review_check(src,latest,results)
     parity_check(src,now,results)
