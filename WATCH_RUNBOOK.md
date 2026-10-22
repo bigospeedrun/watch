@@ -1,5 +1,7 @@
 # GitHub watch runbook
 
+**Never run the watch cycle in the background, and never end your turn while the systemd unit `bos-watch-cycle` is active: wait for it in the foreground (see "Run the tests and watches"). On 2026-10-22 a cycle that ran in the background was killed when the cron session ended.**
+
 Owner: BOS Lead Dev. Checked against the local scripts on 2026-10-11.
 
 ## Purpose and limits
