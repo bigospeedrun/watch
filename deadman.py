@@ -67,6 +67,14 @@ Items:
                        bounds, named as the race's site name in slug form (race_channel_name).
                        Alerts on a missing or extra board or channel, naming each one. GET
                        only; one failed read is tolerated, two in a row alert
+  method-note          the current leader of each of the six boards in the public chat-knowledge.json has a
+                       method note ("method", from data/method-notes.json in bigospeedrun/site: how the
+                       record is proved). A leader seen without one for 24 h alerts, naming the board and
+                       row; the memory keeps the first time each leader was seen without a note. GET only;
+                       one failed read is tolerated, two in a row alert. A board note that covers every row of the
+                       leader's source repository (the CrocSwap integer multiplication line) counts: the site then
+                       shows `method` on that leader, so the item needs no special case (Lead, 2026-10-23: the chat had no
+                       method text; a new leader must not leave the page and the bot without it)
   race-channels        race_channels.py (bigospeedrun-race-channels.timer) last ran ok < 2 h;
                        checked once that timer unit is installed
   stale-issues         Nil rule: no GitHub issue stays open in bigospeedrun/site, board,
@@ -139,6 +147,9 @@ BOARD_DEPLOY_CHECK=True
 BOARD_MEMORY='.git/board-health.json'
 PROVE2ME_MEMORY='.git/prove2me-import.json'
 PARITY_MEMORY='.git/race-parity.json'
+METHOD_MEMORY='.git/method-note.json'
+METHOD_LIMIT=timedelta(hours=24)
+METHOD_LINK='~/nil/bigospeedrun-site/data/method-notes.json (add the leader by board and row id); bigospeedrun.com/chat-knowledge.json'
 SITE_RACES='https://bigospeedrun.com/chat-knowledge.json'
 BOARD_LIST=f'https://board.bigospeedrun.com/llms.txt'
 WATCH_OFFICE='.git/watch-office.json'
@@ -165,7 +176,7 @@ SET_ITEMS={'watch-errors','unanswered-submissions','comment-reply'}
 SET_SEP='\n'
 WATCH_ERRORS_LINK='~/nil/bigospeedrun-data/pivot-watch.json (errors)'
 # Items whose alert repeats when the problem text changes during one failing period.
-REALERT_ON_CHANGE={'prove2me-import','race-parity','stale-issues','review-wait'}
+REALERT_ON_CHANGE={'prove2me-import','race-parity','stale-issues','review-wait','method-note'}
 ISSUE_REPOS=('bigospeedrun/site','bigospeedrun/board','bigospeedrun/verifier','bigospeedrun/watch')
 ISSUE_MEMORY='.git/stale-issues.json'
 ISSUE_LINK='GitHub issues and PRs of bigospeedrun/site, board, verifier and watch'
@@ -255,6 +266,9 @@ class Sources:
     def site_races(self):
         request=urllib.request.Request(SITE_RACES,headers={'User-Agent':'bos-deadman/1','Accept':'application/json'})
         with urllib.request.urlopen(request,timeout=30) as response:return races_from(json.loads(response.read(5*1024*1024)))
+    def site_leaders(self):
+        request=urllib.request.Request(SITE_RACES,headers={'User-Agent':'bos-deadman/1','Accept':'application/json'})
+        with urllib.request.urlopen(request,timeout=30) as response:return leaders_from(json.loads(response.read(5*1024*1024)))
     def board_slugs(self):
         request=urllib.request.Request(BOARD_LIST,headers={'User-Agent':'bos-deadman/1'})
         with urllib.request.urlopen(request,timeout=30) as response:return boards_from(response.read(5*1024*1024).decode())
@@ -295,6 +309,13 @@ class Sources:
     def race_channels_last_ok(self):
         path=self.root/'.git/race-channels.json'
         return parse(json.loads(path.read_text()).get('last_ok')) if path.exists() else None
+    def method_memory(self):
+        path=self.root/METHOD_MEMORY
+        return json.loads(path.read_text()) if path.exists() else {}
+    def remember_method(self,memory):
+        if not self.persist:return
+        path=self.root/METHOD_MEMORY;tmp=path.with_name(path.name+'.tmp')
+        tmp.write_text(json.dumps(memory,indent=2)+'\n');tmp.replace(path)
     def parity_memory(self):
         path=self.root/PARITY_MEMORY
         return json.loads(path.read_text()) if path.exists() else {}
@@ -489,6 +510,33 @@ def parity_check(src,now,results):
     memory['last_ok']=not problems;memory['last_problem']=problem;src.remember_parity(memory)
     results['race-parity']=(not problems,problem,None if problems else now,PARITY_LINK)
 
+def leaders_from(knowledge):
+    """[(board path, row id, has a method note)] of the current leaders of the boards listed on the site."""
+    leaders=[]
+    for p in knowledge.get('problems',[]):
+        for r in p.get('current',[]):leaders.append((p['path'],r['id'],bool(str(r.get('method') or '').strip())))
+    if not leaders:raise ValueError('no leaders in the site data')
+    return leaders
+
+def method_check(src,now,results):
+    memory=src.method_memory()
+    try:leaders=src.site_leaders()
+    except Exception as error:
+        memory['read_failures']=memory.get('read_failures',0)+1
+        if memory['read_failures']>=2:results['method-note']=(False,f"cannot read the site leaders ({memory['read_failures']} runs in a row): "+type(error).__name__,None,METHOD_LINK)
+        else:results['method-note']=(memory.get('last_ok',True),memory.get('last_problem'),None,METHOD_LINK)
+        src.remember_method(memory);return
+    memory['read_failures']=0
+    seen=memory.get('missing',{});missing={}
+    problems=[]
+    for path,row_id,has_note in leaders:
+        if has_note:continue
+        key=path+' '+row_id;since=parse(seen.get(key)) or now;missing[key]=since.isoformat()
+        if now-since>=METHOD_LIMIT:problems.append(f'no method note for the leader {row_id} of {path} since {pt(since)}')
+    problem=safe_text('; '.join(problems),500) if problems else None
+    memory['missing']=missing;memory['last_ok']=not problems;memory['last_problem']=problem;src.remember_method(memory)
+    results['method-note']=(not problems,problem,None if problems else now,METHOD_LINK)
+
 def issue_check(src,now,results):
     memory=src.issue_memory()
     try:
@@ -641,6 +689,7 @@ def check(src,now,to_time=systemd_time):
     prove2me_check(src,latest,results)
     review_check(src,latest,results)
     parity_check(src,now,results)
+    method_check(src,now,results)
     if src.unit_installed('bigospeedrun-race-channels.timer'):
         good=src.race_channels_last_ok();fresh=bool(good and now-good<2*H)
         results['race-channels']=(fresh,None if fresh else 'no passed race channel run in the last 2 h',good,

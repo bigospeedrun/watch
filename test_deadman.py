@@ -74,6 +74,13 @@ class Fake:
               dict(id='3',name='general',type=0,parent_id='1558629621208186970'),
               dict(id='4',name='Other bounds',type=4,parent_id=None)]
     parity_error=None;parity_mem={}
+    # Method notes: the current leader of each board in the public chat-knowledge.json.
+    leaders=[('/exact-dft','direct-pr-41',True),('/apsp','joshuaqfex-apsp-2026',True)];leaders_error=None;method_mem={}
+    def site_leaders(self):
+        if self.leaders_error:raise self.leaders_error
+        return list(self.leaders)
+    def method_memory(self):return json.loads(json.dumps(self.method_mem))
+    def remember_method(self,memory):self.method_mem=json.loads(json.dumps(memory))
     def site_races(self):
         if self.parity_error:raise self.parity_error
         return d.races_from(self.knowledge)
@@ -116,7 +123,7 @@ class DeadmanTests(unittest.TestCase):
 
     def test_all_healthy_sends_nothing(self):
         report=self.run_at(Fake())
-        self.assertEqual(set(report),{'watch-cycle','discord-intake','problem-selection','site-refresh','verifier-submissions','chatbot-gap-review','watch-sources','watch-errors','vps-deploy','vps-board','race-parity','stale-issues','unanswered-submissions','direct-import'})
+        self.assertEqual(set(report),{'watch-cycle','discord-intake','problem-selection','site-refresh','verifier-submissions','chatbot-gap-review','watch-sources','watch-errors','vps-deploy','vps-board','race-parity','method-note','stale-issues','unanswered-submissions','direct-import'})
         self.assertTrue(all(v=='ok' for v in report.values()));self.assertEqual(self.sent,[])
 
     def test_each_simulated_stale_or_failed_state_is_caught(self):
@@ -359,6 +366,36 @@ class DeadmanTests(unittest.TestCase):
         f=Fake();f.knowledge['problems'][0]['name']='Fourier'
         problem=d.check(f,NOW)['race-parity'][1]
         self.assertIn('no Discord channel #fourier in Big O for exact-dft',problem);self.assertIn('extra Discord channel #fourier-transform',problem)
+
+    def test_method_note_alerts_only_after_a_leader_lacked_one_for_24_hours(self):
+        f=Fake();self.assertEqual(d.check(f,NOW)['method-note'][:2],(True,None))
+        f.leaders=[('/exact-dft','direct-pr-41',True),('/apsp','new-leader',False)]
+        self.assertEqual(d.check(f,NOW)['method-note'][:2],(True,None),'first sight starts the clock')
+        self.assertEqual(d.check(f,NOW+timedelta(hours=23))['method-note'][:2],(True,None))
+        ok,problem=d.check(f,NOW+timedelta(hours=24))['method-note'][:2]
+        self.assertFalse(ok);self.assertIn('new-leader',problem);self.assertIn('/apsp',problem)
+        f.leaders=[('/exact-dft','direct-pr-41',True),('/apsp','new-leader',True)]
+        self.assertEqual(d.check(f,NOW+timedelta(hours=25))['method-note'][:2],(True,None),'a note clears the alert')
+        f.leaders=[('/exact-dft','direct-pr-41',True),('/apsp','newer-leader',False)]
+        self.assertEqual(d.check(f,NOW+timedelta(hours=26))['method-note'][:2],(True,None),'another leader starts its own clock')
+        self.assertEqual(f.method_mem['missing'],{'/apsp newer-leader':(NOW+timedelta(hours=26)).isoformat()})
+
+    def test_method_note_tolerates_one_failed_read_and_alerts_on_two(self):
+        f=Fake();f.leaders_error=OSError('down')
+        self.assertNotIn('method-note',self.failing(f))
+        self.assertIn('method-note',self.failing(f))
+        f.leaders_error=None;self.assertNotIn('method-note',self.failing(f))
+
+    def test_a_leader_covered_by_a_board_note_counts_as_noted(self):
+        # The site puts the board note of the leader's repository in `method`, so no row note is needed.
+        knowledge={'problems':[{'path':'/integer-multiplication','current':[{'id':'crocswap-pr-9999','method':'Records from this repository build on OpenAI.'}]}]}
+        f=Fake();f.leaders=d.leaders_from(knowledge)
+        self.assertEqual(d.check(f,NOW+timedelta(hours=48))['method-note'][:2],(True,None))
+
+    def test_leaders_come_from_the_public_knowledge_and_an_empty_list_is_an_error(self):
+        knowledge={'problems':[{'path':'/apsp','current':[{'id':'a','method':'A note.'},{'id':'b'},{'id':'c','method':'  '}]},{'path':'/3sum','current':[]}]}
+        self.assertEqual(d.leaders_from(knowledge),[('/apsp','a',True),('/apsp','b',False),('/apsp','c',False)])
+        with self.assertRaises(ValueError):d.leaders_from({'problems':[{'path':'/apsp','current':[]}]})
 
     def test_race_parity_tolerates_one_failed_read_and_alerts_on_two(self):
         f=Fake();f.parity_error=OSError('down')
