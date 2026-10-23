@@ -1,0 +1,11 @@
+[Unit]
+Description=Read new GitHub comments of the Big O Speedrun repos every 10 minutes for BOS Lead Dev
+
+[Timer]
+OnCalendar=*-*-* *:00/10:00
+AccuracySec=10s
+Persistent=true
+Unit=bigospeedrun-comment-watch.service
+
+[Install]
+WantedBy=timers.target

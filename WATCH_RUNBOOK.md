@@ -213,6 +213,30 @@ succeeded for 3 h. `python3 pwn_watch.py --dry-run` reads only. Install: copy
 `systemd/bigospeedrun-pwn-watch.{service,timer}` to `~/.config/systemd/user/`, then
 `systemctl --user daemon-reload && systemctl --user enable --now bigospeedrun-pwn-watch.timer`.
 
+### GitHub comments (Nil, 2026-10-23)
+
+`comment_watch.py` runs every 10 minutes from `bigospeedrun-comment-watch.timer` (outside the watch cycle).
+People commented on the merged verifier PR #46 (a credit dispute) and nobody saw it for hours, because the
+acknowledgements and dead-man checks cover open items only. The watch reads, with GitHub GET requests only,
+the issue comments (they include the conversation of pull requests), the pull request review comments and
+the review summaries of `bigospeedrun/site`, `verifier`, `board` and `watch`, for open and closed items. A
+new comment by anyone who is not a bot and not `nmamano` (the maintainer account, which is also the
+account of our agents) goes once to BOS Lead Dev through the signed webhook (rule `digest`): author, item
+and its state (issue or PR, open, closed or merged), link, and the first 200 characters, cleaned to one line
+and quoted as UNTRUSTED COMMENT TEXT. A ping of the verifier's own workflow bot that starts with the marker `<!-- bos-derivation-hold-v1 N ` in `bigospeedrun/verifier` also
+alerts once, with fixed text only ("derivation hold on verifier#N, release entry in the comment"; Reviewer,
+2026-10-23). Inline comments of a review submitted later count from their update time, a review that asks for changes counts without text,
+and a deleted account is shown as `ghost`. Messages are cut by their size after JSON escaping. A failed webhook stops the run, keeps what was
+sent, and keeps the cursor. A comment of `nmamano` (OWN in the script) counts
+as the reply to every earlier comment on the same item. The first run starts at that moment; the ignored
+`comment-watch.local.json` holds the cursor (10 minutes of overlap), the ids already sent and the comments
+still without a reply, never the text. A repository that cannot be read keeps the cursor, so its comments
+come next time; a failed webhook leaves the comments unsent for the next run. Dead-man items (hourly):
+`comment-watch` (last good pass < 30 min) and `comment-reply` (a human comment without a maintainer reply
+for 2 hours; one alert per comment). `python3 comment_watch.py --dry-run` reads only. Install: copy
+`systemd/bigospeedrun-comment-watch.{service,timer}` to `~/.config/systemd/user/`, then
+`systemctl --user daemon-reload && systemctl --user enable --now bigospeedrun-comment-watch.timer`.
+
 ## Problem selection digest
 
 `problem_selection_watch.py` reads Discord `#problem-selection`

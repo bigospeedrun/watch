@@ -31,6 +31,12 @@ Items:
                        cycle stalled silently before 2026-10-16 (slitsey Catalan)
   prove2me-digest      #prove2me reader (bigospeedrun-prove2me.timer, every minute) last ran ok
                        < 2 h; checked once that timer unit is installed
+  comment-watch        comment_watch.py (bigospeedrun-comment-watch.timer, every 10 min) last passed
+                       ok < 30 min; checked once that timer unit is installed
+  comment-reply        every human comment on an issue or PR of bigospeedrun/site, verifier, board
+                       and watch, open or closed, has a reply of the maintainer account within 2 h
+                       (comment-watch.local.json); alerts once per comment (Nil, 2026-10-23: a credit
+                       dispute on merged verifier PR #46 sat unseen for hours)
   discord-ack          #submit-a-result acknowledger (bigospeedrun-discord-ack.timer, every minute,
                        discord_ack.py) last ran ok < 15 min, and no message has waited 15 min for
                        its eyes reaction (discord-ack.local.json); checked once that timer unit is
@@ -154,7 +160,7 @@ SOFT_STEPS={DIRECT_STEP,'Refresh public author profiles','Plan Discord record no
             'Post Discord record notifications','Plan X record notifications','Commit X reservations before sending','Post X record notifications'}
 # Items whose problem is a set of strings joined by SET_SEP: an alert lists only strings not
 # alerted yet in this failing period, and a repeated string never alerts again.
-SET_ITEMS={'watch-errors','unanswered-submissions'}
+SET_ITEMS={'watch-errors','unanswered-submissions','comment-reply'}
 SET_SEP='\n'
 WATCH_ERRORS_LINK='~/nil/bigospeedrun-data/pivot-watch.json (errors)'
 # Items whose alert repeats when the problem text changes during one failing period.
@@ -180,6 +186,9 @@ VPS_BACKUP=Path.home()/'nil/wallgame/ops-private/vps-backup'
 PT=ZoneInfo('America/Los_Angeles')
 H=timedelta(hours=1)
 ACK_LIMIT=timedelta(minutes=15)
+COMMENT_PASS=timedelta(minutes=30)
+COMMENT_REPLY=timedelta(hours=2)
+COMMENT_LINK='journalctl --user -u bigospeedrun-comment-watch.service; ~/nil/bigospeedrun-data/comment-watch.local.json'
 
 def pt(when):
     if not when:return 'never recorded'
@@ -320,6 +329,9 @@ class Sources:
         path=self.root/f'{name}.local.json'
         return parse(json.loads(path.read_text()).get('last_ok')) if path.exists() else None
     def unit_installed(self,unit):return (Path.home()/'.config/systemd/user'/unit).exists()
+    def comment_tracked(self):
+        path=self.root/'comment-watch.local.json'
+        return json.loads(path.read_text()).get('tracked',{}) if path.exists() else {}
     def ack_pending(self):
         path=self.root/'discord-ack.local.json'
         return json.loads(path.read_text()).get('pending',{}) if path.exists() else {}
@@ -661,6 +673,16 @@ def check(src,now,to_time=systemd_time):
         good=src.digest_last_ok('prove2me');fresh=bool(good and now-good<2*H)
         results['prove2me-digest']=(fresh,None if fresh else 'no successful #prove2me read in the last 2 h',good,
                                     'journalctl --user -u bigospeedrun-prove2me.service')
+    if src.unit_installed('bigospeedrun-comment-watch.timer'):
+        good=src.digest_last_ok('comment-watch')
+        fresh=bool(good and now-good<COMMENT_PASS)
+        results['comment-watch']=(fresh,None if fresh else 'no successful GitHub comment read in the last 30 min',good,COMMENT_LINK)
+        try:
+            waiting=[f"{t['repo']}#{int(t['number'])} comment by {safe_text(t['author'],40)} has no reply {safe_text(t['url'],110)}"
+                     for t in src.comment_tracked().values() if not t.get('replied') and now-parse(t['at'])>=COMMENT_REPLY]
+            results['comment-reply']=(not waiting,SET_SEP.join(sorted(waiting)) or None,None if waiting else now,COMMENT_LINK)
+        except Exception as error:
+            results['comment-reply']=(False,'cannot read comment-watch.local.json: '+type(error).__name__,None,COMMENT_LINK)
     if src.unit_installed('bigospeedrun-discord-ack.timer'):
         good=src.digest_last_ok('discord-ack');waiting=[m for m,first in src.ack_pending().items() if now-parse(first)>=ACK_LIMIT]
         if not good or now-good>=ACK_LIMIT:problem='the #submit-a-result acknowledger has not run ok for 15 min'

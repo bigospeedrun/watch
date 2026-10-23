@@ -29,11 +29,14 @@ class Fake:
     def watch_errors(self):
         if isinstance(self.werrors,Exception):raise self.werrors
         return list(self.werrors)
-    ack_installed=False;ack_ok=None;pwn_installed=False;pwn_ok=None
-    def unit_installed(self,unit):return self.ack_installed if 'discord-ack' in unit else self.pwn_installed if 'pwn-watch' in unit else self.installed
+    ack_installed=False;ack_ok=None;pwn_installed=False;pwn_ok=None;comment_installed=False;comment_ok=None;comments={}
+    def unit_installed(self,unit):return self.ack_installed if 'discord-ack' in unit else self.pwn_installed if 'pwn-watch' in unit else self.comment_installed if 'comment-watch' in unit else self.installed
+    def comment_tracked(self):
+        if isinstance(self.comments,Exception):raise self.comments
+        return self.comments
     ack={}
     def ack_pending(self):return self.ack
-    def digest_last_ok(self,name):return self.ack_ok if name=='discord-ack' else self.pwn_ok if name=='pwn-watch' else self.digest_ok
+    def digest_last_ok(self,name):return self.ack_ok if name=='discord-ack' else self.pwn_ok if name=='pwn-watch' else self.comment_ok if name=='comment-watch' else self.digest_ok
     def vps_health(self):
         if self.vps_error:raise self.vps_error
         return self.vps
@@ -175,6 +178,19 @@ class DeadmanTests(unittest.TestCase):
         f.ack={'11':(NOW-timedelta(minutes=15)).isoformat(),'12':(NOW-timedelta(minutes=1)).isoformat()}
         self.assertEqual(self.failing(f),{'discord-ack'})
         self.assertIn('1 message(s)',d.check(f,NOW)['discord-ack'][1])
+
+    def test_comment_watch_needs_a_pass_within_30_minutes_and_comment_reply_alerts_once_per_comment_after_2_hours(self):
+        f=Fake();self.assertNotIn('comment-watch',d.check(f,NOW));self.assertNotIn('comment-reply',d.check(f,NOW))
+        f.comment_installed=True;f.comment_ok=NOW-timedelta(minutes=12);self.assertEqual(self.failing(f),set())
+        f.comment_ok=NOW-timedelta(minutes=31);self.assertEqual(self.failing(f),{'comment-watch'})
+        f.comment_ok=None;self.assertEqual(self.failing(f),{'comment-watch'})
+        f.comment_ok=NOW-timedelta(minutes=5)
+        tracked=lambda hours,replied=False,n=46:{'repo':'verifier','number':n,'author':'someone','at':(NOW-timedelta(hours=hours)).isoformat(),'url':'https://github.com/bigospeedrun/verifier/pull/46#issuecomment-1','replied':replied}
+        f.comments={'a':tracked(1.9),'b':tracked(5,True)};self.assertEqual(self.failing(f),set())
+        f.comments={'a':tracked(2.1)};self.assertEqual(self.failing(f),{'comment-reply'})
+        problem=d.check(f,NOW)['comment-reply'][1]
+        self.assertIn('verifier#46 comment by someone has no reply',problem);self.assertNotIn('2.1',problem)
+        f.comments=OSError('x');self.assertEqual(self.failing(f),{'comment-reply'})
 
     def p2m_run(self,f,url,import_ok=True,fail_step=None,other_failure=False):
         steps=[dict(name='Validate refreshed bundle',conclusion='failure' if other_failure else 'success'),

@@ -1,0 +1,10 @@
+[Unit]
+Description=Big O Speedrun GitHub comment watch, every 10 minutes (read-only; sends each new human comment of the BOS repos to BOS Lead Dev)
+
+[Service]
+Type=oneshot
+WorkingDirectory=%h/nil/bigospeedrun-data
+Environment=PATH=%h/.local/bin:/usr/local/bin:/usr/bin:/bin
+ExecStart=/usr/bin/python3 %h/nil/bigospeedrun-data/comment_watch.py
+StandardOutput=journal
+StandardError=journal
