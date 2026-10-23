@@ -292,7 +292,18 @@ class Sources:
         # Pull requests count too: "nothing in bigospeedrun/* stays open indefinitely" (Nil), and
         # verifier PRs from 2026-10-15 stayed open unseen when only issues were read (2026-10-21).
         return [dict(number=i.get('number'),title=i.get('title'),html_url=i.get('html_url'),created_at=i.get('created_at'),
-                     pr='pull_request' in i) for i in items]
+                     pr='pull_request' in i,body_sha256=hashlib.sha256((i.get('body') or '').encode('utf-8')).hexdigest()) for i in items]
+    def bot_comments(self,repo,number):
+        """[(created_at, body)] of the github-actions bot comments on the first comment page."""
+        out=subprocess.run(['gh','api','-X','GET',f'repos/{repo}/issues/{int(number)}/comments','-f','per_page=100'],
+                           capture_output=True,text=True,timeout=60)
+        if out.returncode:raise RuntimeError('GitHub comments request failed')
+        return [(c.get('created_at') or '',c.get('body') or '') for c in json.loads(out.stdout)
+                if c.get('user',{}).get('login')=='github-actions[bot]' and c.get('user',{}).get('type')=='Bot']
+    def pr_head(self,repo,number):
+        out=subprocess.run(['gh','api','-X','GET',f'repos/{repo}/pulls/{int(number)}'],capture_output=True,text=True,timeout=60)
+        if out.returncode:raise RuntimeError('GitHub pull request read failed')
+        return json.loads(out.stdout)['head']['sha']
     def bot_replied(self,repo,number):
         out=subprocess.run(['gh','api','-X','GET',f'repos/{repo}/issues/{int(number)}/comments','-f','per_page=100'],
                            capture_output=True,text=True,timeout=60)
@@ -537,6 +548,29 @@ def method_check(src,now,results):
     memory['missing']=missing;memory['last_ok']=not problems;memory['last_problem']=problem;src.remember_method(memory)
     results['method-note']=(not problems,problem,None if problems else now,METHOD_LINK)
 
+# Interim (Lead, 2026-10-23), until the verifier closes a Claimed-only item and keeps it Claimed: a verifier
+# item whose current version got the bot's claimed-only result is not stale. Verifier PR #52 got
+# "keep_open, Receipt run mismatch" from a publisher bug (fixed in 5ed63b3) instead of claimed_only, so
+# it is snoozed by name until the date below; after it the item alerts again.
+SNOOZED={('bigospeedrun/verifier',52):'2026-10-25T00:00:00+00:00'}
+
+def claimed_only(src,repo,item,now):
+    """The verifier marked this item's current version Claimed-only (no proof run), or it is snoozed."""
+    until=SNOOZED.get((repo,item.get('number')))
+    if until and now<parse(until):return True
+    if repo!='bigospeedrun/verifier':return False
+    n=int(item['number'])
+    try:
+        comments=src.bot_comments(repo,n)
+        if item.get('pr'):
+            head=src.pr_head(repo,n)
+            return any(body.startswith(f'<!-- bos-pr-v2 {n} {head} -->') and '**claimed_only**' in body for _,body in comments)
+        # An issue version is its body: the acknowledgement names the body hash; claimed-only comes after it.
+        acked=[at for at,body in comments if body.startswith(f"<!-- bos-ack-v1 {n} {item.get('body_sha256')} -->")]
+        return bool(acked) and any(body.startswith(f'<!-- bos-claimed-v1 {n} ') and at>=min(acked) for at,body in comments)
+    except Exception:
+        return False  # An unreadable item stays stale: alert rather than hide it.
+
 def issue_check(src,now,results):
     memory=src.issue_memory()
     try:
@@ -544,7 +578,7 @@ def issue_check(src,now,results):
         for repo in ISSUE_REPOS:
             for issue in src.open_issues(repo):
                 opened=parse(issue['created_at'])
-                if opened and now-opened>=24*H:stale.append((opened,repo,issue))
+                if opened and now-opened>=24*H and not claimed_only(src,repo,issue,now):stale.append((opened,repo,issue))
     except Exception as error:
         memory['read_failures']=memory.get('read_failures',0)+1
         if memory['read_failures']>=2:results['stale-issues']=(False,f"cannot read the issues ({memory['read_failures']} runs in a row): "+type(error).__name__,None,ISSUE_LINK)

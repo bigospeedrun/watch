@@ -95,6 +95,9 @@ class Fake:
         return [dict(i) for i in self.issues.get(repo,[])]
     replied=set()
     def bot_replied(self,repo,number):return (repo,number) in self.replied
+    comments={};heads={}
+    def bot_comments(self,repo,number):return list(self.comments.get((repo,number),[]))
+    def pr_head(self,repo,number):return self.heads[(repo,number)]
     def issue_memory(self):return dict(self.issue_mem)
     def remember_issues(self,memory):self.issue_mem=dict(memory)
     def remember_parity(self,memory):self.parity_mem=dict(memory)
@@ -428,6 +431,26 @@ class DeadmanTests(unittest.TestCase):
         self.assertIn('2 issue(s) or PR(s) open for 24 h or more',problem)
         self.assertIn('verifier#4 "Lean submission" open 2 d 1 h https://github.com/bigospeedrun/verifier/issues/4',problem)
         self.assertIn('site#2',problem);self.assertNotIn('#5',problem)
+
+    def test_a_claimed_only_verifier_item_is_not_stale_for_its_current_version(self):
+        # Lead, 2026-10-23 (interim): the bot's claimed-only result for the current version is an answer.
+        V='bigospeedrun/verifier';f=Fake()
+        f.issues={V:[dict(self.issue(4,49),body_sha256='b'*64),dict(self.issue(6,49),pr=True)]}
+        f.comments={(V,4):[('2026-10-21T00:00:00Z','<!-- bos-ack-v1 4 '+'b'*64+' -->\nReceived.'),('2026-10-21T00:05:00Z','<!-- bos-claimed-v1 4 '+'d'*64+' -->\nClaimed.')],
+                    (V,6):[('2026-10-21T00:00:00Z','<!-- bos-pr-v2 6 '+'a'*40+' -->\nPR proof result: **claimed_only**. Bound below the record')]}
+        f.heads={(V,6):'a'*40}
+        self.assertNotIn('stale-issues',self.failing(f))
+        # A new head, or an edited issue body (a new version, acked again), is stale again.
+        f.heads={(V,6):'c'*40};f.issues[V][0]['body_sha256']='e'*64
+        problem=d.check(f,NOW)['stale-issues'][1]
+        self.assertIn('verifier#4',problem);self.assertIn('verifier#6',problem)
+        # A claimed-only comment older than the acknowledgement of the current body does not count.
+        f.issues[V][0]['body_sha256']='b'*64;f.comments[(V,4)]=[f.comments[(V,4)][1],('2026-10-21T01:00:00Z','<!-- bos-ack-v1 4 '+'b'*64+' -->')]
+        self.assertIn('verifier#4',d.check(f,NOW)['stale-issues'][1])
+        # The keep_open PR #52 is snoozed by name until its date, then alerts again.
+        f.issues={V:[dict(self.issue(52,49),pr=True)]};f.heads={(V,52):'a'*40};f.comments={}
+        self.assertNotIn('stale-issues',self.failing(f))
+        self.assertIn('verifier#52',d.check(f,d.parse('2026-10-25T00:00:00+00:00'))['stale-issues'][1])
 
     def test_issue_titles_are_sanitized_and_ages_alone_do_not_realert(self):
         f=Fake();f.issues={'bigospeedrun/watch':[self.issue(7,30,'\u00e9\n::error::'+'x'*300)]}
