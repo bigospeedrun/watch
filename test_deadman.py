@@ -187,6 +187,7 @@ class DeadmanTests(unittest.TestCase):
         f.comment_ok=NOW-timedelta(minutes=5)
         tracked=lambda hours,replied=False,n=46:{'repo':'verifier','number':n,'author':'someone','at':(NOW-timedelta(hours=hours)).isoformat(),'url':'https://github.com/bigospeedrun/verifier/pull/46#issuecomment-1','replied':replied}
         f.comments={'a':tracked(1.9),'b':tracked(5,True)};self.assertEqual(self.failing(f),set())
+        f.comments={'a':dict(tracked(2.1),capped=True)};self.assertEqual(self.failing(f),set(),'a thread at the reply cap waits for Nil')
         f.comments={'a':tracked(2.1)};self.assertEqual(self.failing(f),{'comment-reply'})
         problem=d.check(f,NOW)['comment-reply'][1]
         self.assertIn('verifier#46 comment by someone has no reply',problem);self.assertNotIn('2.1',problem)

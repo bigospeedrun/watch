@@ -116,6 +116,29 @@ def item_label(repo, n, cache):
     return cache[(repo, n)]
 
 
+REPLY_CAP = 3  # Nil rule 2026-10-23: at most 3 agent replies per thread with outside people
+# The first line of an agent reply: "Agent for Nil (...)" and the older "I'm the AI agent that maintains the site for Nil".
+AGENT_LINE = re.compile(r"\A(?:agent for nil(?![a-z0-9])|answered by the big o speedrun ops agent(?![a-z0-9]))|\b(?:i'm|i am) the ai agent\b")
+
+
+def agent_signed(text):
+    first = next((l.strip() for l in (text or '').splitlines() if l.strip()), '').lower().replace('\u2019', "'")
+    # Markdown emphasis or a heading mark in front does not hide the signature; a quote mark (>) does.
+    return bool(AGENT_LINE.search(first.lstrip('*_# \t')))
+
+
+def agent_replies(repo, n, is_pr):
+    """How many comments of OWN on this item are signed as an agent: issue comments, and for a pull request
+    its review comments and review summaries."""
+    paths = [f'issues/{n}/comments'] + ([f'pulls/{n}/comments', f'pulls/{n}/reviews'] if is_pr else [])
+    total = 0
+    for path in paths:
+        for c in gh.pages(f'repos/{ORG}/{repo}/{path}'):
+            if (c.get('user') or {}).get('login') in OWN and agent_signed(c.get('body')):
+                total += 1
+    return total
+
+
 HOLD = re.compile(r'\A\s*<!-- bos-derivation-hold-v1 ([0-9]+) ')
 
 
@@ -125,13 +148,19 @@ def hold_number(e):
     return int(match[1]) if match else None
 
 
-def entry(e, label):
+def entry(e, label, replies=None):
     kind, title = label
     n = hold_number(e)
     if n is not None:
         # Fixed text: nothing of the comment is quoted.
         return f'{pt_time(e["at"])} | DERIVATION HOLD | verifier#{n} ({kind}) | {e["url"]}\n  derivation hold on verifier#{n}, release entry in the comment'
-    lines = [f'{pt_time(e["at"])} | {e["author"]} ({e["assoc"].lower()}) | {e["repo"]}#{e["number"]} ({kind}) | {e["url"]}']
+    if replies is None:
+        cap = 'agent reply count unreadable: check the thread before replying'
+    elif replies >= REPLY_CAP:
+        cap = f'reply cap reached: needs Nil ({replies} agent replies on this item)'
+    else:
+        cap = f'{replies} agent repl{"y" if replies == 1 else "ies"} so far'
+    lines = [f'{pt_time(e["at"])} | {e["author"]} ({e["assoc"].lower()}) | {e["repo"]}#{e["number"]} ({kind}; {cap}) | {e["url"]}']
     # The title is written by users too: it sits inside the quoted block with the text.
     lines.append('  │ item title: ' + (title or '(none)'))
     lines.append('  │ ' + (clean(e['text']) or '(no text)'))
@@ -155,7 +184,7 @@ def chunks(entries, limit=CHUNK):
         yield group
 
 
-def run(notify, root=None, dry_run=False, now=None, read=events, label=item_label):
+def run(notify, root=None, dry_run=False, now=None, read=events, label=item_label, count=agent_replies):
     root = root or ROOT
     now = now or datetime.now(timezone.utc)
     path = root / STATE
@@ -178,7 +207,22 @@ def run(notify, root=None, dry_run=False, now=None, read=events, label=item_labe
                    key=lambda e: e['at'])
     cache = {}
     sent = 0
-    groups = list(chunks([(e['key'], entry(e, label(e['repo'], e['number'], cache))) for e in fresh]))
+    counts = {}
+
+    def replies(e):
+        # Agent replies on the item so far; None when GitHub cannot say (then the alert says so).
+        if hold_number(e) is not None:
+            return None
+        item = (e['repo'], e['number'])
+        if item not in counts:
+            try:
+                kind = label(e['repo'], e['number'], cache)[0]
+                # Without the item kind a pull request would be counted from its issue comments only: say unreadable.
+                counts[item] = None if kind == 'item unreadable' else count(e['repo'], e['number'], kind.startswith('PR'))
+            except Exception:
+                counts[item] = None
+        return counts[item]
+    groups = list(chunks([(e['key'], entry(e, label(e['repo'], e['number'], cache), replies(e))) for e in fresh]))
     by_key = {e['key']: e for e in fresh}
     for i, group in enumerate(groups):
         part = f', part {i + 1} of {len(groups)}' if len(groups) > 1 else ''
@@ -196,7 +240,9 @@ def run(notify, root=None, dry_run=False, now=None, read=events, label=item_labe
             e = by_key[key]
             state['seen'][key] = e['at']
             if hold_number(e) is None:
-                state['tracked'][key] = dict(repo=e['repo'], number=e['number'], author=e['author'], at=e['at'], url=e['url'], replied=False)
+                # A thread at the reply cap waits for Nil: the dead-man does not ask for a reply there.
+                state['tracked'][key] = dict(repo=e['repo'], number=e['number'], author=e['author'], at=e['at'], url=e['url'], replied=False,
+                                             capped=bool(replies(e) is not None and replies(e) >= REPLY_CAP))
         sent += len(group)
     # A comment of ours answers every earlier comment on the same item.
     for e in found:

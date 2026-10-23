@@ -227,7 +227,10 @@ and quoted as UNTRUSTED COMMENT TEXT. A ping of the verifier's own workflow bot 
 alerts once, with fixed text only ("derivation hold on verifier#N, release entry in the comment"; Reviewer,
 2026-10-23). Inline comments of a review submitted later count from their update time, a review that asks for changes counts without text,
 and a deleted account is shown as `ghost`. Messages are cut by their size after JSON escaping. A failed webhook stops the run, keeps what was
-sent, and keeps the cursor. A comment of `nmamano` (OWN in the script) counts
+sent, and keeps the cursor. Reply cap (Nil rule, 2026-10-23: at most 3 agent replies per thread with outside people): when a new human comment arrives, the watch counts the comments of `nmamano`
+on that item (issue comments, and for a pull request its review comments and summaries) whose first line is signed as an agent ("Agent for Nil", "I'm the AI agent",
+"Answered by the Big O Speedrun ops agent"). The alert shows the count; at 3 or more it says "reply cap reached: needs Nil" so the Lead opens an Ask and
+dispatches nobody, and the `comment-reply` dead-man skips that comment. An unreadable count says so. Agent replies posted before 2026-10-23 carry no "Agent for Nil" line, so older threads can count low. A comment of `nmamano` (OWN in the script) counts
 as the reply to every earlier comment on the same item. The first run starts at that moment; the ignored
 `comment-watch.local.json` holds the cursor (10 minutes of overlap), the ids already sent and the comments
 still without a reply, never the text. A repository that cannot be read keeps the cursor, so its comments

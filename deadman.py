@@ -35,7 +35,8 @@ Items:
                        ok < 30 min; checked once that timer unit is installed
   comment-reply        every human comment on an issue or PR of bigospeedrun/site, verifier, board
                        and watch, open or closed, has a reply of the maintainer account within 2 h
-                       (comment-watch.local.json); alerts once per comment (Nil, 2026-10-23: a credit
+                       (comment-watch.local.json); an item that already has 3 agent replies waits for Nil and
+                       is skipped (Nil rule 2026-10-23); alerts once per comment (Nil, 2026-10-23: a credit
                        dispute on merged verifier PR #46 sat unseen for hours)
   discord-ack          #submit-a-result acknowledger (bigospeedrun-discord-ack.timer, every minute,
                        discord_ack.py) last ran ok < 15 min, and no message has waited 15 min for
@@ -679,7 +680,7 @@ def check(src,now,to_time=systemd_time):
         results['comment-watch']=(fresh,None if fresh else 'no successful GitHub comment read in the last 30 min',good,COMMENT_LINK)
         try:
             waiting=[f"{t['repo']}#{int(t['number'])} comment by {safe_text(t['author'],40)} has no reply {safe_text(t['url'],110)}"
-                     for t in src.comment_tracked().values() if not t.get('replied') and now-parse(t['at'])>=COMMENT_REPLY]
+                     for t in src.comment_tracked().values() if not t.get('replied') and not t.get('capped') and now-parse(t['at'])>=COMMENT_REPLY]
             results['comment-reply']=(not waiting,SET_SEP.join(sorted(waiting)) or None,None if waiting else now,COMMENT_LINK)
         except Exception as error:
             results['comment-reply']=(False,'cannot read comment-watch.local.json: '+type(error).__name__,None,COMMENT_LINK)
