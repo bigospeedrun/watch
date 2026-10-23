@@ -550,9 +550,10 @@ def method_check(src,now,results):
 
 # A verifier item whose current version got the bot's claimed-only result is not stale (Lead, 2026-10-23;
 # the verifier closes such items since dbf084a, so this matters for older open items). SNOOZED holds
-# (repo, number): ISO date pairs for an item to skip until that date; after it the item alerts again. Empty
-# since PR #52 closed with its claimed_only report (2026-10-23 22:18Z).
-SNOOZED={}
+# (repo, number): ISO date pairs for an item to skip until that date; after it the item alerts again.
+# Verifier statement PRs #12 and #21 (Lead, 2026-10-24): on 2026-10-28 Reviewer closes them with "reopen
+# when ready" if their authors do not answer; they alert again only if that close does not happen.
+SNOOZED={('bigospeedrun/verifier',12):'2026-10-29T00:00:00+00:00',('bigospeedrun/verifier',21):'2026-10-29T00:00:00+00:00'}
 
 def claimed_only(src,repo,item,now):
     """The verifier marked this item's current version Claimed-only (no proof run), or it is snoozed."""
