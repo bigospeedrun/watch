@@ -548,11 +548,11 @@ def method_check(src,now,results):
     memory['missing']=missing;memory['last_ok']=not problems;memory['last_problem']=problem;src.remember_method(memory)
     results['method-note']=(not problems,problem,None if problems else now,METHOD_LINK)
 
-# Interim (Lead, 2026-10-23), until the verifier closes a Claimed-only item and keeps it Claimed: a verifier
-# item whose current version got the bot's claimed-only result is not stale. Verifier PR #52 got
-# "keep_open, Receipt run mismatch" from a publisher bug (fixed in 5ed63b3) instead of claimed_only, so
-# it is snoozed by name until the date below; after it the item alerts again.
-SNOOZED={('bigospeedrun/verifier',52):'2026-10-25T00:00:00+00:00'}
+# A verifier item whose current version got the bot's claimed-only result is not stale (Lead, 2026-10-23;
+# the verifier closes such items since dbf084a, so this matters for older open items). SNOOZED holds
+# (repo, number): ISO date pairs for an item to skip until that date; after it the item alerts again. Empty
+# since PR #52 closed with its claimed_only report (2026-10-23 22:18Z).
+SNOOZED={}
 
 def claimed_only(src,repo,item,now):
     """The verifier marked this item's current version Claimed-only (no proof run), or it is snoozed."""

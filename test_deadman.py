@@ -1,6 +1,7 @@
 import json, tempfile, unittest
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
+from unittest.mock import patch
 import deadman as d
 
 NOW=datetime(2026,10,15,1,0,tzinfo=timezone.utc)
@@ -447,10 +448,12 @@ class DeadmanTests(unittest.TestCase):
         # A claimed-only comment older than the acknowledgement of the current body does not count.
         f.issues[V][0]['body_sha256']='b'*64;f.comments[(V,4)]=[f.comments[(V,4)][1],('2026-10-21T01:00:00Z','<!-- bos-ack-v1 4 '+'b'*64+' -->')]
         self.assertIn('verifier#4',d.check(f,NOW)['stale-issues'][1])
-        # The keep_open PR #52 is snoozed by name until its date, then alerts again.
+        # A snoozed item is skipped until its date, then alerts again.
         f.issues={V:[dict(self.issue(52,49),pr=True)]};f.heads={(V,52):'a'*40};f.comments={}
-        self.assertNotIn('stale-issues',self.failing(f))
-        self.assertIn('verifier#52',d.check(f,d.parse('2026-10-25T00:00:00+00:00'))['stale-issues'][1])
+        with patch.dict(d.SNOOZED,{(V,52):'2026-10-25T00:00:00+00:00'}):
+            self.assertNotIn('stale-issues',self.failing(f))
+            self.assertIn('verifier#52',d.check(f,d.parse('2026-10-25T00:00:00+00:00'))['stale-issues'][1])
+        self.assertIn('verifier#52',d.check(f,NOW)['stale-issues'][1])
 
     def test_issue_titles_are_sanitized_and_ages_alone_do_not_realert(self):
         f=Fake();f.issues={'bigospeedrun/watch':[self.issue(7,30,'\u00e9\n::error::'+'x'*300)]}
