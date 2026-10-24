@@ -64,6 +64,14 @@ def ok(steps,send,root=None):
     save(root,state)
     return 'cleared '+','.join(cleared)
 
+def fresh_errors(now,before,skip_repo_specific=False):
+    """The report errors of this cycle that the previous report did not have, volatile parts (shas, counts) ignored.
+    A repo-specific error ('owner/repo: ...') can be skipped: the dead-man item watch-errors owns those."""
+    norm=lambda e:re.sub(r'[0-9a-f]{7,40}|\d+','#',e)
+    seen={norm(e) for e in before if isinstance(e,str)}
+    return [e for e in now if isinstance(e,str) and norm(e) not in seen
+            and not (skip_repo_specific and re.match(r'^[\w.-]+/[\w.-]+( PR #\d+)?:',e))]
+
 def office_send(text,identity):
     from poll import lead_notify
     lead_notify(text,identity,'watch-cycle')

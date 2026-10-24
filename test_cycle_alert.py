@@ -38,6 +38,14 @@ class CycleAlertTests(unittest.TestCase):
         c.fail('people-watch',str(self.log),'1',False,self.send,self.root)
         self.assertNotIn('\x1b',self.sent[1]);self.assertLess(len(self.sent[1]),600)
 
+class FreshErrorsTests(unittest.TestCase):
+    def test_only_new_errors_count_and_volatile_parts_are_ignored(self):
+        before=['a/b: compare from abc1234 failed','Mister: cap 300 reached']
+        now=['a/b: compare from 9f8e7d6 failed','Mister: cap 301 reached','Budget exhausted after 360 requests','c/d PR #5: boom']
+        self.assertEqual(c.fresh_errors(now,before),['Budget exhausted after 360 requests','c/d PR #5: boom'])
+        self.assertEqual(c.fresh_errors(now,before,True),['Budget exhausted after 360 requests'])
+        self.assertEqual(c.fresh_errors([],before),[])
+
 class LeadNotifyTests(unittest.TestCase):
     # bos-watch-cycle.timer has no office token: the same alert goes through the signed webhook (Lead, 2026-10-24).
     def run_notify(self,token):

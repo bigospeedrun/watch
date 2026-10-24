@@ -75,7 +75,16 @@ people=json.loads(Path('people-watch.json').read_text()).get('hits',[])
 pending=Path('.git/watch-candidates-pending');pending.mkdir(exist_ok=True)
 if alerts:(pending/(watch['checked_at'].replace(':','')+'.json')).write_text(json.dumps(alerts,indent=2)+'\n')
 if people:(pending/(watch['checked_at'].replace(':','')+'-people.json')).write_text(json.dumps(people,indent=2)+'\n')
-print('Checked',watch['checked_at'],'candidate alerts',len(alerts))
+# NEW report errors reach the session too (BOS Reviewer F1, 2026-10-24). A repo-specific pivot error
+# ('owner/repo: ...') stays with the dead-man item watch-errors (watchlist repos) or a log (search hits).
+# The rest (budget, rate limit) and every people-watch error or warning count once per normalized text.
+from cycle_alert import fresh_errors
+prev_people=json.loads(Path('.git/watch-previous-people.json').read_text())
+people_report=json.loads(Path('people-watch.json').read_text())
+new_errors=fresh_errors(watch.get('errors',[]),previous.get('errors',[]),True)
+new_errors+=fresh_errors(people_report.get('errors',[])+people_report.get('warnings',[]),prev_people.get('errors',[])+prev_people.get('warnings',[]))
+if new_errors:(pending/(watch['checked_at'].replace(':','')+'-errors.json')).write_text(json.dumps(new_errors,indent=2)+'\n')
+print('Checked',watch['checked_at'],'candidate alerts',len(alerts),'new report errors',len(new_errors))
 PY
 cat "$LOG"
 STEP=commit;LOG=.git/watch-git.log

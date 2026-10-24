@@ -84,7 +84,7 @@ cycle: those options omit the full search.
 
 **Quiet cycle: stop at once.** Do this first and spend no more tokens when it applies. Run the check below, and
 `ls .git/watch-candidates-pending/` (a file per cycle with pivot candidates, `...-people.json` for new
-people-watch hits). If the cycle passed (or is not due), nothing is running and the directory is empty or
+people-watch hits, `...-errors.json` for new report errors). If the cycle passed (or is not due), nothing is running and the directory is empty or
 missing, end silently: skip the site refresh check, the reports and the rest of this runbook. The dead-man
 item `site-refresh` alerts on failed refresh runs by itself, and `cycle_alert.py` alerts on a failed step.
 
@@ -310,7 +310,9 @@ than 2 h. Same safety rules: GET only, untrusted text, never read by agents.
 
 Read `.git/people-watch.log`, `.git/pivot-watch.log`, and
 `.git/watch-alert-candidates.json`, and every file in `.git/watch-candidates-pending/` (one per cycle
-that had candidates: you may have missed cycles, and the next cycle counts these repos as known). After you
+that had candidates: you may have missed cycles, and the next cycle counts these repos as known). An `-errors.json` file lists new report errors (not repo-specific ones: the dead-man
+item `watch-errors` owns those); alert Lead only for an error that stops a watch from covering its duty, as the
+alert rule says for coverage. After you
 have reviewed a file, move it into `.git/watch-candidates-reviewed/` (`mkdir -p` it first). Read the full JSON reports when needed:
 
 - `people-watch.json`: `checked_at`, `ranked_hits`, full `hits`, per-user `users`
