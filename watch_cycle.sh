@@ -70,9 +70,11 @@ alerts=[r for r in watch['candidates'] if alert_candidate(r,known,changed)]
 Path('.git/watch-alert-candidates.json').write_text(json.dumps(alerts,indent=2)+'\n')
 # The agent session reviews candidates later and may miss a cycle (usage limit): keep each cycle's own
 # list until the session has reviewed it, because the next cycle counts these repos as known.
-if alerts:
-    pending=Path('.git/watch-candidates-pending');pending.mkdir(exist_ok=True)
-    (pending/(watch['checked_at'].replace(':','')+'.json')).write_text(json.dumps(alerts,indent=2)+'\n')
+# New people-watch hits (the pivot watch does not seed from them) are queued the same way.
+people=json.loads(Path('people-watch.json').read_text()).get('hits',[])
+pending=Path('.git/watch-candidates-pending');pending.mkdir(exist_ok=True)
+if alerts:(pending/(watch['checked_at'].replace(':','')+'.json')).write_text(json.dumps(alerts,indent=2)+'\n')
+if people:(pending/(watch['checked_at'].replace(':','')+'-people.json')).write_text(json.dumps(people,indent=2)+'\n')
 print('Checked',watch['checked_at'],'candidate alerts',len(alerts))
 PY
 cat "$LOG"

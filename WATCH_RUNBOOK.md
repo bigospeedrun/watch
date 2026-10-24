@@ -2,6 +2,8 @@
 
 **Never run the watch cycle in the background, and never end your turn while the systemd unit `bos-watch-cycle` is active: wait for it in the foreground (see "Run the tests and watches"). On 2026-10-22 a cycle that ran in the background was killed when the cron session ended.**
 
+**Start with "Run the tests and watches", its "Quiet cycle" paragraph, before any other section: on a quiet cycle it ends this run at once.**
+
 Owner: BOS Lead Dev. Checked against the local scripts on 2026-10-11.
 
 ## Purpose and limits
@@ -20,7 +22,7 @@ Lean, deploy, post on GitHub, or contact authors. Git pushes are allowed only
 from `main` to `origin` as shown below. Never force-push, push `private-history`,
 or use `--all` or `--mirror`. GitHub Actions owns data refresh. X watching is off permanently. Do not open browser tabs.
 
-## Check the hourly site refresh on every run
+## Check the hourly site refresh on every run with pending candidates
 
 This duty was updated by Lead on 2026-10-11. Check workflow health even
 when there is no new research lead, and before watch tests or network work can
@@ -79,6 +81,12 @@ tests and Discord intake, then runs people_watch.py before pivot_watch.py. The p
 report. It commits only the three report files and pushes `main` after every successful cycle, even when no
 report changed. This retries a previous failed push. Do not use --recheck or --watch-only for a normal
 cycle: those options omit the full search.
+
+**Quiet cycle: stop at once.** Do this first and spend no more tokens when it applies. Run the check below, and
+`ls .git/watch-candidates-pending/` (a file per cycle with pivot candidates, `...-people.json` for new
+people-watch hits). If the cycle passed (or is not due), nothing is running and the directory is empty or
+missing, end silently: skip the site refresh check, the reports and the rest of this runbook. The dead-man
+item `site-refresh` alerts on failed refresh runs by itself, and `cycle_alert.py` alerts on a failed step.
 
 First check whether the timer cycle is running or passed. The cycle passed when `cycle` in
 `.git/cycle-last-ok.json` is later than `.git/cycle-started.txt`.
