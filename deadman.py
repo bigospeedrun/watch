@@ -665,10 +665,15 @@ def prove2me_check(src,latest,results):
     memory=src.prove2me_memory();link=(latest or {}).get('html_url') or 'https://github.com/bigospeedrun/site/actions/workflows/refresh-data.yml'
     try:
         if latest is None:raise RuntimeError('no completed refresh run')
-        names={s['name']:s.get('conclusion') for s in src.run_steps(latest)}
+        steps=src.run_steps(latest)
+        names={s['name']:s.get('conclusion') for s in steps}
     except Exception as error:
         if memory.get('armed'):results['prove2me-import']=(False,'cannot read the refresh run steps: '+type(error).__name__,None,link)
         return
+    # GitHub can list a completed run with no steps at all for a while (run 40115413828, 2026-10-24: the
+    # check at 17:37Z saw none, and a later read lists all 26). That is no verdict: the item keeps its
+    # last state, and the next check reads the run again. A run with other steps but no import step still alerts.
+    if not steps:return
     if PROVE2ME_STEP not in names:
         if memory.get('armed'):results['prove2me-import']=(False,'the newest refresh run has no prove2.me import step',None,link)
         return

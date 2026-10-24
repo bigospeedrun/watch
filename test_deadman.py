@@ -250,6 +250,17 @@ class DeadmanTests(unittest.TestCase):
         self.assertEqual(d.check(f,NOW)['prove2me-import'][0],True);self.assertTrue(f.p2m_mem['armed'])
         f.steps={};self.assertEqual(self.failing(f),{'prove2me-import'})
 
+    def test_a_run_listed_with_no_steps_is_no_verdict_for_the_prove2me_import(self):
+        # Run 40115413828 (2026-10-24 17:37Z): the jobs read of a completed run had no steps yet.
+        f=Fake();self.p2m_run(f,f.runs[0]['html_url'])
+        self.assertEqual(d.check(f,NOW)['prove2me-import'][0],True)
+        f.steps={f.runs[0]['html_url']:[]}
+        self.assertNotIn('prove2me-import',d.check(f,NOW))
+        self.assertEqual(self.failing(f),set())
+        # Other steps without the import step still alert; the armed state is kept.
+        f.steps={f.runs[0]['html_url']:[dict(name='Refresh data through GitHub GET requests',conclusion='success')]}
+        self.assertEqual(self.failing(f),{'prove2me-import'})
+
     def test_a_held_import_alerts_with_its_reason_and_does_not_fail_site_refresh(self):
         f=Fake();f.runs[0]['conclusion']='failure';f.runs[0]['id']=2
         self.p2m_run(f,f.runs[0]['html_url'],import_ok=False)
