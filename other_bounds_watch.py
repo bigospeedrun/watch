@@ -382,7 +382,10 @@ def collect(since,previous,people_hits=(),search=True):
                         for family in targets:additions.append((family,scoped_claims(added,family,True),None))
                     if len(diff.get('files',[]))>=300:
                         truncated.append(dict(query=repo+' claim diff',total_count='at least 300 files'))
-                        errors.append(f'{repo}: compare capped at 300 files from {base[:7]} to {head[:7]}')
+                        # A repo with a configured bound states its claim in the README, read whole at
+                        # head above: a capped compare is no error there (slitsey makes ~550 commits a
+                        # week, Lead 2026-10-24). A README that cannot be read still alerts.
+                        if not bound_cfg:errors.append(f'{repo}: compare capped at 300 files from {base[:7]} to {head[:7]}')
                 # On first run, suppress the reviewed starting claim at its pin.
                 if not old:
                     for cfg in CONFIG:

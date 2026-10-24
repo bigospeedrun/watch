@@ -304,6 +304,33 @@ class OtherBoundsTests(unittest.TestCase):
         self.assertTrue(any('> `|G-p/q| > b^(-700)`.' in r['source_claim_evidence'] for r in rows))
         self.assertTrue(any('configured bound not found' in e for e in result['errors']))
 
+    def test_a_configured_bound_reads_the_unicode_minus_and_a_capped_compare_is_no_error(self):
+        # slitsey README, 2026-10-24: the minus signs became U+2212 and the bound 728, so the
+        # ASCII pattern found nothing and the 550-commit week capped the compare at 300 files.
+        # Real README lines.
+        repo='slitsey/catalan-irrationality-measure'
+        cfg=next(c for c in o.CONFIG if c['repo']==repo)
+        meta=dict(full_name=repo,html_url='https://github.com/'+repo,default_branch='main',pushed_at='2026-10-24T09:00:00Z')
+        text=("> - \u03bc(G) \u2264 728;\n\nFor `G` this means `|G \u2212 a/b| > b^(-728)` for every integer `a` and every sufficiently large\n"
+              "integer `b`. For the other three constants `x` with exponent `E` it means `|x \u2212 p/q| > q^(-(E+e))`.\n")
+        self.assertEqual(o.stated_values(cfg['bound_pattern'],text),[728])
+        self.assertEqual(o.stated_values(cfg['bound_pattern'],'`|G - a/b| > b^(-740)`'),[740])
+        def run(readme_text,previous):
+            def api(path,params=None,**kwargs):
+                if '/compare/' in path:return {'files':[{'filename':f'notes/n{i}.txt','status':'added','patch':'+x'} for i in range(300)]}
+                return {'sha':'b'*40}
+            with patch.object(o,'api',api),patch.object(o,'content',return_value=readme_text.encode()):
+                return o.collect('2026-10-24',previous,search=False)
+        previous={'other_bound_states':{repo:{'head':'a'*40,'seen_claims':[],'meta':meta,'checked_cycle':1}}}
+        # Bound found: one alert for the new value, no error, and no compare.
+        result=run(text,previous)
+        self.assertEqual([r['source_claim_evidence'] for r in result['candidates'] if r['repo']==repo],[['For `G` this means `|G \u2212 a/b| > b^(-728)` for every integer `a` and every sufficiently large']])
+        self.assertFalse([e for e in result['errors'] if repo in e])
+        # Pattern broken again: the error names the cause, the capped compare adds none.
+        result=run(text.replace('|G \u2212 a/b|','|G, a/b|'),previous)
+        self.assertTrue(any('configured bound not found' in e for e in result['errors']))
+        self.assertFalse(any('compare capped' in e for e in result['errors']))
+
     def test_a_bound_flags_only_when_it_beats_the_site_leader(self):
         # MarcosCarreira/catalan-designs v2, 2026-10-21: mu(G) < 2 294, down from his own
         # 2 715, while the Catalan leader is slitsey's 740. Real README lines.
