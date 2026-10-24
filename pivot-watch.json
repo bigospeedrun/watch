@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-24T01:10:55.142204+00:00",
+  "checked_at": "2026-10-24T04:10:05.365046+00:00",
   "watched_repositories": [
     {
       "repo": "eumemic/exact-dft-bounds",
@@ -34,69 +34,71 @@
       "status": "research claims; partial Lean arithmetic checks"
     }
   ],
-  "window_start": "2026-10-21T01:10:55Z",
+  "window_start": "2026-10-21T04:10:05Z",
   "queries": [
-    "\"matrix multiplication\" in:name,description pushed:>=2026-10-21T01:10:55Z fork:false",
-    "\"integer multiplication\" in:name,description pushed:>=2026-10-21T01:10:55Z fork:false",
-    "\"DFT\" in:name,description pushed:>=2026-10-21T01:10:55Z fork:false",
-    "\"FFT\" in:name,description pushed:>=2026-10-21T01:10:55Z fork:false",
-    "\"3SUM\" in:name,description pushed:>=2026-10-21T01:10:55Z fork:false",
-    "\"threesum\" in:name,description pushed:>=2026-10-21T01:10:55Z fork:false",
-    "\"APSP\" in:name,description pushed:>=2026-10-21T01:10:55Z fork:false",
-    "\"subset sum\" in:name,description pushed:>=2026-10-21T01:10:55Z fork:false",
-    "\"discrete Fourier transform\" in:name,description pushed:>=2026-10-21T01:10:55Z fork:false",
-    "\"bounds\" in:name,description,readme created:>=2026-10-21T01:10:55Z fork:false",
-    "\"bounds\" in:name,description,readme pushed:>=2026-10-21T01:10:55Z fork:false",
-    "\"kappa\" in:name,description,readme created:>=2026-10-21T01:10:55Z fork:false",
-    "\"kappa\" in:name,description,readme pushed:>=2026-10-21T01:10:55Z fork:false",
-    "\"exponent\" in:name,description,readme created:>=2026-10-21T01:10:55Z fork:false",
-    "\"exponent\" in:name,description,readme pushed:>=2026-10-21T01:10:55Z fork:false",
-    "\"speedrun\" in:name,description,readme created:>=2026-10-21T01:10:55Z fork:false",
-    "\"speedrun\" in:name,description,readme pushed:>=2026-10-21T01:10:55Z fork:false",
-    "\"matrix multiplication\" in:name,description,readme created:>=2026-10-21T01:10:55Z fork:false",
-    "\"matrix multiplication\" in:name,description,readme pushed:>=2026-10-21T01:10:55Z fork:false",
-    "\"integer multiplication\" in:name,description,readme created:>=2026-10-21T01:10:55Z fork:false",
-    "\"integer multiplication\" in:name,description,readme pushed:>=2026-10-21T01:10:55Z fork:false",
-    "\"DFT\" in:name,description,readme created:>=2026-10-21T01:10:55Z fork:false",
-    "\"DFT\" in:name,description,readme pushed:>=2026-10-21T01:10:55Z fork:false",
-    "\"FFT\" in:name,description,readme created:>=2026-10-21T01:10:55Z fork:false",
-    "\"FFT\" in:name,description,readme pushed:>=2026-10-21T01:10:55Z fork:false",
-    "\"3SUM\" in:name,description,readme created:>=2026-10-21T01:10:55Z fork:false",
-    "\"3SUM\" in:name,description,readme pushed:>=2026-10-21T01:10:55Z fork:false",
-    "\"threesum\" in:name,description,readme created:>=2026-10-21T01:10:55Z fork:false",
-    "\"threesum\" in:name,description,readme pushed:>=2026-10-21T01:10:55Z fork:false",
-    "\"APSP\" in:name,description,readme created:>=2026-10-21T01:10:55Z fork:false",
-    "\"APSP\" in:name,description,readme pushed:>=2026-10-21T01:10:55Z fork:false",
-    "\"subset sum\" in:name,description,readme created:>=2026-10-21T01:10:55Z fork:false",
-    "\"subset sum\" in:name,description,readme pushed:>=2026-10-21T01:10:55Z fork:false",
-    "\"discrete Fourier transform\" in:name,description,readme created:>=2026-10-21T01:10:55Z fork:false",
-    "\"discrete Fourier transform\" in:name,description,readme pushed:>=2026-10-21T01:10:55Z fork:false",
+    "\"matrix multiplication\" in:name,description pushed:>=2026-10-21T04:10:05Z fork:false",
+    "\"integer multiplication\" in:name,description pushed:>=2026-10-21T04:10:05Z fork:false",
+    "\"DFT\" in:name,description pushed:>=2026-10-21T04:10:05Z fork:false",
+    "\"FFT\" in:name,description pushed:>=2026-10-21T04:10:05Z fork:false",
+    "\"3SUM\" in:name,description pushed:>=2026-10-21T04:10:05Z fork:false",
+    "\"threesum\" in:name,description pushed:>=2026-10-21T04:10:05Z fork:false",
+    "\"APSP\" in:name,description pushed:>=2026-10-21T04:10:05Z fork:false",
+    "\"subset sum\" in:name,description pushed:>=2026-10-21T04:10:05Z fork:false",
+    "\"discrete Fourier transform\" in:name,description pushed:>=2026-10-21T04:10:05Z fork:false",
+    "\"bounds\" in:name,description,readme created:>=2026-10-21T04:10:05Z fork:false",
+    "\"bounds\" in:name,description,readme pushed:>=2026-10-21T04:10:05Z fork:false",
+    "\"kappa\" in:name,description,readme created:>=2026-10-21T04:10:05Z fork:false",
+    "\"kappa\" in:name,description,readme pushed:>=2026-10-21T04:10:05Z fork:false",
+    "\"exponent\" in:name,description,readme created:>=2026-10-21T04:10:05Z fork:false",
+    "\"exponent\" in:name,description,readme pushed:>=2026-10-21T04:10:05Z fork:false",
+    "\"speedrun\" in:name,description,readme created:>=2026-10-21T04:10:05Z fork:false",
+    "\"speedrun\" in:name,description,readme pushed:>=2026-10-21T04:10:05Z fork:false",
+    "\"matrix multiplication\" in:name,description,readme created:>=2026-10-21T04:10:05Z fork:false",
+    "\"matrix multiplication\" in:name,description,readme pushed:>=2026-10-21T04:10:05Z fork:false",
+    "\"integer multiplication\" in:name,description,readme created:>=2026-10-21T04:10:05Z fork:false",
+    "\"integer multiplication\" in:name,description,readme pushed:>=2026-10-21T04:10:05Z fork:false",
+    "\"DFT\" in:name,description,readme created:>=2026-10-21T04:10:05Z fork:false",
+    "\"DFT\" in:name,description,readme pushed:>=2026-10-21T04:10:05Z fork:false",
+    "\"FFT\" in:name,description,readme created:>=2026-10-21T04:10:05Z fork:false",
+    "\"FFT\" in:name,description,readme pushed:>=2026-10-21T04:10:05Z fork:false",
+    "\"3SUM\" in:name,description,readme created:>=2026-10-21T04:10:05Z fork:false",
+    "\"3SUM\" in:name,description,readme pushed:>=2026-10-21T04:10:05Z fork:false",
+    "\"threesum\" in:name,description,readme created:>=2026-10-21T04:10:05Z fork:false",
+    "\"threesum\" in:name,description,readme pushed:>=2026-10-21T04:10:05Z fork:false",
+    "\"APSP\" in:name,description,readme created:>=2026-10-21T04:10:05Z fork:false",
+    "\"APSP\" in:name,description,readme pushed:>=2026-10-21T04:10:05Z fork:false",
+    "\"subset sum\" in:name,description,readme created:>=2026-10-21T04:10:05Z fork:false",
+    "\"subset sum\" in:name,description,readme pushed:>=2026-10-21T04:10:05Z fork:false",
+    "\"discrete Fourier transform\" in:name,description,readme created:>=2026-10-21T04:10:05Z fork:false",
+    "\"discrete Fourier transform\" in:name,description,readme pushed:>=2026-10-21T04:10:05Z fork:false",
     "\"CrocSwap/integer-mult-bounds\" in:readme fork:true",
-    "\"QuasiRiemann\" in:name,description,readme pushed:>=2026-10-21T01:10:55Z fork:false",
-    "\"zero-free half-plane\" in:name,description,readme pushed:>=2026-10-21T01:10:55Z fork:false",
-    "\"zero-free boundary\" in:name,description,readme pushed:>=2026-10-21T01:10:55Z fork:false",
-    "\"Catalan irrationality\" in:name,description,readme pushed:>=2026-10-21T01:10:55Z fork:false",
-    "\"Catalan constant\" in:name,description,readme pushed:>=2026-10-21T01:10:55Z fork:false",
-    "\"primitive roots\" in:name,description,readme pushed:>=2026-10-21T01:10:55Z fork:false",
-    "\"primitive-root primes\" in:name,description,readme pushed:>=2026-10-21T01:10:55Z fork:false",
-    "\"matroid prophet\" in:name,description,readme pushed:>=2026-10-21T01:10:55Z fork:false",
-    "\"one-sample matroid\" in:name,description,readme pushed:>=2026-10-21T01:10:55Z fork:false",
-    "\"contingency tables\" in:name,description,readme pushed:>=2026-10-21T01:10:55Z fork:false",
-    "\"average sensitivity\" in:name,description,readme pushed:>=2026-10-21T01:10:55Z fork:false",
-    "\"ptf-average-sensitivity\" in:name,description,readme pushed:>=2026-10-21T01:10:55Z fork:false",
-    "\"van der Waerden\" in:name,description,readme pushed:>=2026-10-21T01:10:55Z fork:false",
-    "\"Sidorenko\" in:name,description,readme pushed:>=2026-10-21T01:10:55Z fork:false",
-    "\"forcing conjecture\" in:name,description,readme pushed:>=2026-10-21T01:10:55Z fork:false",
-    "\"unit distance\" in:name,description,readme pushed:>=2026-10-21T01:10:55Z fork:false",
-    "\"distinct distances\" in:name,description,readme pushed:>=2026-10-21T01:10:55Z fork:false",
-    "\"Snaky\" in:name,description,readme pushed:>=2026-10-21T01:10:55Z fork:false",
-    "\"ordered matrix removal\" in:name,description,readme pushed:>=2026-10-21T01:10:55Z fork:false"
+    "\"ordered binary matrices\" in:name,description,readme pushed:>=2026-10-21T04:10:05Z fork:false",
+    "\"binary matrix removal\" in:name,description,readme pushed:>=2026-10-21T04:10:05Z fork:false",
+    "\"Heilbronn triangle\" in:name,description,readme pushed:>=2026-10-21T04:10:05Z fork:false",
+    "\"Haldane gap\" in:name,description,readme pushed:>=2026-10-21T04:10:05Z fork:false",
+    "\"quasi Riemann\" in:name,description,readme pushed:>=2026-10-21T04:10:05Z fork:false",
+    "\"QuasiRiemann\" in:name,description,readme pushed:>=2026-10-21T04:10:05Z fork:false",
+    "\"zero-free half-plane\" in:name,description,readme pushed:>=2026-10-21T04:10:05Z fork:false",
+    "\"zero-free boundary\" in:name,description,readme pushed:>=2026-10-21T04:10:05Z fork:false",
+    "\"Catalan irrationality\" in:name,description,readme pushed:>=2026-10-21T04:10:05Z fork:false",
+    "\"Catalan constant\" in:name,description,readme pushed:>=2026-10-21T04:10:05Z fork:false",
+    "\"primitive roots\" in:name,description,readme pushed:>=2026-10-21T04:10:05Z fork:false",
+    "\"primitive-root primes\" in:name,description,readme pushed:>=2026-10-21T04:10:05Z fork:false",
+    "\"matroid prophet\" in:name,description,readme pushed:>=2026-10-21T04:10:05Z fork:false",
+    "\"one-sample matroid\" in:name,description,readme pushed:>=2026-10-21T04:10:05Z fork:false",
+    "\"contingency tables\" in:name,description,readme pushed:>=2026-10-21T04:10:05Z fork:false",
+    "\"average sensitivity\" in:name,description,readme pushed:>=2026-10-21T04:10:05Z fork:false",
+    "\"ptf-average-sensitivity\" in:name,description,readme pushed:>=2026-10-21T04:10:05Z fork:false",
+    "\"van der Waerden\" in:name,description,readme pushed:>=2026-10-21T04:10:05Z fork:false",
+    "\"Sidorenko\" in:name,description,readme pushed:>=2026-10-21T04:10:05Z fork:false"
   ],
   "rechecked_retained_candidates": false,
   "preprint_names": [],
   "preprint_search_families": [],
   "coverage_note": "Only the six problems currently shown on the site. Search indexes can lag. Each query is capped at 100 hits; truncations and failures are listed. Fork and citation lists cover all dates. Other bounds: 13 reviewed families plus added improvement claims in new OpenAI math forks; 360 GET attempts / 360 seconds per cycle. Pending repositories and fork/search positions are checkpointed. Deferred work is incomplete coverage, not an all-clear; diff patches can be truncated. Family upstream PRs (GTimG/QuasiRiemannTracker, rohanarun/van-der-waerden-refinement): every open PR plus all PRs updated within 72 hours, first, at most 24 of the 80 PR GETs. Recent CrocSwap PRs: all authors and states, updated within 72 hours; inspect cross-problem claims in PR bodies and added Markdown, TeX and Lean lines. At most 1000 PRs and 300 files per PR; incomplete reads are retried.",
   "errors": [
+    "slitsey/catalan-irrationality-measure: configured bound not found in README.md at 4fd6d90; all README claims checked",
+    "slitsey/catalan-irrationality-measure: compare capped at 300 files from ab47138 to 4fd6d90",
     "simon-oz/AI-News: Unsupported content: simon-oz/AI-News/README.md",
     "arne-diegenbach/aibaby: Unsupported content: arne-diegenbach/aibaby/README.md",
     "vasilis1730-web/epivlepon: GitHub GET failed: repos/vasilis1730-web/epivlepon/commits/main (exit 1)",
@@ -128,84 +130,84 @@
   ],
   "truncated_queries": [
     {
-      "query": "\"DFT\" in:name,description pushed:>=2026-10-21T01:10:55Z fork:false",
-      "total_count": 125
+      "query": "\"DFT\" in:name,description pushed:>=2026-10-21T04:10:05Z fork:false",
+      "total_count": 127
     },
     {
-      "query": "\"FFT\" in:name,description pushed:>=2026-10-21T01:10:55Z fork:false",
-      "total_count": 252
+      "query": "\"FFT\" in:name,description pushed:>=2026-10-21T04:10:05Z fork:false",
+      "total_count": 257
     },
     {
-      "query": "\"bounds\" in:name,description,readme created:>=2026-10-21T01:10:55Z fork:false",
-      "total_count": 6377
+      "query": "\"bounds\" in:name,description,readme created:>=2026-10-21T04:10:05Z fork:false",
+      "total_count": 6365
     },
     {
-      "query": "\"bounds\" in:name,description,readme pushed:>=2026-10-21T01:10:55Z fork:false",
-      "total_count": 34149
+      "query": "\"bounds\" in:name,description,readme pushed:>=2026-10-21T04:10:05Z fork:false",
+      "total_count": 34067
     },
     {
-      "query": "\"kappa\" in:name,description,readme created:>=2026-10-21T01:10:55Z fork:false",
-      "total_count": 558
+      "query": "\"kappa\" in:name,description,readme created:>=2026-10-21T04:10:05Z fork:false",
+      "total_count": 560
     },
     {
-      "query": "\"kappa\" in:name,description,readme pushed:>=2026-10-21T01:10:55Z fork:false",
-      "total_count": 2256
+      "query": "\"kappa\" in:name,description,readme pushed:>=2026-10-21T04:10:05Z fork:false",
+      "total_count": 2249
     },
     {
-      "query": "\"exponent\" in:name,description,readme created:>=2026-10-21T01:10:55Z fork:false",
-      "total_count": 627
+      "query": "\"exponent\" in:name,description,readme created:>=2026-10-21T04:10:05Z fork:false",
+      "total_count": 623
     },
     {
-      "query": "\"exponent\" in:name,description,readme pushed:>=2026-10-21T01:10:55Z fork:false",
-      "total_count": 3249
+      "query": "\"exponent\" in:name,description,readme pushed:>=2026-10-21T04:10:05Z fork:false",
+      "total_count": 3232
     },
     {
-      "query": "\"speedrun\" in:name,description,readme pushed:>=2026-10-21T01:10:55Z fork:false",
-      "total_count": 634
+      "query": "\"speedrun\" in:name,description,readme pushed:>=2026-10-21T04:10:05Z fork:false",
+      "total_count": 647
     },
     {
-      "query": "\"matrix multiplication\" in:name,description,readme created:>=2026-10-21T01:10:55Z fork:false",
-      "total_count": 276
+      "query": "\"matrix multiplication\" in:name,description,readme created:>=2026-10-21T04:10:05Z fork:false",
+      "total_count": 275
     },
     {
-      "query": "\"matrix multiplication\" in:name,description,readme pushed:>=2026-10-21T01:10:55Z fork:false",
-      "total_count": 1251
+      "query": "\"matrix multiplication\" in:name,description,readme pushed:>=2026-10-21T04:10:05Z fork:false",
+      "total_count": 1238
     },
     {
-      "query": "\"DFT\" in:name,description,readme created:>=2026-10-21T01:10:55Z fork:false",
-      "total_count": 264
+      "query": "\"DFT\" in:name,description,readme created:>=2026-10-21T04:10:05Z fork:false",
+      "total_count": 270
     },
     {
-      "query": "\"DFT\" in:name,description,readme pushed:>=2026-10-21T01:10:55Z fork:false",
-      "total_count": 1338
+      "query": "\"DFT\" in:name,description,readme pushed:>=2026-10-21T04:10:05Z fork:false",
+      "total_count": 1321
     },
     {
-      "query": "\"FFT\" in:name,description,readme created:>=2026-10-21T01:10:55Z fork:false",
-      "total_count": 1036
+      "query": "\"FFT\" in:name,description,readme created:>=2026-10-21T04:10:05Z fork:false",
+      "total_count": 1032
     },
     {
-      "query": "\"FFT\" in:name,description,readme pushed:>=2026-10-21T01:10:55Z fork:false",
-      "total_count": 4504
+      "query": "\"FFT\" in:name,description,readme pushed:>=2026-10-21T04:10:05Z fork:false",
+      "total_count": 4486
     },
     {
-      "query": "\"3SUM\" in:name,description,readme pushed:>=2026-10-21T01:10:55Z fork:false",
-      "total_count": 3590
+      "query": "\"3SUM\" in:name,description,readme pushed:>=2026-10-21T04:10:05Z fork:false",
+      "total_count": 3582
     },
     {
-      "query": "\"subset sum\" in:name,description,readme pushed:>=2026-10-21T01:10:55Z fork:false",
+      "query": "\"subset sum\" in:name,description,readme pushed:>=2026-10-21T04:10:05Z fork:false",
       "total_count": 1085
     },
     {
-      "query": "\"discrete Fourier transform\" in:name,description,readme pushed:>=2026-10-21T01:10:55Z fork:false",
-      "total_count": 123
+      "query": "\"discrete Fourier transform\" in:name,description,readme pushed:>=2026-10-21T04:10:05Z fork:false",
+      "total_count": 122
     },
     {
-      "query": "\"contingency tables\" in:name,description,readme pushed:>=2026-10-21T01:10:55Z fork:false",
-      "total_count": 150
+      "query": "\"contingency tables\" in:name,description,readme pushed:>=2026-10-21T04:10:05Z fork:false",
+      "total_count": 151
     },
     {
-      "query": "\"unit distance\" in:name,description,readme pushed:>=2026-10-21T01:10:55Z fork:false",
-      "total_count": 125
+      "query": "slitsey/catalan-irrationality-measure claim diff",
+      "total_count": "at least 300 files"
     },
     {
       "query": "Other bounds deferred work",
@@ -213,11 +215,7 @@
     },
     {
       "query": "GTimG/QuasiRiemannTracker PR #70 files",
-      "total_count": "continued through page 18; at most 300 files per cycle"
-    },
-    {
-      "query": "CrocSwap/integer-mult-bounds PR #5407 files",
-      "total_count": "continued through page 3; at most 300 files per cycle"
+      "total_count": "continued through page 21; at most 300 files per cycle"
     },
     {
       "query": "CrocSwap/integer-mult-bounds recent PRs",
@@ -359,18 +357,73 @@
       "race_evidence": []
     },
     {
+      "repo": "aster2024/openai-math-followups",
+      "url": "https://github.com/aster2024/openai-math-followups",
+      "stars": 1,
+      "created_at": "2026-10-08T04:03:58Z",
+      "pushed_at": "2026-10-24T04:09:37Z",
+      "description": "Follow-ups to the OpenAI mathematics release (October 2026): papers, sources and Lean ancillary files",
+      "problem_guess": "Family 003: The quasi-Riemann hypothesis",
+      "rank": 20,
+      "evidence": [
+        "other-bounds"
+      ],
+      "readme_commit": "7b23ec0b7551953a7b1700ad58f25e7626f26ba8",
+      "source_claim_evidence": [
+        "For a principal zeta function apply the same argument to $(s-1)L(s)$, increasing a polynomial degree if necessary. On the positive disks the zero-free holomorphic function $(s-1)L(s)/(s+1)$ has bounded center logarithm and polynomial growth; hence"
+      ],
+      "claim_signature": "2d789cdd5da9b90812c7553f80daef4fb3b0e68dd63bc879240e063387bc6539",
+      "other_family": "003",
+      "openai_fork_improvement": false,
+      "stated_bound_changed": true,
+      "likely_tracked_source": true,
+      "likely_new_race": false,
+      "likely_pivot": false,
+      "on_board": false
+    },
+    {
+      "repo": "slitsey/catalan-irrationality-measure",
+      "url": "https://github.com/slitsey/catalan-irrationality-measure",
+      "stars": 0,
+      "created_at": "2026-10-10T20:06:16Z",
+      "pushed_at": "2026-10-24T02:39:09Z",
+      "description": "Hosts Lean and LaTeX code for bounds on the irrationality measure of Catalan's constant",
+      "problem_guess": "Family 005: Irrationality of Catalan\u2019s constant",
+      "rank": 20,
+      "evidence": [
+        "other-bounds"
+      ],
+      "readme_commit": "4fd6d90f91fd489063dbfc4a53859399eae18108",
+      "source_claim_evidence": [
+        "A Lean 4 formalization of four irrationality measures. Let `G = \u2211_{j \u2265 0} (-1)^j / (2j+1)^2` be",
+        "Catalan's constant and `L(2, \u03c7\u208b\u2083) = \u2211_{k \u2265 0} (1/(3k+1)^2 \u2212 1/(3k+2)^2)`.",
+        "> - \u03bc(G) \u2264 728;",
+        "> - \u03bc(G \u2212 5\u03c0\u00b2/48) \u2264 32.44;",
+        "> - \u03bc(G + 5\u03c0\u00b2/48) \u2264 32.44;",
+        "> - \u03bc(L(2, \u03c7\u208b\u2083)) \u2264 14.35."
+      ],
+      "claim_signature": "dc0534dcc9decc58e678d4fc66b7967b474bfef69df66655fde7fc61de57969f",
+      "other_family": "005",
+      "openai_fork_improvement": false,
+      "stated_bound_changed": true,
+      "likely_tracked_source": true,
+      "likely_new_race": false,
+      "likely_pivot": false,
+      "on_board": false
+    },
+    {
       "repo": "samlavery/Beurling",
       "url": "https://github.com/samlavery/Beurling",
       "stars": 0,
       "created_at": "2026-10-22T15:26:52Z",
-      "pushed_at": "2026-10-23T23:48:14Z",
+      "pushed_at": "2026-10-24T02:55:40Z",
       "description": null,
       "problem_guess": "Family 003: The quasi-Riemann hypothesis",
       "rank": 20,
       "evidence": [
         "other-bounds"
       ],
-      "readme_commit": "a4441b236ef2331591a87fc896664cd9beb64486",
+      "readme_commit": "9ac062410b4102dfdd31656696572ef5c3ffbd3c",
       "source_claim_evidence": [
         "# Discrete Beurling number systems with integer error O(x^\u03b8), \u03b8 < 1/2, whose zeta function has no zero-free half-plane",
         "> **A gap found and closed after publication (corrections #48 and #55, 2026-10-22).**",
@@ -379,7 +432,7 @@
         "> - Correction #55 replaces the block bound with one that sums over every block content. Theorem R gains a factor",
         "> - #55 passed two further independent adversarial AI checks (`review/recheck/R9-cond-check-55.md`,"
       ],
-      "claim_signature": "45f14776b1565ccd93913de3261e500cc7d8d4a5347db659f2d49b2800e0cc16",
+      "claim_signature": "879c40db6149d7002874b32e21c6783e84ec48fc1f3040ab3b435a02cc5db3ab",
       "other_family": "003",
       "openai_fork_improvement": false,
       "stated_bound_changed": true,
@@ -393,23 +446,21 @@
       "url": "https://github.com/samlavery/Beurling",
       "stars": 0,
       "created_at": "2026-10-22T15:26:52Z",
-      "pushed_at": "2026-10-23T23:48:14Z",
+      "pushed_at": "2026-10-24T02:55:40Z",
       "description": null,
       "problem_guess": "Family 003: The quasi-Riemann hypothesis",
       "rank": 20,
       "evidence": [
         "other-bounds"
       ],
-      "readme_commit": "a4441b236ef2331591a87fc896664cd9beb64486",
+      "readme_commit": "9ac062410b4102dfdd31656696572ef5c3ffbd3c",
       "source_claim_evidence": [
-        "| 73 | \u00a74 Def 4.4 (paper Def good) and its consumers: (H_BS) derivation and Lemma cm (04a), Thm lp (LP-a) and remark, Lemma threshold-mass, Lemma rankin-crude and Lemma si (04x), the E3/E3\u2032 variance bound (04d), Lemma margin (b) Steps 1\u20133 and (c), Lemma goodheights (ii), Lemma budget (D), (N1)/(N2); new Remark rem:horizon | Good(<z) certifies the queue constraint at slot j only when t_j = \u2308s_{j+1}\u2309 + 1 < z. Slots can be up to 11.2 log z long, so the queue bound, and with it the lag bound, (H_BS), Lemma cm, (La) and (LP-a), is certified on Good(<z) only up to \u017e := z \u2212 12 log z \u2212 3. Several statements claimed these bounds up to z, including statements whose margin was 0 (goodheights (ii), Lemma si, (LP-a)) and the E3/E3\u2032 variance bound, which feeds a bad event. (D)'s consumer list was incomplete. Several statements also assumed (H_BS) globally (Thm bs, smooth-v, Lemma S(i), B\u2081, \u03b6_NN(1.8), A\u2080, A\u2081, F_\u03b8) | A new Remark rem:horizon states the certified horizon \u017e and its consequences on Good(",
-        "| 74 | \u00a75 (paper \u00a76), the definitions of \u03bc\u2080 and \u03bc\u2081 before Lemma margin, the proof of (c), the \"rest\" of (b); also R15 cosmetic items C1\u2013C6 | \u03bc\u2081 := (K_\u211a \u2212 K_pt)(f\u20811) used the window-filtered K_\u211a, so it contained the partial-window components m\u2032\u207b\u00b9MA_{\u03baq}[\u03bd\u2081\\|_{[P\u207a(m\u2032),\u221e)}](q), with P\u207a(m\u2032) \u2208 (q, (1+\u03ba)q]. The proof of (c) charged these components \\|f\u2081(q)\\|/m\u2032 \u2264 \u03b7_H f\u2080/m\u2032, which does not cover them: the interval can be shorter than (2q)^{7/12} and always contains P\u207a(m\u2032). Their size \u03ba log x/\u039b grows with log x, so \"(c) for every x \u2265 X\u2080\" and eq:mu1sum were not proved as written. Only range (A) is consumed | \u03bc\u2081 := (K^sh_\u211a \u2212 K_pt)(f\u20811) with the sharp operator. The partial windows (K_\u211a \u2212 K^sh_\u211a)(MA[\u2119]1) move to \u03bc\u2080, whose \"rest\" already budgeted them (\u03ba log u/\u039b by blin(3)). In (c), both operators are sharp, so \\|f\u2081\\| \u2264 \u03b7_H f\u2080 for every component; the Rankin bullet has P\u207a \u2264 y + H(y), with the Euler-product factor exp(15H(X\u2080)/X\u2080). Cosmetic: \u03c1_osc removed from eq:shdecomp (it is identically 0 here); ",
-        "| 75 | \u00a74 (paper \u00a76): grid windows, Prop ecl, Cor increment, Lemma P(iv), the degree cap D (\u00a74.4, \u00a7capl), Lemma reduction(ii), (s4), Lemma rowweights (header, (a), (b), (d), (e)), the E1 row of Table events; App. A setting, PIL s_max, Thm R, cor:R-Ecl, Remark widened; also R14 cosmetic items 1\u20137 | grid windows at height z were not pinned to a range of left ends: a window with left end just below 2z extends past 2z by up to 4L\u207b\u2076, while Thm R, the PIL and Prop cover assume J \u2282 [z, 2z]. Once windows are assigned to heights by their left end, a cofactor window just above a dyadic point (Cor increment), and the windows of Lemma P(iv), are not covered as claimed | windows belong to the dyadic height of their left end in [z, 2z), so J \u2282 [z, 2z+1] and there are at most 2z/\u03b4 + 1 windows; D := log(2z+1)/log X\u2080\u207b. Every site where 2z bounds an element is restated with an explicit margin (the worst is (2+1/z)/(1 \u2212 1/(3e)) = 2.2795 \u2264 2.3 in rowweights(b)). Cor increment uses at most two windows, at ",
-        "| 76 | \u00a72 (the target: choice of \u03b3_k, the convention \"in \u00a73 x_k means x_k\u207a\", (G1), Lemma adapted), \u00a73 Lemma goodheights, Lemma latenoise, Thm zeros; (N5) | with \"in \u00a73, x_k means x_k\u207a = x_k + 2H(x_k)\", Lemma goodheights chose \u03b3_k from D\u0302 on [1, x_k\u207a). That range includes primes decided at slots in (x_k\u207a, x_k\u207a + H/2], which are driven by a target already containing R_k(\u03b3_k). The choice was therefore circular, and \"the system on [1, x_k) does not depend on \u03b3_k\" was false under the convention. Also, \u03b3_k was not defined pathwise (it was undefined off the good event) | the information cutoff is the \u00a72 scale a_k: D\u0302_{<a_k} is decided at slots \u2264 a_k + 0.51H(a_k) < x_k\u207a. \u03b3_k := min S_k, where S_k \u2282 [\u0393_k, 2\u0393_k] is the closed set of heights satisfying (i) and (ii); the fallback is \u0393_k. This is a measurable function of the system on [1, a_k), defined for every \u03c9, and the fallback keeps \u03b1_k \u2208 [1,2] and (G1). S_k has measure \u2265 0.018\u0393_k on Good(<a_k + H(a_k)) \u2283 \ud835\udca2. Lemma latenoise's tail D\u0302_{\u2265a_k} co",
-        "| 77 | \u00a71 (paper \u00a72) \"Slots\" paragraph (choice of \u03d1_s, definition of s_j, jump and continuous slots); Cor lag (spacing sentence); the 04d variance bullet; Thm queue (sandwich); Lemma budget (first failure) | \"Fix \u03d1_s such that almost surely no jump of T starts on a level j+\u03d1_s; this is possible since the deterministic jump levels form a countable set\" is false once Abs or R is active: T(d\u2212) at a rigid d is then random, and its law depends on \u03d1_s through the slots, so the existence of \u03d1_s was unproved. In the tie case T(d\u2212) = j+\u03d1_s, J_j is empty and s_j = inf \u2205 is undefined. Unit jumps were also assumed silently | any \u03d1_s \u2208 (0, \u00bd] is allowed. s_j := min{x : T(x) \u2265 j+\u03d1_s} exists for every \u03c9, and J_j = [s_j, s_{j+1}). Slot j is a jump slot iff T(s_j\u2212) < j+\u03d1_s, otherwise a continuous slot. A jump starting on a level gives an empty continuous slot, and the jump lies in the next slot. Between consecutive continuous-slot starts, T gains exactly one unit of continuous mass, so every slot count",
-        "| 78 | \u00a73 (paper \u00a75) \"The per-scale Freedman events\" and the probability paragraph (04d), Lemma noise; \u00a74 Def 4.4, Table of events and Lemma 4.5 (paper Def good, Table events, Lemma budget); Prop pointwise Steps 1 and 3; (N1)/(N2) | E3 = G_u^NV and E3\u2032 = G_u^sw were defined as whole-scale conjunctions (every window of the scale satisfies (F1) and (F2)), while the same section, Table events and the first-failure argument treated each window's bound as its own event, timed \"when the window closes\". Lemma noise uses individual windows before the whole scale has closed, which a whole-scale conjunction cannot support, and the closing time was never defined. (N2) also said that each short window's variance bound came from earlier windows; it is in fact a sure bound | there is one event per window, E3_W := {W satisfies (F1) and (F2)}, with time t(W) := max W. E3_W is \ud835\udcd5_{t(W)}-measurable: a composite in W has its latest prime \u2264 max W/2, decided at a slot \u2264 max W/2 + 0.51H. E3 and E3\u2032 are the f"
+        "| 77 | \u00a71 (paper \u00a73) \"Slots\" paragraph (choice of \u03d1_s, definition of s_j, jump and continuous slots); Cor lag (spacing sentence); the 04d variance bullet; Thm queue (sandwich); Lemma budget (first failure) | \"Fix \u03d1_s such that almost surely no jump of T starts on a level j+\u03d1_s; this is possible since the deterministic jump levels form a countable set\" is false once Abs or R is active: T(d\u2212) at a rigid d is then random, and its law depends on \u03d1_s through the slots, so the existence of \u03d1_s was unproved. In the tie case T(d\u2212) = j+\u03d1_s, J_j is empty and s_j = inf \u2205 is undefined. Unit jumps were also assumed silently | any \u03d1_s \u2208 (0, \u00bd] is allowed. s_j := min{x : T(x) \u2265 j+\u03d1_s} exists for every \u03c9, and J_j = [s_j, s_{j+1}). Slot j is a jump slot iff T(s_j\u2212) < j+\u03d1_s, otherwise a continuous slot. A jump starting on a level gives an empty continuous slot, and the jump lies in the next slot. Between consecutive continuous-slot starts, T gains exactly one unit of continuous mass, so every slot count",
+        "| 93 | \u00a73 (paper \u00a75) Prop g1(B) Steps 3 and 5 (04f) | Step 3 compares \u03c1^sh(x) with \u03c1^sh(y) for y \u2208 J = [x(1\u22122\u03b4), x(1\u2212\u03b4)], so at level n the points x/n and y/n differ by up to 2\u03b4\u00b7x/n. The threshold bullet used 2\u03b4, but the \u03c1_det smooth-change bound was stated for \\|v \u2212 v\u2032\\| \u2264 \u03b4v, and the resolvable-R\u2032_j bound used \u03b4 | both are restated at displacement 2\u03b4. \u03c1_det: \\|\u0394\u03c1_det\\| \u2264 min(2(2\u03b4(1+\u03ba)v + 1)/(\u03bav), 3\u03a8(2v, X\u2080)/(\u03bav)), derived from the two window differences and the change of normalisation. Its weighted sum is \u2264 C_S[7\u039b\u2074X\u2080^{\u22121/12} + 90\u039b^{4.7}e^{\u2212\u039b/12}] (log \u2248 \u22128.33\u00b710\u2076 at \u039b = 10\u2078), still \u2264 X\u2080^{\u22120.08}. R\u2032_j: the bound is linear in the displacement and doubles to 2\u03ba_j/((1\u2212\u03b8)\u03b3_j log\u2074x), and its Step 5 term is \u2264 4\u03a3_j\u03ba_j log\u207b\u00b3x \u226a log\u207b\u00b2x. From R27: the levels n with y/n < X\u2080 \u2264 x/n are now handled explicitly (v\u2032 := max(y/n, X\u2080); there T\u2032(x/n) \u2212 T\u2032(y/n) = j_{X\u2080} + \u03c1_det(X\u2080) \u2212 \u03c1_det(x/n)), the R\u2033_j derivation is written out, and Step 1's (1 + O(\u03b4)) is made explicit as 0 \u2264 \u03b5_J \u2264 2.01\u03b4/log x | none: ",
+        "| 94 | \u00a71 (paper \u00a73) the cutoff \u03c6 of the oscillations R_k (02, \u00a7target, new eq:phibounds); Lemma G1 (the R_k\u2032 bound); Prop g1(B) Steps 3\u20134 (04f); Appendix B (\u00a7app:cert-consts) | \u03c6 was only required to be C^\u221e, nondecreasing, 0 on (\u2212\u221e, 0] and 1 on [1, \u221e), but the proof of Lemma G1 uses \\|R_k\u2032\\| \u2264 \u03b1_kx^{\u03b8\u22121}(\u03b3_k + \u03b8 + \u2016\u03c6\u2032\u2016_\u221e) \u2264 2\u03b1_k\u03b3_kx^{\u03b8\u22121}, i.e. \u03b8 + \u2016\u03c6\u2032\u2016_\u221e \u2264 \u03b3_k. Smoothness and monotonicity do not bound \u2016\u03c6\u2032\u2016_\u221e (the step can be arbitrarily steep), so the positivity of T\u2032_cont was not guaranteed as written. Later bounds on R\u2033_j hid \u2016\u03c6\u2032\u2016 and \u2016\u03c6\u2033\u2016 in O(1/\u03b3_j) | \u03c6 is now the explicit step \u03c6(t) := \u03c8(t)/(\u03c8(t) + \u03c8(1\u2212t)), with \u03c8(t) := e^{\u22121/t} for t > 0 and \u03c8(t) := 0 otherwise. Then \u03c6\u2032 = \u03c6(1\u2212\u03c6)(1/t\u00b2 + 1/(1\u2212t)\u00b2) \u2265 0, and \u2016\u03c6\u2032\u2016_\u221e \u2264 2, proved analytically and sharp at t = \u00bd. \u2016\u03c6\u2033\u2016_\u221e \u2264 10 (the true sup is 9.841\u2026), certified in arb by the new certificates/constants/phi_bounds.py. Lemma G1 now states \u03b8 + 2 \u2264 \u0393_k \u2264 \u03b3_k. In Prop g1(B) Step 3, R\u2033_j is written out, giving \\|R\u2033_j\\| \u2264 \u03b1_j\u03b3_j\u00b2w^{\u03b8\u22122}(1 + 6/\u03b3_",
+        "| 98 | \u00a73 (paper \u00a75) Lemma si, Region 1 (04x) | for \u2113^{1/4} < u \u2264 U(\u2113) the proof wrote e^Q \u2264 e\u00b2\u2113/\u03c4, but Q = A + a with A > 0 and a \u2264 log(\u2113/\u03c4) + 2, so e^Q = e^A\u00b7e^a exceeds that bound (e^A \u2248 1.000304 at \u039b = 10\u2078, J = 10\u00b3\u2077, \u03c4 = 10\u2078) | e^A is kept. On that range A \u2264 2\u00b710\u207b\u00b3 (A increases in u; at u = U(\u2113) its bound decreases in \u2113 \u2265 10\u00b3\u2074, where it is 1.97\u00b710\u207b\u00b3), so e^Q \u2264 e^{2.002}\u2113/\u03c4. The tail (\u2264 (J/log 2 + 1)\u00b738.3\u00b7e^{2.002}/\u0393((0.449J)^{1/4})) stays < 10\u207b\u2076\u03c4/J. The Region 1 coefficient is 60.78645 \u2264 60.81 | none: Lemma si's constant 61.1 is unchanged | external reader / lead, 2026-10-23; checked by R29 (CONFIRMED) |"
       ],
-      "claim_signature": "f1ee58018b60b0821d8e13e668bb80c6a2d816c1e3df8226955f6248fbdd19af",
+      "claim_signature": "c68f18ac9871d04fb11064092824bb8204c83ca981b05775fb5488df6db1cd84",
       "other_family": "003",
       "openai_fork_improvement": false,
       "stated_bound_changed": true,
@@ -423,19 +474,18 @@
       "url": "https://github.com/samlavery/Beurling",
       "stars": 0,
       "created_at": "2026-10-22T15:26:52Z",
-      "pushed_at": "2026-10-23T23:48:14Z",
+      "pushed_at": "2026-10-24T02:55:40Z",
       "description": null,
       "problem_guess": "Family 003: The quasi-Riemann hypothesis",
       "rank": 20,
       "evidence": [
         "other-bounds"
       ],
-      "readme_commit": "a4441b236ef2331591a87fc896664cd9beb64486",
+      "readme_commit": "9ac062410b4102dfdd31656696572ef5c3ffbd3c",
       "source_claim_evidence": [
-        "(Section~\\ref{sec:params}) hold up to a factor in $[1,1+2H(x_k)/x_k]$, as $u^{1-\\theta}/\\log^3u$ increases; every bound built on them",
-        "$s_{j'}-H(s_{j'})/2\\le p<s_{j+1}/2<s_j-H(s_j)/2$, once $s_j>2H(s_j)+4$; as $v-H(v)/2$ increases, $s_{j'}<s_j$. Conversely, a prime"
+        "increasing for $\\log v\\ge e^2$, the first condition then holds for every larger $v$; and"
       ],
-      "claim_signature": "a23b29bd16e7db6d00cefc1a771cc8bcc47dafadb5d3a145eb886be0eaf49f48",
+      "claim_signature": "3b462512768633853d96efb1e3463a929ae537ffa4f7897b4e93beef2268d56b",
       "other_family": "003",
       "openai_fork_improvement": false,
       "stated_bound_changed": true,
@@ -449,19 +499,18 @@
       "url": "https://github.com/samlavery/Beurling",
       "stars": 0,
       "created_at": "2026-10-22T15:26:52Z",
-      "pushed_at": "2026-10-23T23:48:14Z",
+      "pushed_at": "2026-10-24T02:55:40Z",
       "description": null,
       "problem_guess": "Family 003: The quasi-Riemann hypothesis",
       "rank": 20,
       "evidence": [
         "other-bounds"
       ],
-      "readme_commit": "a4441b236ef2331591a87fc896664cd9beb64486",
+      "readme_commit": "9ac062410b4102dfdd31656696572ef5c3ffbd3c",
       "source_claim_evidence": [
-        "below $a_k$, whose primes are decided at slots $\\le a_k+0.51H(a_k)$ (as $s-H(s)/2$ increases, and $H(a_k+0.51H(a_k))\\le1.01H(a_k)$",
-        "Since $\\kappa_0\\ge X_0^{-1}$, and $u^{1-\\theta}/\\log^3u$ increases for $\\log u\\ge6$ while $x_k\\ge a_k$,"
+        "For $\\ell^{1/4}<u\\le U(\\ell)$: $a\\le a(\\ell,U(\\ell))=\\log(\\ell/\\tau)+2$, and $A\\le2\\cdot10^{-3}$. Indeed $A$ increases in $u$"
       ],
-      "claim_signature": "4de669b1b6682358f55995442f0785029a8968741de4d48222b984c1b0162841",
+      "claim_signature": "aaedc8771eff336e4515ed92172e0033d2468f585789f6607553d53a741526b8",
       "other_family": "003",
       "openai_fork_improvement": false,
       "stated_bound_changed": true,
@@ -475,19 +524,18 @@
       "url": "https://github.com/samlavery/Beurling",
       "stars": 0,
       "created_at": "2026-10-22T15:26:52Z",
-      "pushed_at": "2026-10-23T23:48:14Z",
+      "pushed_at": "2026-10-24T02:55:40Z",
       "description": null,
       "problem_guess": "Family 003: The quasi-Riemann hypothesis",
       "rank": 20,
       "evidence": [
         "other-bounds"
       ],
-      "readme_commit": "a4441b236ef2331591a87fc896664cd9beb64486",
+      "readme_commit": "9ac062410b4102dfdd31656696572ef5c3ffbd3c",
       "source_claim_evidence": [
-        "$s+H(s)/2\\le s_q+H(s_q)/2\\le q+H(s_q)\\le2q$, as $v+H(v)/2$ increases and $H(s_q)\\le e^{-10^6}q$.",
-        "$s\\le b/2+0.51H(b/2)$, as $s-H(s)/2\\le q$ and $s-H(s)/2$ increases. A slot $s$ enters $\\Comp(W)$ or $\\Comp^{(2)}(W)$ only if its box meets $W/w$ for a cofactor $w\\ge2$ (for $\\Comp^{(2)}$, $(W/m)^{1/a}\\subset[0,\\sqrt b]$), which again forces $s\\le b/2+0.51H(b/2)$. So $\\Mart(W)$ and $\\Mart^{(2)}(W)$,"
+        "$\\phi'\\le e^{-g}q$ and $|\\phi''|\\le e^{-g}(q^2+|q'|)$ with $q=1/t^2+1/(1-t)^2$, and, after $e^{1/(1-t)}\\le e^{1/0.98}$ and $(1-t)^{-1}\\le1/0.98$, each term $e^{-1/t}t^{-k}$ ($k\\le6$) increases there, so the values at $t=0.02$ bound the whole range ($\\le1.4\\cdot10^{-18}$ and $\\le3.5\\cdot10^{-15}$). The range $[0.98,1)$"
       ],
-      "claim_signature": "786e5ca06f249d968f0698776ea6362f06d67bd9bbcd86b7f3a80152f8c1b05d",
+      "claim_signature": "421f389284142897e6909c625569f7241c60f97e27de0970a414d7c94b43c21b",
       "other_family": "003",
       "openai_fork_improvement": false,
       "stated_bound_changed": true,
@@ -501,19 +549,18 @@
       "url": "https://github.com/samlavery/Beurling",
       "stars": 0,
       "created_at": "2026-10-22T15:26:52Z",
-      "pushed_at": "2026-10-23T23:48:14Z",
+      "pushed_at": "2026-10-24T02:55:40Z",
       "description": null,
       "problem_guess": "Family 003: The quasi-Riemann hypothesis",
       "rank": 20,
       "evidence": [
         "other-bounds"
       ],
-      "readme_commit": "a4441b236ef2331591a87fc896664cd9beb64486",
+      "readme_commit": "9ac062410b4102dfdd31656696572ef5c3ffbd3c",
       "source_claim_evidence": [
-        "Corollary~\\ref{cor:saias}. For $\\Xm\\le y<X_0$, every level $n\\ge2$ has $y/n\\le y/2<X_0/2<\\Xm$, so every nominal step from $y$ has $\\kappa_{d\\to n}=0$ and $c_n(y)=0$; hence $C^{y,\\nom}_n=0$ for $n\\ge2$ by \\eqref{eq:kernel-rec}, and",
-        "$\\tau$-nearness gives $p\\ge v'/w-2H(v'/w)\\ge\\Xm-2H(\\Xm)$, as $z-2H(z)$ increases; so $p_0\\ge\\sqrt{(\\Xm-2H(\\Xm))\\Xm}\\ge\\Xm-1.01H(\\Xm)$."
+        "\u03ba = 10\u207b\u2076; the limit is (e\u00b9\u2070\u22121)/10 = 2202.55. The new bound holds at \u03c3 = 100."
       ],
-      "claim_signature": "eb2734814b496c965402703e87a55d513027608b61b915fb45ac8d6388410548",
+      "claim_signature": "256cc0864d1911e443638e72cd20cf27f55e63d19b08f7056a216118b4de66ee",
       "other_family": "003",
       "openai_fork_improvement": false,
       "stated_bound_changed": true,
@@ -527,19 +574,22 @@
       "url": "https://github.com/samlavery/Beurling",
       "stars": 0,
       "created_at": "2026-10-22T15:26:52Z",
-      "pushed_at": "2026-10-23T23:48:14Z",
+      "pushed_at": "2026-10-24T02:55:40Z",
       "description": null,
       "problem_guess": "Family 003: The quasi-Riemann hypothesis",
       "rank": 20,
       "evidence": [
         "other-bounds"
       ],
-      "readme_commit": "a4441b236ef2331591a87fc896664cd9beb64486",
+      "readme_commit": "9ac062410b4102dfdd31656696572ef5c3ffbd3c",
       "source_claim_evidence": [
-        "$j_1$, at most one unit (there $T$ rises from $T(s_{X_0}-)\\ge X_0+\\vartheta_{\\mathrm s}-1$ to $j_1+\\vartheta_{\\mathrm s}$, with",
-        "$p\\le s_p+H(s_p)/2\\le s_r+H(s_r)/2\\le r+H(s_r)$, as $v+H(v)/2$ increases and $s_r-H(s_r)/2\\le r$; and $H(s_r)\\le e^{-10^6}r$, as"
+        "The only height condition is Y(t) \u2264 Q_y/50.343. Since Y increases, this condition defines an interval of t, and that interval",
+        "- **Shift from T_y to T_y + 1.** log(T_y+4) \u2212 log T_y \u2264 4/T_y.",
+        "- **Slack.** 1/50.35 \u2212 1/51 = 2.5313\u00b710\u207b\u2074. The new Y bound holds for every Q_y from 10\u2074\u039b to 10\u2079\u039b.",
+        "| 9 | log T_v / log T\u2081 = 1.0540388 | threshold, \u039b = 10\u2078 | 1.072 at \u039b = 10^{8.5}, 1.478 at 10\u00b9\u2070\u2070; also increases in v |",
+        "4. **Step 9.** \"increasing for log v \u2265 e\u00b2\"."
       ],
-      "claim_signature": "8b27ded42b46581cc0dd4c205526ec8ebcda2026ce05a4800011976be9f49c07",
+      "claim_signature": "1a21194f8d7ecd161e16776098d83fd29bd529dc594838cfb056fce4fe0e827e",
       "other_family": "003",
       "openai_fork_improvement": false,
       "stated_bound_changed": true,
@@ -553,18 +603,18 @@
       "url": "https://github.com/samlavery/Beurling",
       "stars": 0,
       "created_at": "2026-10-22T15:26:52Z",
-      "pushed_at": "2026-10-23T23:48:14Z",
+      "pushed_at": "2026-10-24T02:55:40Z",
       "description": null,
       "problem_guess": "Family 003: The quasi-Riemann hypothesis",
       "rank": 20,
       "evidence": [
         "other-bounds"
       ],
-      "readme_commit": "a4441b236ef2331591a87fc896664cd9beb64486",
+      "readme_commit": "9ac062410b4102dfdd31656696572ef5c3ffbd3c",
       "source_claim_evidence": [
-        "$|q-s|\\le H(s)/2$; so every slot label is at most $s_{\\max}:=2z+0.51H(2z)$, because $v\\mapsto v-H(v)/2$ is increasing"
+        "- Toy test (X\u2080 = 100, \u03ba = 0.15, 100-smooth integers up to 2\u00b710\u2076, \u03b4 from 10\u207b\u2074 to 0.2): the largest ratio to the bound"
       ],
-      "claim_signature": "2fc6372bb6ca6fd4eb62b8f8cb63ed8aed1014bc9662fca0098c3905b6529e07",
+      "claim_signature": "bebccf171d509c583fcc0a0f4e0239e938a3c1fd8ac80a8cbb5a1474b4e2512e",
       "other_family": "003",
       "openai_fork_improvement": false,
       "stated_bound_changed": true,
@@ -578,287 +628,19 @@
       "url": "https://github.com/samlavery/Beurling",
       "stars": 0,
       "created_at": "2026-10-22T15:26:52Z",
-      "pushed_at": "2026-10-23T23:48:14Z",
+      "pushed_at": "2026-10-24T02:55:40Z",
       "description": null,
       "problem_guess": "Family 003: The quasi-Riemann hypothesis",
       "rank": 20,
       "evidence": [
         "other-bounds"
       ],
-      "readme_commit": "a4441b236ef2331591a87fc896664cd9beb64486",
+      "readme_commit": "9ac062410b4102dfdd31656696572ef5c3ffbd3c",
       "source_claim_evidence": [
-        "| 81 | Lemma S (ii), (iii) | smooth-v applied at u_y < 1; (ii) now from (i) there; (iii) sum-to-integral made explicit (7.10486L\u00b2 + 4L \u2264 7.11L\u00b2) | reader |"
+        "5. **04b.** The sharper |E_box| \u2264 1.01 (optional; not applied)."
       ],
-      "claim_signature": "341d44aed9345d7f7ee8fdf18bd673ef18aad52cd60131cf2cf94130a97d7d3d",
+      "claim_signature": "469c1bb529f50ad48495b8bb6d30bbc0032c545739dd66fcd596b8da2c34723b",
       "other_family": "003",
-      "openai_fork_improvement": false,
-      "stated_bound_changed": true,
-      "likely_tracked_source": true,
-      "likely_new_race": false,
-      "likely_pivot": false,
-      "on_board": false
-    },
-    {
-      "repo": "samlavery/Beurling",
-      "url": "https://github.com/samlavery/Beurling",
-      "stars": 0,
-      "created_at": "2026-10-22T15:26:52Z",
-      "pushed_at": "2026-10-23T23:48:14Z",
-      "description": null,
-      "problem_guess": "Family 003: The quasi-Riemann hypothesis",
-      "rank": 20,
-      "evidence": [
-        "other-bounds"
-      ],
-      "readme_commit": "a4441b236ef2331591a87fc896664cd9beb64486",
-      "source_claim_evidence": [
-        "- \u03a6_{t\u22121}(s) \u2264 \u03a6_{t\u22121}(u_t), since G_{t\u22121} is non-increasing and Eu_s is non-decreasing.",
-        "## 5. The Cover Bound and Lemma reduction(ii)",
-        "**Theorem caplw(a)** (05-queue:1051\u20131053, 1079\u20131145) uses Lemma reduction(iii) at dyadic z \u2265 X\u2080 on Good(<t_z), with",
-        "$|q-s|\\le H(s)/2$; so every slot label is at most $s_{\\max}:=2z+0.51H(2z)$, because $v\\mapsto v-H(v)/2$ is increasing",
-        "- F_k\u2032 \u2264 0 on 401 grid points, and every H_K is \u2265 0 and non-increasing.",
-        "- Lemma reduction(ii) constants and criterion (iii), at L \u2208 {60, 100, 10\u00b3, 10\u2078, 10\u00b2\u2070}."
-      ],
-      "claim_signature": "8bede3552dbf461614f84d686f64a34433025db5219d5f3ec455a1029044a650",
-      "other_family": "003",
-      "openai_fork_improvement": false,
-      "stated_bound_changed": true,
-      "likely_tracked_source": true,
-      "likely_new_race": false,
-      "likely_pivot": false,
-      "on_board": false
-    },
-    {
-      "repo": "samlavery/Beurling",
-      "url": "https://github.com/samlavery/Beurling",
-      "stars": 0,
-      "created_at": "2026-10-22T15:26:52Z",
-      "pushed_at": "2026-10-23T23:48:14Z",
-      "description": null,
-      "problem_guess": "Family 003: The quasi-Riemann hypothesis",
-      "rank": 20,
-      "evidence": [
-        "other-bounds"
-      ],
-      "readme_commit": "a4441b236ef2331591a87fc896664cd9beb64486",
-      "source_claim_evidence": [
-        "- The extra box is not from #74 or #75. It is in the statement of Theorem zeros, edited by #76, and was passed to the #76 check.",
-        "Unchanged: t_z \u2264 t(E1), and the window count enters only Cor R-Ecl and Lemma reduction(ii)."
-      ],
-      "claim_signature": "4e51523d71562626ca22ad6729005eea147b37f687f7d659396262b0676ad502",
-      "other_family": "003",
-      "openai_fork_improvement": false,
-      "stated_bound_changed": true,
-      "likely_tracked_source": true,
-      "likely_new_race": false,
-      "likely_pivot": false,
-      "on_board": false
-    },
-    {
-      "repo": "samlavery/Beurling",
-      "url": "https://github.com/samlavery/Beurling",
-      "stars": 0,
-      "created_at": "2026-10-22T15:26:52Z",
-      "pushed_at": "2026-10-23T23:48:14Z",
-      "description": null,
-      "problem_guess": "Family 003: The quasi-Riemann hypothesis",
-      "rank": 20,
-      "evidence": [
-        "other-bounds"
-      ],
-      "readme_commit": "a4441b236ef2331591a87fc896664cd9beb64486",
-      "source_claim_evidence": [
-        "- **F1 (FIXABLE, from #78).** The E3_W bound was said to read only E_cl and \"sure facts\". It also reads (H_BS) on"
-      ],
-      "claim_signature": "4774e46e7b2924b4ff1c9512a0991c76ea19aefecea3405873192dc99b26d059",
-      "other_family": "003",
-      "openai_fork_improvement": false,
-      "stated_bound_changed": true,
-      "likely_tracked_source": true,
-      "likely_new_race": false,
-      "likely_pivot": false,
-      "on_board": false
-    },
-    {
-      "repo": "samlavery/Beurling",
-      "url": "https://github.com/samlavery/Beurling",
-      "stars": 0,
-      "created_at": "2026-10-22T15:26:52Z",
-      "pushed_at": "2026-10-23T23:48:14Z",
-      "description": null,
-      "problem_guess": "Family 003: The quasi-Riemann hypothesis",
-      "rank": 20,
-      "evidence": [
-        "other-bounds"
-      ],
-      "readme_commit": "a4441b236ef2331591a87fc896664cd9beb64486",
-      "source_claim_evidence": [
-        "3. **Consumers.** (ii) is cited nowhere else. (iii) is used in Lemma reduction(i) and in caplw Step 2, which need only \"\u2264 Q\"."
-      ],
-      "claim_signature": "f674aa3d3483441dedc7c9bbf0ac2515d685bf57ee7dbcb3e8ce5417fa56f34e",
-      "other_family": "003",
-      "openai_fork_improvement": false,
-      "stated_bound_changed": true,
-      "likely_tracked_source": true,
-      "likely_new_race": false,
-      "likely_pivot": false,
-      "on_board": false
-    },
-    {
-      "repo": "samlavery/Beurling",
-      "url": "https://github.com/samlavery/Beurling",
-      "stars": 0,
-      "created_at": "2026-10-22T15:26:52Z",
-      "pushed_at": "2026-10-23T23:48:14Z",
-      "description": null,
-      "problem_guess": "Family 003: The quasi-Riemann hypothesis",
-      "rank": 20,
-      "evidence": [
-        "other-bounds"
-      ],
-      "readme_commit": "a4441b236ef2331591a87fc896664cd9beb64486",
-      "source_claim_evidence": [
-        "- **Monotonicity.** z \u2212 2H(z) is increasing, since H\u2032 \u2264 4\u00b710\u207b\u2076\u00b7H/z."
-      ],
-      "claim_signature": "7a73574666db09ec6e210b586e8a13eadc6bd51bd5efe20cb3d621f91a6f7193",
-      "other_family": "003",
-      "openai_fork_improvement": false,
-      "stated_bound_changed": true,
-      "likely_tracked_source": true,
-      "likely_new_race": false,
-      "likely_pivot": false,
-      "on_board": false
-    },
-    {
-      "repo": "samlavery/Beurling",
-      "url": "https://github.com/samlavery/Beurling",
-      "stars": 0,
-      "created_at": "2026-10-22T15:26:52Z",
-      "pushed_at": "2026-10-23T23:48:14Z",
-      "description": null,
-      "problem_guess": "Family 003: The quasi-Riemann hypothesis",
-      "rank": 20,
-      "evidence": [
-        "other-bounds"
-      ],
-      "readme_commit": "a4441b236ef2331591a87fc896664cd9beb64486",
-      "source_claim_evidence": [
-        "5. **Prop br with x \u2265 2X\u2080\u207b.** No stronger lower bound is used. At HEAD, Prop pointwise 6(b) also applied Prop br at points"
-      ],
-      "claim_signature": "700737db3ccf1304cde01252276d9ae06349c3c94364efd751c14447084d28ba",
-      "other_family": "003",
-      "openai_fork_improvement": false,
-      "stated_bound_changed": true,
-      "likely_tracked_source": true,
-      "likely_new_race": false,
-      "likely_pivot": false,
-      "on_board": false
-    },
-    {
-      "repo": "kimihiro64/prime-factor-oscillations",
-      "url": "https://github.com/kimihiro64/prime-factor-oscillations",
-      "stars": 0,
-      "created_at": "2026-09-28T06:23:45Z",
-      "pushed_at": "2026-10-23T20:13:15Z",
-      "description": "Lean 4.34 formalization of reversal spectra for affine prime-pair factorization and late-ascent equivalences.",
-      "problem_guess": "Family 003: The quasi-Riemann hypothesis",
-      "rank": 20,
-      "evidence": [
-        "other-bounds"
-      ],
-      "readme_commit": "6cd64beb9b54180a9e8ce65d845553459dd83b67",
-      "source_claim_evidence": [
-        "| 87 | Prime-return overlap delay (`lem:prime-return-overlap-delay`) | **Fully matched** | [LeastPrimeOwner.lean](../PrimeFactorOscillations/Mathlib/NumberTheory/ArithmeticFunction/LeastPrimeOwner.lean) compiles `prime_owner_square_le`, both exact signed overlap-packet vanishing theorems before the square, and `prime_square_minFac`. All smaller-prime overlaps and full product moduli are retained. The changed owner and paper compile without warnings. No remaining clause of this finite lemma; no early restoring bound, quiet-window sequence, or improved analytic exponent is claimed. |",
-        "| 93 | Exact termination of the buffered greedy prime class (`thm:buffered-greedy-termination`) | **Fully matched** | Twenty maintained theorems and five definitions in [GreedyClockTermination.lean](../PrimeFactorOscillations/Proof/PrimeClassDeletion/GreedyClockTermination.lean) and [BufferedGreedyPrimeClass.lean](../PrimeFactorOscillations/Proof/PrimeClassDeletion/BufferedGreedyPrimeClass.lean) prove the full complement-mass clock, the literal deleted-set finiteness equivalence, a count bound from the complete buffered excess with only a log(2) overshoot allowance, and feasibility for nonnegative monotone buffers. Both leaves, changed import module and paper compile. Boundedness of a root-scale buffered excess remains open; no unconditional exponent gain or priority claim. |",
-        "| 95 | Negative-one Carmichael seeds and separated periods (`thm:carmichael-negative-one-seed`) | **Fully matched** | Five theorems and one certificate definition in [CarmichaelSeed.lean](../PrimeFactorOscillations/Helpers/CarmichaelSeed.lean) prove all Korselt arithmetic clauses from the complete seed hypotheses, the even-factor modular product, gcd(q-1,p-1)=2, and the exceptional prime-two separation. Leaf and public probability-profile import compile. This is a finite seed theorem. Claims96-98 now supply the native joint law, exact indices and separated-seed attainment. External seed existence and the RH equivalence remain unformalized. |",
-        "| 101 | Pointwise Carmichael profile lifts and exact fibers (`thm:carmichael-profile-lift-fibers`) | **Fully matched** | Sixteen theorems and five definitions in [CarmichaelProfileLifts.lean](../PrimeFactorOscillations/Helpers/CarmichaelProfileLifts.lean) identify the actual reduction maps, complete fibers of size phi(B), and an injective homomorphic canonical lift preserving every original prime-label success/failure bit, including two. For safe packets, every fiber either wholly matches or wholly fails, with the exact phi(B)-or-zero count. The exceptional even cofactor event is retained. The leaf, public grouping, probability-profile import and saved paper compile. No external infinitude or new RH estimate is asserted. |",
-        "| 102 | Exact conditional even thinning in Carmichael fibers (`thm:carmichael-conditional-even-thinning`) | **Fully matched** | Ten theorems and two definitions in [CarmichaelEvenThinning.lean](../PrimeFactorOscillations/Helpers/CarmichaelEvenThinning.lean) prove the native conditional probability over every complete reduction fiber. When two exactly divides the old exponent, a successful old even return survives in exactly a 2^(-omega(B)) fraction of lifts, while an old nonreturn never becomes a return. All prescribed odd success/failure bits remain coupled, including empty packets. The leaf, grouping, public probability-profile import and saved paper compile without leaf warnings. External infinitude and the RH transfer remain separate. |",
-        "| 104 | Full conditional profile kernel for coprime extensions (`thm:carmichael-full-profile-kernel`) | **Fully matched** | Nine theorems and five definitions in [PrimeOrderReturnKernel.lean](../PrimeFactorOscillations/Helpers/PrimeOrderReturnKernel.lean) and [CarmichaelProfileKernel.lean](../PrimeFactorOscillations/Helpers/CarmichaelProfileKernel.lean) prove the exact conditional joint law over every complete reduction fiber for arbitrary coprime nonzero moduli. The packet may contain every prime label of the new exponent, including new and even labels. Exponent-growth gates, all successes and failures, impossible patterns and empty packets are retained. Both leaves, the grouping, public probability-profile import and saved paper compile without leaf warnings. |"
-      ],
-      "claim_signature": "3d0e7cca5e7a033fd51c1610408d69f2bdedeecece012e1fde43be1f2ef5887e",
-      "other_family": "003",
-      "openai_fork_improvement": false,
-      "stated_bound_changed": true,
-      "likely_tracked_source": true,
-      "likely_new_race": false,
-      "likely_pivot": false,
-      "on_board": false
-    },
-    {
-      "repo": "LiSiruiRay/daily-brain-teaser",
-      "url": "https://github.com/LiSiruiRay/daily-brain-teaser",
-      "stars": 1,
-      "created_at": "2026-03-09T18:46:15Z",
-      "pushed_at": "2026-10-23T20:00:59Z",
-      "description": "My daily brain teaser",
-      "problem_guess": "Family 005: Irrationality of Catalan\u2019s constant",
-      "rank": 20,
-      "evidence": [
-        "other-bounds"
-      ],
-      "readme_commit": "059d602a3e575254d9097a3fb7427d4e129bd9d1",
-      "source_claim_evidence": [
-        "> Last updated: 2026-10-23 20:00 UTC",
-        "| 1 | Lp Norm \u2192 L\u221e | analysis | `Lp norm`, `Limit`, `Squeeze Theorem` | 2026-03-09 |  |  |  |  | [view](questions/lp_norm_infinity/question.md) | [view](questions/lp_norm_infinity/answer.md) |",
-        "| 11 | FTA via Liouville's Theorem | Complex Analysis | `Liouville`, `Entire functions`, `Fundamental theorem of algebra` | 2026-03-26 |  |  |  |  | [view](questions/fta_liouville/question.md) | [view](questions/fta_liouville/answer.md) |",
-        "| 14 | Truncated Exponential Has No Repeated Roots | Putnam | `Polynomials`, `Repeated roots`, `Derivatives`, `Truncated exponential` | 2026-03-27 |  |  |  |  | [view](questions/truncated_exp_no_repeated_roots/question.md) | [view](questions/truncated_exp_no_repeated_roots/answer.md) |",
-        "| 24 | Entire Function with Non-Negative Real Part | Complex Analysis | `Entire functions`, `Liouville`, `Mobius transformation`, `Bounded functions` | 2026-04-23 |  |  |  |  | [view](questions/entire_positive_real_part/question.md) | [view](questions/entire_positive_real_part/answer.md) |",
-        "| 25 | An Impossible Integer Polynomial | Putnam | `Polynomials`, `Integer coefficients`, `Divisibility`, `Modular arithmetic` | 2026-04-24 |  |  |  |  | [view](questions/polynomial_integer_values/question.md) | [view](questions/polynomial_integer_values/answer.md) |"
-      ],
-      "claim_signature": "898099699ffad5d74b1daff0b5e0c318d3bd61c905f233ea7c27b68d562395bb",
-      "other_family": "005",
-      "openai_fork_improvement": false,
-      "stated_bound_changed": true,
-      "likely_tracked_source": true,
-      "likely_new_race": false,
-      "likely_pivot": false,
-      "on_board": false
-    },
-    {
-      "repo": "LiSiruiRay/daily-brain-teaser",
-      "url": "https://github.com/LiSiruiRay/daily-brain-teaser",
-      "stars": 1,
-      "created_at": "2026-03-09T18:46:15Z",
-      "pushed_at": "2026-10-23T20:00:59Z",
-      "description": "My daily brain teaser",
-      "problem_guess": "Family 005: Irrationality of Catalan\u2019s constant",
-      "rank": 20,
-      "evidence": [
-        "other-bounds"
-      ],
-      "readme_commit": "059d602a3e575254d9097a3fb7427d4e129bd9d1",
-      "source_claim_evidence": [
-        "Modulo $N$, a recursion that depends on finitely many previous terms is eventually periodic, because there are only finitely many possible \"windows\" of consecutive residues. If the recursion can also be **run backwards** with integer coefficients, the step map is a bijection on a finite set. Then the sequence is *purely* periodic mod $N$, so its past repeats in its future. Running this recursion backwards from the start produces exactly $2005$ zeros. Periodicity then carries that block of zeros into the positive indices."
-      ],
-      "claim_signature": "1d99f2ff6b587ce3bb0006442da70f4cc3695f08728ed4067fb5c7765014ba8a",
-      "other_family": "005",
-      "openai_fork_improvement": false,
-      "stated_bound_changed": true,
-      "likely_tracked_source": true,
-      "likely_new_race": false,
-      "likely_pivot": false,
-      "on_board": false
-    },
-    {
-      "repo": "AyushMakone/Diffie-Hellman",
-      "url": "https://github.com/AyushMakone/Diffie-Hellman",
-      "stars": 0,
-      "created_at": "2026-10-24T01:09:45Z",
-      "pushed_at": "2026-10-24T01:12:54Z",
-      "description": null,
-      "problem_guess": "Family 029: Primitive roots for every admissible integer base",
-      "rank": 20,
-      "evidence": [
-        "other-bounds"
-      ],
-      "readme_commit": "6c483a9f10750b083e53139fda6dd2125d807999",
-      "source_claim_evidence": [
-        "2. **Private Exponent Generation:**",
-        "A passive observer observing $(p, g, A, B)$ must solve the **Computational Diffie\u2013Hellman (CDH)** problem to recover $g^{ab} \\bmod p$, which is computationally infeasible for safe primes $p \\ge 2048$ bits.",
-        "3. **RFC 3526:** *More Modular Exponential (MODP) Diffie\u2013Hellman groups for Internet Key Exchange (IKE).*"
-      ],
-      "claim_signature": "c21e8f658c74120620a159e71fb8e90522c040a4949e1cb3b5b3278bb29286f7",
-      "other_family": "029",
       "openai_fork_improvement": false,
       "stated_bound_changed": true,
       "likely_tracked_source": true,
@@ -871,14 +653,14 @@
       "url": "https://github.com/alexsmi22-dotcom/MS-WORD-Add-in",
       "stars": 0,
       "created_at": "2026-06-21T20:31:04Z",
-      "pushed_at": "2026-10-24T00:01:59Z",
+      "pushed_at": "2026-10-24T03:38:41Z",
       "description": "Formula, ST. 26, Chem, Math, etc...",
       "problem_guess": "Family 029: Primitive roots for every admissible integer base",
       "rank": 20,
       "evidence": [
         "other-bounds"
       ],
-      "readme_commit": "c23a2db3a7a703588e9a88ee95f6e4833f73ad35",
+      "readme_commit": "afa923ad310173241758489d521f9f6b389f5ab9",
       "source_claim_evidence": [
         "| **Analyze** | no-code numerical workbench: **matrix math** (solve A\u00b7x=b, inverse, determinant/rank/trace, eigenvalues incl. complex, **QR**, **SVD**, one-line **matrix expressions** like `A*inv(B)+2*C'`), **optimization** (Nelder\u2013Mead), **FFT** spectra, **ODE/system solving** \u2014 type the equation you have (**higher order auto-reduces**: `y'' = -0.1*y' - y` just works), with explicit **RK45** plus a 4th-order implicit **stiff solver** (RODAS4) and **automatic stiffness detection**, so kinetics with widely separated rate constants actually solve; **report at the times you choose** (computed, not interpolated) and **stop on a condition** (\u201cwhen does it hit zero?\u201d) \u2014 and **raw data \u2192 trends, correlations & plain-language insights**, all offline |",
         "| **Engineering** | **241 calculators** across statics, mechanics of materials, circuits and electronics, chips and semiconductors, aviation and avionics, trajectory and orbital mechanics, robotics and kinematics, computation and information, thermofluids, energy and power systems, control systems, vibration, thermodynamics, fatigue and fracture, **reliability** (Weibull life by maximum likelihood with censored units in the fit, series/parallel block diagrams, k-out-of-n, standby vs active redundancy, availability), optics and photonics, quantum optics, quantum computing and quantum mechanics, and biomedical engineering. **Energy & power** - wind turbine power with the **Betz limit enforced** (a claimed Cp above 16/27 is refused as physically impossible, the same way a claimed efficiency above Carnot is), solar PV output with **NOCT cell-temperature derating** (a panel is rated at 25 C cells and cells in sun never are), PV fill factor consistency checks, hydropower on the **net** head,",
@@ -887,7 +669,7 @@
         "| **Solid form** | XRPD peaks picked from your pattern (or typed) with Bragg d-spacings and the \"characterized by \u2026 peaks at 2\u03b8 angles of about \u2026\" text; DSC onsets (tangent method) and TGA weight-loss steps; figures in USPTO or journal style |",
         "| **Diagrams** | patent figures from text in USPTO style: block diagrams, flowcharts, state and sequence diagrams, timing diagrams, schematics; numerals in the box or on lead lines, FIG labels, lettering \u2265 1/8 in |"
       ],
-      "claim_signature": "2ce314e970a8972ac0d19147dbf2496017373349a8bb86f29b7166570765a794",
+      "claim_signature": "2d01ef2486160ac7169560827b2072aa5787e022d037f5f9bb1617502dfc555b",
       "other_family": "029",
       "openai_fork_improvement": false,
       "stated_bound_changed": true,
@@ -897,22 +679,23 @@
       "on_board": false
     },
     {
-      "repo": "alexsmi22-dotcom/MS-WORD-Add-in",
-      "url": "https://github.com/alexsmi22-dotcom/MS-WORD-Add-in",
+      "repo": "joeaguilar/skills",
+      "url": "https://github.com/joeaguilar/skills",
       "stars": 0,
-      "created_at": "2026-06-21T20:31:04Z",
-      "pushed_at": "2026-10-24T00:01:59Z",
-      "description": "Formula, ST. 26, Chem, Math, etc...",
+      "created_at": "2026-05-30T05:09:05Z",
+      "pushed_at": "2026-10-24T02:26:15Z",
+      "description": "Skill issues",
       "problem_guess": "Family 029: Primitive roots for every admissible integer base",
       "rank": 20,
       "evidence": [
         "other-bounds"
       ],
-      "readme_commit": "c23a2db3a7a703588e9a88ee95f6e4833f73ad35",
+      "readme_commit": "e3c316942ae19af9e636504fb9dc7a38c9df9d94",
       "source_claim_evidence": [
-        "- 241 calculators over your own numbers, offline \u2014 now including **Reliability**: Weibull life fitted by **maximum likelihood** from your own test data, with units still running entered as suspensions and used IN the fit rather than discarded (throwing survivors away biases the fitted life short). The shape parameter is the answer rather than the mean life \u2014 below 1 the parts are dying young and burn-in helps, above 1 they are wearing out and scheduled replacement helps, at 1 neither does anything \u2014 and the regime is read from a **likelihood-ratio interval**, so an interval straddling 1 is reported as a constant hazard however far above 1 the point estimate sits. Series and parallel **block diagrams** naming the component that carries most of the failures, **k-out-of-n** for voting logic and pump trains, **active against standby spares** with the two assumptions that make standby look better stated where the numbers are, and **availability** labelled INHERENT because it counts the repa"
+        "**Codex executor** (default model **gpt-6.1-sol**) \u2014 the `model` param can't reach a GPT model, so each Codex lane is a **codex seat** (the `codex-seat` skill): a thin Claude wrapper agent whose one Bash call runs `codex-seat.sh`. **Via the `Agent` tool:** `{subagent_type: 'general-purpose', model: 'sonnet', run_in_background: true, description: 'gpt-6.1-sol:task-{id}'}` \u2014 the roster name comes from **`description`** (the Agent tool has no `label` or `effort` param; those are `Workflow.agent()` options). The roster shows the wrapper's Claude model (*sonnet*), so the `gpt-6.1-sol:` prefix in the description is the only signal which GPT model actually ran. In a Workflow script use the full `agent(prompt, {model:'sonnet', effort:'low', label:'gpt-6.1-sol:...', schema})`. The orchestrator writes the executor prompt to `<wavelog-dir>/seats/task-{id}/brief.md` first; the seat dir is the lane's whole record (`brief.md`, `cmd`, `log`, `out.md`, `done`).",
+        "- **Default mode \u2014 feed the generated patch:** `git diff -- <owned files> > review-{id}.patch` off the green stable tree, write `<wavelog-dir>/seats/review-{id}/brief.md` embedding the AC + the patch, then `codex-seat.sh run -d <wavelog-dir>/seats/review-{id} -m gpt-6.1-sol -e high -s read-only` (from the orchestrator with Bash `run_in_background: true`, or from a wrapper labelled `gpt-6.1-sol:review-{id}`). No worktree, no `--scope branch`."
       ],
-      "claim_signature": "9d5d184452f9eb6cdcd3103d891e842ed13a29d5e801577c4591f0cdd114cced",
+      "claim_signature": "53030f1c7aea7eebcae05fa71acd2eb7496a3d062b3da3699f6ec391970c3edd",
       "other_family": "029",
       "openai_fork_improvement": false,
       "stated_bound_changed": true,
@@ -922,155 +705,53 @@
       "on_board": false
     },
     {
-      "repo": "the8thday/AgenticPrism-SKILL",
-      "url": "https://github.com/the8thday/AgenticPrism-SKILL",
-      "stars": 1,
-      "created_at": "2026-09-27T00:46:42Z",
-      "pushed_at": "2026-10-23T23:28:14Z",
-      "description": "Agent Skills for antibody and biologics R&D statistics: binding KD and BLI/SPR kinetics, dose response and ELISA, group statistics, in vivo efficacy, bioanalytical validation and ADA, CMC quality. Validated against R, public beta.",
-      "problem_guess": "Family 115: Sampling and counting contingency tables with arbitrary margins",
-      "rank": 20,
-      "evidence": [
-        "other-bounds"
-      ],
-      "readme_commit": "1e422650bd531b85487a3409391b09e0e2e9789a",
-      "source_claim_evidence": [
-        "- New design-only `fih_dose` analysis type and `first-in-human-dose` Skill: NOAEL to HED/MRSD (FDA 2005 body-surface-area divisors, body-weight exponent, or mg/kg, required for proteins > 100 kDa), MABEL from receptor occupancy or effect concentrations with molar conversion, allometric human two-compartment projection for candidate doses, and sensitivity tables. Never a recommended or approved dose.",
-        "- New `population_pk` analysis type; the `population-pk` Skill is upgraded from R guidance to the runtime. R nlmixr2 (FOCEi) fits one population across dose levels with two-compartment linear, Michaelis-Menten or quasi-steady-state TMDD models (IV bolus, IV infusion, SC with fixed F) through a fixed bridge with 67 exact pins (`install.py --with-r-pop`). Gates withhold parameters for failed covariance, |correlation| > 0.95, saturation outside the observed range, natural-scale RSE > 100% (jointly for nonlinear parameters) and individual estimates above 30% shrinkage; comparison models are descriptive."
-      ],
-      "claim_signature": "9e297adbeb54ea3dffe1dd2f0b996733f6ffc7d4f4f2ef5550afbb0e3fc6d2e0",
-      "other_family": "115",
-      "openai_fork_improvement": false,
-      "stated_bound_changed": true,
-      "likely_tracked_source": true,
-      "likely_new_race": false,
-      "likely_pivot": false,
-      "on_board": false
-    },
-    {
-      "repo": "the8thday/AgenticPrism-SKILL",
-      "url": "https://github.com/the8thday/AgenticPrism-SKILL",
-      "stars": 1,
-      "created_at": "2026-09-27T00:46:42Z",
-      "pushed_at": "2026-10-23T23:28:14Z",
-      "description": "Agent Skills for antibody and biologics R&D statistics: binding KD and BLI/SPR kinetics, dose response and ELISA, group statistics, in vivo efficacy, bioanalytical validation and ADA, CMC quality. Validated against R, public beta.",
-      "problem_guess": "Family 115: Sampling and counting contingency tables with arbitrary margins",
-      "rank": 20,
-      "evidence": [
-        "other-bounds"
-      ],
-      "readme_commit": "1e422650bd531b85487a3409391b09e0e2e9789a",
-      "source_claim_evidence": [
-        "| First-in-human dose calculations | [first-in-human-dose](../../first-in-human-dose/SKILL.md) | 0.15.2 `fih_dose` (design-only, Python): NOAEL to HED/MRSD by FDA 2005 BSA divisors, body-weight exponent or mg/kg (required for proteins > 100 kDa), declared species selection and safety factor; MABEL from receptor occupancy (1:1, optional target depletion) or effect concentrations with molar conversion; allometric human 2-compartment projection with declared exponents; sensitivity tables. Nair & Jacob 2016 NOAEL-HED examples reproduced; base-R oracle 29/29; MABEL and allometry worked-example gates UNMET; calibration not applicable. Never a recommended or approved dose. See [0.15.2 evidence](../../../validation/RELEASE_0.15.2.md) |"
-      ],
-      "claim_signature": "09c7c4bf892635322153b252f90a2eccb22b3a2eb0a1e76e18d081d91c71586d",
-      "other_family": "115",
-      "openai_fork_improvement": false,
-      "stated_bound_changed": true,
-      "likely_tracked_source": true,
-      "likely_new_race": false,
-      "likely_pivot": false,
-      "on_board": false
-    },
-    {
-      "repo": "the8thday/AgenticPrism-SKILL",
-      "url": "https://github.com/the8thday/AgenticPrism-SKILL",
-      "stars": 1,
-      "created_at": "2026-09-27T00:46:42Z",
-      "pushed_at": "2026-10-23T23:28:14Z",
-      "description": "Agent Skills for antibody and biologics R&D statistics: binding KD and BLI/SPR kinetics, dose response and ELISA, group statistics, in vivo efficacy, bioanalytical validation and ADA, CMC quality. Validated against R, public beta.",
-      "problem_guess": "Family 115: Sampling and counting contingency tables with arbitrary margins",
-      "rank": 20,
-      "evidence": [
-        "other-bounds"
-      ],
-      "readme_commit": "1e422650bd531b85487a3409391b09e0e2e9789a",
-      "source_claim_evidence": [
-        "description: Calculate first-in-human starting-dose inputs from declared nonclinical data - NOAEL to human equivalent dose and maximum recommended starting dose (FDA 2005 body-surface-area table, body-weight exponent or mg/kg for large proteins), MABEL / pharmacologically active dose from receptor occupancy or effect concentrations, and allometric projection of human antibody PK for candidate doses - with sensitivity tables. Use when a project needs the numbers behind a FIH dose rationale; it never chooses or approves the dose."
-      ],
-      "claim_signature": "d14bc6fd11b1a4e68de0328331bc5bf7f21971a59f5f7d91d994cace0ac9d680",
-      "other_family": "115",
-      "openai_fork_improvement": false,
-      "stated_bound_changed": true,
-      "likely_tracked_source": true,
-      "likely_new_race": false,
-      "likely_pivot": false,
-      "on_board": false
-    },
-    {
-      "repo": "anthonymartin/GeoLocation",
-      "url": "https://github.com/anthonymartin/GeoLocation",
-      "stars": 188,
-      "created_at": "2012-12-01T17:20:59Z",
-      "pushed_at": "2026-10-24T01:13:44Z",
-      "description": "Retrieve bounding coordinates and distances with GeoLocation.php",
-      "problem_guess": "Family 167: Planar distinct distances and unit-distance bounds",
-      "rank": 20,
-      "evidence": [
-        "other-bounds"
-      ],
-      "readme_commit": "52220844e4109a55636d330a7ee5066f317bab3b",
-      "source_claim_evidence": [
-        "1. Retrieve bounding box coordinates. Just define a coordinate and the size of your bounding box.",
-        "3. Solve point in polygon problems (identify whether a given point is within the bounds of a polygon)",
-        "$distance = $geopointA->distanceTo($geopointB, 'miles'); // approximately 25.8886 miles",
-        "$boundingBox = $geopointA->boundingBox(3, 'miles');",
-        "$boundingBox = $geopointA->boundingBox(3, 'miles');",
-        "$boundingBox = $geopointA->boundingBox(5, 'mi');"
-      ],
-      "claim_signature": "3cbe704516b23bd699be123c6b62387e5ff94bfbe9f8e724089da64007e576aa",
-      "other_family": "167",
-      "openai_fork_improvement": false,
-      "stated_bound_changed": true,
-      "likely_tracked_source": true,
-      "likely_new_race": false,
-      "likely_pivot": false,
-      "on_board": false
-    },
-    {
-      "repo": "katopz/katgpt-rs",
-      "url": "https://github.com/katopz/katgpt-rs",
-      "stars": 140,
-      "created_at": "2026-05-04T16:56:32Z",
-      "pushed_at": "2026-10-24T01:07:14Z",
-      "description": "A neuro-symbolic micro-Transformer with speculative decoding, constraint pruning, recurrent attention, and adaptive test-time scaling \u2014 built in Rust.",
-      "problem_guess": "Family 167: Planar distinct distances and unit-distance bounds",
-      "rank": 20,
-      "evidence": [
-        "other-bounds"
-      ],
-      "readme_commit": "c6fd009b13f89d3c1b6459b59051e32b8f41e48e",
-      "source_claim_evidence": [
-        "| `seal-render` | **No `.docs/` folder** \u2014 born 2026-10-21 (the canvas core carved from seal-game-editor, plan 412 step 1c); AGENTS/README/BOUNDARY only. **Row ADDED 2026-10-24**. | yes (README) | same `.highwater` files | `develop` |",
-        "- **Do not impose a `.docs/` shape that differs from the repo's existing convention \u2014 respect the FORMAT you find.** Numbered vs flat vs named folders, slugs vs prefixes: follow what's there. **FORMAT is not COVERAGE (owner correction, 2026-10-24, twice-paid):** the same line was read as \"the book is 1 folder, keep it 1 folder\" while the code grew to 8 crates \u2014 respect-for-shape became the excuse for a book that covered 2 topics over ~550 source files. The convention decides HOW docs are shaped, never WHETHER the code is covered; Step 0's surface gap overrides it, and the fill lands in the family format. **Re-measured 2026-09-14 over the live 20** (the 09-12 measurement read 19 \u2014 it had no row for `mmorpg-remaster`, which joined at Issue 760): **12** numbered folders (katgpt-rs 10, riir-ai 12, riir-chain 7, riir-clippy 12, riir-dapps 1, riir-deployer 2, riir-game-sdk 10, riir-neuron-db 11, riir-shader 4, riir-train 6, riir-viewbridge 1, mmorpg-remake 1), **5** with no `.docs/` at all ("
-      ],
-      "claim_signature": "4b38d94d23c930ba7fef7bf22147840760ef3a6aafd7898b7c0a0fafeca4c5bf",
-      "other_family": "167",
-      "openai_fork_improvement": false,
-      "stated_bound_changed": true,
-      "likely_tracked_source": true,
-      "likely_new_race": false,
-      "likely_pivot": false,
-      "on_board": false
-    },
-    {
-      "repo": "n0gr1p/UnifiedCapture",
-      "url": "https://github.com/n0gr1p/UnifiedCapture",
+      "repo": "texnet43/theory-of-everything",
+      "url": "https://github.com/texnet43/theory-of-everything",
       "stars": 0,
-      "created_at": "2026-10-23T14:41:52Z",
-      "pushed_at": "2026-10-24T00:04:56Z",
+      "created_at": "2026-04-19T19:34:44Z",
+      "pushed_at": "2026-10-24T01:55:49Z",
+      "description": "Theory of Everything: Trinity \u2014 An Operator-Algebraic Framework on Z\u2081\u2081 \u2014 \u03b1 to 5.4 ppt, 19 SM + \u039bCDM Parameters Structurally Closed, 7 Clay Problems Addressed, 9 Irrational Constants Unified, Zero Free Parameters",
+      "problem_guess": "Family 029: Primitive roots for every admissible integer base",
+      "rank": 20,
+      "evidence": [
+        "other-bounds"
+      ],
+      "readme_commit": "6077d3f65ee8d2459b7f55f04139069b54f75fd1",
+      "source_claim_evidence": [
+        "From **7 axioms** (A0\u2013A6: the base Hilbert A0\u2013A5 + the dimensional lexicon A6; the aether \u00c6\u0422\u2081\u2013\u00c6\u0422\u2085 are theorems 1.0.AET.1\u20135) and",
+        "> 1. **\u03b1 as a self-consistent equation:** 1/\u03b1 = N\u00b7\u03c6\u00b9\u2070/\u03c0\u00b2 \u2212 e\u2074\u00b7\u03c6\u00b2/(\u03c0\u2075\u00b7N) \u2212 \u03b1\u2074\u00b7V_cone is a **self-consistent relation \u03b1 = f(\u03b1)** (analogous to \u03c6 = 1+1/\u03c6). Its fixed point converges to 1/\u03b1 = 137.035999160 (0.338 ppb = 338 ppt, 4.1\u03c3 from LKB-Rb 2020; under the tree-substitution convention 5.4 ppt = 0.07\u03c3 \u2014 the double reading is stated in Lemma 2.4.A.A); the value 137.035999207 is reached by substituting the tree-level \u03b1 = \u03c0\u00b2/(N\u00b7\u03c6\u00b9\u2070) on the right-hand side (5.4 ppt). Theorem 2.4.A.0.5.t.",
+        "> 2. **\u039b suppression exponent:** \u03c1_\u039b = M_P\u2074\u00b7(R/Z\u2082)/\u03c0^(2N\u00b2) = (3/2)\u00b7M_P\u2074/\u03c0^242, where the exponent 2N\u00b2 = 2N\u00b7N factors as (Cone: matter+space halves, 2N) \u00d7 (Z\u2081\u2081 structure, N) and R/Z\u2082 = 3/2 = spatial dimension / mirror involution. log\u2081\u2080(\u03c1_\u039b) = \u221246.588 vs observed \u221246.59 \u2014 deviation **0.002 dex** (0.4%). The 10\u00b9\u00b2\u00b2 discrepancy is sharply reduced (a residual 2N signature of induced gravity is honestly noted, Remark 3.10.H.5.r).",
+        "> 3. **N = 11** from a single structural input: R=3 (Higgs VEV traceless) \u2192 Z\u2082=2 (sphere-cone duality) \u2192 |Quintet| = R+Z\u2082 = 5 \u2192 N = 2\u00b7|Quintet|+1 = 11.",
+        "> 3a. **Genesis Cascade (Theorem 2.4.G.7):** the ten Duality modes k=1..10 are causally generated from the Absolute (k=0) by alternation of two operations \u2014 G-collective (accumulation of variability) and G-closure (resonant self-closure) \u2014 at three closure points k=3 (Height), k=6 (Shape, \u03c0-closure), k=9 (Field). The Dimensional Lexicon (A6) is thus the order of a causal genesis, not an arbitrary labelling. Cross-validated by the quadratic-residue structure of Z\u2081\u2081 (Corollary 2.4.G.7.d): the cascade partition {1,3,4,5} metric / {2} internal coincides exactly with QR(11)\u2229{1,..,5}.",
+        "> 3b. **Algebraic necessity of QR as the metric carrier (Theorem 4.3.0.d.N):** the identification \"quadratic residue = metric direction\" is an algebraic theorem, not a postulate. By bilinearity of the metric tensor (Riemann 1854), the carrier of any bilinear form on Z_N* is necessarily a subgroup (bilinearity g(ab,c)=g(a,c)\u00b7g(b,c) requires ab\u2208S). QR(N) is the unique proper nontrivial subgroup of the cyclic group Z_N*, hence the unique consistent metric carrier. The non-residues do not form a subgroup and cannot carry a metric \u2014 they are forced to be the internal (charge) sector. This holds for every prime N\u22613(mod 4); for N\u22611(mod 4) no proper carrier exists and no Lorentzian signature can arise. Three independent routes converge: algebraic (4.3.0.d.N), ontological (2.4.G.7.c), topological (1.10.B.3)."
+      ],
+      "claim_signature": "4c249f36c8797320d01967f2975de67adcb33373dec0a0a8088971d768349fae",
+      "other_family": "029",
+      "openai_fork_improvement": false,
+      "stated_bound_changed": true,
+      "likely_tracked_source": true,
+      "likely_new_race": false,
+      "likely_pivot": false,
+      "on_board": false
+    },
+    {
+      "repo": "acal05/bank-marketing-analytics",
+      "url": "https://github.com/acal05/bank-marketing-analytics",
+      "stars": 0,
+      "created_at": "2026-07-19T00:47:13Z",
+      "pushed_at": "2026-10-24T01:17:52Z",
       "description": null,
-      "problem_guess": "Family 167: Planar distinct distances and unit-distance bounds",
+      "problem_guess": "Family 115: Sampling and counting contingency tables with arbitrary margins",
       "rank": 20,
       "evidence": [
         "other-bounds"
       ],
-      "readme_commit": "0a5f36737708fc742bd16648f8965719cf403536",
+      "readme_commit": "a7e91e892e43c78544b0a503959b2bfdd3c672f6",
       "source_claim_evidence": [
-        "The Task Delegator menu remained open for approximately 129 seconds in the replay, outlasting the former 120-second correlation TTL. A longer timeout for explicitly opened menus is covered by an offline regression test; no additional game capture is needed for that boundary case."
+        "The original logistic regression model achieved approximately 88.3% accuracy but failed to correctly identify any actual subscribers at the default classification threshold."
       ],
-      "claim_signature": "787075ae494a4f7747d54f5a39000bcaecb870bed99689d86e4a66540c2f40d6",
-      "other_family": "167",
+      "claim_signature": "5e3d3753ce685062bca01a5bad7c9e8a573867cb6f262ec937926d1be157d6a1",
+      "other_family": "115",
       "openai_fork_improvement": false,
       "stated_bound_changed": true,
       "likely_tracked_source": true,
@@ -1079,175 +760,29 @@
       "on_board": false
     },
     {
-      "repo": "CrocSwap/integer-mult-bounds",
-      "url": "https://github.com/CrocSwap/integer-mult-bounds/pull/5407",
-      "pr_number": 5407,
-      "author": "Clear1nsight",
-      "created_at": "2026-10-23T23:40:55Z",
-      "pushed_at": "2026-10-23T23:48:16Z",
-      "stars": 0,
-      "rank": 25,
-      "description": "Independently audit the coupled provider and conditional closure budget (no new \u03ba)",
-      "problem_guess": "exact DFT",
-      "readme_commit": "b62252c61113d2863b36ce2419aa81a07f393c42",
+      "repo": "iszhanjiawei/TTS_arxiv_daily",
+      "url": "https://github.com/iszhanjiawei/TTS_arxiv_daily",
+      "stars": 3,
+      "created_at": "2025-07-29T03:13:56Z",
+      "pushed_at": "2026-10-24T03:24:22Z",
+      "description": null,
+      "problem_guess": "Family 160: Superexponential van der Waerden numbers",
+      "rank": 20,
+      "evidence": [
+        "other-bounds"
+      ],
+      "readme_commit": "b741001df1ba2079b11d55dc281bca8f2d32174f",
       "source_claim_evidence": [
-        "Its eighth tensor power has coefficient 1/16. The Fourier sum of E",
-        "256 code Fourier values, exact filter bounds for n=0,...,64, a rank-96",
-        "All 408 actual helper roles are grouped by their actual ordered entrance/exit bases. `checks/all_helpers.py` independently checks all 17 endpoint pairs and 34 oriented classes, with both normalizer factors, actual positive Fourier rank and exact phase. No receipt's PASS status is proof. The selected source receipt supplies candidate normalizer coefficients for unchanged classes; those coefficients are freshly checked against the final bases. The separate lineage stage reconstructs the selected PR4470 bases through its exact patches and attributes 382 source-identical helpers plus 26 changed helpers; lineage is provenance, not a substitute for the fresh phase proof.",
-        "All one-column literal address maps in this gate lie in the Clifford group on the **fixed 17-axis ambient space**. Its projective quotient is finite. Scalar root phases are absorbed into the coefficients after tensor lift; they do not change Fourier grade. The finite universe of projective one-column Clifford maps is therefore independent of column width f.",
-        "The Gram argument in `PROOF.md` can be applied once to representatives of this whole finite projective universe, rather than merely to the words appearing in a single chosen decoder. For sufficiently large f its tensor-power Gram matrix is positive definite. This gives a uniform threshold even when scalar reconstruction coefficients, selections of allowed controls, or numbers of passive scalar operations depend on f. The source one-column C1/C3 entries and all their allowed left expansions remain in the monomial subset and preserve the grade support proved in the frozen packet.",
-        "For the `75/76` stability bound, the four coefficient residue classes are disjoint. The signed elementary-symmetric-product formula proves the ++-- sign rule for every n. The recurrence and uniform odd-coefficient estimate imply that the filter's coefficient L1 norm decreases after n=1; its maximum is `77/75`. Positive mass is therefore at most `76/75`. The stated stability constant applies to the full width interval, not automatically to the eight selected widths. The n=0 scalar Fourier test and n=1 96-element modular Gram/Reynolds arguments remain separate. Their sharpness does not claim sharpness for n>=2.",
-        "5. **The eight selected widths follow for every n>=2, not just tested n.** The length-eight code has 16 words, is self-dual, and every weight is divisible by four. The vector obtained by selecting a codeword independently on every axis is fixed by S, CNOT, native H, and iI. For native H, `((1+i)/2)^8=1/16`, and the code Fourier sum contributes exactly 16; the absolute phase is essential. These generators produce the whole dyadic normalizer: reduce the image of Z1 to Z1; while preserving it, remove the other-axis X/Z components of the image of X1 with CNOT/CZ, then remove its Z1 component and sign. Commutation with both X1 and Z1 leaves `I tensor V`. Iterate, leaving only a dyadic scalar unit. Native H has the ordinary H Pauli action, with its scalar absorbed in that final allowed unit. Consequently every g fixes the eighth-copy code vector. The nonzero injection `v -> v tensor tau` intertwines the f and f+8 residuals. Zero at f+8 therefore implies zero at f. Every width 1..8n+4 ascends",
-        "6. **The stability improvement has an all-n argument.** The four coefficient residue classes of `q_n` are disjoint, so its coefficient L1 norm equals that of P_(2n). The elementary-symmetric-product formula has positive real product factors even for r=-1/4, giving descending signs ++--. When the roots -a,b are added, the sign pattern gives the displayed recurrence for L_new-L. The first odd-index coefficient gives `U_odd/L >= (3/16)/(3/2)=1/8`; meanwhile `ab/(a-b)<=1/192`. Hence the L1 norms strictly decrease for n>=1. At n=1 the norm is 77/75, and at n=0 it is one. Because q_n(1)=1, positive coefficient mass is at most 76/75. Removing negative multiples of nonnegative E_f gives `max E_f >= (75/76) sum |c_g|^2`, for the full range 1..8n+4. Finite polynomial checks in the oracle corroborate this derivation; they do not replace induction."
+        "<p align=right>(<a href=#updated-on-20261024>back to top</a>)</p>"
       ],
-      "source_claim_files": [
-        "research/coupled-provider-independent-audit/capsule/clifford-repository/research/clifford-tensor-gram/ADVANCES.md",
-        "research/coupled-provider-independent-audit/capsule/clifford-repository/research/clifford-tensor-gram/README.md",
-        "research/coupled-provider-independent-audit/custody/5376/provenance-sources/1ec1119972c9aefe42525172d07b332fcff81cb4/research/final4610-independent-admission/PROOF.md",
-        "research/coupled-provider-independent-audit/custody/5376/provenance-sources/7c472563474e60185e6ca101a17622133d047e56/research/passive-saved-query-ceiling/evidence/frozen/pr4948-saved-query-macro-gate/UNIFORM-ALPHABET-ADDENDUM.md",
-        "research/coupled-provider-independent-audit/custody/5376/source-capsule/research/clifford-tensor-gram/ADVANCES.md",
-        "research/coupled-provider-independent-audit/custody/5376/source-capsule/research/clifford-tensor-gram/README.md",
-        "research/coupled-provider-independent-audit/reports/acceptance/REVIEW.md",
-        "research/coupled-provider-independent-audit/reports/clifford-proof/REVIEW.md"
-      ],
-      "claim_signature": "e9b3f09ba8fb81cdeed324d10b8e0ac3510b4603b73ef1a5d7255fb91659fc72",
-      "cross_problem_pr": true,
-      "other_family": null,
+      "claim_signature": "86f33cf62adf8d31e80bde1602015d676b811ef8df7301110f44257cb848b832",
+      "other_family": "160",
+      "openai_fork_improvement": false,
       "stated_bound_changed": true,
       "likely_tracked_source": true,
       "likely_new_race": false,
-      "likely_pivot": true,
-      "on_board": true,
-      "evidence": [
-        "recent-crocswap-pr"
-      ],
-      "coverage_complete": false
-    },
-    {
-      "repo": "CrocSwap/integer-mult-bounds",
-      "url": "https://github.com/CrocSwap/integer-mult-bounds/pull/5407",
-      "pr_number": 5407,
-      "author": "Clear1nsight",
-      "created_at": "2026-10-23T23:40:55Z",
-      "pushed_at": "2026-10-23T23:48:16Z",
-      "stars": 0,
-      "rank": 25,
-      "description": "Independently audit the coupled provider and conditional closure budget (no new \u03ba)",
-      "problem_guess": "matrix multiplication",
-      "readme_commit": "b62252c61113d2863b36ce2419aa81a07f393c42",
-      "source_claim_evidence": [
-        "The discriminating cases include: phase inside a tensor versus an outer scalar; C inverse and q=0; query sign; a self query requiring snapshot semantics; noncommuting gate order; loss of an arbitrary dirty role; role swap and rational scaling; and exact coefficient grouping. Direct small tensor matrices bind the oracle's expansion on widths <=3 (n=2 restricted to width<=2). Witnesses at larger selected widths are evaluated by products of independently constructed base entries, without allocating tensor matrices. The independent 96-matrix one-axis closure is also used for a fresh modular Gram rank and Reynolds ranks; it does not read the submitted inverse as an oracle."
-      ],
-      "source_claim_files": [
-        "research/coupled-provider-independent-audit/reports/clifford-proof/REVIEW.md"
-      ],
-      "claim_signature": "72dd126bec23e1b0848e0c0c105efe83fea87eaad56b1bc11a60d0dfebe2a57f",
-      "cross_problem_pr": true,
-      "other_family": null,
-      "stated_bound_changed": true,
-      "likely_tracked_source": true,
-      "likely_new_race": false,
-      "likely_pivot": true,
-      "on_board": true,
-      "evidence": [
-        "recent-crocswap-pr"
-      ],
-      "coverage_complete": false
-    },
-    {
-      "repo": "CrocSwap/integer-mult-bounds",
-      "url": "https://github.com/CrocSwap/integer-mult-bounds/pull/5376",
-      "pr_number": 5376,
-      "author": "aliromman",
-      "created_at": "2026-10-23T20:25:19Z",
-      "pushed_at": "2026-10-23T23:04:55Z",
-      "stars": 0,
-      "rank": 25,
-      "description": "Verify a complete Clifford provider and exclude 30,328 paid-pair fusions",
-      "problem_guess": "exact DFT",
-      "readme_commit": "848cdce9003262c4b6e02ec4558f302e4fae56ad",
-      "source_claim_evidence": [
-        "Its eighth tensor power has coefficient 1/16. The Fourier sum of E",
-        "256 code Fourier values, exact filter bounds for n=0,...,64, a rank-96"
-      ],
-      "source_claim_files": [
-        "research/clifford-tensor-gram/ADVANCES.md",
-        "research/clifford-tensor-gram/README.md"
-      ],
-      "claim_signature": "80756c7b0bbc00066e3fdda469ff9873e60ab8a4d7eda3685995a22d1ace47d3",
-      "cross_problem_pr": true,
-      "other_family": null,
-      "stated_bound_changed": true,
-      "likely_tracked_source": true,
-      "likely_new_race": false,
-      "likely_pivot": true,
-      "on_board": true,
-      "evidence": [
-        "recent-crocswap-pr"
-      ],
-      "coverage_complete": true
-    },
-    {
-      "repo": "CrocSwap/integer-mult-bounds",
-      "url": "https://github.com/CrocSwap/integer-mult-bounds/pull/4610",
-      "pr_number": 4610,
-      "author": "intqwq",
-      "created_at": "2026-10-22T10:02:07Z",
-      "pushed_at": "2026-10-22T19:19:22Z",
-      "stars": 0,
-      "rank": 25,
-      "description": "Conditional \u03ba = 0.0030217758: joint helper interfaces and Lean compiler tightening",
-      "problem_guess": "exact DFT",
-      "readme_commit": "20bb93cd990d2ff683e4d0fc56b87a42cd5d3296",
-      "source_claim_evidence": [
-        "`r_new=r_old+delta`, `delta>=0` premise. This is a precise scope distinction,"
-      ],
-      "source_claim_files": [
-        "research/kappa-round7-4610-phase-debt-audit-20261022/README.md"
-      ],
-      "claim_signature": "cfd88942a01b1d034b30f443091a0e03e7a475e28726c4ab7c6e5f183602fd6d",
-      "cross_problem_pr": true,
-      "other_family": null,
-      "stated_bound_changed": true,
-      "likely_tracked_source": true,
-      "likely_new_race": false,
-      "likely_pivot": true,
-      "on_board": true,
-      "evidence": [
-        "recent-crocswap-pr"
-      ],
-      "coverage_complete": true
-    },
-    {
-      "repo": "CrocSwap/integer-mult-bounds",
-      "url": "https://github.com/CrocSwap/integer-mult-bounds/pull/4722",
-      "pr_number": 4722,
-      "author": "lensora",
-      "created_at": "2026-10-22T17:54:19Z",
-      "pushed_at": "2026-10-22T18:18:42Z",
-      "stars": 0,
-      "rank": 25,
-      "description": "Prove sharp uniform bounds for triangular parity macro cuts",
-      "problem_guess": "exact DFT",
-      "readme_commit": "3fcaa4d4c0568ce474c593d0882296ff43d3705a",
-      "source_claim_evidence": [
-        "needs gate-level precision, not just macro boundaries. Bind the \u00a72 FFT/twist"
-      ],
-      "source_claim_files": [
-        "research/triangular-parity-uniform-prefix/README.md"
-      ],
-      "claim_signature": "ba04ea4f266b1791622b4fb0515e2746e492fac59ee75fa9fa6252ce6f0f3ac5",
-      "cross_problem_pr": true,
-      "other_family": null,
-      "stated_bound_changed": true,
-      "likely_tracked_source": true,
-      "likely_new_race": false,
-      "likely_pivot": true,
-      "on_board": true,
-      "evidence": [
-        "recent-crocswap-pr"
-      ],
-      "coverage_complete": true
+      "likely_pivot": false,
+      "on_board": false
     }
   ],
   "related": [
@@ -1339,7 +874,7 @@
       "url": "https://github.com/jwr404/integer-mult-bounds",
       "stars": 1,
       "created_at": "2026-10-16T07:38:31Z",
-      "pushed_at": "2026-10-24T00:12:43Z",
+      "pushed_at": "2026-10-24T03:21:06Z",
       "problem_guess": "integer multiplication",
       "description": "Conditional integer multiplication: kappa > 2^-15. Community proofs, exact certificates and reproducible audits; assumes the OpenAI #109 framework.",
       "rank": 6,
@@ -1463,6 +998,70 @@
       "stated_bound_changed": false
     },
     {
+      "repo": "Clear1nsight/integer-mult-bounds",
+      "url": "https://github.com/Clear1nsight/integer-mult-bounds",
+      "stars": 0,
+      "created_at": "2026-10-17T21:38:51Z",
+      "pushed_at": "2026-10-24T04:08:10Z",
+      "problem_guess": "integer multiplication",
+      "description": "Conditional integer multiplication: kappa > 2^-15. Community proofs, exact certificates and reproducible audits; assumes the OpenAI #109 framework.",
+      "rank": 6,
+      "evidence": [
+        "fork"
+      ],
+      "likely_new_race": false,
+      "on_board": false,
+      "stated_bound_changed": false
+    },
+    {
+      "repo": "zxv/integer-mult-bounds",
+      "url": "https://github.com/zxv/integer-mult-bounds",
+      "stars": 0,
+      "created_at": "2026-10-15T13:41:34Z",
+      "pushed_at": "2026-10-24T04:07:42Z",
+      "problem_guess": "integer multiplication",
+      "description": "Conditional integer multiplication: kappa > 2^-15. Community proofs, exact certificates and reproducible audits; assumes the OpenAI #109 framework.",
+      "rank": 6,
+      "evidence": [
+        "fork"
+      ],
+      "likely_new_race": false,
+      "on_board": false,
+      "stated_bound_changed": false
+    },
+    {
+      "repo": "CubeJerry/integer-mult-bounds",
+      "url": "https://github.com/CubeJerry/integer-mult-bounds",
+      "stars": 0,
+      "created_at": "2026-10-13T06:06:47Z",
+      "pushed_at": "2026-10-24T03:20:43Z",
+      "problem_guess": "integer multiplication",
+      "description": "Conditional integer multiplication: kappa > 2^-15. Community proofs, exact certificates and reproducible audits; assumes the OpenAI #109 framework.",
+      "rank": 6,
+      "evidence": [
+        "fork"
+      ],
+      "likely_new_race": false,
+      "on_board": false,
+      "stated_bound_changed": false
+    },
+    {
+      "repo": "NicholasStone/integer-mult-bounds",
+      "url": "https://github.com/NicholasStone/integer-mult-bounds",
+      "stars": 0,
+      "created_at": "2026-10-15T17:11:45Z",
+      "pushed_at": "2026-10-24T02:51:37Z",
+      "problem_guess": "integer multiplication",
+      "description": "Conditional integer multiplication: kappa > 2^-15. Community proofs, exact certificates and reproducible audits; assumes the OpenAI #109 framework.",
+      "rank": 6,
+      "evidence": [
+        "fork"
+      ],
+      "likely_new_race": false,
+      "on_board": false,
+      "stated_bound_changed": false
+    },
+    {
       "repo": "DaysSky/integer-mult-bounds",
       "url": "https://github.com/DaysSky/integer-mult-bounds",
       "stars": 0,
@@ -1484,38 +1083,6 @@
       "stars": 0,
       "created_at": "2026-10-11T03:38:46Z",
       "pushed_at": "2026-10-24T00:39:47Z",
-      "problem_guess": "integer multiplication",
-      "description": "Conditional integer multiplication: kappa > 2^-15. Community proofs, exact certificates and reproducible audits; assumes the OpenAI #109 framework.",
-      "rank": 6,
-      "evidence": [
-        "fork"
-      ],
-      "likely_new_race": false,
-      "on_board": false,
-      "stated_bound_changed": false
-    },
-    {
-      "repo": "Clear1nsight/integer-mult-bounds",
-      "url": "https://github.com/Clear1nsight/integer-mult-bounds",
-      "stars": 0,
-      "created_at": "2026-10-17T21:38:51Z",
-      "pushed_at": "2026-10-23T23:54:12Z",
-      "problem_guess": "integer multiplication",
-      "description": "Conditional integer multiplication: kappa > 2^-15. Community proofs, exact certificates and reproducible audits; assumes the OpenAI #109 framework.",
-      "rank": 6,
-      "evidence": [
-        "fork"
-      ],
-      "likely_new_race": false,
-      "on_board": false,
-      "stated_bound_changed": false
-    },
-    {
-      "repo": "zxv/integer-mult-bounds",
-      "url": "https://github.com/zxv/integer-mult-bounds",
-      "stars": 0,
-      "created_at": "2026-10-15T13:41:34Z",
-      "pushed_at": "2026-10-23T23:35:14Z",
       "problem_guess": "integer multiplication",
       "description": "Conditional integer multiplication: kappa > 2^-15. Community proofs, exact certificates and reproducible audits; assumes the OpenAI #109 framework.",
       "rank": 6,
@@ -1563,22 +1130,6 @@
       "url": "https://github.com/Chrisbryan17/integer-mult-bounds",
       "stars": 0,
       "created_at": "2026-10-13T19:13:51Z",
-      "pushed_at": "2026-10-23T20:20:54Z",
-      "problem_guess": "integer multiplication",
-      "description": "Conditional integer multiplication: kappa > 2^-15. Community proofs, exact certificates and reproducible audits; assumes the OpenAI #109 framework.",
-      "rank": 6,
-      "evidence": [
-        "fork"
-      ],
-      "likely_new_race": false,
-      "on_board": false,
-      "stated_bound_changed": false
-    },
-    {
-      "repo": "CubeJerry/integer-mult-bounds",
-      "url": "https://github.com/CubeJerry/integer-mult-bounds",
-      "stars": 0,
-      "created_at": "2026-10-13T06:06:47Z",
       "pushed_at": "2026-10-23T20:20:54Z",
       "problem_guess": "integer multiplication",
       "description": "Conditional integer multiplication: kappa > 2^-15. Community proofs, exact certificates and reproducible audits; assumes the OpenAI #109 framework.",
@@ -2047,22 +1598,6 @@
       "stars": 0,
       "created_at": "2026-10-22T08:39:58Z",
       "pushed_at": "2026-10-22T17:29:41Z",
-      "problem_guess": "integer multiplication",
-      "description": "Conditional integer multiplication: kappa > 2^-15. Community proofs, exact certificates and reproducible audits; assumes the OpenAI #109 framework.",
-      "rank": 6,
-      "evidence": [
-        "fork"
-      ],
-      "likely_new_race": false,
-      "on_board": false,
-      "stated_bound_changed": false
-    },
-    {
-      "repo": "NicholasStone/integer-mult-bounds",
-      "url": "https://github.com/NicholasStone/integer-mult-bounds",
-      "stars": 0,
-      "created_at": "2026-10-15T17:11:45Z",
-      "pushed_at": "2026-10-22T17:07:14Z",
       "problem_guess": "integer multiplication",
       "description": "Conditional integer multiplication: kappa > 2^-15. Community proofs, exact certificates and reproducible audits; assumes the OpenAI #109 framework.",
       "rank": 6,
@@ -6364,10 +5899,10 @@
         "stargazers_count": 0,
         "fork": true
       },
-      "checked_cycle": 102
+      "checked_cycle": 103
     },
     "slitsey/catalan-irrationality-measure": {
-      "head": "ab471381fc9cf161c1acc1a2aae2c4502fcd233e",
+      "head": "4fd6d90f91fd489063dbfc4a53859399eae18108",
       "seen_claims": [
         "1171e0812d3d6f1f8a9ebdedabfd82433b07741a9b6d406f7bb5b8a301f0bf5e",
         "91478363316f2c05d5df1ff06d4ae2716ddf85e353cb6ae6e18f637b843c2ae0",
@@ -6386,7 +5921,8 @@
         "76026a7a6adf4b2365742dbf14eee4ead7fc6e703c7a8264ecc238bc59a55952",
         "d7efa9b81d109a6f764c45ff37d92dcd700589c1ec4e40fab87273deae7830ca",
         "c157f783c1b2ee140980a11ed9a9f94297febbc7361090832919b9cee53a44f4",
-        "fcbf723386883b9831d65633a41aaa08b021fb9280b7ff8931fd5789a95cd694"
+        "fcbf723386883b9831d65633a41aaa08b021fb9280b7ff8931fd5789a95cd694",
+        "dc0534dcc9decc58e678d4fc66b7967b474bfef69df66655fde7fc61de57969f"
       ],
       "openai_fork": false,
       "meta": {
@@ -6394,12 +5930,12 @@
         "html_url": "https://github.com/slitsey/catalan-irrationality-measure",
         "default_branch": "main",
         "created_at": "2026-10-10T20:06:16Z",
-        "pushed_at": "2026-10-23T23:20:50Z",
+        "pushed_at": "2026-10-24T02:39:09Z",
         "description": "Hosts Lean and LaTeX code for bounds on the irrationality measure of Catalan's constant",
         "stargazers_count": 0,
         "fork": false
       },
-      "checked_cycle": 102
+      "checked_cycle": 103
     },
     "Rogerhu12/openai-math-extensions": {
       "head": "8e94120c0e9eecfe3d4991eb2102d4da8ede96cf",
@@ -6419,7 +5955,7 @@
         "stargazers_count": 0,
         "fork": false
       },
-      "checked_cycle": 102
+      "checked_cycle": 103
     },
     "shea256/matroid-prophet-inequality": {
       "head": "8cd1395994596d89ad20c2af8b69dab8e3402ee1",
@@ -6446,7 +5982,7 @@
         "stargazers_count": 1,
         "fork": false
       },
-      "checked_cycle": 102
+      "checked_cycle": 103
     },
     "EcoDataLab/contingency-tables": {
       "head": "d851f00508840e5182fe5e9328446e65626f6e6b",
@@ -6476,7 +6012,7 @@
         "stargazers_count": 0,
         "fork": false
       },
-      "checked_cycle": 102
+      "checked_cycle": 103
     },
     "log-prathm/ptf-average-sensitivity": {
       "head": "5e9f26cf74935f08be20f9ac4deb57b291d707d8",
@@ -6495,7 +6031,7 @@
         "stargazers_count": 0,
         "fork": false
       },
-      "checked_cycle": 102
+      "checked_cycle": 103
     },
     "rohanarun/van-der-waerden-refinement": {
       "head": "63bef9ca996786a41169de4a0c3d6b3b47b0fe96",
@@ -6521,7 +6057,7 @@
         "fork": false,
         "_openai_fork": false
       },
-      "checked_cycle": 102
+      "checked_cycle": 103
     },
     "rohanarun/sidorenko-template-refinements": {
       "head": "5ca68cb81cfcd7f1b32102b93e186b2b51d5e2f8",
@@ -6541,7 +6077,7 @@
         "fork": false,
         "_openai_fork": false
       },
-      "checked_cycle": 102
+      "checked_cycle": 103
     },
     "rohanarun/unit-distance-grid-refinement": {
       "head": "4e7b3af0a46a7127a57019a0ab6d76fa2b55fe2e",
@@ -6562,7 +6098,7 @@
         "fork": false,
         "_openai_fork": false
       },
-      "checked_cycle": 102
+      "checked_cycle": 103
     },
     "gotrevor/snaky-15x15": {
       "head": "b18ed32473a6a22ebfdda98da62d61b8b1590c1e",
@@ -6582,7 +6118,7 @@
         "stargazers_count": 1,
         "fork": false
       },
-      "checked_cycle": 102
+      "checked_cycle": 103
     },
     "erebos-labs/ordered-matrix-removal-4x4": {
       "head": "0d43f182f2ee12e27419ac4d5e32fd2d9b68ab43",
@@ -6601,7 +6137,7 @@
         "stargazers_count": 0,
         "fork": false
       },
-      "checked_cycle": 102
+      "checked_cycle": 103
     },
     "littleBro/heilbronn-triangle-bounds": {
       "head": "45738785a8877fddf268a36ac7f3703d510be55e",
@@ -6624,7 +6160,7 @@
         "stargazers_count": 0,
         "fork": false
       },
-      "checked_cycle": 102
+      "checked_cycle": 103
     },
     "amachino/haldane-gap-refinement": {
       "head": "15909bdc15e947795b6fba946008dd8530bb3477",
@@ -6642,7 +6178,7 @@
         "stargazers_count": 0,
         "fork": false
       },
-      "checked_cycle": 102
+      "checked_cycle": 103
     },
     "massainodes/math": {
       "head": "fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb",
@@ -7083,7 +6619,7 @@
         "stargazers_count": 0,
         "fork": false
       },
-      "checked_cycle": 102
+      "checked_cycle": 103
     },
     "hansonwong310/openai-math": {
       "head": "fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb",
@@ -7296,7 +6832,7 @@
         "stargazers_count": 12,
         "fork": false
       },
-      "checked_cycle": 102
+      "checked_cycle": 103
     },
     "gokhankelebek/math": {
       "head": "fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb",
@@ -7508,7 +7044,7 @@
       "checked_cycle": 1
     },
     "aster2024/openai-math-followups": {
-      "head": "41956ce2ad80d301a0fa8929b518603be4881196",
+      "head": "7b23ec0b7551953a7b1700ad58f25e7626f26ba8",
       "seen_claims": [
         "27bc6b0165989b680227266aa9314e75238ede4a48588ba1ef65fc1ffaaf30e3",
         "c5b7aed3361e1a6e79fe366916f0319ae0f3879246ef6b351fbdf45834c4e93b",
@@ -7517,7 +7053,8 @@
         "7d6e32586618180bb37797e8f86d1ded772094ab708fcc1b2432c17c99fe4f34",
         "c4a5498178a6b7b14c7d778e009013e6b532ae9e9b03a18ac3d71c880a0346cc",
         "3a6798bb923071942505be0b76b2ceb3a716c55285fdbac1418100545167fa8a",
-        "a03bfb655e6b7392f9ff33ff9b295c9faa112a68f2110303615f229e80f73abc"
+        "a03bfb655e6b7392f9ff33ff9b295c9faa112a68f2110303615f229e80f73abc",
+        "2d789cdd5da9b90812c7553f80daef4fb3b0e68dd63bc879240e063387bc6539"
       ],
       "openai_fork": false,
       "meta": {
@@ -7525,12 +7062,12 @@
         "html_url": "https://github.com/aster2024/openai-math-followups",
         "default_branch": "main",
         "created_at": "2026-10-08T04:03:58Z",
-        "pushed_at": "2026-10-23T15:32:24Z",
+        "pushed_at": "2026-10-24T04:09:37Z",
         "description": "Follow-ups to the OpenAI mathematics release (October 2026): papers, sources and Lean ancillary files",
         "stargazers_count": 1,
         "fork": false
       },
-      "checked_cycle": 102
+      "checked_cycle": 103
     },
     "PjhAustin/openai-math": {
       "head": "fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb",
@@ -7769,7 +7306,7 @@
         "fork": true,
         "_openai_fork": true
       },
-      "checked_cycle": 102
+      "checked_cycle": 103
     },
     "AlejandraValentina/Dino-active": {
       "head": "f994c63c5ca5bd602300b38f62fe4ac59a9d6f4b",
@@ -7892,7 +7429,7 @@
         "stargazers_count": 0,
         "fork": false
       },
-      "checked_cycle": 102
+      "checked_cycle": 103
     },
     "Hesstastic/math": {
       "head": "fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb",
@@ -8218,7 +7755,7 @@
         "stargazers_count": 0,
         "fork": false
       },
-      "checked_cycle": 102
+      "checked_cycle": 103
     },
     "Czworldy/math": {
       "head": "fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb",
@@ -8435,7 +7972,7 @@
         "stargazers_count": 0,
         "fork": false
       },
-      "checked_cycle": 102
+      "checked_cycle": 103
     },
     "binbinao/math": {
       "head": "fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb",
@@ -8505,7 +8042,7 @@
         "stargazers_count": 2,
         "fork": false
       },
-      "checked_cycle": 102
+      "checked_cycle": 103
     },
     "StarChino/math": {
       "head": "fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb",
@@ -8588,7 +8125,7 @@
         "fork": true,
         "_openai_fork": true
       },
-      "checked_cycle": 102
+      "checked_cycle": 103
     },
     "Argonaut-Math/argonaut-math-quasi-riemann-boundary": {
       "head": "5971383edcb0b1cf863927eed3b359d2d3ba346e",
@@ -8606,7 +8143,7 @@
         "stargazers_count": 3,
         "fork": false
       },
-      "checked_cycle": 102
+      "checked_cycle": 103
     },
     "erratas/math": {
       "head": "fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb",
@@ -8774,7 +8311,7 @@
         "fork": true,
         "_openai_fork": true
       },
-      "checked_cycle": 102
+      "checked_cycle": 103
     },
     "Bigger-and-Stronger/quad-meshing-survey": {
       "head": "0e481d8d0885ce3fbd7669c273c22f7212253b60",
@@ -8807,7 +8344,7 @@
         "fork": true,
         "_openai_fork": true
       },
-      "checked_cycle": 102
+      "checked_cycle": 103
     },
     "chokmah-me/fragile-proof-audit": {
       "head": "288285bd4c47cf945026ed35188bd0d6355a10d3",
@@ -8842,7 +8379,7 @@
         "fork": true,
         "_openai_fork": true
       },
-      "checked_cycle": 102
+      "checked_cycle": 103
     },
     "conjectures-io/conjectures-validator": {
       "head": "bc4e1f7d5354fbb20d09636399ac24df2b6b63d8",
@@ -8875,7 +8412,7 @@
         "fork": true,
         "_openai_fork": true
       },
-      "checked_cycle": 102
+      "checked_cycle": 103
     },
     "rohitkrjha/catalan-measure": {
       "head": "613d6a9223cf9b6f425189c11c1e830147c10937",
@@ -8893,7 +8430,7 @@
         "stargazers_count": 1,
         "fork": false
       },
-      "checked_cycle": 102
+      "checked_cycle": 103
     },
     "rongou/math": {
       "head": "fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb",
@@ -8910,7 +8447,7 @@
         "fork": true,
         "_openai_fork": true
       },
-      "checked_cycle": 102
+      "checked_cycle": 103
     },
     "siliconjungle/ink-knowledge": {
       "head": "3b0bf05c6e884130b3121a999ecc952baa773dc3",
@@ -8943,7 +8480,7 @@
         "fork": true,
         "_openai_fork": true
       },
-      "checked_cycle": 102
+      "checked_cycle": 103
     },
     "zeeny2park/dynamicState": {
       "head": "08fe020efd64e0166af878a797b6fde151615a73",
@@ -8976,7 +8513,7 @@
         "fork": true,
         "_openai_fork": true
       },
-      "checked_cycle": 102
+      "checked_cycle": 103
     },
     "platypii/integer-mult-bounds-lean": {
       "head": "e5004e8e4d8b43dbf446e63b7acbffe582ccc523",
@@ -9009,7 +8546,7 @@
         "fork": true,
         "_openai_fork": true
       },
-      "checked_cycle": 102
+      "checked_cycle": 103
     },
     "systemslibrarian/crypto-lab": {
       "head": "76647e072e1caf0a3654e514d340523af302069c",
@@ -9042,7 +8579,7 @@
         "fork": true,
         "_openai_fork": true
       },
-      "checked_cycle": 102
+      "checked_cycle": 103
     },
     "domaine-oleksandr-kever/claude-plugins": {
       "head": "4944f43fba5ca580ac1eeb4e83fe7e9c7b96752f",
@@ -9075,7 +8612,7 @@
         "fork": true,
         "_openai_fork": true
       },
-      "checked_cycle": 102
+      "checked_cycle": 103
     },
     "naibarn/SmartSpecPro": {
       "head": "5f3c8f648d242cf4b1eac164ba91bd3672d4caf9",
@@ -9108,7 +8645,7 @@
         "fork": true,
         "_openai_fork": true
       },
-      "checked_cycle": 102
+      "checked_cycle": 103
     },
     "nullcryptodev/Clarity": {
       "head": "f6702165c4874532dd4d4764e2a51b925b8bc155",
@@ -9141,7 +8678,7 @@
         "fork": true,
         "_openai_fork": true
       },
-      "checked_cycle": 102
+      "checked_cycle": 103
     },
     "jzbz/dcroxide": {
       "head": "74168e8387c8f852f738119f39766f9c87b93447",
@@ -9176,7 +8713,7 @@
         "fork": true,
         "_openai_fork": true
       },
-      "checked_cycle": 102
+      "checked_cycle": 103
     },
     "MiniLangProject/MiniLangCompilerML": {
       "head": "a8a05e105e5e2ace26d703285b70f5e850211f03",
@@ -9209,7 +8746,7 @@
         "fork": true,
         "_openai_fork": true
       },
-      "checked_cycle": 102
+      "checked_cycle": 103
     },
     "MiniLangProject/MiniLangCompilerPy": {
       "head": "fd5792bf0a053e9aa1e035443a359109df5b9566",
@@ -9242,7 +8779,7 @@
         "fork": true,
         "_openai_fork": true
       },
-      "checked_cycle": 102
+      "checked_cycle": 103
     },
     "mage-uwu/sandcommand": {
       "head": "84b8ff42dc67cfe0c139e39edfb5c16db4ac83c3",
@@ -9275,7 +8812,7 @@
         "fork": true,
         "_openai_fork": true
       },
-      "checked_cycle": 102
+      "checked_cycle": 103
     },
     "jedediahg/testmiser": {
       "head": "9493e321dc84a10d1df30496b47d8d34a0608d0f",
@@ -9308,7 +8845,7 @@
         "fork": true,
         "_openai_fork": true
       },
-      "checked_cycle": 102
+      "checked_cycle": 103
     },
     "nature-tycoon/second-growth": {
       "head": "85d183b3ecf9b58c996e5455f32b17c9e908f658",
@@ -9341,7 +8878,7 @@
         "fork": true,
         "_openai_fork": true
       },
-      "checked_cycle": 102
+      "checked_cycle": 103
     },
     "adhithyan15/coding-adventures": {
       "head": "473d961784ff86cfa8f69f4d60697879566db89e",
@@ -9374,7 +8911,7 @@
         "fork": true,
         "_openai_fork": true
       },
-      "checked_cycle": 102
+      "checked_cycle": 103
     },
     "rjwalters/geode-fem": {
       "head": "fb15e9ab658ca7058ff09dba209418877a485411",
@@ -9415,7 +8952,7 @@
         "fork": true,
         "_openai_fork": true
       },
-      "checked_cycle": 102
+      "checked_cycle": 103
     },
     "Plasius-LTD/storage": {
       "head": "9ba5b054cd965a486910c8eec97332f280e0e7f7",
@@ -9448,7 +8985,7 @@
         "fork": true,
         "_openai_fork": true
       },
-      "checked_cycle": 102
+      "checked_cycle": 103
     },
     "VladimirReshetnikov/ProveIt": {
       "head": "453359f90d66937231d8b59749f00316ccaf0862",
@@ -11205,7 +10742,7 @@
       "checked_cycle": 3
     },
     "Dicklesworthstone/frankenpandas": {
-      "head": "2fca1a8aef41a069481fff0ded46f760d9528351",
+      "head": "f5f235c26c3af184ffe4580d247c6cdaeb707bce",
       "seen_claims": [
         "f3506109536ab057dcfd14e300fd9096d7ea0ed4de76f2c7affb7d25afe3a5db",
         "ae9bee464bc8178e5d668af1cbfbb1025ecd0d06218057519150c77a33aa6379",
@@ -11219,12 +10756,12 @@
         "html_url": "https://github.com/Dicklesworthstone/frankenpandas",
         "default_branch": "main",
         "created_at": "2026-02-13T20:27:18Z",
-        "pushed_at": "2026-10-20T17:28:03Z",
+        "pushed_at": "2026-10-24T01:52:54Z",
         "description": "Memory-safe, clean-room Rust reimplementation of pandas with packetized conformance gates, strict/hardened runtime modes, and RaptorQ-backed artifact durability.",
         "stargazers_count": 22,
         "fork": false
       },
-      "checked_cycle": 76
+      "checked_cycle": 103
     },
     "ManojKumar7676/GridOs": {
       "head": "52f503b50124f233e26c59a21f9b6044eba36886",
@@ -11285,12 +10822,12 @@
         "html_url": "https://github.com/legacy-codes/xlstat-unofficial-legacy-archives",
         "default_branch": "main",
         "created_at": "2026-06-19T13:34:38Z",
-        "pushed_at": "2026-10-23T22:43:35Z",
+        "pushed_at": "2026-10-24T01:14:13Z",
         "description": "XLStat 5.2.1413 Premium Full Setup 2026",
         "stargazers_count": 1,
         "fork": false
       },
-      "checked_cycle": 102
+      "checked_cycle": 103
     },
     "Aweinspiring-elegist588/GraphPad-Prism-2026": {
       "head": "b80555b06c0ee16ad29f5eb9f7fa41f51654ac9a",
@@ -11405,7 +10942,7 @@
         "fork": true,
         "_openai_fork": true
       },
-      "checked_cycle": 102
+      "checked_cycle": 103
     },
     "ustadzCoding-dev/phishcross": {
       "head": "6723e17ac3046853e263c1264624bbcddffcd7cf",
@@ -13866,7 +13403,7 @@
       "checked_cycle": 5
     },
     "iszhanjiawei/TTS_arxiv_daily": {
-      "head": "9b89794d7f51f900bf9d92a9006e1cfc5731d0e8",
+      "head": "b741001df1ba2079b11d55dc281bca8f2d32174f",
       "seen_claims": [
         "867c89c75ef3f179a41fcee7d457d4e52d0a37acbc10761175cc7a9e7398b00c",
         "12ba32b016ab4bed1d7ce93ee53859fb439499e0de2769b74fbdf8136e1d6139",
@@ -13880,7 +13417,8 @@
         "ecf6f084dedc66851d224472275c8684aab6b547d3081562e123f3fa7a6966ee",
         "e843584975d56138a247d305d728bd2f4ba0c86ca04385e89f7e1a4fc52baeee",
         "e89dc3fd518eff538733e15ef63fb2f3726ed45063f11ff7988207cc6eecc0ad",
-        "3740a15c593d1af9e26707379168a295f98333a35c2a3067947ac7afe9273f1c"
+        "3740a15c593d1af9e26707379168a295f98333a35c2a3067947ac7afe9273f1c",
+        "86f33cf62adf8d31e80bde1602015d676b811ef8df7301110f44257cb848b832"
       ],
       "openai_fork": false,
       "meta": {
@@ -13888,12 +13426,12 @@
         "html_url": "https://github.com/iszhanjiawei/TTS_arxiv_daily",
         "default_branch": "main",
         "created_at": "2025-07-29T03:13:56Z",
-        "pushed_at": "2026-10-23T03:28:26Z",
+        "pushed_at": "2026-10-24T03:24:22Z",
         "description": null,
         "stargazers_count": 3,
         "fork": false
       },
-      "checked_cycle": 96
+      "checked_cycle": 103
     },
     "creelie/Erdos-1183": {
       "head": "2842ef3a58604a8f4b35271d5753c2bf9bdecd0b",
@@ -14005,7 +13543,7 @@
         "stargazers_count": 0,
         "fork": false
       },
-      "checked_cycle": 102
+      "checked_cycle": 103
     },
     "mostly-ai/mostlyai-qa": {
       "head": "1684d884a93f7337c3d1b6b2470370524306267f",
@@ -15858,7 +15396,7 @@
         "stargazers_count": 0,
         "fork": false
       },
-      "checked_cycle": 102
+      "checked_cycle": 103
     },
     "Cody-Stevens/math-gamedev-experiments": {
       "head": "89481d0572faab2e8da012d5117756ca2cfd53bb",
@@ -18458,7 +17996,7 @@
         "fork": true,
         "_openai_fork": true
       },
-      "checked_cycle": 102
+      "checked_cycle": 103
     },
     "getkono/spargen": {
       "head": "21a5cb1d19eb34f71e421f1a62aa94f9df0192ab",
@@ -22390,7 +21928,7 @@
         "stargazers_count": 1,
         "fork": false
       },
-      "checked_cycle": 102
+      "checked_cycle": 103
     },
     "tech-andgar/awesome-stars": {
       "head": "74984519e9a3c75803d19821c78187831bfb767e",
@@ -22667,7 +22205,7 @@
       "checked_cycle": 36
     },
     "texnet43/theory-of-everything": {
-      "head": "639862c58d7b4721d70c9d6121123c7e24ac90ed",
+      "head": "6077d3f65ee8d2459b7f55f04139069b54f75fd1",
       "seen_claims": [
         "f94903f6508c4a4fe01b29013de3c758b12407efa47738abdf883d4e0824980f",
         "45afa9f62f81614db983dca76a6bb8b625c842581ce9947e26a530768b65de2a",
@@ -22676,7 +22214,8 @@
         "19a88988886306e5fd4ac81c0808347a9e984e00d655ed5dc5d515031901cdeb",
         "be615bda3d938cd9497a912ee0970e798bb5f9598f051de787b3a868740ec81e",
         "d685222240aba145fea76a68a489c00b354b92c950611d20f5c8ef23ac13930e",
-        "7247f7c5b231e26dcd2428e2460e571dc73b4994d7b95df0ac2130a367d3bb58"
+        "7247f7c5b231e26dcd2428e2460e571dc73b4994d7b95df0ac2130a367d3bb58",
+        "4c249f36c8797320d01967f2975de67adcb33373dec0a0a8088971d768349fae"
       ],
       "openai_fork": false,
       "meta": {
@@ -22684,12 +22223,12 @@
         "html_url": "https://github.com/texnet43/theory-of-everything",
         "default_branch": "main",
         "created_at": "2026-04-19T19:34:44Z",
-        "pushed_at": "2026-10-21T14:46:32Z",
+        "pushed_at": "2026-10-24T01:55:49Z",
         "description": "Theory of Everything: Trinity \u2014 An Operator-Algebraic Framework on Z\u2081\u2081 \u2014 \u03b1 to 5.4 ppt, 19 SM + \u039bCDM Parameters Structurally Closed, 7 Clay Problems Addressed, 9 Irrational Constants Unified, Zero Free Parameters",
         "stargazers_count": 0,
         "fork": false
       },
-      "checked_cycle": 83
+      "checked_cycle": 103
     },
     "zektec/advanced-actions-invoker-utils": {
       "head": "721738ecc085b3a4d2ff59ad006d0d15c3b85028",
@@ -22797,7 +22336,7 @@
         "stargazers_count": 0,
         "fork": false
       },
-      "checked_cycle": 102
+      "checked_cycle": 103
     },
     "LmeowLaunchpad/Legendary": {
       "head": "bb52579b96500ac630f644b962c6c9f58ccafed7",
@@ -25795,7 +25334,7 @@
         "fork": true,
         "_openai_fork": true
       },
-      "checked_cycle": 102
+      "checked_cycle": 103
     },
     "sahiil444/Machine-Learning": {
       "head": "4c8fdd469ba8753351d424ff806401c81935052d",
@@ -27251,7 +26790,7 @@
         "fork": true,
         "_openai_fork": true
       },
-      "checked_cycle": 102
+      "checked_cycle": 103
     },
     "ajw1111/Assignment-1-DHG502": {
       "head": "7d863216476baab6c5224aaa05a6b56fe1071b2b",
@@ -27436,7 +26975,7 @@
         "stargazers_count": 0,
         "fork": false
       },
-      "checked_cycle": 102
+      "checked_cycle": 103
     },
     "soemoehtun/Site-2-Site-Distance-Calculator": {
       "head": "c59861517cb495f20801b3924cbc3ce4149418ce",
@@ -27542,7 +27081,7 @@
         "stargazers_count": 5,
         "fork": false
       },
-      "checked_cycle": 102
+      "checked_cycle": 103
     },
     "shazia28/RLWE_PUF_ARMOR_PQ": {
       "head": "ce9489be2793d2ae63976f50fde1aebdbf2377c1",
@@ -27719,7 +27258,7 @@
         "stargazers_count": 0,
         "fork": false
       },
-      "checked_cycle": 102
+      "checked_cycle": 103
     },
     "Kerinjo/mathdeck": {
       "head": "dbc639d790b07ef8d5422c916ca925b88265d335",
@@ -28020,7 +27559,7 @@
       "checked_cycle": 17
     },
     "alexsmi22-dotcom/MS-WORD-Add-in": {
-      "head": "c23a2db3a7a703588e9a88ee95f6e4833f73ad35",
+      "head": "afa923ad310173241758489d521f9f6b389f5ab9",
       "seen_claims": [
         "6e4e3e05325544e434a2203c1832c010d363c603a8744c940e92f05a11dbf857",
         "6ac74d60b65d379383029f15d174f64b49312c5ef0a04c1ffb84c391a19fb6fc",
@@ -28084,7 +27623,8 @@
         "f194ac7991cf1bef9eee0a6c778a0d322622b5cb91604277ce16551844fa8cf4",
         "bd1b29b93348d4e2725e7e95304b5df3155c655e83aed74ef2e18cdf1d69a901",
         "2ce314e970a8972ac0d19147dbf2496017373349a8bb86f29b7166570765a794",
-        "9d5d184452f9eb6cdcd3103d891e842ed13a29d5e801577c4591f0cdd114cced"
+        "9d5d184452f9eb6cdcd3103d891e842ed13a29d5e801577c4591f0cdd114cced",
+        "2d01ef2486160ac7169560827b2072aa5787e022d037f5f9bb1617502dfc555b"
       ],
       "openai_fork": false,
       "meta": {
@@ -28092,12 +27632,12 @@
         "html_url": "https://github.com/alexsmi22-dotcom/MS-WORD-Add-in",
         "default_branch": "main",
         "created_at": "2026-06-21T20:31:04Z",
-        "pushed_at": "2026-10-24T00:01:59Z",
+        "pushed_at": "2026-10-24T03:38:41Z",
         "description": "Formula, ST. 26, Chem, Math, etc...",
         "stargazers_count": 0,
         "fork": false
       },
-      "checked_cycle": 102
+      "checked_cycle": 103
     },
     "Abhinab433/cryptography_basics": {
       "head": "321036d33ab6ae68abf3662ff91cc789ae76e507",
@@ -29302,7 +28842,7 @@
         "fork": true,
         "_openai_fork": false
       },
-      "checked_cycle": 102
+      "checked_cycle": 103
     },
     "artuskg/van-der-waerden-refinement": {
       "head": "54ac9715fceab938ca77d5980c36ab691765a04d",
@@ -29321,7 +28861,7 @@
         "stargazers_count": 0,
         "fork": true
       },
-      "checked_cycle": 102
+      "checked_cycle": 103
     },
     "MathCompressionBench/mcb-submissions": {
       "head": "08f444bbbda6c98c577c85fd79d2e9c8a1d3e829",
@@ -29932,7 +29472,7 @@
         "stargazers_count": 0,
         "fork": true
       },
-      "checked_cycle": 102
+      "checked_cycle": 103
     },
     "nielstron/QuasiRiemannTracker": {
       "head": "290d9c5463344c3e2fab93b878f3281e77e3fd6f",
@@ -29950,7 +29490,7 @@
         "stargazers_count": 0,
         "fork": true
       },
-      "checked_cycle": 102
+      "checked_cycle": 103
     },
     "Gaozhongpai/QuasiRiemannTracker": {
       "head": "40844a7614b67840801e65b836b3da2e1f7ff029",
@@ -29968,7 +29508,7 @@
         "stargazers_count": 0,
         "fork": true
       },
-      "checked_cycle": 102
+      "checked_cycle": 103
     },
     "lixiang90/RH-Zero-Free-Formalization": {
       "head": "3dd6c44c3df3cecbd21a91393c59db679269c4d9",
@@ -29986,7 +29526,7 @@
         "stargazers_count": 0,
         "fork": false
       },
-      "checked_cycle": 102
+      "checked_cycle": 103
     },
     "TheRealDubb/family-003-extension-xenoproof": {
       "head": "b6c98187528e036b8c60414a6961ef999caf31fb",
@@ -30004,7 +29544,7 @@
         "stargazers_count": 0,
         "fork": false
       },
-      "checked_cycle": 102
+      "checked_cycle": 103
     },
     "Gaozhongpai/seven-eighths-refinement-certificates": {
       "head": "8c995528481f144debf70ffd25678a3fdf379fd4",
@@ -30022,7 +29562,7 @@
         "stargazers_count": 1,
         "fork": false
       },
-      "checked_cycle": 102
+      "checked_cycle": 103
     },
     "shea256/ordered-binary-matrix-removal": {
       "head": "527bffa3e3798594738efe3dc1afc22a8ef2ce32",
@@ -30044,7 +29584,7 @@
         "stargazers_count": 4,
         "fork": false
       },
-      "checked_cycle": 102
+      "checked_cycle": 103
     },
     "auraecosystem/math": {
       "head": "853b754961a808377d75f463870943a051e5e1ed",
@@ -30061,7 +29601,7 @@
         "fork": true,
         "_openai_fork": true
       },
-      "checked_cycle": 102
+      "checked_cycle": 103
     },
     "SlackEight/tau-vanishing": {
       "head": "f8a8b7c21a219b4e2ba4c6cce12dc9031aa7e226",
@@ -31692,7 +31232,7 @@
         "fork": true,
         "_openai_fork": true
       },
-      "checked_cycle": 102
+      "checked_cycle": 103
     },
     "mitsuruk/statcpp": {
       "head": "bc4fb3728350378d52330c9c3d95717077eeda66",
@@ -32327,7 +31867,7 @@
       "checked_cycle": 38
     },
     "raghurama123/Biostatistics-CDFD-2026": {
-      "head": "e8aac3cd9bd32d0603744037d3c773d1f1d6c663",
+      "head": "0263890ab4238b0fc106b8300fd207d5b299b42a",
       "seen_claims": [],
       "openai_fork": false,
       "meta": {
@@ -32335,12 +31875,12 @@
         "html_url": "https://github.com/raghurama123/Biostatistics-CDFD-2026",
         "default_branch": "main",
         "created_at": "2026-09-12T02:15:03Z",
-        "pushed_at": "2026-10-23T16:57:35Z",
+        "pushed_at": "2026-10-24T04:02:25Z",
         "description": "Material for biostatistics course",
         "stargazers_count": 1,
         "fork": false
       },
-      "checked_cycle": 101
+      "checked_cycle": 103
     },
     "ansys/pyansys-geometry": {
       "head": "857749108abfa06a8a10bf88c3c44227f64218e1",
@@ -32620,7 +32160,7 @@
         "stargazers_count": 0,
         "fork": true
       },
-      "checked_cycle": 102
+      "checked_cycle": 103
     },
     "MathVisionAI/openai-deslop": {
       "head": "2e5240cba7415754ced9a50d42bc6d7b1bf3c487",
@@ -34078,7 +33618,7 @@
       "checked_cycle": 48
     },
     "bigospeedrun/site": {
-      "head": "f5e21e8c25c4a1d6e6fc02e3b9e505d1b1b6b10c",
+      "head": "951df2315a70ff6606a819a605e7a8d026b38fd8",
       "seen_claims": [],
       "openai_fork": false,
       "meta": {
@@ -34086,12 +33626,12 @@
         "html_url": "https://github.com/bigospeedrun/site",
         "default_branch": "main",
         "created_at": "2026-10-10T10:04:52Z",
-        "pushed_at": "2026-10-24T00:36:51Z",
+        "pushed_at": "2026-10-24T04:02:13Z",
         "description": "Leaderboards for improved algorithmic bounds.",
         "stargazers_count": 0,
         "fork": false
       },
-      "checked_cycle": 102
+      "checked_cycle": 103
     },
     "7haiderjaved8/ai-python-test-generation-study": {
       "head": "0070f7a45bc1ff33f263ce00528015725d3a96ce",
@@ -34162,7 +33702,7 @@
       "checked_cycle": 49
     },
     "Son0fGuilliman/-Practical-Statistics-for-Data-Scientist-Books": {
-      "head": "1378629a25ffc29ee617fc7c3d9d1bd1953c7a25",
+      "head": "eeb63ba43848d185ae9775fa13a777935f172d88",
       "seen_claims": [],
       "openai_fork": false,
       "meta": {
@@ -34170,12 +33710,12 @@
         "html_url": "https://github.com/Son0fGuilliman/-Practical-Statistics-for-Data-Scientist-Books",
         "default_branch": "main",
         "created_at": "2026-10-02T16:09:45Z",
-        "pushed_at": "2026-10-17T04:07:44Z",
+        "pushed_at": "2026-10-24T02:19:29Z",
         "description": "Code reproduction and theoretical summaries of Practical Statistics for Data Scientists (2nd Edition) using Python and Jupyter Notebook.",
         "stargazers_count": 0,
         "fork": false
       },
-      "checked_cycle": 49
+      "checked_cycle": 103
     },
     "prcliaprianaa/Practical-Statistics-for-Data-Scientists": {
       "head": "23f8ea79f8f2088dbadeb80c66bd19f8330680b6",
@@ -34599,7 +34139,7 @@
         "fork": true,
         "_openai_fork": true
       },
-      "checked_cycle": 102
+      "checked_cycle": 103
     },
     "kjw0716/Math10": {
       "head": "dd364bb07e71b64b73838981f9879d9d88bf7a4a",
@@ -34802,7 +34342,7 @@
       "checked_cycle": 55
     },
     "adomlans/TensorTonic-Solutions": {
-      "head": "45de4ef8dc9dc99ed5cdbee0689dfb5cc7da93fc",
+      "head": "e5e6292016d5147ffe7162da5f5391cc8b707583",
       "seen_claims": [],
       "openai_fork": false,
       "meta": {
@@ -34810,12 +34350,12 @@
         "html_url": "https://github.com/adomlans/TensorTonic-Solutions",
         "default_branch": "main",
         "created_at": "2026-07-29T07:13:59Z",
-        "pushed_at": "2026-10-23T11:22:33Z",
+        "pushed_at": "2026-10-24T02:59:27Z",
         "description": "My solutions to TensorTonic problems",
         "stargazers_count": 0,
         "fork": false
       },
-      "checked_cycle": 98
+      "checked_cycle": 103
     },
     "AfzalSurti/clara": {
       "head": "d6a22e45c731aafc2ebb017e1c414aa669fad32e",
@@ -35593,7 +35133,7 @@
       "checked_cycle": 63
     },
     "ryan-charette/number-theory-proof-verification": {
-      "head": "5ab232a1aee2bafe544db9193705f8c6d5c9a711",
+      "head": "2f5cd5f44fd61781675731a4c891bda46bf496d7",
       "seen_claims": [
         "31f7eb418391d0711f7ee5f9d885be5547206e5579f1909040b5f27f8e6138e3",
         "9d7176b5b6c0f2d633e7a0d8c961d113f178c61ee7d4a5483c8a460f5eb0f395",
@@ -35607,28 +35147,30 @@
         "html_url": "https://github.com/ryan-charette/number-theory-proof-verification",
         "default_branch": "main",
         "created_at": "2024-10-15T22:41:49Z",
-        "pushed_at": "2026-10-23T04:12:00Z",
+        "pushed_at": "2026-10-24T03:13:05Z",
         "description": "Introduction to Lean via elementary number theory",
         "stargazers_count": 1,
         "fork": false
       },
-      "checked_cycle": 95
+      "checked_cycle": 103
     },
     "joeaguilar/skills": {
-      "head": "69f226a8a5070ba8a272327533666446021435dd",
-      "seen_claims": [],
+      "head": "e3c316942ae19af9e636504fb9dc7a38c9df9d94",
+      "seen_claims": [
+        "53030f1c7aea7eebcae05fa71acd2eb7496a3d062b3da3699f6ec391970c3edd"
+      ],
       "openai_fork": false,
       "meta": {
         "full_name": "joeaguilar/skills",
         "html_url": "https://github.com/joeaguilar/skills",
         "default_branch": "main",
         "created_at": "2026-05-30T05:09:05Z",
-        "pushed_at": "2026-10-24T01:00:08Z",
+        "pushed_at": "2026-10-24T02:26:15Z",
         "description": "Skill issues",
         "stargazers_count": 0,
         "fork": false
       },
-      "checked_cycle": 102
+      "checked_cycle": 103
     },
     "TunahanCnrYildiz/chi2-power": {
       "head": "61debbe9963e24edbc144879015bf3287e90e86a",
@@ -36073,7 +35615,7 @@
         "fork": true,
         "_openai_fork": true
       },
-      "checked_cycle": 102
+      "checked_cycle": 103
     },
     "Iulia-MariaCaraman/bacalaureat-statistical-analysis2": {
       "head": "60dd9a2348693e743133ffb1927a9d10f3285a20",
@@ -36150,12 +35692,12 @@
         "html_url": "https://github.com/Solidarity31/EXCISE",
         "default_branch": "main",
         "created_at": "2025-08-22T19:51:03Z",
-        "pushed_at": "2026-10-20T15:14:36Z",
+        "pushed_at": "2026-10-23T22:09:00Z",
         "description": null,
         "stargazers_count": 0,
         "fork": false
       },
-      "checked_cycle": 75
+      "checked_cycle": 103
     },
     "crazy-kafka/VLSI_design_browser": {
       "head": "90ae50ab982f29e7e89460f6359cd410a95cbd1c",
@@ -36224,7 +35766,7 @@
       "checked_cycle": 69
     },
     "lowrank/lowrank": {
-      "head": "b067320db3e5fce9feb873246a47d70f61e1b65f",
+      "head": "b70a87b195d31774a4052bc8525391a2f58d1a0e",
       "seen_claims": [],
       "openai_fork": false,
       "meta": {
@@ -36232,12 +35774,12 @@
         "html_url": "https://github.com/lowrank/lowrank",
         "default_branch": "main",
         "created_at": "2022-12-08T22:30:54Z",
-        "pushed_at": "2026-10-23T12:33:25Z",
+        "pushed_at": "2026-10-24T00:52:45Z",
         "description": "README",
         "stargazers_count": 0,
         "fork": false
       },
-      "checked_cycle": 98
+      "checked_cycle": 103
     },
     "Foundation-0/formal-claims-audit": {
       "head": "20f83b35cce60f625967d88f85392ba03672b1bf",
@@ -36344,9 +35886,10 @@
       "checked_cycle": 102
     },
     "acal05/bank-marketing-analytics": {
-      "head": "263c814712e3c7a3c0e08543c0377b1b36f7a42c",
+      "head": "a7e91e892e43c78544b0a503959b2bfdd3c672f6",
       "seen_claims": [
-        "8b4d8e8cd87166cc1386a8d277e7eef02d49ad3363427c83c61645bee9c710ca"
+        "8b4d8e8cd87166cc1386a8d277e7eef02d49ad3363427c83c61645bee9c710ca",
+        "5e3d3753ce685062bca01a5bad7c9e8a573867cb6f262ec937926d1be157d6a1"
       ],
       "openai_fork": false,
       "meta": {
@@ -36354,12 +35897,12 @@
         "html_url": "https://github.com/acal05/bank-marketing-analytics",
         "default_branch": "main",
         "created_at": "2026-07-19T00:47:13Z",
-        "pushed_at": "2026-10-24T01:12:22Z",
+        "pushed_at": "2026-10-24T01:17:52Z",
         "description": null,
         "stargazers_count": 0,
         "fork": false
       },
-      "checked_cycle": 102
+      "checked_cycle": 103
     },
     "FriedmanJP/MacroEconometricModels.jl": {
       "head": "13e3522c45c7973acb49d92ca39beb7051a9ac97",
@@ -36444,7 +35987,7 @@
         "fork": true,
         "_openai_fork": true
       },
-      "checked_cycle": 102
+      "checked_cycle": 103
     },
     "sneed-and-feed/lean-theorems-3": {
       "head": "85dbbf28ba211d4aee2de08e82092a65d018f71d",
@@ -36618,12 +36161,12 @@
         "html_url": "https://github.com/Steel-SecAdv-LLC/Mercury-Agent",
         "default_branch": "main",
         "created_at": "2025-12-02T05:32:27Z",
-        "pushed_at": "2026-10-24T00:53:41Z",
+        "pushed_at": "2026-10-24T02:39:32Z",
         "description": "Mercury Agent \u2671 is a civilization-first neuro-symbolic AI for multi-domain anomaly & hazard detection and early warning \u2014 a trained detector-fusion core, real-data hazard models, fail-closed ethical gates, post-quantum crypto, and a self-hostable detection-as-a-service platform. Built for STEAM research and humanitarian crisis response.",
         "stargazers_count": 5,
         "fork": false
       },
-      "checked_cycle": 102
+      "checked_cycle": 103
     },
     "Shayashree/Tracegaurd": {
       "head": "a5f3c1f290325fcdd1bac187b8a7a3fd9f29adb1",
@@ -38386,7 +37929,7 @@
       "checked_cycle": 85
     },
     "nkwork9999/duckSMILES": {
-      "head": "31902df2722a0405d87152d867644dbf13abbb27",
+      "head": "e00f4ff79dc27bb4e3861ff4022d357ac0a00edf",
       "seen_claims": [],
       "openai_fork": false,
       "meta": {
@@ -38394,12 +37937,12 @@
         "html_url": "https://github.com/nkwork9999/duckSMILES",
         "default_branch": "main",
         "created_at": "2026-03-14T11:21:41Z",
-        "pushed_at": "2026-10-23T15:35:30Z",
+        "pushed_at": "2026-10-24T02:19:19Z",
         "description": null,
         "stargazers_count": 4,
         "fork": false
       },
-      "checked_cycle": 99
+      "checked_cycle": 103
     },
     "Vasliy-Vasily/data_analytics": {
       "head": "4215564b0604b151b7902801746076fe6f629359",
@@ -38989,7 +38532,7 @@
       "checked_cycle": 90
     },
     "rhys-vdw/lua-doc-extractor-rs": {
-      "head": "e4ce3344924b98f4fed055f10e603fb70a688661",
+      "head": "c8704e22208fc7a8ffd78e6c029d2e8badabec91",
       "seen_claims": [
         "cf4cb74d3aa28e49e74a73a0b6b77dc0b99efcd1ddcdb382f15a022cf9f56d6d"
       ],
@@ -38999,12 +38542,12 @@
         "html_url": "https://github.com/rhys-vdw/lua-doc-extractor-rs",
         "default_branch": "main",
         "created_at": "2026-10-21T12:36:27Z",
-        "pushed_at": "2026-10-23T17:51:32Z",
+        "pushed_at": "2026-10-24T02:07:23Z",
         "description": "Extracts EmmyLua docs from C-style comments.",
         "stargazers_count": 0,
         "fork": false
       },
-      "checked_cycle": 100
+      "checked_cycle": 103
     },
     "akashhg2007/SleepLikeABaby": {
       "head": "4d70fe6ceda9b887c666d16ce7745350c4ed786a",
@@ -39226,7 +38769,7 @@
       "checked_cycle": 91
     },
     "samlavery/Beurling": {
-      "head": "a4441b236ef2331591a87fc896664cd9beb64486",
+      "head": "9ac062410b4102dfdd31656696572ef5c3ffbd3c",
       "seen_claims": [
         "34172d10607ff645ac9b692c48e3b91049b5c8294b10ac8730fd53aa1b9ad35d",
         "41973f71a517ac96d5b080f51cedb6e837335d5f7fa5e390d73a26a31ed753ae",
@@ -39304,7 +38847,16 @@
         "4774e46e7b2924b4ff1c9512a0991c76ea19aefecea3405873192dc99b26d059",
         "f674aa3d3483441dedc7c9bbf0ac2515d685bf57ee7dbcb3e8ce5417fa56f34e",
         "7a73574666db09ec6e210b586e8a13eadc6bd51bd5efe20cb3d621f91a6f7193",
-        "700737db3ccf1304cde01252276d9ae06349c3c94364efd751c14447084d28ba"
+        "700737db3ccf1304cde01252276d9ae06349c3c94364efd751c14447084d28ba",
+        "879c40db6149d7002874b32e21c6783e84ec48fc1f3040ab3b435a02cc5db3ab",
+        "c68f18ac9871d04fb11064092824bb8204c83ca981b05775fb5488df6db1cd84",
+        "3b462512768633853d96efb1e3463a929ae537ffa4f7897b4e93beef2268d56b",
+        "aaedc8771eff336e4515ed92172e0033d2468f585789f6607553d53a741526b8",
+        "421f389284142897e6909c625569f7241c60f97e27de0970a414d7c94b43c21b",
+        "256cc0864d1911e443638e72cd20cf27f55e63d19b08f7056a216118b4de66ee",
+        "1a21194f8d7ecd161e16776098d83fd29bd529dc594838cfb056fce4fe0e827e",
+        "bebccf171d509c583fcc0a0f4e0239e938a3c1fd8ac80a8cbb5a1474b4e2512e",
+        "469c1bb529f50ad48495b8bb6d30bbc0032c545739dd66fcd596b8da2c34723b"
       ],
       "openai_fork": false,
       "meta": {
@@ -39312,12 +38864,12 @@
         "html_url": "https://github.com/samlavery/Beurling",
         "default_branch": "development",
         "created_at": "2026-10-22T15:26:52Z",
-        "pushed_at": "2026-10-23T23:48:14Z",
+        "pushed_at": "2026-10-24T02:55:40Z",
         "description": null,
         "stargazers_count": 0,
         "fork": false
       },
-      "checked_cycle": 102
+      "checked_cycle": 103
     },
     "Sudeep2296/MITM-Attack-simulation": {
       "head": "e8d28567a2114a4c1e4dd0a11e5574a60811e7c4",
@@ -39636,7 +39188,7 @@
         "fork": true,
         "_openai_fork": true
       },
-      "checked_cycle": 102
+      "checked_cycle": 103
     },
     "yuuxxann/FIASSP": {
       "head": "2dab5341e0e460a43230bb867744aaf64311a52f",
@@ -39894,7 +39446,7 @@
       "checked_cycle": 96
     },
     "YJ-Niu/scicore": {
-      "head": "e116306bc1325ae4e237d03668a6e84c8f5e9520",
+      "head": "2c8da5f60ac378fbe3b9661df3788fcb9c9e92d5",
       "seen_claims": [],
       "openai_fork": false,
       "meta": {
@@ -39902,12 +39454,12 @@
         "html_url": "https://github.com/YJ-Niu/scicore",
         "default_branch": "main",
         "created_at": "2026-10-19T07:51:14Z",
-        "pushed_at": "2026-10-23T13:29:31Z",
+        "pushed_at": "2026-10-24T01:18:59Z",
         "description": "**A Rust-powered scipy-compatible array library.**",
         "stargazers_count": 2,
         "fork": false
       },
-      "checked_cycle": 98
+      "checked_cycle": 103
     },
     "carol18-a11y/Music-and-Mental-Health-Relation": {
       "head": "d29387fe9cbec655cf66db641ac7162895f57648",
@@ -40026,7 +39578,7 @@
         "fork": true,
         "_openai_fork": true
       },
-      "checked_cycle": 102
+      "checked_cycle": 103
     },
     "fniessen/refcard-R": {
       "head": "cc92a5b278313979f9d762d7e82b4eab9e220177",
@@ -40071,12 +39623,12 @@
         "html_url": "https://github.com/Hazardous9hub/Hazardous9hub",
         "default_branch": "main",
         "created_at": "2026-09-11T18:48:52Z",
-        "pushed_at": "2026-10-23T08:47:56Z",
+        "pushed_at": "2026-10-24T04:08:51Z",
         "description": "My profile",
         "stargazers_count": 0,
         "fork": false
       },
-      "checked_cycle": 97
+      "checked_cycle": 103
     },
     "Ragebeat/rag-japanese-labour-law": {
       "head": "ad38ce8a31ca6ea3659d4d7e6db0de3e36e0c135",
@@ -40270,7 +39822,7 @@
       "checked_cycle": 98
     },
     "bigospeedrun/verifier": {
-      "head": "817a8bb03d599860804c0843e8bd9b356efcbe83",
+      "head": "a85ebff64c27b3643ab6f2cf1aa7a808fb8264f9",
       "seen_claims": [
         "c63e56327672cf6488f00f384a225ba19078947987d2dd8db1ccb9ff5992b4e2"
       ],
@@ -40280,15 +39832,15 @@
         "html_url": "https://github.com/bigospeedrun/verifier",
         "default_branch": "main",
         "created_at": "2026-10-10T09:22:54Z",
-        "pushed_at": "2026-10-24T01:14:06Z",
+        "pushed_at": "2026-10-24T04:02:29Z",
         "description": "Public, isolated Lean proof reruns with Comparator and nanoda; pinned challenges and artifact receipts.",
         "stargazers_count": 3,
         "fork": false
       },
-      "checked_cycle": 102
+      "checked_cycle": 103
     },
     "AyalewGM/chaos-lab": {
-      "head": "157290b0af2a501a121a1c1a91ccb91d8596330f",
+      "head": "c3b0a914b2d20cb7e996940ac4024b957ce7e3a7",
       "seen_claims": [
         "7faf35f0943ad79f6093394b2c72d550d03d2b7ad63391b256b0d484b83e54cf"
       ],
@@ -40298,12 +39850,12 @@
         "html_url": "https://github.com/AyalewGM/chaos-lab",
         "default_branch": "main",
         "created_at": "2026-10-23T04:02:35Z",
-        "pushed_at": "2026-10-23T10:27:13Z",
+        "pushed_at": "2026-10-24T02:56:15Z",
         "description": "Chaos Theory Laboratory",
         "stargazers_count": 0,
         "fork": false
       },
-      "checked_cycle": 98
+      "checked_cycle": 103
     },
     "Sourini/OTP1_inclass1_assignment_FransRastas": {
       "head": "8c420b3749797e5c5297a5a4801e3c5de6f32b54",
@@ -40472,7 +40024,7 @@
         "fork": true,
         "_openai_fork": true
       },
-      "checked_cycle": 102
+      "checked_cycle": 103
     },
     "Strandfelt/pcm-zces-parser": {
       "head": "3103028ecc3e9887487232322ce0052ebf39984b",
@@ -40855,14 +40407,46 @@
         "fork": false
       },
       "checked_cycle": 102
+    },
+    "gtatters/ExpectedCounts": {
+      "head": "8c5dd656040090c6e9b3db20fd6a11a3b36c168e",
+      "seen_claims": [],
+      "openai_fork": false,
+      "meta": {
+        "full_name": "gtatters/ExpectedCounts",
+        "html_url": "https://github.com/gtatters/ExpectedCounts",
+        "default_branch": "main",
+        "created_at": "2026-10-03T19:41:36Z",
+        "pushed_at": "2026-10-24T03:03:48Z",
+        "description": "An interactive shiny app showing where the expected counts are derived from in a contingency table",
+        "stargazers_count": 1,
+        "fork": false
+      },
+      "checked_cycle": 103
+    },
+    "stanleyxiao01/ST558_Project_2": {
+      "head": "437e630d3216737e961f42a94ce5cdcbe6ea3e4c",
+      "seen_claims": [],
+      "openai_fork": false,
+      "meta": {
+        "full_name": "stanleyxiao01/ST558_Project_2",
+        "html_url": "https://github.com/stanleyxiao01/ST558_Project_2",
+        "default_branch": "main",
+        "created_at": "2026-10-24T01:15:28Z",
+        "pushed_at": "2026-10-24T01:18:49Z",
+        "description": "This project is an interactive R Shiny application built to explore customer demographic, financial, and outreach data from direct bank marketing campaigns.",
+        "stargazers_count": 0,
+        "fork": false
+      },
+      "checked_cycle": 103
     }
   },
   "other_bounds_checkpoint": {
     "version": 1,
-    "cycle": 102,
-    "search_cursor": 20,
+    "cycle": 103,
+    "search_cursor": 15,
     "fork_page": 1,
-    "fork_since": "2026-10-21T01:10:55Z",
+    "fork_since": "2026-10-21T04:10:05Z",
     "pending": [
       {
         "full_name": "simon-oz/AI-News",
@@ -41147,16 +40731,16 @@
     ]
   },
   "other_bounds_usage": {
-    "requests": 218,
-    "elapsed_seconds": 212.496,
+    "requests": 213,
+    "elapsed_seconds": 228.135,
     "request_limit": 360,
     "seconds_limit": 360,
-    "repositories_checked": 102,
+    "repositories_checked": 98,
     "pending_repositories": 28,
     "starting_pending_repositories": 28,
     "starting_pending_forks": 0,
     "pending_forks": 0,
-    "untouched_forks_skipped": 86,
+    "untouched_forks_skipped": 85,
     "forks_without_changed_files": 0,
     "forks_with_changed_files": 0
   },
@@ -41164,17 +40748,17 @@
     "eumemic/exact-dft-bounds": {
       "bound": "607/1250000",
       "source_commit": "6f87d1a0c9ae462cdcb2034a1361c87623221e66",
-      "checked_at": "2026-10-24T01:10:55.142204+00:00"
+      "checked_at": "2026-10-24T04:10:05.365046+00:00"
     },
     "shea256/fourier-transform-below-nlogn": {
       "bound": "2466337/2000000000",
       "source_commit": "0e61af6ce0ef712494c93c902baefa314ef7e23c",
-      "checked_at": "2026-10-24T01:10:55.142204+00:00"
+      "checked_at": "2026-10-24T04:10:05.365046+00:00"
     },
     "jacobalansussman/wht-power-saving-lean": {
       "bound": "3577409/2000000000",
       "source_commit": "f08d308ff93f4867165a1e80765fe985c06b4edf",
-      "checked_at": "2026-10-24T01:10:55.142204+00:00"
+      "checked_at": "2026-10-24T04:10:05.365046+00:00"
     },
     "Swapnil-jain/threesum-derand": {
       "bound": [
@@ -41182,7 +40766,7 @@
         "2995943/1000000"
       ],
       "source_commit": "48adbc585f666a37003c700f97c89f3e73c570ce",
-      "checked_at": "2026-10-24T01:10:55.142204+00:00"
+      "checked_at": "2026-10-24T04:10:05.365046+00:00"
     }
   },
   "crocswap_pr_states": {
@@ -75824,15 +75408,15 @@
       "updated_at": "2026-10-23T23:55:34Z"
     },
     "5407": {
-      "revision": null,
+      "revision": "ffdcb5921cba1daaa81f7fa63408e111980826650e39f9ce4cac8966f44207cb",
       "pending_revision": "ffdcb5921cba1daaa81f7fa63408e111980826650e39f9ce4cac8966f44207cb",
-      "next_file_page": 4,
+      "next_file_page": 5,
       "head": "b62252c61113d2863b36ce2419aa81a07f393c42",
       "seen_claims": [
         "e9b3f09ba8fb81cdeed324d10b8e0ac3510b4603b73ef1a5d7255fb91659fc72",
         "72dd126bec23e1b0848e0c0c105efe83fea87eaad56b1bc11a60d0dfebe2a57f"
       ],
-      "updated_at": "2026-10-23T23:48:16Z"
+      "updated_at": "2026-10-24T02:54:33Z"
     },
     "5406": {
       "revision": "d50b189a2ae1f4a306a2d3dd86976b1ec90d555d7ef096d81d478b9269475787",
@@ -75907,6 +75491,70 @@
       "head": "2add42d1edf14a263abe90a3bcde67fc1ba30768",
       "seen_claims": [],
       "updated_at": "2026-10-22T16:35:47Z"
+    },
+    "5419": {
+      "revision": "08dc8b5c0a7aa6f8ad7a73334c938b683f7291a0708bf52de0e271162c86bea3",
+      "pending_revision": "08dc8b5c0a7aa6f8ad7a73334c938b683f7291a0708bf52de0e271162c86bea3",
+      "next_file_page": 2,
+      "head": "d94f60b3b603782fce40f1911b3b094847d0f45a",
+      "seen_claims": [],
+      "updated_at": "2026-10-24T04:15:29Z"
+    },
+    "5420": {
+      "revision": "a39735ac5042452cd74a61623fe404aef586bb956f885b9040b3f2fb6bf0bc30",
+      "pending_revision": "a39735ac5042452cd74a61623fe404aef586bb956f885b9040b3f2fb6bf0bc30",
+      "next_file_page": 2,
+      "head": "302c11c02b15be8a62c8da29784b1bb11737cf1c",
+      "seen_claims": [],
+      "updated_at": "2026-10-24T04:12:17Z"
+    },
+    "5418": {
+      "revision": "d6517923ef60bb962002e72e4ecb1180073a82958e9804c960de3af68cda48e3",
+      "pending_revision": "d6517923ef60bb962002e72e4ecb1180073a82958e9804c960de3af68cda48e3",
+      "next_file_page": 2,
+      "head": "fe4c345778554ec5c02368b1ddf2f6918eeb0df5",
+      "seen_claims": [],
+      "updated_at": "2026-10-24T03:40:32Z"
+    },
+    "5417": {
+      "revision": "a1301e7f22c106c63cc99c476dce2c9ec5138d499878b40537c37fc609bb79c1",
+      "pending_revision": "a1301e7f22c106c63cc99c476dce2c9ec5138d499878b40537c37fc609bb79c1",
+      "next_file_page": 4,
+      "head": "f649e9006179215cbae43cbbd628b48aa3c95de4",
+      "seen_claims": [],
+      "updated_at": "2026-10-24T03:21:08Z"
+    },
+    "5416": {
+      "revision": "85d061bdd0f4e362e5a4c7195ead8f7ba99eec1ec4ac9badabac46c50f7a0ad7",
+      "pending_revision": "85d061bdd0f4e362e5a4c7195ead8f7ba99eec1ec4ac9badabac46c50f7a0ad7",
+      "next_file_page": 2,
+      "head": "f0cdec0f1de417323a2a4680de3ecce333e8e820",
+      "seen_claims": [],
+      "updated_at": "2026-10-24T02:56:13Z"
+    },
+    "5415": {
+      "revision": "34bb1f123c5bc28e9e88c9f35fcef70eccc79f9aa4f4eedd070a841b417e37b3",
+      "pending_revision": "34bb1f123c5bc28e9e88c9f35fcef70eccc79f9aa4f4eedd070a841b417e37b3",
+      "next_file_page": 2,
+      "head": "39d6f18d53f073fcae75b7fd98055060cb648e73",
+      "seen_claims": [],
+      "updated_at": "2026-10-24T02:54:33Z"
+    },
+    "5414": {
+      "revision": "27b5ab0d5eb528ae351d339d5553880674e8f9deeaf2bc1a88c80c5f51aaf0d3",
+      "pending_revision": "27b5ab0d5eb528ae351d339d5553880674e8f9deeaf2bc1a88c80c5f51aaf0d3",
+      "next_file_page": 3,
+      "head": "bc37fb01c58d20e799d3299dec63e654f67d9d1b",
+      "seen_claims": [],
+      "updated_at": "2026-10-24T02:54:33Z"
+    },
+    "5413": {
+      "revision": "b4cdf73f5f7b6c59a6189deb5fddf04892088676dbae08b01e13b11c7a0552d4",
+      "pending_revision": "b4cdf73f5f7b6c59a6189deb5fddf04892088676dbae08b01e13b11c7a0552d4",
+      "next_file_page": 3,
+      "head": "0c1fa2f47fb5ea17b93a4b67063d08e49cc38e51",
+      "seen_claims": [],
+      "updated_at": "2026-10-24T02:54:33Z"
     }
   },
   "family_pr_states": {
@@ -76585,7 +76233,7 @@
       "70": {
         "revision": null,
         "pending_revision": "d622683accfe60fee8bb608dc2c994004b32ef93793215fcc2a9a5e85217aea0",
-        "next_file_page": 19,
+        "next_file_page": 22,
         "head": "8ee28f244ec11b180d09c9d3f92e34ee078c746a",
         "seen_claims": [
           "85d2ea2305ec3bdacac581805da95e9fbf71d066e873f95387620e9aa0ce1a58"
@@ -76596,26 +76244,14 @@
   },
   "crocswap_prs_checked": [
     "GTimG/QuasiRiemannTracker#70",
-    5270,
-    5412,
-    5411,
-    5410,
-    5405,
-    5408,
-    5409,
-    5407,
-    5406,
-    5376,
-    5404,
-    5402,
-    5403,
-    5400,
-    5401,
-    4726,
-    4610,
-    4723,
-    4722,
-    4721,
-    4694
+    5419,
+    5420,
+    5418,
+    5417,
+    5416,
+    5415,
+    5414,
+    5413,
+    5407
   ]
 }
