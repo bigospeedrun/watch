@@ -5,6 +5,10 @@ Runs hourly from the systemd user timer bigospeedrun-deadman.timer, outside the
 watch cron and Isomux cronjobs, so it does not depend on what it checks.
 Items:
   watch-cycle          last cycle with all steps passed < 4 h (.git/cycle-last-ok.json)
+  candidate-review     the oldest file in .git/watch-candidates-pending/ (candidates the review session has
+                       not yet moved to .git/watch-candidates-reviewed/) is under 6 h old; the alert counts the
+                       files. The session may be down on a usage limit while the timer cycle still runs
+                       (BOS Reviewer, 2026-10-24)
   discord-intake       last passed < 4 h (#submit-a-result intake)
   problem-selection    last passed < 4 h (#problem-selection digest)
   site-refresh         bigospeedrun/site refresh-data.yml: latest completed run
@@ -373,6 +377,10 @@ class Sources:
     def digest_last_ok(self,name):
         path=self.root/f'{name}.local.json'
         return parse(json.loads(path.read_text()).get('last_ok')) if path.exists() else None
+    def pending_candidates(self):
+        """Modification times of the candidate files the review session has not yet reviewed."""
+        folder=self.root/'.git/watch-candidates-pending'
+        return [datetime.fromtimestamp(p.stat().st_mtime,timezone.utc) for p in folder.glob('*.json')] if folder.exists() else []
     def unit_installed(self,unit):return (Path.home()/'.config/systemd/user'/unit).exists()
     def comment_tracked(self):
         path=self.root/'comment-watch.local.json'
@@ -703,6 +711,10 @@ def check(src,now,to_time=systemd_time):
     marker('watch-cycle',('cycle','push'),None,4,'~/nil/bigospeedrun-data/.git/cycle-alert.log and .git/*.log')
     marker('discord-intake',('discord-intake',),'discord-watch.log',4,'~/nil/bigospeedrun-data/.git/discord-watch.log')
     marker('problem-selection',('problem-selection',),'problem-selection.log',4,'~/nil/bigospeedrun-data/.git/problem-selection.log')
+    waiting=sorted(src.pending_candidates())
+    old=bool(waiting) and now-waiting[0]>=6*H
+    results['candidate-review']=(not old,f'{len(waiting)} cycle file(s) of candidates wait for the review session; the oldest since {waiting[0].isoformat(timespec="minutes")}' if old else None,
+                                 None if old else now,'~/nil/bigospeedrun-data/.git/watch-candidates-pending/ (WATCH_RUNBOOK.md, "Quiet cycle")')
     try:
         runs=src.refresh_runs()
         done=[r for r in runs if r.get('status')=='completed']

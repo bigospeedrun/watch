@@ -24,7 +24,8 @@ class Fake:
     def refresh_runs(self):return self.runs
     def systemd(self,unit,*props):return self.service if unit.endswith('.service') else self.timer
     def cron_runs(self,job):return self.cron
-    installed=False;digest_ok=None;stalled=()
+    installed=False;digest_ok=None;stalled=();pending=[]
+    def pending_candidates(self):return list(self.pending)
     def stalled_sources(self):return list(self.stalled)
     werrors=[]
     def watch_errors(self):
@@ -127,7 +128,7 @@ class DeadmanTests(unittest.TestCase):
 
     def test_all_healthy_sends_nothing(self):
         report=self.run_at(Fake())
-        self.assertEqual(set(report),{'watch-cycle','discord-intake','problem-selection','site-refresh','verifier-submissions','chatbot-gap-review','watch-sources','watch-errors','vps-deploy','vps-board','race-parity','method-note','stale-issues','unanswered-submissions','direct-import'})
+        self.assertEqual(set(report),{'watch-cycle','candidate-review','discord-intake','problem-selection','site-refresh','verifier-submissions','chatbot-gap-review','watch-sources','watch-errors','vps-deploy','vps-board','race-parity','method-note','stale-issues','unanswered-submissions','direct-import'})
         self.assertTrue(all(v=='ok' for v in report.values()));self.assertEqual(self.sent,[])
 
     def test_each_simulated_stale_or_failed_state_is_caught(self):
@@ -172,6 +173,13 @@ class DeadmanTests(unittest.TestCase):
         def broken(run):raise RuntimeError('log')
         f.direct_reason=broken;runs(f,['failure']*3)
         self.assertEqual(d.check(f,NOW)['direct-import'][1],'the direct step kept the previous bundle in the 3 newest run(s): cannot read the step log: RuntimeError')
+
+    def test_candidates_wait_at_most_6_hours_for_the_review_session(self):
+        f=Fake();self.assertEqual(self.failing(f),set())
+        f.pending=[NOW-timedelta(hours=5.9),NOW-timedelta(hours=1)];self.assertEqual(self.failing(f),set())
+        f.pending=[NOW-timedelta(hours=6),NOW-timedelta(hours=1)]
+        self.assertEqual(self.failing(f),{'candidate-review'})
+        self.assertIn('2 cycle file(s)',d.check(f,NOW)['candidate-review'][1])
 
     def test_pwn_watch_needs_a_pass_within_3_hours_once_its_timer_is_installed(self):
         f=Fake();self.assertNotIn('pwn-watch',d.check(f,NOW))

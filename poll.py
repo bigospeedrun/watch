@@ -16,6 +16,8 @@ def office(route,data=None):
     req=urllib.request.Request('http://localhost:4000'+route, data=json.dumps(data).encode() if data is not None else None, headers={'Authorization':'Bearer '+os.environ[LOCAL_OFFICE['token_env']],'Content-Type':'application/json'})
     with urllib.request.urlopen(req,timeout=30) as response:return json.load(response)
 
+SEP='\n\n'
+
 def lead_notify(text,identity,channel='watch-cycle'):
     """Send one message to the lead. With the office token in the environment (a cycle started by the
     agent session) it goes through the office API; without it (the systemd timer bos-watch-cycle.timer,
@@ -26,7 +28,10 @@ def lead_notify(text,identity,channel='watch-cycle'):
         return
     import digest_size
     from deadman import webhook_send
-    webhook_send(ROOT,'digest')(dict(kind='bos-digest',channel=channel,text=digest_size.fit(text,digest_size.LIMIT)))
+    send=webhook_send(ROOT,'digest')
+    # A text over the webhook size goes in parts (paragraphs together, an over-long paragraph cut), at most 4.
+    parts=[SEP.join(t for _,t in group) for group in digest_size.chunks(list(enumerate(text.split(SEP))),digest_size.LIMIT)]
+    for i,part in enumerate(parts[:4]):send(dict(kind='bos-digest',channel=channel,text=part))
 
 def schedule():
     pending=office(f'/api/agents/{SELF}/scheduled-messages')['scheduled']
