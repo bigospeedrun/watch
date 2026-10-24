@@ -176,6 +176,7 @@ def main():
     result['crocswap_pr_states']=prs['states']
     result['family_pr_states']=prs['family_states']
     result['crocswap_prs_checked']=prs['checked']
+    result['waiting_drafts']=prs['waiting']
     result['errors'].extend(prs['errors']);result['truncated_queries'].extend(prs['truncated'])
     result['coverage_note']+=' Family upstream PRs (GTimG/QuasiRiemannTracker, rohanarun/van-der-waerden-refinement): every open PR plus all PRs updated within 72 hours, first, at most 24 of the 80 PR GETs.'
     result['coverage_note']+=' Recent CrocSwap PRs: all authors and states, updated within 72 hours; inspect cross-problem claims in PR bodies and added Markdown, TeX and Lean lines. At most 1000 PRs and 300 files per PR; incomplete reads are retried.'

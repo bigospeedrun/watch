@@ -177,4 +177,82 @@ class FamilyPRTests(unittest.TestCase):
         self.assertLessEqual(result['requests'],cw.MAX_REQUESTS)
         self.assertTrue(any(t['query']==self.QRT+' PR inspection budget' for t in result['truncated']))
 
+# Lead, 2026-10-24: GTimG/QuasiRiemannTracker #71 is a draft (created 14:16:57Z, head checks failed) and was flagged as a
+# new bound. A draft created from DRAFT_SINCE on is "draft, waiting"; it alerts once when marked ready, with its head checks.
+class DraftPRTests(unittest.TestCase):
+    QRT='GTimG/QuasiRiemannTracker'
+    CHECKS=[dict(name='admission',status='completed',conclusion='failure',output=dict(title=None)),
+            dict(name='verify (slayer-recost-0p87477290596)',status='completed',conclusion='failure',output={}),
+            dict(name='qrh/pr-admission',status='completed',conclusion='failure',output=dict(title='PR admission failed')),
+            dict(name='prepare',status='completed',conclusion='success',output={})]
+    def pr(self,draft=True,head='h1',body='Prove the Dirichlet boundary.',created='2026-10-24T14:16:57Z',repo=None):
+        repo=repo or self.QRT
+        return dict(number=71,title='Prove the Dirichlet boundary',body=body,head={'sha':head},user={'login':'Rexyysilent'},created_at=created,
+                    updated_at='2026-10-24T14:17:37Z',html_url=f'https://github.com/{repo}/pull/71',state='open',draft=draft)
+    def watch(self,pr,previous=None,checks=None,claim='Quasi-Riemann bound mu 0.87477290596 improved.',repo=None,check_error=None):
+        self.calls=[]
+        def api(path,params,**kwargs):
+            self.calls.append(path)
+            if path.endswith('/pulls'):return [pr] if '/'+(repo or self.QRT)+'/' in '/'+path else []
+            if '/check-runs' in path:
+                if check_error:raise check_error
+                return dict(total_count=len(checks if checks is not None else self.CHECKS),check_runs=checks if checks is not None else self.CHECKS)
+            return [dict(filename='notes.md',status='added',patch='+'+claim)]
+        with patch('crocswap_pr_watch.api',side_effect=api):
+            return cw.collect_all(SINCE,previous or {}) if repo is None else cw.collect(SINCE,previous or {})
+    def carry(self,result):return {'family_pr_states':result.get('family_states',{}),'crocswap_pr_states':result['states']}
+
+    def test_a_new_draft_waits_and_alerts_once_when_ready_with_its_head_checks(self):
+        draft=self.watch(self.pr())
+        self.assertEqual(draft['candidates'],[])
+        self.assertEqual([(w['repo'],w['pr_number'],w['status'],w['head']) for w in draft['waiting']],[(self.QRT,71,'draft, waiting','h1')])
+        self.assertFalse(any('/files' in c or '/check-runs' in c for c in self.calls))
+        self.assertEqual(draft['family_states'][self.QRT]['71']['seen_claims'],[])
+        # Still a draft, also after a head change: listed again, no alert, no request for its files.
+        again=self.watch(self.pr(),self.carry(draft));moved=self.watch(self.pr(head='h2',body='A new claim 0.5.'),self.carry(again))
+        self.assertEqual([len(r['waiting']) for r in (again,moved)],[1,1]);self.assertEqual(again['candidates']+moved['candidates'],[])
+        # Marked ready for review: one alert, with the draft flag and the failed head checks.
+        ready=self.watch(self.pr(draft=False,head='h2',body='A new claim 0.5.'),self.carry(moved))
+        self.assertEqual(ready['waiting'],[])
+        row,=ready['candidates']
+        self.assertEqual((row['pr_number'],row['draft'],row['head_check_state']),(71,False,'failed'))
+        self.assertEqual(row['head_checks'],'failed: 3 of 4 checks failed; admission; verify (slayer-recost-0p87477290596); qrh/pr-admission - PR admission failed')
+        self.assertTrue(alert_candidate(row,set(),set()))
+        # Once: the same ready head alerts no more; a head that changes while ready, with a new claim, alerts again.
+        same=self.watch(self.pr(draft=False,head='h2',body='A new claim 0.5.'),self.carry(ready))
+        self.assertEqual(same['candidates'],[])
+        moved_ready=self.watch(self.pr(draft=False,head='h3',body='A new claim 0.5.'),self.carry(ready),claim='Quasi-Riemann bound mu 0.4 improved.')
+        self.assertEqual(len(moved_ready['candidates']),1)
+
+    def test_an_earlier_alert_of_a_draft_is_forgotten_so_it_alerts_when_ready(self):
+        # PR #71 alerted as a ready PR before the rule; the next read finds a draft, and its keys are dropped.
+        first=self.watch(self.pr(draft=False));self.assertEqual(len(first['candidates']),1)
+        drafted=self.watch(self.pr(),self.carry(first))
+        self.assertEqual((drafted['candidates'],len(drafted['waiting']),drafted['family_states'][self.QRT]['71']['seen_claims']),([],1,[]))
+        ready=self.watch(self.pr(draft=False),self.carry(drafted))
+        self.assertEqual(len(ready['candidates']),1)
+
+    def test_a_draft_before_the_cut_keeps_its_row_and_a_closed_draft_is_not_listed(self):
+        old=self.watch(self.pr(created='2026-10-01T00:00:00Z'))
+        row,=old['candidates'];self.assertEqual((row['draft'],old['waiting']),(True,[]))
+        closed=dict(self.pr(),state='closed')
+        self.assertEqual(self.watch(closed)['waiting'],[])
+
+    def test_crocswap_drafts_follow_the_same_rule(self):
+        pr=dict(self.pr(repo=REPO),html_url=f'https://github.com/{REPO}/pull/71',updated_at='2026-10-24T14:17:37Z')
+        result=self.watch(pr,repo=REPO,claim='Exact DFT bound improves to 0.001.')
+        self.assertEqual(result['candidates'],[]);self.assertEqual([w['repo'] for w in result['waiting']],[REPO])
+        ready=self.watch(dict(pr,draft=False),self.carry(result),repo=REPO,claim='Exact DFT bound improves to 0.001.')
+        self.assertEqual([(r['problem_guess'],r['draft']) for r in ready['candidates']],[('exact DFT',False)])
+
+    def test_head_check_summaries_are_short_plain_and_never_stop_an_alert(self):
+        weird=[dict(name='x'*100+'<script>@everyone',status='completed',conclusion='timed_out',output=dict(title='Bad\nline `code` '+'y'*100))]
+        row,=self.watch(self.pr(draft=False),checks=weird)['candidates']
+        self.assertEqual(row['head_check_state'],'failed');self.assertNotRegex(row['head_checks'],r'[<>@`\n]');self.assertLess(len(row['head_checks']),200)
+        for checks,state in (([],'none'),([dict(status='in_progress',conclusion=None)],'pending'),([dict(name='ok',status='completed',conclusion='success')],'passed')):
+            row,=self.watch(self.pr(draft=False),checks=checks)['candidates'];self.assertEqual(row['head_check_state'],state)
+        # A failed read is unread, with the alert still sent, and adds no report error.
+        result=self.watch(self.pr(draft=False),check_error=RuntimeError('GitHub GET failed'))
+        row,=result['candidates'];self.assertEqual(row['head_check_state'],'unread');self.assertEqual(result['errors'],[])
+
 if __name__=='__main__':unittest.main()

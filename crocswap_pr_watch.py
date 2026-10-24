@@ -22,6 +22,34 @@ MAX_SECONDS=120
 # Smaller repo first, so a large PR backlog on the other cannot starve it.
 FAMILY_PR_REPOS={'rohanarun/van-der-waerden-refinement':'160','GTimG/QuasiRiemannTracker':'003'}
 FAMILY_MAX_REQUESTS=24
+# A draft PR created from this time on is no signal (Lead, 2026-10-24, after GTimG/QuasiRiemannTracker #71): it is
+# listed as "draft, waiting", records no claim key, and alerts when it is marked ready for review. Earlier drafts keep
+# their rows. The same cut as DRAFT_SINCE in the site's data/refresh.py.
+DRAFT_SINCE='2026-10-23T15:13:18Z'
+FAILED_CHECKS={'failure','timed_out','cancelled','action_required','startup_failure','stale'}
+
+def silent_draft(pr):
+    return bool(pr.get('draft')) and str(pr.get('created_at') or '')>=DRAFT_SINCE
+
+def check_name(text):
+    # Check names and titles come from the PR's own workflow files: untrusted text, kept short and plain.
+    return re.sub(r'[^A-Za-z0-9 ._/()#:+-]','',str(text or ''))[:60].strip()
+
+def head_checks(budget,repo,head,name):
+    """The check runs of a PR head as dict(state, text): state is failed, pending, passed, none or unread.
+    One GET; a read that fails or has an unexpected shape is 'unread', never an error of the scan."""
+    try:
+        data=budget.request(f'repos/{repo}/commits/{head}/check-runs',dict(per_page=100),name)
+        runs=data['check_runs']
+        if not isinstance(runs,list):raise TypeError('check_runs')
+        failed=[r for r in runs if r.get('status')=='completed' and r.get('conclusion') in FAILED_CHECKS]
+        pending=[r for r in runs if r.get('status')!='completed']
+        state='failed' if failed else 'pending' if pending else 'passed' if runs else 'none'
+        shown=[check_name(r.get('name'))+(' - '+check_name((r.get('output') or {}).get('title')) if (r.get('output') or {}).get('title') else '') for r in failed[:6]]
+        text=f'{state}: {len(failed)} of {len(runs)} checks failed' if failed else f'{state}: {len(runs)} checks'
+        return dict(state=state,text=text+('; '+'; '.join(shown)+(f'; and {len(failed)-6} more' if len(failed)>6 else '') if shown else ''))
+    except (RuntimeError,ValueError,KeyError,TypeError,AttributeError):
+        return dict(state='unread',text='unread: the head checks could not be read')
 
 def source_claims(text,default=None):
     """Keep a claim near its problem name, not an unrelated inherited number.
@@ -68,8 +96,18 @@ def scan(repo,since,states,budget,out,family=None):
         number=str(pr['number']);old=states.get(number,{})
         head=pr['head']['sha']
         body=(pr.get('title') or '')+'\n'+(pr.get('body') or '')
-        revision=hashlib.sha256((head+'\n'+body).encode()).hexdigest()
-        if old.get('revision')==revision:return
+        draft=bool(pr.get('draft'));silent=silent_draft(pr)
+        # Only a silent draft changes its revision: a PR marked ready scans again, the others keep their saved revision.
+        revision=hashlib.sha256((head+'\n'+body+('\nsilent draft' if silent else '')).encode()).hexdigest()
+        waiting=dict(repo=repo,pr_number=pr['number'],url=pr['html_url'],author=pr['user']['login'],created_at=pr['created_at'],head=head,status='draft, waiting')
+        if old.get('revision')==revision:
+            if silent and pr.get('state','open')=='open':out['waiting'].append(waiting)
+            return
+        if silent:
+            # No claim key is kept, also none from an earlier alert of this PR: it alerts once when it is ready.
+            states[number]=dict(revision=revision,pending_revision=revision,next_file_page=1,head=head,seen_claims=[],updated_at=pr['updated_at'],draft=True)
+            if pr.get('state','open')=='open':out['waiting'].append(waiting)
+            return
         documents=[('PR body',body)];complete=True;finished=False
         next_page=old.get('next_file_page',1) if old.get('pending_revision')==revision else 1
         try:
@@ -102,13 +140,14 @@ def scan(repo,since,states,budget,out,family=None):
                 label='family:'+family if family else label
                 claims.setdefault(label,[]).extend(lines)
                 paths.setdefault(label,[]).append(path)
-        seen=list(old.get('seen_claims',[]))
+        seen=list(old.get('seen_claims',[]));checks=None
         for label,lines in claims.items():
             lines=list(dict.fromkeys(lines));key=claim_key(label,lines)
             if not key or key in seen:continue
             fam=label.removeprefix('family:') if label.startswith('family:') else None
             problem=f"Family {fam}: {FAMILIES[fam]['title']}" if fam else label
-            out['candidates'].append(dict(repo=repo,url=pr['html_url'],pr_number=pr['number'],author=pr['user']['login'],created_at=pr['created_at'],pushed_at=pr['updated_at'],stars=0,rank=25,description=pr['title'],problem_guess=problem,readme_commit=head,source_claim_evidence=lines[:8],source_claim_files=paths[label],claim_signature=key,cross_problem_pr=True,other_family=fam,stated_bound_changed=True,likely_tracked_source=True,likely_new_race=False,likely_pivot=True,on_board=True,evidence=['recent-family-pr' if family else 'recent-crocswap-pr'],coverage_complete=complete))
+            if checks is None:checks=head_checks(budget,repo,head,name)
+            out['candidates'].append(dict(repo=repo,url=pr['html_url'],pr_number=pr['number'],author=pr['user']['login'],created_at=pr['created_at'],pushed_at=pr['updated_at'],stars=0,rank=25,description=pr['title'],problem_guess=problem,readme_commit=head,source_claim_evidence=lines[:8],source_claim_files=paths[label],claim_signature=key,cross_problem_pr=True,other_family=fam,stated_bound_changed=True,likely_tracked_source=True,likely_new_race=False,likely_pivot=True,on_board=True,evidence=['recent-family-pr' if family else 'recent-crocswap-pr'],coverage_complete=complete,draft=draft,head_check_state=checks['state'],head_checks=checks['text']))
             seen.append(key)
         # Resume file pagination; do not spend each cycle on the first 300 files.
         states[number]=dict(revision=revision if finished else None,pending_revision=revision,next_file_page=next_page,head=head,seen_claims=seen,updated_at=pr['updated_at'])
@@ -141,7 +180,7 @@ def scan(repo,since,states,budget,out,family=None):
 def collect(since,previous):
     """CrocSwap PRs only, with the full PR budget."""
     states=json.loads(json.dumps(previous.get('crocswap_pr_states',{})))
-    out=dict(candidates=[],errors=[],truncated=[],checked=[])
+    out=dict(candidates=[],errors=[],truncated=[],checked=[],waiting=[])
     budget=Budget(MAX_REQUESTS,MAX_SECONDS)
     scan(REPO,since,states,budget,out)
     return dict(out,states=states,requests=budget.requests)
@@ -151,7 +190,7 @@ def collect_all(since,previous):
     together within MAX_REQUESTS GETs and MAX_SECONDS."""
     states=json.loads(json.dumps(previous.get('crocswap_pr_states',{})))
     family_states=json.loads(json.dumps(previous.get('family_pr_states',{})))
-    out=dict(candidates=[],errors=[],truncated=[],checked=[])
+    out=dict(candidates=[],errors=[],truncated=[],checked=[],waiting=[])
     budget=Budget(FAMILY_MAX_REQUESTS,MAX_SECONDS)
     for repo,family in FAMILY_PR_REPOS.items():
         if not scan(repo,since,family_states.setdefault(repo,{}),budget,out,family):break
