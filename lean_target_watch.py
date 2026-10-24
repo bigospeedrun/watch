@@ -161,9 +161,8 @@ def main():
     parser.add_argument('--dry-run',action='store_true',help='read GitHub; send and write nothing')
     args=parser.parse_args()
     def notify(text,identity):
-        from poll import office,LEAD
-        result=office(f'/api/agents/{LEAD}/messages',{'text':text,'clientMessageId':identity})
-        if not result.get('messageId'):raise RuntimeError('Alert delivery unconfirmed')
+        from poll import lead_notify
+        lead_notify(text,identity,'lean-target')
     readme_at=lambda sha:content(REPO,'README.md',sha).decode('utf-8','replace')
     try:print(json.dumps(run(api,tarball,notify,dry_run=args.dry_run,readme_at=readme_at)))
     except Exception as error:

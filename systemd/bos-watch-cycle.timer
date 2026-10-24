@@ -1,0 +1,11 @@
+[Unit]
+Description=Start the Big O Speedrun GitHub watch cycle every 3 hours
+
+[Timer]
+OnCalendar=*-*-* 00/3:05:00
+AccuracySec=30s
+Persistent=true
+Unit=bos-watch-cycle.service
+
+[Install]
+WantedBy=timers.target

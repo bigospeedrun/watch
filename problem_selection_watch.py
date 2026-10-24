@@ -139,15 +139,16 @@ def main():
                         help='office: the cycle agent token; webhook: signed Isomux webhook (systemd timer)')
     args=parser.parse_args()
     config=json.loads((ROOT/'.git/watch-office.json').read_text())
+    # Without the office token (a cycle started by the systemd timer) the digest goes through the webhook, in its size.
+    webhook=args.via=='webhook' or not os.environ.get(config.get('token_env') or '')
     def notify(text,identity):
-        if args.via=='webhook':
+        if webhook:
             from deadman import webhook_send
             webhook_send(ROOT,'digest')(dict(kind='bos-digest',channel=args.channel,text=text));return
-        from poll import office,LEAD
-        result=office(f'/api/agents/{LEAD}/messages',{'text':text,'clientMessageId':identity})
-        if not result.get('messageId'):raise RuntimeError('Digest delivery unconfirmed')
+        from poll import lead_notify
+        lead_notify(text,identity,args.channel)
     try:print(json.dumps(run(Discord(config,CHANNELS[args.channel][0]),notify,dry_run=args.dry_run,name=args.channel,
-                             limit=WEBHOOK_CHUNK if args.via=='webhook' else None)))
+                             limit=WEBHOOK_CHUNK if webhook else None)))
     except Exception as error:
         # Exception text can hold response data. Never print it.
         print('Problem selection watch failed: '+type(error).__name__)

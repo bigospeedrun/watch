@@ -65,9 +65,8 @@ def ok(steps,send,root=None):
     return 'cleared '+','.join(cleared)
 
 def office_send(text,identity):
-    from poll import office,LEAD
-    result=office(f'/api/agents/{LEAD}/messages',{'text':text,'clientMessageId':identity})
-    if not result.get('messageId'):raise RuntimeError('Cycle alert delivery unconfirmed')
+    from poll import lead_notify
+    lead_notify(text,identity,'watch-cycle')
 
 def main(argv):
     if len(argv)>=3 and argv[0]=='fail':

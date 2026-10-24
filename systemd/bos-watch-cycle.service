@@ -1,0 +1,13 @@
+[Unit]
+Description=Big O Speedrun GitHub watch cycle (tests, Discord intake, problem selection, people and pivot watches, push); the agent session only reviews the candidates
+
+[Service]
+Type=oneshot
+WorkingDirectory=%h/nil/bigospeedrun-data
+Environment=PATH=%h/.local/bin:/usr/local/bin:/usr/bin:/bin
+# The same lock as the agent session and poll.py. Busy means a cycle is running: exit 75 is no failure.
+ExecStart=/usr/bin/flock -n -E 75 .git/poll.lock bash watch_cycle.sh
+SuccessExitStatus=75
+TimeoutStartSec=40min
+StandardOutput=journal
+StandardError=journal

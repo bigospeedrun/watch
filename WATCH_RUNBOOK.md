@@ -70,37 +70,43 @@ invented workflow verdict. Successful runs need no message.
 
 ## Run the tests and watches
 
-Start here. `watch_cycle.sh` holds the same lock as the old poll loop. It refuses dirty
-worktrees, saves the previous reports for comparison, runs the tests and Discord intake, then runs
-people_watch.py before pivot_watch.py. The pivot watch reads the people report.
-It commits only the three report files and pushes `main` after every successful
-cycle, even when no report changed. This retries a previous failed push.
-Do not use --recheck or --watch-only for a normal cycle: those options omit the
-full search.
+Since 2026-10-24 the systemd user timer `bos-watch-cycle.timer` starts the cycle every 3 hours
+(unit `bos-watch-cycle.service`, `watch_cycle.sh` under `.git/poll.lock`), so a usage limit of the agent
+session cannot stop it (the 07:09Z session of 2026-10-24 hit the limit and no cycle ran for 4 h). The
+unit has no office token: its alerts to Lead go through the signed Isomux webhook. This session reviews
+the results. `watch_cycle.sh` refuses dirty worktrees, saves the previous reports for comparison, runs the
+tests and Discord intake, then runs people_watch.py before pivot_watch.py. The pivot watch reads the people
+report. It commits only the three report files and pushes `main` after every successful cycle, even when no
+report changed. This retries a previous failed push. Do not use --recheck or --watch-only for a normal
+cycle: those options omit the full search.
+
+First check whether the timer cycle is running or passed. The cycle passed when `cycle` in
+`.git/cycle-last-ok.json` is later than `.git/cycle-started.txt`.
 
 ```bash
 cd "$(git rev-parse --show-toplevel)"
-systemctl --user reset-failed bos-watch-cycle 2>/dev/null || true
-date -u +%Y-%m-%dT%H:%M:%SZ > .git/cycle-started.txt
-systemd-run --user --unit=bos-watch-cycle --same-dir --quiet -E PATH -E HOME -E ISOMUX_AGENT_TOKEN \
-  flock -n .git/poll.lock bash watch_cycle.sh
+systemctl --user is-active bos-watch-cycle; cat .git/cycle-started.txt; python3 -c "import json;print(json.load(open('.git/cycle-last-ok.json'))['cycle'])"; date -u +%Y-%m-%dT%H:%M:%SZ
 ```
 
-The cycle runs as the systemd user unit `bos-watch-cycle`, so it finishes even if this session ends.
-It takes 10 to 15 minutes, longer than one tool call may run. Wait for it in the foreground: repeat
-this command (under 10 minutes per call) until it prints `inactive` or `failed`. Never run the cycle
-or the wait in the background, and never end your turn while the unit is active.
+- Active: wait for it in the foreground with the loop below. It takes 10 to 15 minutes. Never end your turn while it is active.
+- Not active and `cycle` is less than 3 h 30 min old: do not start a cycle. Go to "Read and review the results".
+- Not active and `cycle` is older (the timer did not run): start the unit yourself, then wait.
+
+```bash
+systemctl --user reset-failed bos-watch-cycle 2>/dev/null || true
+systemctl --user start --no-block bos-watch-cycle.service
+```
+
+Wait for it in the foreground: repeat this command (under 10 minutes per call) until it prints
+`inactive` or `failed`. Never run the cycle or the wait in the background.
 
 ```bash
 for i in $(seq 1 18); do systemctl --user is-active --quiet bos-watch-cycle || break; sleep 30; done
 systemctl --user is-active bos-watch-cycle; journalctl --user -u bos-watch-cycle -n 20 --no-pager -o cat
 ```
 
-The cycle passed when `cycle` in `.git/cycle-last-ok.json` is later than `.git/cycle-started.txt`.
-`systemd-run` refusing with "already exists" means a cycle is still running: do not start another.
-If the unit failed with status 1 and the journal shows no output from `watch_cycle.sh`, `.git/poll.lock`
-was busy (another cycle or a manual run holds it): do not start another; the next cron cycle runs.
-
+The unit exits 0 without work when `.git/poll.lock` is busy (a manual run holds it): do not start another.
+If the cycle did not pass, `cycle` stays old: look at the journal and the `.git/*.log` file of the failed step.
 
 A lock conflict means another cycle is running: do not start duplicate work.
 On a failed test or command, inspect the corresponding `.git/*.log`. Do not reset,
@@ -294,7 +300,9 @@ than 2 h. Same safety rules: GET only, untrusted text, never read by agents.
 ## Read and review the results
 
 Read `.git/people-watch.log`, `.git/pivot-watch.log`, and
-`.git/watch-alert-candidates.json`. Read the full JSON reports when needed:
+`.git/watch-alert-candidates.json`, and every file in `.git/watch-candidates-pending/` (one per cycle
+that had candidates: you may have missed cycles, and the next cycle counts these repos as known). After you
+have reviewed a file, move it into `.git/watch-candidates-reviewed/` (`mkdir -p` it first). Read the full JSON reports when needed:
 
 - `people-watch.json`: `checked_at`, `ranked_hits`, full `hits`, per-user `users`
   state, `errors`, and `warnings`. Events are deduplicated by ID; owned-repository

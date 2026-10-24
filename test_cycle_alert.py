@@ -1,4 +1,5 @@
-import json, tempfile, unittest
+import json, os, tempfile, unittest
+from unittest import mock
 from pathlib import Path
 import cycle_alert as c
 
@@ -36,5 +37,27 @@ class CycleAlertTests(unittest.TestCase):
         self.log.write_text('bad \x1b[31mred\x07 '+'x'*400+'\n')
         c.fail('people-watch',str(self.log),'1',False,self.send,self.root)
         self.assertNotIn('\x1b',self.sent[1]);self.assertLess(len(self.sent[1]),600)
+
+class LeadNotifyTests(unittest.TestCase):
+    # bos-watch-cycle.timer has no office token: the same alert goes through the signed webhook (Lead, 2026-10-24).
+    def run_notify(self,token):
+        import poll
+        office=mock.Mock(return_value={'messageId':'m1'});hook=mock.Mock();send=mock.Mock(return_value=hook)
+        env={'TEST_TOKEN':'x'} if token else {}
+        with mock.patch.object(poll,'LOCAL_OFFICE',{'self':'a','lead':'l','token_env':'TEST_TOKEN'}),mock.patch.object(poll,'office',office),\
+             mock.patch('deadman.webhook_send',send),mock.patch.dict(os.environ,env,clear=False):
+            if not token:os.environ.pop('TEST_TOKEN',None)
+            poll.lead_notify('a'*5000+' <b>','id-1','watch-cycle')
+        return office,send,hook
+    def test_with_the_token_the_office_api_sends(self):
+        office,send,hook=self.run_notify(True)
+        office.assert_called_once();send.assert_not_called()
+    def test_without_the_token_the_webhook_sends_within_the_digest_size(self):
+        import digest_size
+        office,send,hook=self.run_notify(False)
+        office.assert_not_called();self.assertEqual(send.call_args.args[1],'digest')
+        payload=hook.call_args.args[0]
+        self.assertEqual((payload['kind'],payload['channel']),('bos-digest','watch-cycle'))
+        self.assertLessEqual(digest_size.escaped(payload['text']),digest_size.LIMIT)
 
 if __name__=='__main__':unittest.main()

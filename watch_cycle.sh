@@ -5,6 +5,8 @@
 # session release killed the cycle in pivot_watch.py with no alert).
 cd "$(dirname "$(readlink -f "$0")")"
 set -eu
+# The systemd timer bos-watch-cycle.timer and the agent session both start this script, under the same lock.
+date -u +%Y-%m-%dT%H:%M:%SZ > .git/cycle-started.txt
 # A step that stops the cycle alerts Lead once (cycle_alert.py dedupes by step
 # until it passes again). STEP and LOG name the running command.
 STEP=preflight;LOG=.git/watch-preflight.log;ALERTED=0
@@ -66,6 +68,11 @@ known={r['repo'] for r in previous.get('candidates',[])
 changed={r['repo'] for r in watch.get('watched_repositories',[]) if r['new_commit']}
 alerts=[r for r in watch['candidates'] if alert_candidate(r,known,changed)]
 Path('.git/watch-alert-candidates.json').write_text(json.dumps(alerts,indent=2)+'\n')
+# The agent session reviews candidates later and may miss a cycle (usage limit): keep each cycle's own
+# list until the session has reviewed it, because the next cycle counts these repos as known.
+if alerts:
+    pending=Path('.git/watch-candidates-pending');pending.mkdir(exist_ok=True)
+    (pending/(watch['checked_at'].replace(':','')+'.json')).write_text(json.dumps(alerts,indent=2)+'\n')
 print('Checked',watch['checked_at'],'candidate alerts',len(alerts))
 PY
 cat "$LOG"

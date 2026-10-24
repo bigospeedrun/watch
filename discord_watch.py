@@ -140,9 +140,8 @@ def main():
     parser=argparse.ArgumentParser();parser.add_argument('--dry-run',action='store_true');args=parser.parse_args()
     config=load(ROOT/'.git/watch-office.json',{})
     def notify(text,identity):
-        from poll import office,LEAD
-        result=office(f'/api/agents/{LEAD}/messages',{'text':text,'clientMessageId':identity})
-        if not result.get('messageId'):raise RuntimeError('Alert delivery unconfirmed')
+        from poll import lead_notify
+        lead_notify(text,identity,'discord-intake')
     try:print(json.dumps(run(Discord(config),notify,dry_run=args.dry_run)))
     except Exception as error:
         # Exceptions can contain response/request data. Never print their text.
