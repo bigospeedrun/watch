@@ -258,13 +258,24 @@ class DeadmanTests(unittest.TestCase):
         for count in (1,2):
             self.assertNotIn('prove2me-import',d.check(f,NOW));self.assertEqual(f.p2m_mem['empty_reads'],count)
         # The wait is bounded: the third empty read in a row alerts.
-        self.assertIn('no steps in 3 checks',d.check(f,NOW)['prove2me-import'][1])
+        self.assertIn('no steps in 3 or more checks',d.check(f,NOW)['prove2me-import'][1])
         # A read with steps resets the count.
         del f.steps[f.runs[0]['html_url']];self.p2m_run(f,f.runs[0]['html_url'])
         self.assertEqual(d.check(f,NOW)['prove2me-import'][0],True);self.assertEqual(f.p2m_mem['empty_reads'],0)
         # Other steps without the import step still alert at once; the armed state is kept.
         f.steps={f.runs[0]['html_url']:[dict(name='Refresh data through GitHub GET requests',conclusion='success')]}
         self.assertEqual(self.failing(f),{'prove2me-import'})
+
+    def test_empty_step_reads_alert_once_and_not_on_every_further_check(self):
+        f=Fake();self.p2m_run(f,f.runs[0]['html_url']);self.run_at(f)
+        f.steps={f.runs[0]['html_url']:[]}
+        for _ in range(5):self.run_at(f)
+        alerts=[p for p in self.sent if p.get('item')=='prove2me-import']
+        self.assertEqual([p['event'] for p in alerts],['alert']);self.assertIn('3 or more checks',alerts[0]['text'])
+        self.assertEqual(f.p2m_mem['empty_reads'],5)
+        # A read with steps recovers it.
+        del f.steps[f.runs[0]['html_url']];self.p2m_run(f,f.runs[0]['html_url']);self.run_at(f)
+        self.assertEqual([p['event'] for p in self.sent if p.get('item')=='prove2me-import'],['alert','recovered'])
 
     def test_a_held_import_alerts_with_its_reason_and_does_not_fail_site_refresh(self):
         f=Fake();f.runs[0]['conclusion']='failure';f.runs[0]['id']=2

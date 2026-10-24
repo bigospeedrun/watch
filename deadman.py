@@ -676,12 +676,13 @@ def prove2me_check(src,latest,results):
     # GitHub can list a completed run with no steps at all for a while (run 40115413828, 2026-10-24: the
     # check at 17:37Z probably saw none, and a later read lists all 26). That is no verdict: the item keeps its
     # last state, and the next check reads the run again. A run with other steps but no import step still alerts.
-    # The wait is bounded (Reviewer, 2026-10-24): the third empty read in a row alerts.
+    # The wait is bounded (Reviewer, 2026-10-24): the third empty read in a row alerts. The text has no count: a
+    # changed text alerts again (REALERT_ON_CHANGE), and the alert is sent once.
     empty=0 if steps else int(memory.get('empty_reads',0))+1
     if memory.get('empty_reads',0)!=empty:memory['empty_reads']=empty;src.remember_prove2me(memory)
     if not steps:
         if memory.get('armed') and empty>=PROVE2ME_EMPTY_READS:
-            results['prove2me-import']=(False,f'the newest refresh run was listed with no steps in {empty} checks in a row',None,link)
+            results['prove2me-import']=(False,f'the newest refresh run was listed with no steps in {PROVE2ME_EMPTY_READS} or more checks in a row',None,link)
         return
     if PROVE2ME_STEP not in names:
         if memory.get('armed'):results['prove2me-import']=(False,'the newest refresh run has no prove2.me import step',None,link)
