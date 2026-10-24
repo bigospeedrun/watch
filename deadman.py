@@ -187,6 +187,15 @@ SUBMISSION_TITLE='[Lean submission]'
 REPLY_LIMIT=timedelta(minutes=45)
 REPLY_LINK='https://github.com/bigospeedrun/verifier/issues (open items without a github-actions reply)'
 
+# Lead SRE, 2026-10-24 (VPS hardening B): the boshealth read goes over the tailnet (the VPS node vmi3632214). The host key stays
+# pinned under the public address of known_hosts through HostKeyAlias. The public address is still used for HTTPS (vps_host).
+VPS_TAILNET='100.115.7.104'
+def boshealth_command(known,host,address):
+    return ['ssh','-F','/dev/null','-T','-i',str(VPS_SECRETS/'boshealth.key'),'-o','IdentitiesOnly=yes',
+            '-o','IdentityAgent=none','-o','PreferredAuthentications=publickey','-o','BatchMode=yes',
+            '-o','StrictHostKeyChecking=yes','-o','UserKnownHostsFile='+str(known),'-o','GlobalKnownHostsFile=/dev/null',
+            '-o','HostKeyAlias='+host,'-o','ConnectTimeout=20','boshealth@'+address]
+
 def alert_key(item,problem):
     # The text that decides a repeat alert: for stale-issues, the issue set without the ages.
     if item=='stale-issues' and problem:return re.sub(r' open [0-9]+ d [0-9]+ h','',problem)
@@ -379,10 +388,7 @@ class Sources:
         known=VPS_SECRETS/'boshealth.known_hosts'
         host=self.vps_host()
         # The forced command takes no command; stderr is dropped so nothing about the key is printed.
-        out=subprocess.run(['ssh','-F','/dev/null','-T','-i',str(VPS_SECRETS/'boshealth.key'),'-o','IdentitiesOnly=yes',
-                            '-o','IdentityAgent=none','-o','PreferredAuthentications=publickey','-o','BatchMode=yes',
-                            '-o','StrictHostKeyChecking=yes','-o','UserKnownHostsFile='+str(known),'-o','GlobalKnownHostsFile=/dev/null',
-                            '-o','ConnectTimeout=20','boshealth@'+host],
+        out=subprocess.run(boshealth_command(known,host,VPS_TAILNET),
                            stdin=subprocess.DEVNULL,capture_output=True,text=True,timeout=60)
         if out.returncode:raise RuntimeError(f'boshealth read exited {out.returncode}')
         return json.loads(out.stdout)

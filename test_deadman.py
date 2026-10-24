@@ -401,6 +401,13 @@ class DeadmanTests(unittest.TestCase):
         self.assertEqual(d.leaders_from(knowledge),[('/apsp','a',True),('/apsp','b',False),('/apsp','c',False)])
         with self.assertRaises(ValueError):d.leaders_from({'problems':[{'path':'/apsp','current':[]}]})
 
+    def test_the_boshealth_read_goes_over_the_tailnet_with_the_pinned_host_key(self):
+        command=d.boshealth_command(Path('/x/known'),'66.94.120.107',d.VPS_TAILNET)
+        self.assertEqual(command[-1],'boshealth@100.115.7.104')
+        self.assertIn('HostKeyAlias=66.94.120.107',command)
+        self.assertIn('StrictHostKeyChecking=yes',command)
+        self.assertNotIn('boshealth@66.94.120.107',command)
+
     def test_race_parity_tolerates_one_failed_read_and_alerts_on_two(self):
         f=Fake();f.parity_error=OSError('down')
         self.assertNotIn('race-parity',self.failing(f))
