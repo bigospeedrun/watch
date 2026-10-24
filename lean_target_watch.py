@@ -30,7 +30,7 @@ import subprocess
 import tarfile
 from pathlib import Path
 from github_read import api, content
-MAX_WALK=30  # newest commits read between two cycles (one contents GET each)
+MAX_WALK=100  # newest commits read between two cycles (one contents GET each). 30 was too low: 32 commits came between two cycles on 2026-10-24.
 
 ROOT=Path(__file__).resolve().parent
 STATE='.git/lean-target-watch.json'
