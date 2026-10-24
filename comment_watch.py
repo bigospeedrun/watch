@@ -22,6 +22,7 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
+import digest_size
 import github_read as gh
 
 ROOT = Path(__file__).resolve().parent
@@ -32,7 +33,7 @@ STATE = 'comment-watch.local.json'
 OVERLAP = timedelta(minutes=10)  # a comment is created before an edit, a clock or a page can lag
 KEEP = timedelta(days=14)
 TEXT = 200
-CHUNK = 2200  # entries per message, counted after JSON escaping; Isomux caps a webhook message at 4000 characters
+CHUNK = digest_size.LIMIT  # one message, header included, as Isomux counts it (digest_size.py)
 PT = ZoneInfo('America/Los_Angeles')
 HEADER = ('GitHub comment watch ({count} new comment{s}{part}). Read-only watch of bigospeedrun/site, verifier, board and watch, '
           'open and closed items.\n'
@@ -167,21 +168,12 @@ def entry(e, label, replies=None):
     return '\n'.join(lines)
 
 
-def escaped(text):
-    """The size of the text in the webhook body, where non-ASCII characters and quotes are escaped."""
-    return len(json.dumps(text))
+escaped = digest_size.escaped
+HEADER_COST = digest_size.header_cost(HEADER.format(count=99999, s='s', part=', part 99 of 99'))
 
 
 def chunks(entries, limit=CHUNK):
-    group, size = [], 0
-    for key, text in entries:
-        if group and size + escaped(text) + 4 > limit:
-            yield group
-            group, size = [], 0
-        group.append((key, text))
-        size += escaped(text) + 4
-    if group:
-        yield group
+    return digest_size.chunks(entries, limit - HEADER_COST)
 
 
 def run(notify, root=None, dry_run=False, now=None, read=events, label=item_label, count=agent_replies):

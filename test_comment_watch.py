@@ -163,10 +163,10 @@ class CommentWatchTests(unittest.TestCase):
     def test_parts_are_measured_after_json_escaping(self):
         w = Watch()
         w.run(T0)
-        w.events['verifier'] = [event(n, at=1 + n % 5, text='\u4e2d' * 200) for n in range(12)]
+        w.events['verifier'] = [event(n, at=1 + n % 5, text='\u4e2d<&' * 70) for n in range(12)]
         w.run(T0 + timedelta(minutes=10))
         self.assertGreater(len(w.alerts), 3)
-        self.assertTrue(all(c.escaped(text) < 3600 for text, _ in w.alerts), [c.escaped(t) for t, _ in w.alerts])
+        self.assertTrue(all(c.escaped(text) < c.CHUNK for text, _ in w.alerts), [c.escaped(t) for t, _ in w.alerts])
 
     def test_the_item_title_sits_inside_the_quoted_block(self):
         w = Watch()

@@ -28,6 +28,7 @@ from pathlib import Path
 from urllib.error import HTTPError, URLError
 from zoneinfo import ZoneInfo
 
+import digest_size
 import discord_watch as dw
 
 ROOT = Path(__file__).resolve().parent
@@ -44,12 +45,8 @@ FORWARD = 1 << 14
 PAGES = 3
 NEW_CHANNEL_LOOKBACK = timedelta(minutes=10)
 KEEP = timedelta(days=3)
-# Isomux cuts a webhook text over its budget without an error, so a signal past the cut would be lost but marked sent.
-# The digest rule of the bos-deadman hook has two args (channel, text) and Isomux gives each arg an equal share of the
-# budget (server/webhooks/block.ts), after the note of the hook and the sender prefix. Measured on 2026-10-24 with the
-# dry-run route of the hook: the longest text that is not cut is 1827 characters, as Isomux counts them. One message,
-# header included, stays under 1700.
-LIMIT = 1700
+# One message, header included, stays under digest_size.LIMIT: Isomux cuts a longer text without an error.
+LIMIT = digest_size.LIMIT
 PER_AUTHOR = 3  # full entries per author in one pass; the rest is one line per author
 MAX_PARTS = 4  # webhook messages in one pass: the last one is the overflow part when entries were left out
 OVERFLOW_LINES = 6
@@ -150,40 +147,14 @@ def entry(message, channel, found, guild, extra=()):
             f' | #{clean(channel, 60)}{forwarded} | https://discord.com/channels/{guild}/{message["channel_id"]}/{message["id"]}\n  │ {text}{more}')
 
 
-def escaped(text):
-    """The length of the text in the webhook JSON as Isomux counts it: < > & cost 6 characters each. ASCII escaping stays conservative."""
-    return len(json.dumps(text)) - 2 + 5 * sum(text.count(c) for c in '<>&')
-
-
-HEADER_COST = escaped(HEADER.format(count=99999, s='s', part=', part 99 of 99')) + 2  # the header and the blank line after it
-SEPARATOR = escaped('\n\n')
-
-
-def fit(text, room):
-    """The entry, its quoted lines cut from the end until it fits; the first line (author, channel, link) stays."""
-    if escaped(text) <= room:
-        return text
-    head, _, rest = text.partition('\n')
-    while rest and escaped(head + '\n' + rest + ' [cut]') > room:
-        rest = rest[:len(rest) * 3 // 4].rstrip()
-    if rest:
-        return head + '\n' + rest + ' [cut]'
-    # A first line that alone is over the room (long names with < or CJK): cut it, every character costs at most 6.
-    return text if escaped(head) <= room else head[:room // 6 - 6].rstrip() + ' [cut]'
+escaped = digest_size.escaped
+fit = digest_size.fit
+HEADER_COST = digest_size.header_cost(HEADER.format(count=99999, s='s', part=', part 99 of 99'))
+SEPARATOR = digest_size.SEPARATOR
 
 
 def chunks(entries, limit=LIMIT):
-    room = limit - HEADER_COST
-    group, size = [], 0
-    for key, text in entries:
-        text = fit(text, room)
-        if group and size + escaped(text) + SEPARATOR > room:
-            yield group
-            group, size = [], 0
-        group.append((key, text))
-        size += escaped(text) + SEPARATOR
-    if group:
-        yield group
+    return digest_size.chunks(entries, limit - HEADER_COST)
 
 
 def author_label(message):

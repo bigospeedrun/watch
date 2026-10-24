@@ -21,7 +21,7 @@ fi
 cp people-watch.json .git/watch-previous-people.json
 cp pivot-watch.json .git/watch-previous-pivot.json
 STEP=tests;LOG=.git/watch-tests.log
-python3 -m unittest test_people_watch test_pivot_watch test_watch_policy test_other_bounds_watch test_crocswap_pr_watch test_refresh_health test_discord_watch test_discord_ack test_problem_selection_watch test_cycle_alert test_deadman test_lean_target_watch test_pwn_watch test_discord_signals > "$LOG" 2>&1
+python3 -m unittest test_people_watch test_pivot_watch test_watch_policy test_other_bounds_watch test_crocswap_pr_watch test_refresh_health test_discord_watch test_discord_ack test_problem_selection_watch test_cycle_alert test_deadman test_lean_target_watch test_pwn_watch test_discord_signals test_digest_size test_comment_watch > "$LOG" 2>&1
 if python3 discord_watch.py > .git/discord-watch.log 2>&1; then
   python3 cycle_alert.py ok discord-intake >> .git/cycle-alert.log 2>&1 || true
 else

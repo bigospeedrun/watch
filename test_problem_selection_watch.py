@@ -1,6 +1,7 @@
 import contextlib, io, json, tempfile, unittest
 from pathlib import Path
 from unittest.mock import patch
+import digest_size
 import problem_selection_watch as w
 
 class API:
@@ -99,9 +100,9 @@ class ProblemSelectionTests(unittest.TestCase):
     def test_webhook_parts_fit_the_isomux_message_cap(self):
         with tempfile.TemporaryDirectory() as tmp:
             sent=[]
-            w.run(API([msg(i,'line '*300) for i in range(1,9)]),lambda text,key:sent.append(text),Path(tmp),name='prove2me',limit=w.WEBHOOK_CHUNK)
+            w.run(API([msg(i,'line <&'*300) for i in range(1,9)]),lambda text,key:sent.append(text),Path(tmp),name='prove2me',limit=w.WEBHOOK_CHUNK)
             self.assertGreater(len(sent),1)
-            for text in sent:self.assertLess(len(json.dumps(text)),4000-500)
+            for text in sent:self.assertLess(digest_size.escaped(text),digest_size.LIMIT)
 
     def test_main_via_webhook_sends_digest_kind(self):
         payloads=[];out=io.StringIO()
