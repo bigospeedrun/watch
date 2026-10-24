@@ -58,7 +58,9 @@ Items:
                        run, so the alert comes from that file, not from the run. A run that
                        failed only in the prove2.me steps counts as a success for
                        site-refresh. Arms itself on the first run with the import step; from
-                       then on a run without the step alerts
+                       then on a run without the step alerts. A run listed with no steps at
+                       all (a GitHub read lag) is no verdict; the third such check in a row
+                       alerts
   review-wait          nothing waits for the lead in data/review-holds.json (implausible
                        jump holds), data/claim-review.json (CrocSwap claims),
                        data/platypii-lean.json (held note) or data/sources/intake.json
@@ -171,6 +173,7 @@ PROVE2ME_STEP='Import reviewed prove2.me results'
 PROVE2ME_FAIL_STEP='Fail the run when the prove2.me import failed'
 PROVE2ME_FAIL_STEPS={PROVE2ME_FAIL_STEP,'Fail the run when the prove2.me import is held'}
 PROVE2ME_STEPS={PROVE2ME_STEP}|PROVE2ME_FAIL_STEPS
+PROVE2ME_EMPTY_READS=3
 REVIEW_FAIL_STEP='Fail the run while a result waits for lead review'
 REVIEW_STEPS={REVIEW_FAIL_STEP,'List results that wait for lead review'}
 # continue-on-error steps of refresh-data.yml: they never fail a run on their own.
@@ -671,9 +674,15 @@ def prove2me_check(src,latest,results):
         if memory.get('armed'):results['prove2me-import']=(False,'cannot read the refresh run steps: '+type(error).__name__,None,link)
         return
     # GitHub can list a completed run with no steps at all for a while (run 40115413828, 2026-10-24: the
-    # check at 17:37Z saw none, and a later read lists all 26). That is no verdict: the item keeps its
+    # check at 17:37Z probably saw none, and a later read lists all 26). That is no verdict: the item keeps its
     # last state, and the next check reads the run again. A run with other steps but no import step still alerts.
-    if not steps:return
+    # The wait is bounded (Reviewer, 2026-10-24): the third empty read in a row alerts.
+    empty=0 if steps else int(memory.get('empty_reads',0))+1
+    if memory.get('empty_reads',0)!=empty:memory['empty_reads']=empty;src.remember_prove2me(memory)
+    if not steps:
+        if memory.get('armed') and empty>=PROVE2ME_EMPTY_READS:
+            results['prove2me-import']=(False,f'the newest refresh run was listed with no steps in {empty} checks in a row',None,link)
+        return
     if PROVE2ME_STEP not in names:
         if memory.get('armed'):results['prove2me-import']=(False,'the newest refresh run has no prove2.me import step',None,link)
         return

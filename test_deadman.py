@@ -251,13 +251,18 @@ class DeadmanTests(unittest.TestCase):
         f.steps={};self.assertEqual(self.failing(f),{'prove2me-import'})
 
     def test_a_run_listed_with_no_steps_is_no_verdict_for_the_prove2me_import(self):
-        # Run 40115413828 (2026-10-24 17:37Z): the jobs read of a completed run had no steps yet.
+        # Run 40115413828 (2026-10-24 17:37Z): the jobs read of a completed run probably had no steps yet.
         f=Fake();self.p2m_run(f,f.runs[0]['html_url'])
         self.assertEqual(d.check(f,NOW)['prove2me-import'][0],True)
         f.steps={f.runs[0]['html_url']:[]}
-        self.assertNotIn('prove2me-import',d.check(f,NOW))
-        self.assertEqual(self.failing(f),set())
-        # Other steps without the import step still alert; the armed state is kept.
+        for count in (1,2):
+            self.assertNotIn('prove2me-import',d.check(f,NOW));self.assertEqual(f.p2m_mem['empty_reads'],count)
+        # The wait is bounded: the third empty read in a row alerts.
+        self.assertIn('no steps in 3 checks',d.check(f,NOW)['prove2me-import'][1])
+        # A read with steps resets the count.
+        del f.steps[f.runs[0]['html_url']];self.p2m_run(f,f.runs[0]['html_url'])
+        self.assertEqual(d.check(f,NOW)['prove2me-import'][0],True);self.assertEqual(f.p2m_mem['empty_reads'],0)
+        # Other steps without the import step still alert at once; the armed state is kept.
         f.steps={f.runs[0]['html_url']:[dict(name='Refresh data through GitHub GET requests',conclusion='success')]}
         self.assertEqual(self.failing(f),{'prove2me-import'})
 
