@@ -57,6 +57,13 @@ class LeadNotifyTests(unittest.TestCase):
             if not token:os.environ.pop('TEST_TOKEN',None)
             poll.lead_notify('\n\n'.join(['a'*900+' <b>']*3),'id-1','watch-cycle')
         return office,send,hook
+    def test_parts_over_the_limit_end_with_a_marker(self):
+        import poll
+        hook=mock.Mock()
+        with mock.patch.object(poll,'LOCAL_OFFICE',{'token_env':'NO_SUCH_TOKEN'}),mock.patch('deadman.webhook_send',mock.Mock(return_value=hook)):
+            poll.lead_notify('\n\n'.join(['p%d '%i+'x'*1500 for i in range(6)]),'id-2','watch-cycle')
+        texts=[c.args[0]['text'] for c in hook.call_args_list]
+        self.assertEqual(len(texts),4);self.assertIn('more parts of this message were not sent',texts[-1]);self.assertTrue(texts[2].startswith('p2 '))
     def test_with_the_token_the_office_api_sends(self):
         office,send,hook=self.run_notify(True)
         office.assert_called_once();send.assert_not_called()

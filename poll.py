@@ -31,7 +31,8 @@ def lead_notify(text,identity,channel='watch-cycle'):
     send=webhook_send(ROOT,'digest')
     # A text over the webhook size goes in parts (paragraphs together, an over-long paragraph cut), at most 4.
     parts=[SEP.join(t for _,t in group) for group in digest_size.chunks(list(enumerate(text.split(SEP))),digest_size.LIMIT)]
-    for i,part in enumerate(parts[:4]):send(dict(kind='bos-digest',channel=channel,text=part))
+    if len(parts)>4:parts=parts[:3]+[f'[{len(parts)-3} more parts of this message were not sent]']
+    for part in parts:send(dict(kind='bos-digest',channel=channel,text=part))
 
 def schedule():
     pending=office(f'/api/agents/{SELF}/scheduled-messages')['scheduled']
