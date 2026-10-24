@@ -22,6 +22,11 @@ class DigestSizeTests(unittest.TestCase):
     def test_a_first_line_over_the_room_is_cut(self):
         self.assertLessEqual(d.escaped(d.fit('<' * 1000 + '\n  \u2502 quoted', 500)), 500)
 
+    def test_a_first_line_within_a_few_characters_of_the_room_is_kept_alone(self):
+        for size in (1693, 1695, 1700):
+            cut = d.fit('h' * size + '\n  \u2502 quoted', 1700)
+            self.assertLessEqual(d.escaped(cut), 1700)
+
     def test_groups_fit_the_room(self):
         groups = list(d.chunks([(str(n), 'x' * 300 + '<' * 20) for n in range(10)], 1000))
         self.assertGreater(len(groups), 3)

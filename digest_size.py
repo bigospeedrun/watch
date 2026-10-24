@@ -31,7 +31,7 @@ def fit(text, room):
     if rest:
         return head + '\n' + rest + ' [cut]'
     # A first line that alone is over the room (long names with < or CJK): cut it, every character costs at most 6.
-    return text if escaped(head) <= room else head[:room // 6 - 6].rstrip() + ' [cut]'
+    return head if escaped(head) <= room else head[:room // 6 - 6].rstrip() + ' [cut]'
 
 
 def chunks(entries, room):
