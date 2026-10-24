@@ -91,8 +91,8 @@ Items:
                        tolerated, two in a row alert
   chatbot-gap-review   Isomux cronjob "BOS chatbot gap review" completed a run
                        without error < 26 h ago (~/.isomux/cronjobs, read-only)
-  vps-deploy           self-hosted site on the VPS (a created, restarting or starting container is read again once
-                       after 30 s, and only that read counts), read through the forced-command
+  vps-deploy           self-hosted site on the VPS (a created, restarting or starting container is read again every
+                       30 s, at most 4 times, and the last read counts), read through the forced-command
                        login boshealth (status.json + the site and egress containers):
                        last tick < 45 min, no failed/failed_target/rolled_back/rollback_failed/stopped/refused
                        result, not held or waiting for over 1 day, ticks not erring for 1 h, units ok, containers running
@@ -459,6 +459,7 @@ def systemd_time(value):
     return parse(out.stdout.strip()) if out.returncode==0 else None
 
 VPS_SETTLE_SECONDS=30
+VPS_SETTLE_READS=4
 
 def vps_settling(data):
     """True when a container of the site or the board is created, restarting or still starting its health check."""
@@ -827,9 +828,11 @@ def check(src,now,to_time=systemd_time):
     memory=src.vps_memory();board=src.board_memory();data=None
     try:
         data=src.vps_health()
-        # An auto-deploy leaves a container 'created' or 'starting' for a few seconds (09:37Z 2026-10-24, a false
-        # alarm): read again once after 30 s and judge only that read.
-        if vps_settling(data):
+        # An auto-deploy leaves a container 'created' or 'starting' for up to 2 minutes (09:37Z 2026-10-24, a false
+        # alarm): the site waits for a healthy egress, and each container has a 30 s health interval. Read again every
+        # 30 s, at most 4 times (the --wait-timeout of auto-deploy.sh, after which the deploy rolls back), and judge the last read.
+        for _ in range(VPS_SETTLE_READS):
+            if not vps_settling(data):break
             src.pause(VPS_SETTLE_SECONDS)
             data=src.vps_health()
     except Exception as error:
