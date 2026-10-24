@@ -85,10 +85,10 @@ First check whether the timer cycle is running or passed. The cycle passed when 
 
 ```bash
 cd "$(git rev-parse --show-toplevel)"
-systemctl --user is-active bos-watch-cycle; cat .git/cycle-started.txt; python3 -c "import json;print(json.load(open('.git/cycle-last-ok.json'))['cycle'])"; date -u +%Y-%m-%dT%H:%M:%SZ
+systemctl --user show -p ActiveState --value bos-watch-cycle; cat .git/cycle-started.txt; python3 -c "import json;print(json.load(open('.git/cycle-last-ok.json'))['cycle'])"; date -u +%Y-%m-%dT%H:%M:%SZ
 ```
 
-- Active: wait for it in the foreground with the loop below. It takes 10 to 15 minutes. Never end your turn while it is active.
+- `activating` or `active` (a oneshot unit shows `activating` while it runs): wait for it in the foreground with the loop below. It takes 10 to 15 minutes. Never end your turn while it is active.
 - Not active and `cycle` is less than 3 h 30 min old: do not start a cycle. Go to "Read and review the results".
 - Not active and `cycle` is older (the timer did not run): start the unit yourself, then wait.
 
@@ -97,12 +97,12 @@ systemctl --user reset-failed bos-watch-cycle 2>/dev/null || true
 systemctl --user start --no-block bos-watch-cycle.service
 ```
 
-Wait for it in the foreground: repeat this command (under 10 minutes per call) until it prints
-`inactive` or `failed`. Never run the cycle or the wait in the background.
+Wait for it in the foreground: repeat this command (under 10 minutes per call) until
+ActiveState is `inactive` or `failed`. Never run the cycle or the wait in the background.
 
 ```bash
-for i in $(seq 1 18); do systemctl --user is-active --quiet bos-watch-cycle || break; sleep 30; done
-systemctl --user is-active bos-watch-cycle; journalctl --user -u bos-watch-cycle -n 20 --no-pager -o cat
+for i in $(seq 1 18); do case "$(systemctl --user show -p ActiveState --value bos-watch-cycle)" in active|activating) sleep 30;; *) break;; esac; done
+systemctl --user show -p ActiveState,Result bos-watch-cycle; journalctl --user -u bos-watch-cycle -n 20 --no-pager -o cat
 ```
 
 The unit exits 0 without work when `.git/poll.lock` is busy (a manual run holds it): do not start another.
