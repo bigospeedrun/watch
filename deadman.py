@@ -91,7 +91,8 @@ Items:
                        tolerated, two in a row alert
   chatbot-gap-review   Isomux cronjob "BOS chatbot gap review" completed a run
                        without error < 26 h ago (~/.isomux/cronjobs, read-only)
-  vps-deploy           self-hosted site on the VPS, read through the forced-command
+  vps-deploy           self-hosted site on the VPS (a created, restarting or starting container is read again once
+                       after 30 s, and only that read counts), read through the forced-command
                        login boshealth (status.json + the site and egress containers):
                        last tick < 45 min, no failed/failed_target/rolled_back/rollback_failed/stopped/refused
                        result, not held or waiting for over 1 day, ticks not erring for 1 h, units ok, containers running
@@ -403,6 +404,7 @@ class Sources:
                            stdin=subprocess.DEVNULL,capture_output=True,text=True,timeout=60)
         if out.returncode:raise RuntimeError(f'boshealth read exited {out.returncode}')
         return json.loads(out.stdout)
+    def pause(self,seconds):time.sleep(seconds)
     def vps_memory(self):
         path=self.root/VPS_MEMORY
         return json.loads(path.read_text()) if path.exists() else {}
@@ -455,6 +457,14 @@ def systemd_time(value):
     if not value or value=='n/a':return None
     out=subprocess.run(['date','-u','-d',value,'+%Y-%m-%dT%H:%M:%SZ'],capture_output=True,text=True,timeout=10)
     return parse(out.stdout.strip()) if out.returncode==0 else None
+
+VPS_SETTLE_SECONDS=30
+
+def vps_settling(data):
+    """True when a container of the site or the board is created, restarting or still starting its health check."""
+    sections=[data]+([data['board']] if isinstance(data.get('board'),dict) else [])
+    return any(c.get('present') and (c.get('status') in ('created','restarting') or c.get('health')=='starting')
+               for section in sections for c in (section.get('containers') or {}).values())
 
 def vps_deploy(data,now,memory):
     """(ok, problem) for the VPS deploy status; updates memory (held_since)."""
@@ -817,6 +827,11 @@ def check(src,now,to_time=systemd_time):
     memory=src.vps_memory();board=src.board_memory();data=None
     try:
         data=src.vps_health()
+        # An auto-deploy leaves a container 'created' or 'starting' for a few seconds (09:37Z 2026-10-24, a false
+        # alarm): read again once after 30 s and judge only that read.
+        if vps_settling(data):
+            src.pause(VPS_SETTLE_SECONDS)
+            data=src.vps_health()
     except Exception as error:
         # One failed read keeps the last verdict; the second in a row alerts.
         memory['read_failures']=memory.get('read_failures',0)+1

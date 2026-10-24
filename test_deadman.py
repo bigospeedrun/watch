@@ -41,8 +41,11 @@ class Fake:
     def digest_last_ok(self,name):return self.ack_ok if name=='discord-ack' else self.sig_ok if name=='discord-signals' else self.pwn_ok if name=='pwn-watch' else self.comment_ok if name=='comment-watch' else self.digest_ok
     def vps_health(self):
         if self.vps_error:raise self.vps_error
+        if self.later is not None and self.pauses:return self.later
         return self.vps
     def vps_memory(self):return dict(self.memory)
+    pauses=[];later=None
+    def pause(self,seconds):self.pauses.append(seconds)
     def remember_vps(self,memory):self.memory=dict(memory)
     # The board is not live by default: no DNS, no certificate, no backup store yet.
     board_code=OSError('board.bigospeedrun.com does not resolve');cert_days=OSError('no certificate for the name');backup=None
@@ -180,6 +183,19 @@ class DeadmanTests(unittest.TestCase):
         f.pending=[NOW-timedelta(hours=6),NOW-timedelta(hours=1)]
         self.assertEqual(self.failing(f),{'candidate-review'})
         self.assertIn('2 cycle file(s)',d.check(f,NOW)['candidate-review'][1])
+
+    def test_a_container_that_is_still_starting_is_read_again_after_30_seconds(self):
+        # 09:37Z 2026-10-24: the read fell between created and started of a normal auto-deploy.
+        f=Fake();f.pauses=[];f.vps['containers']['bigospeedrun-site-1'].update(status='created',health=None)
+        f.vps['containers']['bigospeedrun-egress-1'].update(health='starting')
+        f.later=json.loads(json.dumps(f.vps));f.later['containers']=vps_fixture(NOW)['containers']
+        self.assertEqual(self.failing(f),set());self.assertEqual(f.pauses,[30])
+        # Still not running after the second read: the alert stands, and there is no third read.
+        f=Fake();f.pauses=[];f.vps['containers']['bigospeedrun-site-1'].update(status='created',health=None)
+        f.later=json.loads(json.dumps(f.vps));self.assertEqual(self.failing(f),{'vps-deploy'});self.assertEqual(f.pauses,[30])
+        # A healthy read, or an exited container, does not wait.
+        f=Fake();f.pauses=[];self.assertEqual(self.failing(f),set());self.assertEqual(f.pauses,[])
+        f.vps['containers']['bigospeedrun-site-1'].update(status='exited',health=None);self.assertEqual(self.failing(f),{'vps-deploy'});self.assertEqual(f.pauses,[])
 
     def test_pwn_watch_needs_a_pass_within_3_hours_once_its_timer_is_installed(self):
         f=Fake();self.assertNotIn('pwn-watch',d.check(f,NOW))
