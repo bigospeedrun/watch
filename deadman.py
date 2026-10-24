@@ -42,6 +42,9 @@ Items:
                        discord_ack.py) last ran ok < 15 min, and no message has waited 15 min for
                        its eyes reaction (discord-ack.local.json); checked once that timer unit is
                        installed (Nil, 2026-10-21: acknowledge messages quickly)
+  discord-signals      discord_signals.py (bigospeedrun-discord-signals.timer, every 2 min) last passed
+                       ok < 15 min (discord-signals.local.json); checked once that timer unit is installed
+                       (the Lead heard nothing of a member's request to Nil in #general on 2026-10-23)
   pwn-watch            pwn.watch security incident poll (bigospeedrun-pwn-watch.timer, every 30 min,
                        pwn_watch.py) last passed < 3 h (pwn-watch.local.json); checked once that timer
                        unit is installed (Lead, 2026-10-22)
@@ -780,6 +783,10 @@ def check(src,now,to_time=systemd_time):
         elif waiting:problem=f'{len(waiting)} message(s) in #submit-a-result waited 15 min for the eyes reaction (ids {", ".join(sorted(waiting,key=int)[:5])})'
         else:problem=None
         results['discord-ack']=(problem is None,problem,good,'journalctl --user -u bigospeedrun-discord-ack.service')
+    if src.unit_installed('bigospeedrun-discord-signals.timer'):
+        good=src.digest_last_ok('discord-signals');fresh=bool(good and now-good<ACK_LIMIT)
+        results['discord-signals']=(fresh,None if fresh else 'the Discord signals reader has not passed for 15 min',good,
+                                    'journalctl --user -u bigospeedrun-discord-signals.service')
     if src.unit_installed('bigospeedrun-pwn-watch.timer'):
         good=src.digest_last_ok('pwn-watch');fresh=bool(good and now-good<3*H)
         results['pwn-watch']=(fresh,None if fresh else 'no successful pwn.watch poll in the last 3 h',good,

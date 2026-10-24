@@ -1,0 +1,11 @@
+[Unit]
+Description=Read Discord mentions, replies and forwards every 2 minutes for BOS Lead Dev
+
+[Timer]
+OnCalendar=*-*-* *:00/2:00
+AccuracySec=5s
+Persistent=true
+Unit=bigospeedrun-discord-signals.service
+
+[Install]
+WantedBy=timers.target

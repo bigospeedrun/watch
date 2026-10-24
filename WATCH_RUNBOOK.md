@@ -240,6 +240,27 @@ for 2 hours; one alert per comment). `python3 comment_watch.py --dry-run` reads 
 `systemd/bigospeedrun-comment-watch.{service,timer}` to `~/.config/systemd/user/`, then
 `systemctl --user daemon-reload && systemctl --user enable --now bigospeedrun-comment-watch.timer`.
 
+### Discord signals (Lead and Nil, 2026-10-24)
+
+On 2026-10-23 a member forwarded a records post into #general, asked Nil there to change a rule, and Nil told the bot
+"handle it"; no reader watched #general, so the Lead heard nothing. `discord_signals.py` runs every 2 minutes from
+`bigospeedrun-discord-signals.timer`. It lists the text, voice, announcement and stage channels of the guild and its active threads once per pass, skips
+the channels #submit-a-result, #problem-selection and #prove2me (other readers; a thread under them is read here), and reads the rest with GET requests. It alerts the Lead
+once per message through the signed webhook (rule `digest`) for these signals: `nil` (a message by Nil's account, id in the
+script, that mentions the bot; listed first), `mention` (the bot or a role it holds), `reply` (to a message of the bot or of a
+webhook), `forward` (of a post from a bot-only channel) and `intruder` (a human message in #announcements, #rules,
+#records-big-o, #records-other-bounds or #chat-log). Bot and webhook authors never count. A message that mentions the bot also
+gets the bot's eyes reaction. A signal younger than 60 seconds waits one pass, so a follow-up ask is quoted with it. Flood cap (Reviewer, 2026-10-24):
+per pass, 3 full entries per author (Nil is never capped), at most 4 webhook messages (3 full and one overflow message), and the rest is
+one line per author with the count and the first link; those ids count as sent. A message stays under 3600 characters as Isomux counts it
+(< > & cost 6 each), because Isomux cuts a longer text without an error. The alert quotes the first 200 characters as UNTRUSTED VISITOR TEXT; the ignored
+`discord-signals.local.json` keeps only the cursor per channel, the ids already sent and the time of the last full pass. A first run
+starts at the newest message of each channel; a channel that appears later is read from 10 minutes back. A channel the bot cannot read is
+skipped; any other read error, or a failed webhook, keeps that cursor and makes the pass partial. Dead-man item `discord-signals`:
+last full pass < 15 min. `python3 discord_signals.py --dry-run` reads only. Install: copy
+`systemd/bigospeedrun-discord-signals.{service,timer}` to `~/.config/systemd/user/`, then
+`systemctl --user daemon-reload && systemctl --user enable --now bigospeedrun-discord-signals.timer`.
+
 ## Problem selection digest
 
 `problem_selection_watch.py` reads Discord `#problem-selection`

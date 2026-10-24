@@ -30,14 +30,14 @@ class Fake:
     def watch_errors(self):
         if isinstance(self.werrors,Exception):raise self.werrors
         return list(self.werrors)
-    ack_installed=False;ack_ok=None;pwn_installed=False;pwn_ok=None;comment_installed=False;comment_ok=None;comments={}
-    def unit_installed(self,unit):return self.ack_installed if 'discord-ack' in unit else self.pwn_installed if 'pwn-watch' in unit else self.comment_installed if 'comment-watch' in unit else self.installed
+    ack_installed=False;ack_ok=None;pwn_installed=False;pwn_ok=None;sig_installed=False;sig_ok=None;comment_installed=False;comment_ok=None;comments={}
+    def unit_installed(self,unit):return self.ack_installed if 'discord-ack' in unit else self.sig_installed if 'discord-signals' in unit else self.pwn_installed if 'pwn-watch' in unit else self.comment_installed if 'comment-watch' in unit else self.installed
     def comment_tracked(self):
         if isinstance(self.comments,Exception):raise self.comments
         return self.comments
     ack={}
     def ack_pending(self):return self.ack
-    def digest_last_ok(self,name):return self.ack_ok if name=='discord-ack' else self.pwn_ok if name=='pwn-watch' else self.comment_ok if name=='comment-watch' else self.digest_ok
+    def digest_last_ok(self,name):return self.ack_ok if name=='discord-ack' else self.sig_ok if name=='discord-signals' else self.pwn_ok if name=='pwn-watch' else self.comment_ok if name=='comment-watch' else self.digest_ok
     def vps_health(self):
         if self.vps_error:raise self.vps_error
         return self.vps
@@ -189,6 +189,12 @@ class DeadmanTests(unittest.TestCase):
         f.ack={'11':(NOW-timedelta(minutes=15)).isoformat(),'12':(NOW-timedelta(minutes=1)).isoformat()}
         self.assertEqual(self.failing(f),{'discord-ack'})
         self.assertIn('1 message(s)',d.check(f,NOW)['discord-ack'][1])
+
+    def test_discord_signals_needs_a_pass_within_15_minutes_once_its_timer_is_installed(self):
+        f=Fake();self.assertNotIn('discord-signals',d.check(f,NOW))
+        f.sig_installed=True;f.sig_ok=NOW-timedelta(minutes=3);self.assertEqual(self.failing(f),set())
+        f.sig_ok=NOW-timedelta(minutes=16);self.assertEqual(self.failing(f),{'discord-signals'})
+        f.sig_ok=None;self.assertEqual(self.failing(f),{'discord-signals'})
 
     def test_comment_watch_needs_a_pass_within_30_minutes_and_comment_reply_alerts_once_per_comment_after_2_hours(self):
         f=Fake();self.assertNotIn('comment-watch',d.check(f,NOW));self.assertNotIn('comment-reply',d.check(f,NOW))

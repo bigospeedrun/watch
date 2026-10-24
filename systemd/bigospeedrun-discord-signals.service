@@ -1,0 +1,10 @@
+[Unit]
+Description=Big O Speedrun Discord signals reader, every 2 minutes (read-only plus the eyes reaction; sends bot mentions, replies and forwards to BOS Lead Dev)
+
+[Service]
+Type=oneshot
+WorkingDirectory=%h/nil/bigospeedrun-data
+Environment=PATH=%h/.local/bin:/usr/local/bin:/usr/bin:/bin
+ExecStart=/usr/bin/python3 %h/nil/bigospeedrun-data/discord_signals.py
+StandardOutput=journal
+StandardError=journal
