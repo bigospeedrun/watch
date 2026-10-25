@@ -118,7 +118,8 @@ def scan(repo,since,states,budget,out,family=None):
             if pr.get('state','open')=='open':out['waiting'].append(waiting)
             return
         documents=[('PR body',body)];complete=True;finished=False
-        next_page=old.get('next_file_page',1) if old.get('pending_revision')==revision else 1
+        # A verdict re-scan starts at page 1: the claim to alert sits in the files already read.
+        next_page=old.get('next_file_page',1) if old.get('pending_revision')==revision and not verdict else 1
         try:
             for file_page in range(next_page,min(next_page+3,31)):
                 files=budget.request(f'repos/{repo}/pulls/{number}/files',dict(per_page=100,page=file_page),name)

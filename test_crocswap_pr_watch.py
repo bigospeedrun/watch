@@ -293,4 +293,21 @@ class DraftPRTests(unittest.TestCase):
         closed=self.watch(dict(self.pr(draft=False),state='closed'),self.carry(first),checks=self.PASSED)
         self.assertEqual(closed['candidates'],[])
 
+    def test_the_verdict_on_the_same_head_reads_the_files_from_page_one(self):
+        # Reviewer probe (2026-10-25): the saved revision is unchanged, so a resume at next_file_page would miss the claim.
+        pages=[]
+        def watch(checks,previous=None):
+            def api(path,params,**kwargs):
+                if path.endswith('/pulls'):return [self.pr(draft=False)] if self.QRT in path else []
+                if '/check-runs' in path:return dict(total_count=len(checks),check_runs=checks)
+                pages.append(params.get('page'))
+                return [dict(filename='notes.md',status='added',patch='+Quasi-Riemann bound mu 0.87477290596 improved.')] if params.get('page')==1 else []
+            with patch('crocswap_pr_watch.api',side_effect=api):
+                return cw.collect_all(SINCE,previous or {})
+        first=watch(self.RUNNING);self.assertEqual(len(first['candidates']),1)
+        state=first['family_states'][self.QRT]['71'];state['next_file_page']=4;state['revision']=state['pending_revision']
+        del pages[:]
+        done=watch(self.PASSED,self.carry(first))
+        self.assertEqual(pages[:1],[1]);row,=done['candidates'];self.assertEqual((row['head_check_state'],row['checks_final']),('passed',True))
+
 if __name__=='__main__':unittest.main()
