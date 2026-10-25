@@ -311,9 +311,11 @@ class OtherBoundsTests(unittest.TestCase):
         repo='slitsey/catalan-irrationality-measure'
         cfg=next(c for c in o.CONFIG if c['repo']==repo)
         meta=dict(full_name=repo,html_url='https://github.com/'+repo,default_branch='main',pushed_at='2026-10-24T09:00:00Z')
-        text=("> - \u03bc(G) \u2264 728;\n\nFor `G` this means `|G \u2212 a/b| > b^(-728)` for every integer `a` and every sufficiently large\n"
-              "integer `b`. For the other three constants `x` with exponent `E` it means `|x \u2212 p/q| > q^(-(E+e))`.\n")
-        self.assertEqual(o.stated_values(cfg['bound_pattern'],text),[728])
+        # The README states the configured reviewed bound (728 on 2026-10-24, 590 from the same day's S. Litsey row).
+        reviewed=cfg['reviewed_bound']
+        text=("> - \u03bc(G) \u2264 %s;\n\nFor `G` this means `|G \u2212 a/b| > b^(-%s)` for every integer `a` and every sufficiently large\n"
+              "integer `b`. For the other three constants `x` with exponent `E` it means `|x \u2212 p/q| > q^(-(E+e))`.\n") % (reviewed, reviewed)
+        self.assertEqual(o.stated_values(cfg['bound_pattern'],text),[int(reviewed)])
         self.assertEqual(o.stated_values(cfg['bound_pattern'],'`|G - a/b| > b^(-740)`'),[740])
         def run(readme_text,previous):
             def api(path,params=None,**kwargs):
@@ -322,10 +324,10 @@ class OtherBoundsTests(unittest.TestCase):
             with patch.object(o,'api',api),patch.object(o,'content',return_value=readme_text.encode()):
                 return o.collect('2026-10-24',previous,search=False)
         previous={'other_bound_states':{repo:{'head':'a'*40,'seen_claims':[],'meta':meta,'checked_cycle':1}}}
-        # Bound found at the reviewed 728: silent, no error, no compare. A new value alerts once.
+        # Bound found at the reviewed value: silent, no error, no compare. A new value alerts once.
         result=run(text,previous)
         self.assertEqual([r for r in result['candidates'] if r['repo']==repo],[])
-        result=run(text.replace('728','700'),previous)
+        result=run(text.replace(reviewed,'700'),previous)
         self.assertEqual([r['source_claim_evidence'] for r in result['candidates'] if r['repo']==repo],[['For `G` this means `|G \u2212 a/b| > b^(-700)` for every integer `a` and every sufficiently large']])
         self.assertFalse([e for e in result['errors'] if repo in e])
         # Pattern broken again: the error names the cause, the capped compare adds none.
