@@ -98,6 +98,19 @@ def changed_text(budget,repo,f,errors,head,whole=True):
     except (RuntimeError,ValueError,KeyError,TypeError,AttributeError) as error:
         errors.append(f"{repo}: missing diff patch {f['filename']} at {head[:7]}; reading the file failed ({type(error).__name__})");return None
 
+def tree_changed_files(budget,repo,base,head):
+    """Files added or changed between two commits, from their recursive trees. The compare API stops at
+    300 files and has no second page (checked 2026-10-25, GTimG/QuasiRiemannTracker: 922 files in one PR).
+    A file has no patch here, so the caller reads it whole from its blob. Raises RuntimeError when a tree is
+    missing or truncated."""
+    paths=[]
+    for revision in (base,head):
+        tree=budget.get(f'repos/{repo}/git/trees/{revision}',{'recursive':1})
+        if not isinstance(tree.get('tree'),list) or tree.get('truncated'):raise RuntimeError(f'tree of {revision[:7]} is missing or truncated')
+        paths.append({e['path']:e['sha'] for e in tree['tree'] if e.get('type')=='blob'})
+    old,new=paths
+    return [dict(filename=name,status='added' if name not in old else 'modified',sha=sha) for name,sha in new.items() if old.get(name)!=sha]
+
 def unread(family,f,head):
     """An alert addition for a changed file that could not be read (no patch, and the blob
     read failed): the lead checks it by hand (Reviewer and Lead, 2026-10-21). Keyed on the
@@ -373,19 +386,30 @@ def collect(since,previous,people_hits=(),search=True):
                         # never read. Keep the README claims at head and move on.
                         errors.append(f'{repo}: compare from {base[:7]} failed (history may be rewritten); README read at {head[:7]}')
                         diff={'files':[]}
-                    for f in diff.get('files',[]):
+                    files=list(diff.get('files',[]))
+                    capped=len(files)>=300
+                    if capped and not bound_cfg:
+                        # The compare API shows 300 files at most: the trees of both commits give the rest, so a
+                        # capped compare cannot hide a changed .md/.tex file (Lead, 2026-10-25, tracker #71 range).
+                        try:
+                            named={f['filename'] for f in files}
+                            files+=[f for f in tree_changed_files(budget,repo,base,head) if f['filename'] not in named]
+                            capped=False
+                        except BudgetExhausted:raise
+                        except RuntimeError as error:
+                            errors.append(f'{repo}: compare capped at 300 files from {base[:7]} to {head[:7]}; reading the trees failed ({error})')
+                    for f in files:
                         if f['filename']=='README.md' or f.get('status')=='removed' or not re.search(r'\.(?:md|tex)$',f['filename']):continue
                         added=changed_text(budget,repo,f,errors,head)
                         if added is None:
                             additions+=[unread(family,f,head) for family in families];continue
                         targets=family_matches(f['filename']+'\n'+added) or families
                         for family in targets:additions.append((family,scoped_claims(added,family,True),None))
-                    if len(diff.get('files',[]))>=300:
+                    if capped:
                         truncated.append(dict(query=repo+' claim diff',total_count='at least 300 files'))
                         # A repo with a configured bound states its claim in the README, read whole at
                         # head above: a capped compare is no error there (slitsey makes ~550 commits a
                         # week, Lead 2026-10-24). A README that cannot be read still alerts.
-                        if not bound_cfg:errors.append(f'{repo}: compare capped at 300 files from {base[:7]} to {head[:7]}')
                 # On first run, suppress the reviewed starting claim at its pin.
                 if not old:
                     for cfg in CONFIG:

@@ -478,7 +478,42 @@ class OtherBoundsTests(unittest.TestCase):
         previous={'other_bound_states':{repo:{'head':'a'*40,'seen_claims':[],'meta':meta,'checked_cycle':1}}}
         with patch.object(o,'CONFIG',[cfg]),patch.object(o,'api',api),patch.object(o,'content',return_value=b'# Catalan constant'):
             result=o.collect('2026-10-21',previous,search=False)
-        self.assertIn(f'{repo}: compare capped at 300 files from aaaaaaa to bbbbbbb',result['errors'])
+        self.assertEqual(result['errors'],[f'{repo}: compare capped at 300 files from aaaaaaa to bbbbbbb; reading the trees failed (tree of aaaaaaa is missing or truncated)'])
+        self.assertEqual([q['query'] for q in result['truncated'] if 'claim diff' in q['query']],[f'{repo} claim diff'])
+
+    def test_a_capped_compare_reads_the_rest_from_the_trees(self):
+        # Tracker #71 range, 2026-10-25: 922 added files, the compare shows 300. The late .tex file is read whole.
+        import base64,hashlib
+        repo='rohitkrjha/catalan-measure'
+        cfg=next(c for c in o.CONFIG if c['repo']==repo)
+        paper=b"Catalan irrationality: we improve the bound to mu(G) <= 699.\n"
+        blob=hashlib.sha1(b'blob %d\0'%len(paper)+paper).hexdigest()
+        site={'families':[{'slug':'catalan','direction':'lower','claims':[{'value':'740'}]}]}
+        meta=dict(full_name=repo,html_url='https://github.com/'+repo,default_branch='main',pushed_at='2026-10-25T12:00:00Z')
+        same={'path':'docs/kept.md','type':'blob','sha':'c'*40}
+        def run(head_tree):
+            gets=[]
+            def content(r,path,ref,**kwargs):return json.dumps(site).encode() if r==o.SITE else b'# Catalan constant'
+            def api(path,params=None,**kwargs):
+                gets.append(path)
+                if '/compare/' in path:return {'files':[{'filename':f'submissions/n{i}.json','status':'added','patch':'+x'} for i in range(300)]}
+                if '/git/trees/'+'a'*40 in path:return {'tree':[same,{'path':'docs/gone.md','type':'blob','sha':'d'*40}],'truncated':False}
+                if '/git/trees/'+'b'*40 in path:return head_tree
+                if '/git/blobs/' in path:return {'size':len(paper),'content':base64.b64encode(paper).decode(),'encoding':'base64'}
+                return {'sha':'b'*40}
+            previous={'other_bound_states':{repo:{'head':'a'*40,'seen_claims':[],'meta':meta,'checked_cycle':1}}}
+            with patch.object(o,'CONFIG',[cfg]),patch.object(o,'api',api),patch.object(o,'content',content):
+                result=o.collect('2026-10-25',previous,search=False)
+            return [r for r in result['candidates'] if r['repo']==repo],result,gets
+        late={'path':'paper/late.tex','type':'blob','sha':blob}
+        rows,result,gets=run({'tree':[same,late,{'path':'docs/dir','type':'tree','sha':'e'*40},{'path':'sub','type':'commit','sha':'f'*40}],'truncated':False})
+        self.assertEqual(len(rows),1);self.assertIn('699',rows[0]['source_claim_evidence'][0])
+        self.assertEqual(result['errors'],[]);self.assertFalse(any('claim diff' in q['query'] for q in result['truncated']))
+        self.assertIn(f'repos/{repo}/git/blobs/{blob}',gets);self.assertFalse(any('docs/kept' in g or 'docs/dir' in g for g in gets))
+        # A truncated tree is an error again, and the claim diff stays listed as truncated.
+        rows,result,_=run({'tree':[same,late],'truncated':True})
+        self.assertEqual(rows,[]);self.assertEqual(len(result['errors']),1);self.assertIn('reading the trees failed (tree of bbbbbbb is missing or truncated)',result['errors'][0])
+        self.assertTrue(any('claim diff' in q['query'] for q in result['truncated']))
 
     def test_an_unreadable_file_without_a_patch_alerts_in_the_generic_path(self):
         # A watched repo without bound_pattern: the same read, and the same alert when it fails.
