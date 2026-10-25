@@ -255,4 +255,42 @@ class DraftPRTests(unittest.TestCase):
         result=self.watch(self.pr(draft=False),check_error=RuntimeError('GitHub GET failed'))
         row,=result['candidates'];self.assertEqual(row['head_check_state'],'unread');self.assertEqual(result['errors'],[])
 
+    # GTimG/QuasiRiemannTracker #73 (2026-10-25): alerted while its checks ran, then moved its head. The claim alerts once
+    # more when the checks of the CURRENT head have a verdict, and not before.
+    RUNNING=[dict(name='verify',status='in_progress',conclusion=None,output={})]
+    PASSED=[dict(name='verify',status='completed',conclusion='success',output={})]
+    def test_a_claim_alerted_with_pending_checks_alerts_again_when_the_checks_of_the_current_head_finish(self):
+        first=self.watch(self.pr(draft=False),checks=self.RUNNING)
+        row,=first['candidates'];self.assertEqual((row['head_check_state'],row['checks_final']),('pending',False))
+        self.assertEqual(len(first['family_states'][self.QRT]['71']['awaiting_checks']),1)
+        # Same head, checks still running: no alert, and the checks are read again.
+        again=self.watch(self.pr(draft=False),self.carry(first),checks=self.RUNNING)
+        self.assertEqual(again['candidates'],[]);self.assertTrue(any('/check-runs' in c for c in self.calls))
+        # The head moves while the checks run: the same bound does not alert again, the wait stays.
+        moved=self.watch(self.pr(draft=False,head='h2'),self.carry(again),checks=self.RUNNING)
+        self.assertEqual(moved['candidates'],[]);self.assertEqual(len(moved['family_states'][self.QRT]['71']['awaiting_checks']),1)
+        self.assertTrue(any(c.endswith('/commits/h2/check-runs') for c in self.calls))
+        # The checks of the current head finish: one alert, with that head and its verdict; the wait ends.
+        done=self.watch(self.pr(draft=False,head='h2'),self.carry(moved),checks=self.PASSED)
+        row,=done['candidates'];self.assertEqual((row['readme_commit'],row['head_check_state'],row['checks_final']),('h2','passed',True))
+        self.assertNotIn('awaiting_checks',done['family_states'][self.QRT]['71'])
+        self.assertTrue(alert_candidate(row,set(),set()))
+        self.assertEqual(self.watch(self.pr(draft=False,head='h2'),self.carry(done),checks=self.PASSED)['candidates'],[])
+        # A failed verdict alerts too, and a PR whose first alert already had a verdict never waits.
+        failed=self.watch(self.pr(draft=False,head='h2'),self.carry(moved))
+        self.assertEqual([r['head_check_state'] for r in failed['candidates']],['failed'])
+        final=self.watch(self.pr(draft=False),checks=self.PASSED);self.assertNotIn('awaiting_checks',final['family_states'][self.QRT]['71'])
+
+    def test_a_new_bound_on_a_moved_head_alerts_at_once_and_unread_checks_keep_waiting(self):
+        first=self.watch(self.pr(draft=False),checks=self.RUNNING)
+        changed=self.watch(self.pr(draft=False,head='h2'),self.carry(first),checks=self.RUNNING,claim='Quasi-Riemann bound mu 0.4 improved.')
+        row,=changed['candidates'];self.assertEqual(row['head_check_state'],'pending')
+        # A check read that fails is no verdict: nothing alerts, the wait stays, and the scan reports no error.
+        unread=self.watch(self.pr(draft=False),self.carry(first),check_error=RuntimeError('GitHub GET failed'))
+        self.assertEqual((unread['candidates'],unread['errors']),([],[]))
+        self.assertEqual(len(unread['family_states'][self.QRT]['71']['awaiting_checks']),1)
+        # A closed PR is not read for checks.
+        closed=self.watch(dict(self.pr(draft=False),state='closed'),self.carry(first),checks=self.PASSED)
+        self.assertEqual(closed['candidates'],[])
+
 if __name__=='__main__':unittest.main()

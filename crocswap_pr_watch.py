@@ -100,7 +100,16 @@ def scan(repo,since,states,budget,out,family=None):
         # Only a silent draft changes its revision: a PR marked ready scans again, the others keep their saved revision.
         revision=hashlib.sha256((head+'\n'+body+('\nsilent draft' if silent else '')).encode()).hexdigest()
         waiting=dict(repo=repo,pr_number=pr['number'],url=pr['html_url'],author=pr['user']['login'],created_at=pr['created_at'],head=head,status='draft, waiting')
-        if old.get('revision')==revision:
+        # Claims alerted while their head checks ran (pending, or unread) wait for a verdict (Lead, 2026-10-25, after
+        # GTimG/QuasiRiemannTracker #73 moved its head while its checks ran). Each scan of the PR reads the checks of
+        # the CURRENT head; once they are final (passed, failed or none), the claim alerts once more, with those
+        # checks. A head move re-reads the files, so a changed bound alerts as a new claim.
+        awaiting=list(old.get('awaiting_checks',[])) if not silent else []
+        verdict=None
+        if awaiting and pr.get('state','open')=='open':
+            verdict=head_checks(budget,repo,head,name)
+            if verdict['state'] in ('pending','unread'):verdict=None
+        if old.get('revision')==revision and verdict is None:
             if silent and pr.get('state','open')=='open':out['waiting'].append(waiting)
             return
         if silent:
@@ -140,17 +149,20 @@ def scan(repo,since,states,budget,out,family=None):
                 label='family:'+family if family else label
                 claims.setdefault(label,[]).extend(lines)
                 paths.setdefault(label,[]).append(path)
-        seen=list(old.get('seen_claims',[]));checks=None
+        seen=list(old.get('seen_claims',[]));checks=verdict
+        if verdict:
+            seen=[k for k in seen if k not in awaiting];awaiting=[]
         for label,lines in claims.items():
             lines=list(dict.fromkeys(lines));key=claim_key(label,lines)
             if not key or key in seen:continue
             fam=label.removeprefix('family:') if label.startswith('family:') else None
             problem=f"Family {fam}: {FAMILIES[fam]['title']}" if fam else label
             if checks is None:checks=head_checks(budget,repo,head,name)
-            out['candidates'].append(dict(repo=repo,url=pr['html_url'],pr_number=pr['number'],author=pr['user']['login'],created_at=pr['created_at'],pushed_at=pr['updated_at'],stars=0,rank=25,description=pr['title'],problem_guess=problem,readme_commit=head,source_claim_evidence=lines[:8],source_claim_files=paths[label],claim_signature=key,cross_problem_pr=True,other_family=fam,stated_bound_changed=True,likely_tracked_source=True,likely_new_race=False,likely_pivot=True,on_board=True,evidence=['recent-family-pr' if family else 'recent-crocswap-pr'],coverage_complete=complete,draft=draft,head_check_state=checks['state'],head_checks=checks['text']))
+            if checks['state'] in ('pending','unread'):awaiting.append(key)
+            out['candidates'].append(dict(repo=repo,url=pr['html_url'],pr_number=pr['number'],author=pr['user']['login'],created_at=pr['created_at'],pushed_at=pr['updated_at'],stars=0,rank=25,description=pr['title'],problem_guess=problem,readme_commit=head,source_claim_evidence=lines[:8],source_claim_files=paths[label],claim_signature=key,cross_problem_pr=True,other_family=fam,stated_bound_changed=True,likely_tracked_source=True,likely_new_race=False,likely_pivot=True,on_board=True,evidence=['recent-family-pr' if family else 'recent-crocswap-pr'],coverage_complete=complete,draft=draft,head_check_state=checks['state'],head_checks=checks['text'],checks_final=bool(verdict)))
             seen.append(key)
         # Resume file pagination; do not spend each cycle on the first 300 files.
-        states[number]=dict(revision=revision if finished else None,pending_revision=revision,next_file_page=next_page,head=head,seen_claims=seen,updated_at=pr['updated_at'])
+        states[number]=dict(revision=revision if finished else None,pending_revision=revision,next_file_page=next_page,head=head,seen_claims=seen,updated_at=pr['updated_at'],**(dict(awaiting_checks=list(dict.fromkeys(awaiting))) if awaiting else {}))
         out['checked'].append(pr['number'] if repo==REPO else f'{repo}#{number}')
     def stop():
         if not budget.spent():return False
