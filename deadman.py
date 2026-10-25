@@ -241,11 +241,17 @@ class ProbeFailed(Exception):
         try:family='v%d'%ipaddress.ip_address(host).version
         except ValueError:family='by name'
         super().__init__(f'{family} {phase} {type(error).__name__}')
+        self.error=error
 
-def cert_failure_text(why,controls):
+def cert_failure_text(why,controls,error=None):
     """One line: the failed phase, the control from the box to Cloudflare per family, and what that says."""
     c4=controls.get('v4','unchecked');c6=controls.get('v6','unchecked')
-    if c4=='ok':verdict='the box reaches Cloudflare over v4, so the fault is on the path to the origin'
+    error=getattr(error,'error',error)
+    if isinstance(error,ssl.SSLCertVerificationError):
+        verdict='the origin certificate did not verify (expired, wrong name or chain): renew or check it'
+    elif isinstance(error,ssl.SSLError) and not isinstance(error,ssl.SSLEOFError):
+        verdict='the origin answered with a TLS error: check its certificate and Caddy'
+    elif c4=='ok':verdict='the box reaches Cloudflare over v4, so the fault is at the origin or on the path to it'
     elif c4=='unchecked':verdict='the box controls did not run'
     else:verdict='the box v4 egress is down'
     v6=', and the box v6 egress is down (this probe does not use v6)' if c6 not in ('ok','no address','unchecked') else ''
@@ -923,7 +929,7 @@ def board_checks(src,now,board,results):
         results['board-https']=(not bad,f"the board feed answered {code} on {board['https_failures']} runs in a row" if bad else None,None,BOARD_FEED)
     link='TLS handshake to the VPS with SNI '+BOARD_HOST+'; journalctl -u wg-caddy on the VPS'
     try:days=src.board_cert_days()
-    except Exception as error:days=None;why=str(error) if isinstance(error,ProbeFailed) else type(error).__name__
+    except Exception as error:days=None;failure=error;why=str(error) if isinstance(error,ProbeFailed) else type(error).__name__
     if days is not None:
         board['cert_armed']=True;board['cert_failures']=0
         results['board-cert']=(days>=21,None if days>=21 else f'the origin certificate expires in {days:.0f} days',now if days>=21 else None,link)
@@ -933,7 +939,7 @@ def board_checks(src,now,board,results):
         if bad:
             try:controls=src.board_egress_controls()
             except Exception:controls={}
-        results['board-cert']=(not bad,f"the origin TLS handshake failed on {board['cert_failures']} runs in a row: {cert_failure_text(why,controls)}" if bad else None,None,link)
+        results['board-cert']=(not bad,f"the origin TLS handshake failed on {board['cert_failures']} runs in a row: {cert_failure_text(why,controls,failure)}" if bad else None,None,link)
     link='python3 -I ~/nil/wallgame/ops-private/vps-backup/vpsbackup.py fresh bigospeedrun-board; journalctl --user -u vps-backup@bigospeedrun-board; grep ACK ~/nil/wallgame/ops-private/vps-backup/store/bigospeedrun-board.log'
     try:fresh=src.board_backup()
     except Exception as error:fresh=(None,'cannot run vpsbackup.py: '+type(error).__name__)

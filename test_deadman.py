@@ -1,4 +1,4 @@
-import json, tempfile, unittest
+import json, ssl, tempfile, unittest
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from unittest.mock import patch
@@ -772,10 +772,21 @@ class BoardTests(unittest.TestCase):
         origin=d.ProbeFailed('connect',TimeoutError(),'192.0.2.7')
         text=self.cert_problem(origin,{'v4':'ok','v6':'ok'})
         self.assertIn('v4 connect TimeoutError',text);self.assertIn('control to board.bigospeedrun.com: v4 ok, v6 ok',text)
-        self.assertIn('the fault is on the path to the origin',text);self.assertNotIn('v6 egress is down',text)
+        self.assertIn('the fault is at the origin or on the path to it',text);self.assertNotIn('v6 egress is down',text)
         text=self.cert_problem(d.ProbeFailed('handshake',ConnectionResetError(),'192.0.2.7'),{'v4':'ok','v6':'TimeoutError'})
         self.assertIn('v4 handshake ConnectionResetError',text);self.assertIn('v6 TimeoutError',text)
-        self.assertIn('the box v6 egress is down (this probe does not use v6)',text);self.assertIn('fault is on the path to the origin',text)
+        self.assertIn('the box v6 egress is down (this probe does not use v6)',text);self.assertIn('fault is at the origin or on the path to it',text)
+        text=self.cert_problem(d.ProbeFailed('connect',ConnectionRefusedError(),'192.0.2.7'),{'v4':'ok','v6':'ok'})
+        self.assertIn('v4 connect ConnectionRefusedError',text);self.assertIn('at the origin or on the path to it',text)
+        # An expired or wrong certificate is not packet loss, whatever the controls say.
+        for controls in ({'v4':'ok','v6':'ok'},{'v4':'TimeoutError','v6':'TimeoutError'}):
+            text=self.cert_problem(d.ProbeFailed('handshake',ssl.SSLCertVerificationError(1,'certificate has expired'),'192.0.2.7'),controls)
+            self.assertIn('v4 handshake SSLCertVerificationError',text);self.assertIn('did not verify (expired, wrong name or chain): renew or check it',text)
+            self.assertNotIn('path to it',text);self.assertNotIn('v4 egress is down',text)
+        text=self.cert_problem(d.ProbeFailed('handshake',ssl.SSLError(1,'WRONG_VERSION_NUMBER'),'192.0.2.7'),{'v4':'ok','v6':'ok'})
+        self.assertIn('answered with a TLS error',text)
+        text=self.cert_problem(d.ProbeFailed('handshake',ssl.SSLEOFError(8,'EOF'),'192.0.2.7'),{'v4':'ok','v6':'ok'})
+        self.assertIn('at the origin or on the path to it',text)
         text=self.cert_problem(origin,{'v4':'TimeoutError','v6':'no address'})
         self.assertIn('the box v4 egress is down',text);self.assertNotIn('v6 egress is down',text)
 
