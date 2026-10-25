@@ -219,7 +219,7 @@ def alert_key(item,problem):
 BOARD_HOST='board.bigospeedrun.com'
 BOARD_FEED=f'https://{BOARD_HOST}/api/posts?board=3sum&limit=1'   # the board is at the root of its host (board 21648c1)
 BOARD_LINK='ssh boshealth (VPS /opt/bigospeedrun-board/auto-deploy/status.json); runbook ~/nil/bigospeedrun-notes/phase-e-board-deploy-plan.md'
-VPS_BACKUP=Path.home()/'nil/wallgame/ops-private/vps-backup'
+VPS_BACKUP=Path.home()/'nil/vps-ops/vps-backup'
 PT=ZoneInfo('America/Los_Angeles')
 H=timedelta(hours=1)
 ACK_LIMIT=timedelta(minutes=15)
@@ -940,7 +940,7 @@ def board_checks(src,now,board,results):
             try:controls=src.board_egress_controls()
             except Exception:controls={}
         results['board-cert']=(not bad,f"the origin TLS handshake failed on {board['cert_failures']} runs in a row: {cert_failure_text(why,controls,failure)}" if bad else None,None,link)
-    link='python3 -I ~/nil/wallgame/ops-private/vps-backup/vpsbackup.py fresh bigospeedrun-board; journalctl --user -u vps-backup@bigospeedrun-board; grep ACK ~/nil/wallgame/ops-private/vps-backup/store/bigospeedrun-board.log'
+    link='python3 -I ~/nil/vps-ops/vps-backup/vpsbackup.py fresh bigospeedrun-board; journalctl --user -u vps-backup@bigospeedrun-board; grep ACK ~/nil/vps-ops/vps-backup/store/bigospeedrun-board.log'
     try:fresh=src.board_backup()
     except Exception as error:fresh=(None,'cannot run vpsbackup.py: '+type(error).__name__)
     if fresh is None:
