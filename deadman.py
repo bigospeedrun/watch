@@ -107,7 +107,11 @@ Items:
                        board section alerts
   board-https          GET the board feed through Cloudflare: not 200 on 2 runs in a row
   board-cert           TLS handshake to the VPS with SNI board.bigospeedrun.com: the
-                       origin certificate expires in under 21 days, or 2 failed handshakes
+                       origin certificate expires in under 21 days, or 2 failed handshakes.
+                       The origin address is an IPv4 literal. A failed run names the phase
+                       (connect or handshake) and checks the box itself: a TCP connect to
+                       board.bigospeedrun.com:443 over v4 and over v6, each alone, so a box
+                       v6 or v4 outage reads as such and not as an origin fault
   board-backup         vpsbackup.py fresh bigospeedrun-board exits non-zero (no fresh copy
                        on auntie, or the desktop copy failed), or the newest ACK line in its
                        pull log (store/bigospeedrun-board.log) is ACK FAIL: the VPS did not
@@ -124,6 +128,7 @@ item stays unsent, so the next hourly run retries. Output holds no secrets.
 import argparse
 import hashlib
 import hmac
+import ipaddress
 import json
 import re
 import socket
@@ -229,6 +234,22 @@ def pt(when):
 
 def parse(stamp):
     return datetime.fromisoformat(stamp.replace('Z','+00:00')).astimezone(timezone.utc) if stamp else None
+
+class ProbeFailed(Exception):
+    """The origin TLS probe failed in one phase; the family follows from the address (the origin is a literal)."""
+    def __init__(self,phase,error,host):
+        try:family='v%d'%ipaddress.ip_address(host).version
+        except ValueError:family='by name'
+        super().__init__(f'{family} {phase} {type(error).__name__}')
+
+def cert_failure_text(why,controls):
+    """One line: the failed phase, the control from the box to Cloudflare per family, and what that says."""
+    c4=controls.get('v4','unchecked');c6=controls.get('v6','unchecked')
+    if c4=='ok':verdict='the box reaches Cloudflare over v4, so the fault is on the path to the origin'
+    elif c4=='unchecked':verdict='the box controls did not run'
+    else:verdict='the box v4 egress is down'
+    v6=', and the box v6 egress is down (this probe does not use v6)' if c6 not in ('ok','no address','unchecked') else ''
+    return f"{why}; control to {BOARD_HOST}: v4 {c4}, v6 {c6}: {verdict}{v6}"
 
 class Sources:
     """Read-only views of the checked systems. Tests replace these methods."""
@@ -423,10 +444,24 @@ class Sources:
     def board_cert_days(self):
         # Only the TLS handshake: the origin's cloudflare_only gate aborts after it, and no
         # HTTP request is sent. The default context checks the chain and the name.
-        with socket.create_connection((self.vps_host(),443),timeout=20) as raw:
-            with ssl.create_default_context().wrap_socket(raw,server_hostname=BOARD_HOST) as tls:
-                cert=tls.getpeercert()
+        host=self.vps_host()
+        try:raw=socket.create_connection((host,443),timeout=20)
+        except Exception as error:raise ProbeFailed('connect',error,host) from error
+        try:
+            with raw:
+                with ssl.create_default_context().wrap_socket(raw,server_hostname=BOARD_HOST) as tls:
+                    cert=tls.getpeercert()
+        except Exception as error:raise ProbeFailed('handshake',error,host) from error
         return (ssl.cert_time_to_seconds(cert['notAfter'])-time.time())/86400
+    def board_egress_controls(self):
+        """The box's own path to Cloudflare, one address family at a time: {'v4': 'ok'|error name, 'v6': ...}."""
+        out={}
+        for name,family in (('v4',socket.AF_INET),('v6',socket.AF_INET6)):
+            try:address=socket.getaddrinfo(BOARD_HOST,443,family,socket.SOCK_STREAM)[0][4][:2]
+            except OSError:out[name]='no address';continue
+            try:socket.create_connection(address,timeout=10).close();out[name]='ok'
+            except Exception as error:out[name]=type(error).__name__
+        return out
     def board_backup(self):
         """(exit code, first line) of vpsbackup.py fresh, or None before the first pull."""
         if not (VPS_BACKUP/'store'/'bigospeedrun-board').is_dir():return None
@@ -888,14 +923,17 @@ def board_checks(src,now,board,results):
         results['board-https']=(not bad,f"the board feed answered {code} on {board['https_failures']} runs in a row" if bad else None,None,BOARD_FEED)
     link='TLS handshake to the VPS with SNI '+BOARD_HOST+'; journalctl -u wg-caddy on the VPS'
     try:days=src.board_cert_days()
-    except Exception as error:days=None;why=type(error).__name__
+    except Exception as error:days=None;why=str(error) if isinstance(error,ProbeFailed) else type(error).__name__
     if days is not None:
         board['cert_armed']=True;board['cert_failures']=0
         results['board-cert']=(days>=21,None if days>=21 else f'the origin certificate expires in {days:.0f} days',now if days>=21 else None,link)
     elif board.get('cert_armed'):
         board['cert_failures']=board.get('cert_failures',0)+1
         bad=board['cert_failures']>=2
-        results['board-cert']=(not bad,f"the origin TLS handshake failed on {board['cert_failures']} runs in a row: {why}" if bad else None,None,link)
+        if bad:
+            try:controls=src.board_egress_controls()
+            except Exception:controls={}
+        results['board-cert']=(not bad,f"the origin TLS handshake failed on {board['cert_failures']} runs in a row: {cert_failure_text(why,controls)}" if bad else None,None,link)
     link='python3 -I ~/nil/wallgame/ops-private/vps-backup/vpsbackup.py fresh bigospeedrun-board; journalctl --user -u vps-backup@bigospeedrun-board; grep ACK ~/nil/wallgame/ops-private/vps-backup/store/bigospeedrun-board.log'
     try:fresh=src.board_backup()
     except Exception as error:fresh=(None,'cannot run vpsbackup.py: '+type(error).__name__)

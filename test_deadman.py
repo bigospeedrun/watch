@@ -56,6 +56,10 @@ class Fake:
     def board_cert_days(self):
         if isinstance(self.cert_days,Exception):raise self.cert_days
         return self.cert_days
+    controls={'v4':'ok','v6':'ok'}
+    def board_egress_controls(self):
+        if isinstance(self.controls,Exception):raise self.controls
+        return self.controls
     def board_backup(self):return self.backup
     ack_log=None
     def board_ack_log(self):
@@ -757,6 +761,29 @@ class BoardTests(unittest.TestCase):
         ok,problem,*_=d.check(f,NOW)['board-cert'];self.assertFalse(ok);self.assertIn('20 days',problem)
         f=self.live();d.check(f,NOW);f.cert_days=OSError('handshake')
         self.assertEqual(self.failing(f),set());self.assertEqual(self.failing(f),{'board-cert'})
+
+    def cert_problem(self,error,controls):
+        f=self.live();d.check(f,NOW);f.cert_days=error;f.controls=controls
+        self.assertEqual(self.failing(f),set())
+        report=d.check(f,NOW)['board-cert'];self.assertFalse(report[0]);return report[1]
+
+    def test_cert_alert_names_phase_and_family_and_the_box_controls(self):
+        # The origin is an IPv4 literal: a box v6 outage must read as such and not as an origin fault.
+        origin=d.ProbeFailed('connect',TimeoutError(),'192.0.2.7')
+        text=self.cert_problem(origin,{'v4':'ok','v6':'ok'})
+        self.assertIn('v4 connect TimeoutError',text);self.assertIn('control to board.bigospeedrun.com: v4 ok, v6 ok',text)
+        self.assertIn('the fault is on the path to the origin',text);self.assertNotIn('v6 egress is down',text)
+        text=self.cert_problem(d.ProbeFailed('handshake',ConnectionResetError(),'192.0.2.7'),{'v4':'ok','v6':'TimeoutError'})
+        self.assertIn('v4 handshake ConnectionResetError',text);self.assertIn('v6 TimeoutError',text)
+        self.assertIn('the box v6 egress is down (this probe does not use v6)',text);self.assertIn('fault is on the path to the origin',text)
+        text=self.cert_problem(origin,{'v4':'TimeoutError','v6':'no address'})
+        self.assertIn('the box v4 egress is down',text);self.assertNotIn('v6 egress is down',text)
+
+    def test_cert_alert_survives_a_failing_control_and_a_plain_error(self):
+        text=self.cert_problem(OSError('x'),OSError('controls broke'))
+        self.assertIn('OSError; control to board.bigospeedrun.com: v4 unchecked, v6 unchecked',text)
+        self.assertIn('the box controls did not run',text)
+        self.assertIn('by name connect',str(d.ProbeFailed('connect',OSError(),'board.example')))
 
     def test_backup_freshness(self):
         f=self.live();d.check(f,NOW)
