@@ -292,6 +292,10 @@ class DraftPRTests(unittest.TestCase):
         # A closed PR is not read for checks.
         closed=self.watch(dict(self.pr(draft=False),state='closed'),self.carry(first),checks=self.PASSED)
         self.assertEqual(closed['candidates'],[])
+        # ... and its wait ends at once, so a merged PR (#74) does not stay in the state as waiting.
+        self.assertNotIn('awaiting_checks',closed['family_states'][self.QRT]['71'])
+        self.assertEqual(closed['family_states'][self.QRT]['71']['seen_claims'],first['family_states'][self.QRT]['71']['seen_claims'])
+        self.assertEqual(self.watch(dict(self.pr(draft=False),state='closed'),self.carry(closed),checks=self.PASSED)['candidates'],[])
 
     def test_the_verdict_on_the_same_head_reads_the_files_from_page_one(self):
         # Reviewer probe (2026-10-25): the saved revision is unchanged, so a resume at next_file_page would miss the claim.

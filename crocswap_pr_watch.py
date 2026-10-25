@@ -104,6 +104,10 @@ def scan(repo,since,states,budget,out,family=None):
         # GTimG/QuasiRiemannTracker #73 moved its head while its checks ran). Each scan of the PR reads the checks of
         # the CURRENT head; once they are final (passed, failed or none), the claim alerts once more, with those
         # checks. A head move re-reads the files, so a changed bound alerts as a new claim.
+        if old.get('awaiting_checks') and pr.get('state','open')!='open':
+            # A merged or closed PR gets no checks verdict (the merge or the close settles the claim): the wait ends
+            # now, so the saved state does not show it as waiting for good (QuasiRiemannTracker #74, 2026-10-25).
+            old={k:v for k,v in old.items() if k!='awaiting_checks'};states[number]=old
         awaiting=list(old.get('awaiting_checks',[])) if not silent else []
         verdict=None
         if awaiting and pr.get('state','open')=='open':
