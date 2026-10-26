@@ -89,8 +89,9 @@ Items:
   stale-issues         Nil rule: no GitHub issue stays open in bigospeedrun/site, board,
                        verifier or watch. Alerts on each issue open for 24 h or more (repo,
                        number, title, age, link), and again when that set of issues changes
-                       (a new age alone does not alert). GET only; one failed read is
-                       tolerated, two in a row alert
+                       (a new age alone does not alert). A snoozed item (SNOOZED) still alerts
+                       on each new comment from anyone except our own accounts and bots, or on a
+                       PR head change. GET only; one failed read is tolerated, two in a row alert
   chatbot-gap-review   Isomux cronjob "BOS chatbot gap review" completed a run
                        without error < 26 h ago (~/.isomux/cronjobs, read-only)
   vps-deploy           self-hosted site on the VPS (a created, restarting or starting container is read again every
@@ -347,6 +348,13 @@ class Sources:
         if out.returncode:raise RuntimeError('GitHub comments request failed')
         return [(c.get('created_at') or '',c.get('body') or '') for c in json.loads(out.stdout)
                 if c.get('user',{}).get('login')=='github-actions[bot]' and c.get('user',{}).get('type')=='Bot']
+    def outside_comments(self,repo,number):
+        """[(created_at, login)] of the comments from anyone except bots and our own accounts."""
+        out=subprocess.run(['gh','api','-X','GET',f'repos/{repo}/issues/{int(number)}/comments','-f','per_page=100','--paginate','--slurp'],
+                           capture_output=True,text=True,timeout=60)
+        if out.returncode:raise RuntimeError('GitHub comments request failed')
+        return [(c.get('created_at') or '',(c.get('user') or {}).get('login') or '') for page in json.loads(out.stdout) for c in page
+                if (c.get('user') or {}).get('type')!='Bot' and (c.get('user') or {}).get('login') not in OWN_ACCOUNTS]
     def pr_head(self,repo,number):
         out=subprocess.run(['gh','api','-X','GET',f'repos/{repo}/pulls/{int(number)}'],capture_output=True,text=True,timeout=60)
         if out.returncode:raise RuntimeError('GitHub pull request read failed')
@@ -626,6 +634,26 @@ def method_check(src,now,results):
 # Verifier statement PRs #12 and #21 (Lead, 2026-10-24): on 2026-10-28 Reviewer closes them with "reopen
 # when ready" if their authors do not answer; they alert again only if that close does not happen.
 SNOOZED={('bigospeedrun/verifier',12):'2026-10-29T00:00:00+00:00',('bigospeedrun/verifier',21):'2026-10-29T00:00:00+00:00'}
+# A snoozed item still alerts on outside activity (Lead, 2026-10-26: a comment by an outside author on #21 stayed hidden
+# for the snooze): a comment after SNOOZE_FROM from anyone except OWN_ACCOUNTS and bots, or a PR head that differs from
+# the first head seen (the heads of #12 and #21 did not move since their snooze). Each new comment or head changes the
+# alert text, so it alerts once per change. A failed read goes up to issue_check (two in a row alert). Every snooze in
+# SNOOZED shares SNOOZE_FROM: give a later snooze its own start before you add it.
+SNOOZE_FROM='2026-10-24T00:34:00+00:00'
+OWN_ACCOUNTS={'nmamano'}
+
+def snooze_activity(src,repo,item,now,memory):
+    """Text that names the outside activity on a snoozed item, or None when it is quiet or not snoozed."""
+    until=SNOOZED.get((repo,item.get('number')))
+    if not until or now>=parse(until):return None
+    n=int(item['number']);notes=[]
+    since=parse(SNOOZE_FROM)
+    new=[(at,who) for at,who in src.outside_comments(repo,n) if parse(at) and parse(at)>since]
+    if new:notes.append(f"{len(new)} new outside comment(s), last by {safe_text(new[-1][1],40)} at {safe_text(new[-1][0],20)}")
+    if item.get('pr'):
+        head=src.pr_head(repo,n);seen=memory.setdefault('snooze_heads',{}).setdefault(f'{repo}#{n}',head)
+        if head!=seen:notes.append(f'new head {head[:7]}')
+    return '; '.join(notes) or None
 
 def claimed_only(src,repo,item,now):
     """The verifier marked this item's current version Claimed-only (no proof run), or it is snoozed."""
@@ -651,7 +679,9 @@ def issue_check(src,now,results):
         for repo in ISSUE_REPOS:
             for issue in src.open_issues(repo):
                 opened=parse(issue['created_at'])
-                if opened and now-opened>=24*H and not claimed_only(src,repo,issue,now):stale.append((opened,repo,issue))
+                if not opened or now-opened<24*H:continue
+                note=snooze_activity(src,repo,issue,now,memory)
+                if note or not claimed_only(src,repo,issue,now):stale.append((opened,repo,issue,note))
     except Exception as error:
         memory['read_failures']=memory.get('read_failures',0)+1
         if memory['read_failures']>=2:results['stale-issues']=(False,f"cannot read the issues ({memory['read_failures']} runs in a row): "+type(error).__name__,None,ISSUE_LINK)
@@ -659,9 +689,10 @@ def issue_check(src,now,results):
         src.remember_issues(memory);return
     memory['read_failures']=0
     parts=[]
-    for opened,repo,issue in sorted(stale,key=lambda s:(s[1],s[2]['number'] or 0))[:10]:
+    for opened,repo,issue,note in sorted(stale,key=lambda s:(s[1],s[2]['number'] or 0))[:10]:
         hours=int((now-opened)/H)
-        parts.append(f"{repo.split('/')[1]}#{int(issue['number'])}{' (PR)' if issue.get('pr') else ''} \"{safe_text(issue.get('title'),60)}\" open {hours//24} d {hours%24} h {safe_text(issue.get('html_url'),100)}")
+        parts.append(f"{repo.split('/')[1]}#{int(issue['number'])}{' (PR)' if issue.get('pr') else ''} \"{safe_text(issue.get('title'),60)}\" open {hours//24} d {hours%24} h {safe_text(issue.get('html_url'),100)}"
+                     +(f' (snoozed, but: {note})' if note else ''))
     if len(stale)>10:parts.append(f'and {len(stale)-10} more')
     problem=(f'{len(stale)} issue(s) or PR(s) open for 24 h or more: '+'; '.join(parts)) if stale else None
     memory['last_ok']=not stale;memory['last_problem']=problem;src.remember_issues(memory)

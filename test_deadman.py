@@ -106,6 +106,11 @@ class Fake:
     def bot_replied(self,repo,number):return (repo,number) in self.replied
     comments={};heads={}
     def bot_comments(self,repo,number):return list(self.comments.get((repo,number),[]))
+    outside={}
+    def outside_comments(self,repo,number):
+        got=self.outside.get((repo,number),[])
+        if isinstance(got,Exception):raise got
+        return list(got)
     def pr_head(self,repo,number):return self.heads[(repo,number)]
     def issue_memory(self):return dict(self.issue_mem)
     def remember_issues(self,memory):self.issue_mem=dict(memory)
@@ -526,6 +531,29 @@ class DeadmanTests(unittest.TestCase):
             self.assertNotIn('stale-issues',self.failing(f))
             self.assertIn('verifier#52',d.check(f,d.parse('2026-10-25T00:00:00+00:00'))['stale-issues'][1])
         self.assertIn('verifier#52',d.check(f,NOW)['stale-issues'][1])
+
+    def test_a_snoozed_item_still_alerts_on_outside_activity(self):
+        # Lead, 2026-10-26: a snooze hid an outside comment on verifier #21. A new outside comment or head alerts once.
+        V='bigospeedrun/verifier'
+        f=Fake();f.issues={V:[dict(self.issue(52,49),pr=True)]};f.heads={(V,52):'a'*40}
+        f.outside={(V,52):[('2026-10-20T00:00:00Z','darkhipo')]}  # before the snooze began
+        with patch.dict(d.SNOOZED,{(V,52):'2026-10-29T00:00:00+00:00'}),patch.object(d,'SNOOZE_FROM','2026-10-24T00:00:00+00:00'):
+            self.assertNotIn('stale-issues',self.failing(f));self.run_at(f)
+            f.outside[(V,52)].append(('2026-10-26T06:06:08Z','darkhipo'))
+            self.run_at(f,NOW+timedelta(hours=1));self.run_at(f,NOW+timedelta(hours=2))
+            f.outside[(V,52)].append(('2026-10-26T09:00:00Z','someone'))
+            self.run_at(f,NOW+timedelta(hours=3))
+            problem=d.check(f,NOW)['stale-issues'][1]
+            self.assertIn('verifier#52',problem);self.assertIn('snoozed, but: 2 new outside comment(s), last by someone',problem)
+            f.heads={(V,52):'c'*40};f.outside[(V,52)]=[]
+            self.assertIn('new head ccccccc',d.check(f,NOW)['stale-issues'][1])
+            # One failed read is tolerated and shows the last text; two in a row alert.
+            self.run_at(f,NOW+timedelta(hours=4));before=d.check(f,NOW)['stale-issues'][1]
+            f.outside[(V,52)]=RuntimeError('x')
+            self.assertEqual(d.check(f,NOW)['stale-issues'][1],before)
+            self.assertIn('cannot read the issues (2 runs in a row)',d.check(f,NOW)['stale-issues'][1])
+        # Own accounts and bots are filtered by the source (outside_comments); the snooze ends at its date as before.
+        self.assertEqual([p['event'] for p in self.sent if p.get('item')=='stale-issues'],['alert','alert','alert'])  # two comments, one head
 
     def test_issue_titles_are_sanitized_and_ages_alone_do_not_realert(self):
         f=Fake();f.issues={'bigospeedrun/watch':[self.issue(7,30,'\u00e9\n::error::'+'x'*300)]}
