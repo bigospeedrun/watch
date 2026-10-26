@@ -527,7 +527,7 @@ class DeadmanTests(unittest.TestCase):
         self.assertIn('verifier#4',d.check(f,NOW)['stale-issues'][1])
         # A snoozed item is skipped until its date, then alerts again.
         f.issues={V:[dict(self.issue(52,49),pr=True)]};f.heads={(V,52):'a'*40};f.comments={}
-        with patch.dict(d.SNOOZED,{(V,52):'2026-10-25T00:00:00+00:00'}):
+        with patch.dict(d.SNOOZED,{(V,52):('2026-10-01T00:00:00+00:00','2026-10-25T00:00:00+00:00',None)}):
             self.assertNotIn('stale-issues',self.failing(f))
             self.assertIn('verifier#52',d.check(f,d.parse('2026-10-25T00:00:00+00:00'))['stale-issues'][1])
         self.assertIn('verifier#52',d.check(f,NOW)['stale-issues'][1])
@@ -537,7 +537,7 @@ class DeadmanTests(unittest.TestCase):
         V='bigospeedrun/verifier'
         f=Fake();f.issues={V:[dict(self.issue(52,49),pr=True)]};f.heads={(V,52):'a'*40}
         f.outside={(V,52):[('2026-10-20T00:00:00Z','darkhipo')]}  # before the snooze began
-        with patch.dict(d.SNOOZED,{(V,52):'2026-10-29T00:00:00+00:00'}),patch.object(d,'SNOOZE_FROM','2026-10-24T00:00:00+00:00'):
+        with patch.dict(d.SNOOZED,{(V,52):('2026-10-24T00:00:00+00:00','2026-10-29T00:00:00+00:00','a'*40)}):
             self.assertNotIn('stale-issues',self.failing(f));self.run_at(f)
             f.outside[(V,52)].append(('2026-10-26T06:06:08Z','darkhipo'))
             self.run_at(f,NOW+timedelta(hours=1));self.run_at(f,NOW+timedelta(hours=2))

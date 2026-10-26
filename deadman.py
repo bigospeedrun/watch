@@ -630,35 +630,35 @@ def method_check(src,now,results):
 
 # A verifier item whose current version got the bot's claimed-only result is not stale (Lead, 2026-10-23;
 # the verifier closes such items since dbf084a, so this matters for older open items). SNOOZED holds
-# (repo, number): ISO date pairs for an item to skip until that date; after it the item alerts again.
+# (repo, number): (from, until, head). The item is skipped until `until`; after that it alerts again. `from` is the
+# snooze start: only comments after it count as new. `head` is the PR head sha at the snooze (None for an issue).
 # Verifier statement PRs #12 and #21 (Lead, 2026-10-24): on 2026-10-28 Reviewer closes them with "reopen
 # when ready" if their authors do not answer; they alert again only if that close does not happen.
-SNOOZED={('bigospeedrun/verifier',12):'2026-10-29T00:00:00+00:00',('bigospeedrun/verifier',21):'2026-10-29T00:00:00+00:00'}
+SNOOZED={('bigospeedrun/verifier',12):('2026-10-24T00:34:00+00:00','2026-10-29T00:00:00+00:00','4cfb6db4d58932e3bbf22f3abd5f97831d981e94'),
+         ('bigospeedrun/verifier',21):('2026-10-24T00:34:00+00:00','2026-10-29T00:00:00+00:00','f44a54607356a8a4a2fcfd65e39433d9f102fa1f')}
 # A snoozed item still alerts on outside activity (Lead, 2026-10-26: a comment by an outside author on #21 stayed hidden
-# for the snooze): a comment after SNOOZE_FROM from anyone except OWN_ACCOUNTS and bots, or a PR head that differs from
-# the first head seen (the heads of #12 and #21 did not move since their snooze). Each new comment or head changes the
-# alert text, so it alerts once per change. A failed read goes up to issue_check (two in a row alert). Every snooze in
-# SNOOZED shares SNOOZE_FROM: give a later snooze its own start before you add it.
-SNOOZE_FROM='2026-10-24T00:34:00+00:00'
+# for the snooze): a comment after its `from` from anyone except OWN_ACCOUNTS and bots, or a PR head that differs from
+# its `head`. Each new comment or head changes the alert text, so it alerts once per change. A failed read goes up to
+# issue_check (two in a row alert).
+assert all(isinstance(v,tuple) and len(v)==3 for v in SNOOZED.values()),'SNOOZED values are (from, until, head)'
 OWN_ACCOUNTS={'nmamano'}
 
-def snooze_activity(src,repo,item,now,memory):
+def snooze_activity(src,repo,item,now):
     """Text that names the outside activity on a snoozed item, or None when it is quiet or not snoozed."""
-    until=SNOOZED.get((repo,item.get('number')))
-    if not until or now>=parse(until):return None
-    n=int(item['number']);notes=[]
-    since=parse(SNOOZE_FROM)
-    new=[(at,who) for at,who in src.outside_comments(repo,n) if parse(at) and parse(at)>since]
+    entry=SNOOZED.get((repo,item.get('number')))
+    if not entry or now>=parse(entry[1]):return None
+    since,_,seen=entry;n=int(item['number']);notes=[]
+    new=[(at,who) for at,who in src.outside_comments(repo,n) if parse(at) and parse(at)>parse(since)]
     if new:notes.append(f"{len(new)} new outside comment(s), last by {safe_text(new[-1][1],40)} at {safe_text(new[-1][0],20)}")
-    if item.get('pr'):
-        head=src.pr_head(repo,n);seen=memory.setdefault('snooze_heads',{}).setdefault(f'{repo}#{n}',head)
+    if item.get('pr') and seen:
+        head=src.pr_head(repo,n)
         if head!=seen:notes.append(f'new head {head[:7]}')
     return '; '.join(notes) or None
 
 def claimed_only(src,repo,item,now):
     """The verifier marked this item's current version Claimed-only (no proof run), or it is snoozed."""
-    until=SNOOZED.get((repo,item.get('number')))
-    if until and now<parse(until):return True
+    entry=SNOOZED.get((repo,item.get('number')))
+    if entry and now<parse(entry[1]):return True
     if repo!='bigospeedrun/verifier':return False
     n=int(item['number'])
     try:
@@ -680,7 +680,7 @@ def issue_check(src,now,results):
             for issue in src.open_issues(repo):
                 opened=parse(issue['created_at'])
                 if not opened or now-opened<24*H:continue
-                note=snooze_activity(src,repo,issue,now,memory)
+                note=snooze_activity(src,repo,issue,now)
                 if note or not claimed_only(src,repo,issue,now):stale.append((opened,repo,issue,note))
     except Exception as error:
         memory['read_failures']=memory.get('read_failures',0)+1
