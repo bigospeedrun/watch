@@ -26,6 +26,11 @@ FAMILY_MAX_REQUESTS=24
 # listed as "draft, waiting", records no claim key, and alerts when it is marked ready for review. Earlier drafts keep
 # their rows. The same cut as DRAFT_SINCE in the site's data/refresh.py.
 DRAFT_SINCE='2026-10-23T15:13:18Z'
+# A family PR with an alerted claim alerts the lead once more when it is merged (Lead, 2026-10-26: GTimG/QuasiRiemannTracker
+# #76 merged with a better bound and nothing alerted). A merge in GTimG/QuasiRiemannTracker makes the row Human
+# Verified (Nil, 2026-10-19); other family repos alert too, but their rows stay Claimed. A close without a merge gives no
+# alert: nothing changes on the site. Merges before this time were seen by the lead already.
+MERGE_ALERT_SINCE='2026-10-26T01:30:00Z'
 FAILED_CHECKS={'failure','timed_out','cancelled','action_required','startup_failure','stale'}
 
 def silent_draft(pr):
@@ -108,6 +113,11 @@ def scan(repo,since,states,budget,out,family=None):
             # A merged or closed PR gets no checks verdict (the merge or the close settles the claim): the wait ends
             # now, so the saved state does not show it as waiting for good (QuasiRiemannTracker #74, 2026-10-25).
             old={k:v for k,v in old.items() if k!='awaiting_checks'};states[number]=old
+        merged_at=str(pr.get('merged_at') or '')
+        if family and merged_at>=MERGE_ALERT_SINCE and not silent and old.get('seen_claims') and not old.get('merged_alerted'):
+            # The claim alerted while the PR was open; its merge is a new fact. One alert, then merged_alerted stays in the state.
+            out['candidates'].append(dict(repo=repo,url=pr['html_url'],pr_number=pr['number'],author=pr['user']['login'],created_at=pr['created_at'],pushed_at=pr['updated_at'],stars=0,rank=25,description=pr['title'],problem_guess=f"Family {family}: {FAMILIES[family]['title']}",readme_commit=head,source_claim_evidence=[check_name(pr.get('title'))+' (merged '+merged_at+')'],source_claim_files=[],claim_signature='merged:'+head,cross_problem_pr=True,other_family=family,stated_bound_changed=True,likely_tracked_source=True,likely_new_race=False,likely_pivot=True,on_board=True,evidence=['family-pr-merged'],coverage_complete=True,draft=draft,merged_at=merged_at,head_check_state='merged',head_checks='merged',checks_final=True))
+            old=dict(old,merged_alerted=True);states[number]=old
         awaiting=list(old.get('awaiting_checks',[])) if not silent else []
         verdict=None
         if awaiting and pr.get('state','open')=='open':
@@ -167,7 +177,7 @@ def scan(repo,since,states,budget,out,family=None):
             out['candidates'].append(dict(repo=repo,url=pr['html_url'],pr_number=pr['number'],author=pr['user']['login'],created_at=pr['created_at'],pushed_at=pr['updated_at'],stars=0,rank=25,description=pr['title'],problem_guess=problem,readme_commit=head,source_claim_evidence=lines[:8],source_claim_files=paths[label],claim_signature=key,cross_problem_pr=True,other_family=fam,stated_bound_changed=True,likely_tracked_source=True,likely_new_race=False,likely_pivot=True,on_board=True,evidence=['recent-family-pr' if family else 'recent-crocswap-pr'],coverage_complete=complete,draft=draft,head_check_state=checks['state'],head_checks=checks['text'],checks_final=bool(verdict)))
             seen.append(key)
         # Resume file pagination; do not spend each cycle on the first 300 files.
-        states[number]=dict(revision=revision if finished else None,pending_revision=revision,next_file_page=next_page,head=head,seen_claims=seen,updated_at=pr['updated_at'],**(dict(awaiting_checks=list(dict.fromkeys(awaiting))) if awaiting else {}))
+        states[number]=dict(revision=revision if finished else None,pending_revision=revision,next_file_page=next_page,head=head,seen_claims=seen,updated_at=pr['updated_at'],**(dict(awaiting_checks=list(dict.fromkeys(awaiting))) if awaiting else {}),**(dict(merged_alerted=True) if old.get('merged_alerted') or (family and merged_at) else {}))
         out['checked'].append(pr['number'] if repo==REPO else f'{repo}#{number}')
     def stop():
         if not budget.spent():return False

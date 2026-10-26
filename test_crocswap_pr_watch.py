@@ -297,6 +297,29 @@ class DraftPRTests(unittest.TestCase):
         self.assertEqual(closed['family_states'][self.QRT]['71']['seen_claims'],first['family_states'][self.QRT]['71']['seen_claims'])
         self.assertEqual(self.watch(dict(self.pr(draft=False),state='closed'),self.carry(closed),checks=self.PASSED)['candidates'],[])
 
+    def test_a_merged_family_pr_with_an_alerted_claim_alerts_once(self):
+        # GTimG/QuasiRiemannTracker #76 (2026-10-26): alerted open with its checks running, merged, and nothing alerted.
+        first=self.watch(self.pr(draft=False),checks=self.RUNNING)
+        self.assertEqual(len(first['candidates']),1)
+        merged=dict(self.pr(draft=False),state='closed',merged_at='2026-10-26T01:30:22Z')
+        done=self.watch(merged,self.carry(first),checks=self.PASSED)
+        row,=done['candidates'];self.assertTrue(alert_candidate(row,set(),set()))
+        self.assertEqual((row['pr_number'],row['other_family'],row['evidence'],row['head_check_state']),(71,'003',['family-pr-merged'],'merged'))
+        self.assertIn('merged 2026-10-26T01:30:22Z',row['source_claim_evidence'][0])
+        state=done['family_states'][self.QRT]['71'];self.assertTrue(state['merged_alerted']);self.assertNotIn('awaiting_checks',state)
+        # Once: the next scans, also after a changed body, alert nothing more for the merge.
+        self.assertEqual(self.watch(merged,self.carry(done),checks=self.PASSED)['candidates'],[])
+        # A merge that came with the first sight of the PR is the claim alert itself: no second alert later.
+        late=self.watch(merged,checks=self.PASSED);self.assertEqual(len(late['candidates']),1)
+        self.assertEqual(self.watch(merged,self.carry(late),checks=self.PASSED)['candidates'],[])
+        # An older merge, an open PR and a PR without an alerted claim do not alert.
+        base=self.watch(self.pr(draft=False),checks=self.PASSED)
+        old=dict(merged,merged_at='2026-10-25T21:50:01Z')
+        self.assertEqual(self.watch(old,self.carry(base),checks=self.PASSED)['candidates'],[])
+        self.assertEqual(self.watch(self.pr(draft=False),self.carry(base),checks=self.PASSED)['candidates'],[])
+        none=self.watch(self.pr(draft=False),checks=self.PASSED,claim='A note without a bound.')
+        self.assertEqual(self.watch(merged,self.carry(none),checks=self.PASSED)['candidates'],[])
+
     def test_the_verdict_on_the_same_head_reads_the_files_from_page_one(self):
         # Reviewer probe (2026-10-25): the saved revision is unchanged, so a resume at next_file_page would miss the claim.
         pages=[]
