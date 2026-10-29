@@ -31,6 +31,7 @@ DRAFT_SINCE='2026-10-23T15:13:18Z'
 # Verified (Nil, 2026-10-19); other family repos alert too, but their rows stay Claimed. A close without a merge gives no
 # alert: nothing changes on the site. Merges before this time were seen by the lead already.
 MERGE_ALERT_SINCE='2026-10-26T01:30:00Z'
+WAITING_RUNS={'queued','waiting','pending','requested','in_progress'}
 FAILED_CHECKS={'failure','timed_out','cancelled','action_required','startup_failure','stale'}
 
 def silent_draft(pr):
@@ -40,6 +41,14 @@ def check_name(text):
     # Check names and titles come from the PR's own workflow files: untrusted text, kept short and plain.
     return re.sub(r'[^A-Za-z0-9 ._/()#:+-]','',str(text or ''))[:60].strip()
 
+def newest(rows,key,order):
+    """One row per key, the newest by order (later in the list wins a tie). A row with no key stays as it is."""
+    best={}
+    for position,row in enumerate(rows):
+        k=key(row) if key(row) is not None else ('row',position)
+        if k not in best or (order(row) or 0)>=(order(best[k]) or 0):best[k]=row
+    return list(best.values())
+
 def head_checks(budget,repo,head,name):
     """The check runs of a PR head as dict(state, text): state is failed, pending, passed, none or unread.
     One GET; a read that fails or has an unexpected shape is 'unread', never an error of the scan."""
@@ -47,11 +56,25 @@ def head_checks(budget,repo,head,name):
         data=budget.request(f'repos/{repo}/commits/{head}/check-runs',dict(per_page=100),name)
         runs=data['check_runs']
         if not isinstance(runs,list):raise TypeError('check_runs')
+        # The API lists the latest run per name of each check SUITE, so a superseded attempt on the same sha (cancelled,
+        # failed) is still there next to the new one (QuasiRiemannTracker #89): keep the newest run per name.
+        runs=newest(runs,lambda r:r.get('name'),lambda r:r.get('id'))
         failed=[r for r in runs if r.get('status')=='completed' and r.get('conclusion') in FAILED_CHECKS]
         pending=[r for r in runs if r.get('status')!='completed']
         state='failed' if failed else 'pending' if pending else 'passed' if runs else 'none'
+        approval=[]
+        if not failed:
+            # A workflow run that waits for a maintainer to approve a first-time contributor creates no check run, so the
+            # check runs alone read "passed" (QuasiRiemannTracker #93, 2026-10-29). Read the workflow runs of the head.
+            workflows=budget.request(f'repos/{repo}/actions/runs',dict(head_sha=head,per_page=100),name)['workflow_runs']
+            if not isinstance(workflows,list):raise TypeError('workflow_runs')
+            workflows=newest(workflows,lambda w:w.get('workflow_id'),lambda w:(w.get('run_number') or 0,w.get('id') or 0))
+            approval=[check_name(w.get('name')) for w in workflows if w.get('conclusion')=='action_required']
+            if approval or any(w.get('status') in WAITING_RUNS for w in workflows):state='pending'
         shown=[check_name(r.get('name'))+(' - '+check_name((r.get('output') or {}).get('title')) if (r.get('output') or {}).get('title') else '') for r in failed[:6]]
         text=f'{state}: {len(failed)} of {len(runs)} checks failed' if failed else f'{state}: {len(runs)} checks'
+        if approval:text=f"pending: waiting for maintainer approval of {', '.join(dict.fromkeys(approval))} ({len(runs)} checks so far)"
+        elif state=='pending' and not pending:text=f'pending: {len(runs)} checks, a workflow run is queued or waiting'
         return dict(state=state,text=text+('; '+'; '.join(shown)+(f'; and {len(failed)-6} more' if len(failed)>6 else '') if shown else ''))
     except (RuntimeError,ValueError,KeyError,TypeError,AttributeError):
         return dict(state='unread',text='unread: the head checks could not be read')

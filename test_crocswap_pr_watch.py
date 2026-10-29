@@ -189,7 +189,7 @@ class DraftPRTests(unittest.TestCase):
         repo=repo or self.QRT
         return dict(number=71,title='Prove the Dirichlet boundary',body=body,head={'sha':head},user={'login':'Rexyysilent'},created_at=created,
                     updated_at='2026-10-24T14:17:37Z',html_url=f'https://github.com/{repo}/pull/71',state='open',draft=draft)
-    def watch(self,pr,previous=None,checks=None,claim='Quasi-Riemann bound mu 0.87477290596 improved.',repo=None,check_error=None):
+    def watch(self,pr,previous=None,checks=None,claim='Quasi-Riemann bound mu 0.87477290596 improved.',repo=None,check_error=None,workflows=(),workflow_error=None):
         self.calls=[]
         def api(path,params,**kwargs):
             self.calls.append(path)
@@ -197,6 +197,9 @@ class DraftPRTests(unittest.TestCase):
             if '/check-runs' in path:
                 if check_error:raise check_error
                 return dict(total_count=len(checks if checks is not None else self.CHECKS),check_runs=checks if checks is not None else self.CHECKS)
+            if '/actions/runs' in path:
+                if workflow_error:raise workflow_error
+                return dict(total_count=len(workflows),workflow_runs=list(workflows))
             return [dict(filename='notes.md',status='added',patch='+'+claim)]
         with patch('crocswap_pr_watch.api',side_effect=api):
             return cw.collect_all(SINCE,previous or {}) if repo is None else cw.collect(SINCE,previous or {})
@@ -320,6 +323,41 @@ class DraftPRTests(unittest.TestCase):
         none=self.watch(self.pr(draft=False),checks=self.PASSED,claim='A note without a bound.')
         self.assertEqual(self.watch(merged,self.carry(none),checks=self.PASSED)['candidates'],[])
 
+    def test_a_workflow_run_that_waits_for_approval_is_not_a_passed_check(self):
+        # GTimG/QuasiRiemannTracker #93 (2026-10-29): the four check runs passed, but "Trusted project checks" was
+        # action_required (a first-time contributor) and has no check run, so the head read "passed".
+        waiting=[dict(name='Trusted project checks',status='completed',conclusion='action_required'),dict(name='PR admission',status='completed',conclusion='success')]
+        first=self.watch(self.pr(draft=False),checks=self.PASSED,workflows=waiting)
+        row,=first['candidates'];self.assertEqual((row['head_check_state'],row['checks_final']),('pending',False))
+        self.assertIn('waiting for maintainer approval of Trusted project checks',row['head_checks']);self.assertNotIn('passed',row['head_checks'])
+        self.assertEqual(len(first['family_states'][self.QRT]['71']['awaiting_checks']),1)
+        # Still waiting: no alert. Approved and passed: one alert with the final verdict.
+        self.assertEqual(self.watch(self.pr(draft=False),self.carry(first),checks=self.PASSED,workflows=waiting)['candidates'],[])
+        done=self.watch(self.pr(draft=False),self.carry(first),checks=self.PASSED,workflows=[dict(name='Trusted project checks',status='completed',conclusion='success')])
+        row,=done['candidates'];self.assertEqual((row['head_check_state'],row['checks_final']),('passed',True))
+        # A queued workflow run waits too; a failed check run needs no workflow read; an unreadable workflow read is unread.
+        row,=self.watch(self.pr(draft=False),checks=self.PASSED,workflows=[dict(name='t',status='queued',conclusion=None)])['candidates']
+        self.assertEqual(row['head_check_state'],'pending');self.assertIn('queued or waiting',row['head_checks'])
+        self.watch(self.pr(draft=False),checks=self.CHECKS,workflows=waiting);self.assertFalse(any('/actions/runs' in c for c in self.calls))
+        row,=self.watch(self.pr(draft=False),checks=self.PASSED,workflow_error=RuntimeError('GitHub GET failed'))['candidates']
+        self.assertEqual(row['head_check_state'],'unread')
+
+    def test_only_the_newest_run_per_check_name_and_per_workflow_counts(self):
+        # QuasiRiemannTracker #89: a cancelled attempt of an older check suite sits next to the passing run of the new one.
+        old=[dict(id=1,name='verify',status='completed',conclusion='cancelled',output={}),dict(id=2,name='admission',status='completed',conclusion='failure',output={})]
+        new=[dict(id=11,name='verify',status='completed',conclusion='success',output={}),dict(id=12,name='admission',status='completed',conclusion='success',output={})]
+        row,=self.watch(self.pr(draft=False),checks=old+new)['candidates']
+        self.assertEqual((row['head_check_state'],row['head_checks']),('passed','passed: 2 checks'))
+        # The reverse is failed: the newest run of a name decides, wherever it sits in the list.
+        row,=self.watch(self.pr(draft=False),checks=new+old[:1]+[dict(id=13,name='admission',status='completed',conclusion='failure',output={})])['candidates']
+        self.assertEqual(row['head_check_state'],'failed');self.assertIn('1 of 2 checks failed',row['head_checks'])
+        # An old action_required run of a workflow that a newer run replaced does not keep the head pending; a newer one does.
+        stale=dict(id=5,workflow_id=7,run_number=1,name='Trusted project checks',status='completed',conclusion='action_required')
+        fresh=dict(id=9,workflow_id=7,run_number=2,name='Trusted project checks',status='completed',conclusion='success')
+        row,=self.watch(self.pr(draft=False),checks=self.PASSED,workflows=[fresh,stale])['candidates'];self.assertEqual(row['head_check_state'],'passed')
+        row,=self.watch(self.pr(draft=False),checks=self.PASSED,workflows=[dict(fresh,id=4,run_number=0),dict(stale,run_number=3)])['candidates']
+        self.assertEqual(row['head_check_state'],'pending')
+
     def test_the_verdict_on_the_same_head_reads_the_files_from_page_one(self):
         # Reviewer probe (2026-10-25): the saved revision is unchanged, so a resume at next_file_page would miss the claim.
         pages=[]
@@ -327,6 +365,7 @@ class DraftPRTests(unittest.TestCase):
             def api(path,params,**kwargs):
                 if path.endswith('/pulls'):return [self.pr(draft=False)] if self.QRT in path else []
                 if '/check-runs' in path:return dict(total_count=len(checks),check_runs=checks)
+                if '/actions/runs' in path:return dict(total_count=0,workflow_runs=[])
                 pages.append(params.get('page'))
                 return [dict(filename='notes.md',status='added',patch='+Quasi-Riemann bound mu 0.87477290596 improved.')] if params.get('page')==1 else []
             with patch('crocswap_pr_watch.api',side_effect=api):
