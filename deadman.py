@@ -61,6 +61,10 @@ Items:
                        then on a run without the step alerts. A run listed with no steps at
                        all (a GitHub read lag) is no verdict; the third such check in a row
                        alerts
+  croc-certifications  data/crocswap-certifications.json on main (what CrocSwap main certifies; the site gives a CrocSwap PR row
+                       Human Verified only then) has no read_error older than 3 h. The refresh sets read_error when its
+                       read of the CrocSwap history fails and keeps the stored file, so new certifications stay unapplied
+                       (Lead, 2026-10-30)
   review-wait          nothing waits for the lead in data/review-holds.json (implausible
                        jump holds), data/claim-review.json (CrocSwap claims),
                        data/platypii-lean.json (held note) or data/sources/intake.json
@@ -165,6 +169,8 @@ PROVE2ME_MEMORY='.git/prove2me-import.json'
 PARITY_MEMORY='.git/race-parity.json'
 METHOD_MEMORY='.git/method-note.json'
 METHOD_LIMIT=timedelta(hours=24)
+CERT_LIMIT=timedelta(hours=3)
+CERT_LINK='~/nil/bigospeedrun-site/data/crocswap_cert.py; https://github.com/bigospeedrun/site/actions/workflows/refresh-data.yml'
 METHOD_LINK='~/nil/bigospeedrun-site/data/method-notes.json (add the leader by board and row id); bigospeedrun.com/chat-knowledge.json'
 SITE_RACES='https://bigospeedrun.com/chat-knowledge.json'
 BOARD_LIST=f'https://board.bigospeedrun.com/llms.txt'
@@ -311,6 +317,13 @@ class Sources:
         try:intake=raw('data/sources/intake.json')
         except RuntimeError:intake={}
         return raw('data/review-holds.json').get('holds',[]),raw('data/claim-review.json').get('queue',[]),platypii,intake
+    def croc_cert_state(self):
+        out=subprocess.run(['gh','api','-X','GET','repos/bigospeedrun/site/contents/data/crocswap-certifications.json','-H','Accept: application/vnd.github.raw'],
+                           capture_output=True,text=True,timeout=60)
+        if out.returncode:
+            if 'HTTP 404' in out.stderr:return {}  # Sites before 2026-10-30 have no such file.
+            raise RuntimeError('GitHub contents request failed')
+        return json.loads(out.stdout)
     def site_races(self):
         request=urllib.request.Request(SITE_RACES,headers={'User-Agent':'bos-deadman/1','Accept':'application/json'})
         with urllib.request.urlopen(request,timeout=30) as response:return races_from(json.loads(response.read(5*1024*1024)))
@@ -628,6 +641,15 @@ def method_check(src,now,results):
     memory['missing']=missing;memory['last_ok']=not problems;memory['last_problem']=problem;src.remember_method(memory)
     results['method-note']=(not problems,problem,None if problems else now,METHOD_LINK)
 
+def cert_check(src,now,results):
+    try:error=(src.croc_cert_state() or {}).get('read_error')
+    except Exception as error_read:
+        results['croc-certifications']=(False,'cannot read data/crocswap-certifications.json: '+type(error_read).__name__,None,CERT_LINK);return
+    since=parse((error or {}).get('since'))
+    if error and since and now-since>=CERT_LIMIT:
+        results['croc-certifications']=(False,safe_text(f"the CrocSwap certification read has failed since {pt(since)}: {error.get('message')}; new certifications stay unapplied",500),None,CERT_LINK)
+    else:results['croc-certifications']=(True,None,now,CERT_LINK)
+
 # A verifier item whose current version got the bot's claimed-only result is not stale (Lead, 2026-10-23;
 # the verifier closes such items since dbf084a, so this matters for older open items). SNOOZED holds
 # (repo, number): (from, until, head). The item is skipped until `until`; after that it alerts again. `from` is the
@@ -844,6 +866,7 @@ def check(src,now,to_time=systemd_time):
     review_check(src,latest,results)
     parity_check(src,now,results)
     method_check(src,now,results)
+    cert_check(src,now,results)
     if src.unit_installed('bigospeedrun-race-channels.timer'):
         good=src.race_channels_last_ok();fresh=bool(good and now-good<2*H)
         results['race-channels']=(fresh,None if fresh else 'no passed race channel run in the last 2 h',good,

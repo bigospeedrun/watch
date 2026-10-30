@@ -74,6 +74,10 @@ class Fake:
         if isinstance(self.p2m_state,Exception):raise self.p2m_state
         return self.p2m_state
     def prove2me_memory(self):return dict(self.p2m_mem)
+    cert_state={};
+    def croc_cert_state(self):
+        if isinstance(self.cert_state,Exception):raise self.cert_state
+        return self.cert_state
     # Race parity: one problem and one Other bounds row, each with a board and a channel.
     knowledge={'problems':[{'path':'/exact-dft','name':'Fourier Transform','title':'Exact discrete Fourier transform'}],
                'otherBounds':{'rows':[{'path':'/other/catalan','title':'Catalan\u2019s constant'}]}}
@@ -140,7 +144,7 @@ class DeadmanTests(unittest.TestCase):
 
     def test_all_healthy_sends_nothing(self):
         report=self.run_at(Fake())
-        self.assertEqual(set(report),{'watch-cycle','candidate-review','discord-intake','problem-selection','site-refresh','verifier-submissions','chatbot-gap-review','watch-sources','watch-errors','vps-deploy','vps-board','race-parity','method-note','stale-issues','unanswered-submissions','direct-import'})
+        self.assertEqual(set(report),{'watch-cycle','candidate-review','discord-intake','problem-selection','site-refresh','verifier-submissions','chatbot-gap-review','watch-sources','watch-errors','vps-deploy','vps-board','race-parity','method-note','croc-certifications','stale-issues','unanswered-submissions','direct-import'})
         self.assertTrue(all(v=='ok' for v in report.values()));self.assertEqual(self.sent,[])
 
     def test_each_simulated_stale_or_failed_state_is_caught(self):
@@ -453,6 +457,16 @@ class DeadmanTests(unittest.TestCase):
         f.leaders=[('/exact-dft','direct-pr-41',True),('/apsp','newer-leader',False)]
         self.assertEqual(d.check(f,NOW+timedelta(hours=26))['method-note'][:2],(True,None),'another leader starts its own clock')
         self.assertEqual(f.method_mem['missing'],{'/apsp newer-leader':(NOW+timedelta(hours=26)).isoformat()})
+
+    def test_croc_certifications_alert_only_when_a_read_error_is_older_than_3_hours(self):
+        f=Fake();self.assertEqual(d.check(f,NOW)['croc-certifications'][:2],(True,None))
+        since=(NOW-timedelta(hours=2)).isoformat()
+        f.cert_state={'read_error':{'since':since,'message':'RuntimeError: GitHub GET failed'}}
+        self.assertEqual(d.check(f,NOW)['croc-certifications'][:2],(True,None),'a blip is not an alert')
+        ok,problem=d.check(f,NOW+timedelta(hours=1))['croc-certifications'][:2]
+        self.assertFalse(ok);self.assertIn('GitHub GET failed',problem);self.assertIn('new certifications stay unapplied',problem)
+        f.cert_state={};self.assertEqual(d.check(f,NOW+timedelta(hours=2))['croc-certifications'][:2],(True,None),'a good run clears it')
+        f.cert_state=OSError('down');self.assertIn('croc-certifications',self.failing(f))
 
     def test_method_note_tolerates_one_failed_read_and_alerts_on_two(self):
         f=Fake();f.leaders_error=OSError('down')
