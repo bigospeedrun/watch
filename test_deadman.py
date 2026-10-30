@@ -74,7 +74,9 @@ class Fake:
         if isinstance(self.p2m_state,Exception):raise self.p2m_state
         return self.p2m_state
     def prove2me_memory(self):return dict(self.p2m_mem)
-    cert_state={};
+    cert_state={};cert_mem={}
+    def cert_memory(self):return json.loads(json.dumps(self.cert_mem))
+    def remember_cert(self,memory):self.cert_mem=json.loads(json.dumps(memory))
     def croc_cert_state(self):
         if isinstance(self.cert_state,Exception):raise self.cert_state
         return self.cert_state
@@ -466,7 +468,11 @@ class DeadmanTests(unittest.TestCase):
         ok,problem=d.check(f,NOW+timedelta(hours=1))['croc-certifications'][:2]
         self.assertFalse(ok);self.assertIn('GitHub GET failed',problem);self.assertIn('new certifications stay unapplied',problem)
         f.cert_state={};self.assertEqual(d.check(f,NOW+timedelta(hours=2))['croc-certifications'][:2],(True,None),'a good run clears it')
-        f.cert_state=OSError('down');self.assertIn('croc-certifications',self.failing(f))
+        f.cert_state=OSError('down')
+        self.assertNotIn('croc-certifications',self.failing(f),'one failed read is a blip')
+        self.assertIn('croc-certifications',self.failing(f),'two in a row alert')
+        f.cert_state={};self.assertNotIn('croc-certifications',self.failing(f));f.cert_state=OSError('down')
+        self.assertNotIn('croc-certifications',self.failing(f),'a good read resets the count')
 
     def test_method_note_tolerates_one_failed_read_and_alerts_on_two(self):
         f=Fake();f.leaders_error=OSError('down')

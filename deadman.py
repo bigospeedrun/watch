@@ -168,6 +168,7 @@ BOARD_MEMORY='.git/board-health.json'
 PROVE2ME_MEMORY='.git/prove2me-import.json'
 PARITY_MEMORY='.git/race-parity.json'
 METHOD_MEMORY='.git/method-note.json'
+CERT_MEMORY='.git/croc-certifications.json'
 METHOD_LIMIT=timedelta(hours=24)
 CERT_LIMIT=timedelta(hours=3)
 CERT_LINK='~/nil/bigospeedrun-site/data/crocswap_cert.py; https://github.com/bigospeedrun/site/actions/workflows/refresh-data.yml'
@@ -391,6 +392,13 @@ class Sources:
     def method_memory(self):
         path=self.root/METHOD_MEMORY
         return json.loads(path.read_text()) if path.exists() else {}
+    def cert_memory(self):
+        path=self.root/CERT_MEMORY
+        return json.loads(path.read_text()) if path.exists() else {}
+    def remember_cert(self,memory):
+        if not self.persist:return
+        path=self.root/CERT_MEMORY;tmp=path.with_name(path.name+'.tmp')
+        tmp.write_text(json.dumps(memory));tmp.replace(path)
     def remember_method(self,memory):
         if not self.persist:return
         path=self.root/METHOD_MEMORY;tmp=path.with_name(path.name+'.tmp')
@@ -642,9 +650,15 @@ def method_check(src,now,results):
     results['method-note']=(not problems,problem,None if problems else now,METHOD_LINK)
 
 def cert_check(src,now,results):
+    # One failed read of the file is a blip (like method_check); two in a row alert.
+    memory=src.cert_memory()
     try:error=(src.croc_cert_state() or {}).get('read_error')
     except Exception as error_read:
-        results['croc-certifications']=(False,'cannot read data/crocswap-certifications.json: '+type(error_read).__name__,None,CERT_LINK);return
+        memory['read_failures']=memory.get('read_failures',0)+1;src.remember_cert(memory)
+        if memory['read_failures']>=2:results['croc-certifications']=(False,f"cannot read data/crocswap-certifications.json ({memory['read_failures']} runs in a row): "+type(error_read).__name__,None,CERT_LINK)
+        else:results['croc-certifications']=(True,None,None,CERT_LINK)
+        return
+    if memory.get('read_failures'):memory['read_failures']=0;src.remember_cert(memory)
     since=parse((error or {}).get('since'))
     if error and since and now-since>=CERT_LIMIT:
         results['croc-certifications']=(False,safe_text(f"the CrocSwap certification read has failed since {pt(since)}: {error.get('message')}; new certifications stay unapplied",500),None,CERT_LINK)
