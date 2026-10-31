@@ -159,7 +159,17 @@ so a review session that stays down is noticed). A failing item alerts BOS Lead 
 through a signed Isomux webhook (`.git/deadman.json`), then once on recovery.
 If the lead cannot be reached, the alert goes to `.git/deadman-alerts.log` and
 the next hourly run retries. `python3 deadman.py --dry-run` prints item status
-only. This cycle cross-checks the timer through `.git/deadman-state.json`.
+only.
+`hook_guard.py` (2026-10-31, Lead) guards the webhook itself: on 2026-10-26 its secret changed (a change of
+manager rotates a hook's secret), every BOS timer got HTTP 401 for five days, and nothing reached the lead. Each hour
+the guard sends a signed probe (event `hook-guard`, which no rule matches: HTTP 200, no turn billed) through the
+same URL, secret file and signature as `webhook_send`. HTTP 401 or an unreadable config pages the manager at once;
+any other failure pages after 2 failed passes in a row; a good probe resolves the page. It pages through the Isomux
+pager (`POST /api/app/pager`, key `bos-hook-guard`), never through the webhook, and tells the lead once per problem
+and once on recovery (`POST /api/app/message`, the lead from `.git/watch-office.json`). It runs as an Isomux app (loop,
+token in the app's environment). Fix for a 401: the hook's creator rotates the secret and saves the raw string
+to `secret_file` of `.git/deadman.json`. The Isomux hook limit is 10 dispatches a minute: after a long outage the
+backlog of the timers (pwn-watch up to 10 alerts, comment-watch parts) can need two or three runs to flow. This cycle cross-checks the timer through `.git/deadman-state.json`.
 
 ## Discord submissions
 
