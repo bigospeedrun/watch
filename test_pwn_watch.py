@@ -3,6 +3,7 @@ import io
 import json
 import tempfile
 import unittest
+import urllib.error
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from unittest.mock import patch
@@ -191,6 +192,25 @@ class PwnWatchTests(unittest.TestCase):
         self.assertIsNone(self.state()['last_ok'])
         self.run_once(feeds)
         self.assertEqual([p['text'].rsplit('/', 1)[1] for p in self.sent], ['first', 'second'])
+
+    def test_a_refused_webhook_names_its_http_status_and_never_the_response_text(self):
+        # 2026-10-31: the hook secret was stale, every send got 401, and the journal said only RuntimeError.
+        self.seed()
+        feeds = Feeds(dict(node=[incident('first')]))
+        def refused(payload):
+            raise urllib.error.HTTPError('http://localhost:4000/hooks/x', 401, 'SECRET BODY', {}, io.BytesIO(b'SECRET BODY'))
+        with self.assertRaisesRegex(pw.AlertNotDelivered, r'^alert not delivered: HTTPError 401$'):
+            self.run_once(feeds, send=refused)
+        with patch('sys.argv', ['pwn_watch.py']), patch('pwn_watch.run', side_effect=pw.AlertNotDelivered('alert not delivered: HTTPError 401')), \
+                patch('deadman.webhook_send'), patch('builtins.print') as out:
+            with self.assertRaises(SystemExit):
+                pw.main()
+        out.assert_called_once_with('pwn.watch poll failed: alert not delivered: HTTPError 401')
+        with patch('sys.argv', ['pwn_watch.py']), patch('pwn_watch.run', side_effect=ValueError('FEED TEXT')), \
+                patch('deadman.webhook_send'), patch('builtins.print') as out:
+            with self.assertRaises(SystemExit):
+                pw.main()
+        out.assert_called_once_with('pwn.watch poll failed: ValueError')
 
     def test_dry_run_sends_and_writes_nothing(self):
         result = self.run_once(Feeds(dict(node=[incident('a')])), dry_run=True)
