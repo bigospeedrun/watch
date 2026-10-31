@@ -25,10 +25,11 @@ the alert key and its time, plus the time of the last good pass. The dead-man it
 import argparse
 import json
 import re
-import urllib.error
 import urllib.request
 from datetime import datetime, timezone
 from pathlib import Path
+
+from deadman import why
 
 ROOT = Path(__file__).resolve().parent
 STATE = 'pwn-watch.local.json'
@@ -55,12 +56,6 @@ SLUG = re.compile(r'[a-z0-9][a-z0-9-]{0,119}')
 
 class AlertNotDelivered(RuntimeError):
     """The webhook refused or could not take an alert. The text holds only an exception type and an HTTP status."""
-
-
-def why(error):
-    """'HTTPError 401' for a refused webhook call, else the exception type. Never the response text."""
-    name = type(error).__name__
-    return f'{name} {error.code}' if isinstance(error, urllib.error.HTTPError) else name
 
 
 def safe_text(value, cap=200):

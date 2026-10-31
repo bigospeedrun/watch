@@ -4,6 +4,7 @@ import unittest
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from unittest import mock
+from urllib.error import HTTPError
 
 import comment_watch as c
 
@@ -121,6 +122,15 @@ class CommentWatchTests(unittest.TestCase):
         self.assertEqual((result['status'], result['sent']), ('ok', 1))
         self.assertEqual(len(w.alerts), 2, 'the comment of the working repository was not sent twice')
         self.assertEqual(w.state()['cursor'], iso(20))
+
+    def test_a_refused_webhook_names_its_http_status(self):
+        # 2026-10-31: a stale hook secret made every send fail with 401 for five days, and the log said only HTTPError.
+        w = Watch()
+        w.run(T0)
+        w.events['verifier'] = [event(1, at=2)]
+        refused = HTTPError('http://localhost:4000/hooks/x', 401, 'SECRET BODY', {}, None)
+        result = c.run(mock.Mock(side_effect=refused), w.root, now=T0 + timedelta(minutes=10), read=w.read, label=w.label, count=w.count)
+        self.assertEqual((result['status'], result['sent']), ('partial: notify:HTTPError 401', 0))
 
     def test_an_undelivered_alert_leaves_the_comment_unseen_and_it_is_retried(self):
         w = Watch()

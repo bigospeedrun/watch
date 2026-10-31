@@ -1024,6 +1024,11 @@ def board_checks(src,now,board,results):
                 problems.append(f'the newest pull was not acknowledged (ACK FAIL at {pt(ack[1])}): the VPS wrote no pull marker')
             results['board-backup']=(not problems,'; '.join(problems)[:300] or None,None if problems else now,link)
 
+def why(error):
+    """An exception type, plus the HTTP status of a refused call ('HTTPError 401'). Never the response text."""
+    name=type(error).__name__
+    return f'{name} {error.code}' if isinstance(error,urllib.error.HTTPError) else name
+
 def webhook_send(root,event='deadman'):
     # Isomux passes only the rule's args to the agent (payload.text here), in a
     # message capped at 4000 characters; keep payload text well below that.

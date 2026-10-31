@@ -24,6 +24,7 @@ from zoneinfo import ZoneInfo
 
 import digest_size
 import github_read as gh
+from deadman import why
 
 ROOT = Path(__file__).resolve().parent
 ORG = 'bigospeedrun'
@@ -225,7 +226,7 @@ def run(notify, root=None, dry_run=False, now=None, read=events, label=item_labe
             notify(text, 'comment-watch-' + group[0][0])
         except Exception as error:
             # Stop here, keep what was received and keep the cursor: the rest comes next run.
-            failed.append('notify:' + type(error).__name__)
+            failed.append('notify:' + why(error))
             break
         # Only comments the lead has received count as sent.
         for key, _ in group:

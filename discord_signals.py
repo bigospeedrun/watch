@@ -30,6 +30,7 @@ from zoneinfo import ZoneInfo
 
 import digest_size
 import discord_watch as dw
+from deadman import why
 
 ROOT = Path(__file__).resolve().parent
 STATE = 'discord-signals.local.json'
@@ -313,7 +314,7 @@ def run(api, notify, root=None, dry_run=False, now=None, sleep=time.sleep):
             notify(text, 'discord-signals-' + keys[0])
             sent_ids |= set(keys)
         except Exception as error:
-            failed.append('notify:' + type(error).__name__)
+            failed.append('notify:' + why(error))
             blocked |= {k for _, ks in parts[i:] for k in ks}
             break
     if not dry_run:

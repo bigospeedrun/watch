@@ -189,6 +189,16 @@ class RunTests(unittest.TestCase):
         self.assertLessEqual(len(quoted) - 4, s.TEXT + len(' [cut]'))
         self.assertNotIn('secret', (r.root / s.STATE).read_text())
 
+    def test_a_refused_webhook_names_its_http_status(self):
+        r = Run()
+        r.go()
+        r.api.rows[GENERAL] = [msg(40, mentions=[dict(id=BOT)])]
+        def refused(text, identity):
+            raise HTTPError('http://localhost:4000/hooks/x', 401, 'SECRET BODY', {}, None)
+        r.notify = refused
+        result = r.go(2)
+        self.assertEqual((result['status'], result['sent']), ('partial: notify:HTTPError 401', 0))
+
     def test_a_failed_webhook_keeps_the_cursor_and_the_message_comes_next_time_once(self):
         r = Run()
         r.go()

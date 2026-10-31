@@ -656,6 +656,11 @@ class DeadmanTests(unittest.TestCase):
     def test_unconfigured_webhook_counts_as_unreachable(self):
         with self.assertRaises(RuntimeError):d.webhook_send(self.root)(dict(text='x'))
 
+    def test_why_names_a_refused_status_and_never_the_response_text(self):
+        import io,urllib.error
+        self.assertEqual(d.why(urllib.error.HTTPError('http://x',401,'SECRET BODY',{},io.BytesIO(b'SECRET BODY'))),'HTTPError 401')
+        self.assertEqual(d.why(OSError('feed text')),'OSError')
+
     def test_webhook_signature_matches_isomux_verify(self):
         import hashlib,hmac,http.server,threading
         got={}
