@@ -165,7 +165,9 @@ manager rotates a hook's secret), every BOS timer got HTTP 401 for five days, an
 the guard sends a signed probe (event `hook-guard`, which no rule matches: HTTP 200, no turn billed) through the
 same URL, secret file and signature as `webhook_send`. HTTP 401 or an unreadable config pages the manager at once;
 any other failure pages after 2 failed passes in a row; a good probe resolves the page. It pages through the Isomux
-pager (`POST /api/app/pager`, key `bos-hook-guard`), never through the webhook, and tells the lead once per problem
+pager (`POST /api/app/pager`, key `bos-hook-guard`), never through the webhook. The page goes to the app owner, Isomuxer 4,
+who has no Discord webhook (delivery `no_webhook`, checked 2026-10-31), so the message to the lead is the working path.
+It tells the lead once per problem
 and once on recovery (`POST /api/app/message`, the lead from `.git/watch-office.json`). It runs as an Isomux app (loop,
 token in the app's environment). Fix for a 401: the hook's creator rotates the secret and saves the raw string
 to `secret_file` of `.git/deadman.json`. The Isomux hook limit is 10 dispatches a minute: after a long outage the
