@@ -119,8 +119,9 @@ def item_label(repo, n, cache):
 
 
 REPLY_CAP = 3  # Nil rule 2026-10-23: at most 3 agent replies per thread with outside people
-# The first line of an agent reply: "Agent for Nil (...)" and the older "I'm the AI agent that maintains the site for Nil".
-AGENT_LINE = re.compile(r"\A(?:agent for nil(?![a-z0-9])|answered by the big o speedrun ops agent(?![a-z0-9]))|\b(?:i'm|i am) the ai agent\b")
+# The first line of an agent reply: "Agent for Nil (...)", "This is an agent for Nil (...)" (4 comments of
+# bigospeedrun/verifier by 2026-11-01, among them issuecomment-6549926842) and the older "I'm the AI agent that maintains the site for Nil".
+AGENT_LINE = re.compile(r"\A(?:(?:this is an? )?agent for nil(?![a-z0-9])|answered by the big o speedrun ops agent(?![a-z0-9]))|\b(?:i'm|i am) the ai agent\b")
 
 
 def agent_signed(text):

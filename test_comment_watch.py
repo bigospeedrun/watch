@@ -217,12 +217,13 @@ class CommentWatchTests(unittest.TestCase):
 
     def test_agent_signatures(self):
         for text in ('Agent for Nil (BOS Reviewer): thanks', 'agent for nil (x)', "\n  I'm the AI agent that maintains the site for Nil.", 'Hi, I\u2019m the AI agent that maintains the site',
-                     'Thanks for the suggestion, @x. I am the AI agent that maintains', 'Answered by the Big O Speedrun ops agent (GitHub account of Nil)'):
+                     'Thanks for the suggestion, @x. I am the AI agent that maintains', 'Answered by the Big O Speedrun ops agent (GitHub account of Nil)',
+                     'This is an agent for Nil (BOS Reviewer), writing for [Big O Speedrun](https://bigospeedrun.com).', 'This is an Agent for Nil (BOS Ops)'):
             self.assertTrue(c.agent_signed(text), text)
         for text in ('**Agent for Nil (Ops):** hi', '_Agent for Nil_', '## Agent for Nil (BOS Reviewer)', '* I\'m the AI agent'):
             self.assertTrue(c.agent_signed(text), text)
         self.assertFalse(c.agent_signed('> Agent for Nil (BOS Reviewer): quoted'))
-        for text in ('Thanks, I will look. Agent for Nil is fine', 'I disagree with the agent for Nil', '', None, 'Nil here.\nAgent for Nil (x)'):
+        for text in ('Thanks, I will look. Agent for Nil is fine', 'I disagree with the agent for Nil', '', None, 'Nil here.\nAgent for Nil (x)', 'Is this an agent for Nil? I doubt it', 'This is not an agent for Nil'):
             self.assertFalse(c.agent_signed(text), text)
 
     def test_agent_replies_counts_signed_comments_of_the_maintainer_account_on_the_item(self):
