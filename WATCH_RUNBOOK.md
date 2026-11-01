@@ -309,7 +309,7 @@ retries next cycle. `python3 problem_selection_watch.py --dry-run` reads only.
 This route does not change the #submit-a-result intake above.
 
 The same script reads the private `#prove2me` channel (`1560124932518580245`,
-the channel with prove2.me) every hour at :07, outside this cycle, from the
+the channel with prove2.me) every 15 minutes, outside this cycle, from the
 systemd user timer `bigospeedrun-prove2me.timer`
 (`problem_selection_watch.py --channel prove2me --via webhook`). A systemd unit
 has no office token, so it delivers through the signed Isomux webhook

@@ -3,7 +3,7 @@
 
 Members suggest new problems in #problem-selection (read by the watch cycle,
 delivered through the office API). #prove2me is the private channel with
-prove2.me (read hourly by bigospeedrun-prove2me.timer, delivered through the
+prove2.me (read every 15 minutes by bigospeedrun-prove2me.timer, delivered through the
 signed Isomux webhook, since a systemd unit has no office token). This script
 sends each run's new messages (author, time in PT, text, link) straight to the lead.
 It only sends GET requests to Discord: no messages, reactions or edits.
