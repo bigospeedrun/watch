@@ -80,10 +80,61 @@ class CommentWatchTests(unittest.TestCase):
     def test_bots_and_the_maintainer_account_do_not_alert(self):
         w = Watch()
         w.run(T0)
-        w.events['verifier'] = [event(1, author='github-actions[bot]', bot=True, at=1), event(2, author='nmamano', at=2, assoc='MEMBER'),
+        w.events['verifier'] = [event(1, author='github-actions[bot]', bot=True, at=1), event(2, author='nmamano', at=2, assoc='MEMBER', text='Agent for Nil (BOS Reviewer): thanks'),
                                 event(3, author='vercel', bot=True, at=2)]
         self.assertEqual(w.run(T0 + timedelta(minutes=10))['new'], 0)
         self.assertEqual(w.alerts, [])
+
+    def test_an_unsigned_comment_of_the_maintainer_account_alerts_at_once_in_its_own_message_and_only_once(self):
+        # 2026-11-02: a Reviewer reply on verifier#94 had no agent line and Nil found it before we did.
+        w = Watch()
+        w.run(T0)
+        w.events['verifier'] = [event(1, author='nmamano', at=1, assoc='MEMBER', text='Thanks, merged. Ignore the earlier note.'), event(2, at=2)]
+        result = w.run(T0 + timedelta(minutes=10))
+        digest = [a for a in w.alerts if not a[1].startswith('comment-watch-unsigned-')]
+        unsigned = [a for a in w.alerts if a[1].startswith('comment-watch-unsigned-')]
+        self.assertEqual(len(digest), 1, 'the human comment is in the digest as before')
+        self.assertNotIn('Ignore the earlier note', digest[0][0])
+        self.assertEqual([a[1] for a in unsigned], ['comment-watch-unsigned-ic:verifier:1'])
+        self.assertIn('UNSIGNED COMMENT BY THE MAINTAINER ACCOUNT', unsigned[0][0])
+        self.assertIn('Thanks, merged. Ignore the earlier note.', unsigned[0][0])
+        self.assertIn('issuecomment-1', unsigned[0][0])
+        # It is not sent again, and it still counts as our reply to earlier comments (the existing rule).
+        w.alerts.clear()
+        w.run(T0 + timedelta(minutes=20))
+        self.assertEqual(w.alerts, [])
+        self.assertIn('ic:verifier:1', w.state()['seen'])
+
+    def test_which_comments_of_the_maintainer_account_count_as_unsigned(self):
+        own = lambda text, key='ic:verifier:1', **kw: dict(event(1, author='nmamano', text=text, assoc='MEMBER', **kw), key=key)
+        for text in ('Agent for Nil (BOS Reviewer): ok', 'This is an agent for Nil (BOS Reviewer), writing for Big O Speedrun.',
+                     'Thanks for the report.\n\nThis is an agent for Nil (BOS Ops).', '**Agent for Nil (Ops):** ok', 'THIS IS AN AGENT FOR NIL (x)',
+                     "I\u2019m the AI agent that maintains the site for Nil."):
+            self.assertFalse(c.unsigned_own(own(text)), text)
+        for text in ('Thanks, merged.', '', None, 'Nil here.\nAgent for Nil (x)', 'This is not an agent for Nil', '> Agent for Nil (x): quoted\nI agree', 'Is this an agent for Nil?'):
+            self.assertTrue(c.unsigned_own(own(text)), text)
+        # Other accounts and bots are not this guard's business; a bodyless COMMENTED review is only a container.
+        self.assertFalse(c.unsigned_own(event(1, author='someone', text='Thanks')))
+        self.assertFalse(c.unsigned_own(event(1, author='nmamano', bot=True, text='Thanks')))
+        self.assertFalse(c.unsigned_own(dict(own('', key='rv:verifier:5'), state='COMMENTED')))
+        self.assertTrue(c.unsigned_own(dict(own('', key='rv:verifier:5'), state='APPROVED')))
+        self.assertTrue(c.unsigned_own(dict(own('', key='rv:verifier:5'), state='CHANGES_REQUESTED')))
+        self.assertTrue(c.unsigned_own(dict(own('Looks fine', key='rv:verifier:5'), state='COMMENTED')))
+        self.assertTrue(c.unsigned_own(own('Inline note', key='rc:verifier:3')))
+
+    def test_an_undelivered_unsigned_alert_is_retried_and_the_dry_run_sends_nothing(self):
+        w = Watch()
+        w.run(T0)
+        w.events['verifier'] = [event(1, author='nmamano', at=1, assoc='MEMBER', text='no line')]
+        self.assertEqual(w.run(T0 + timedelta(minutes=10), dry_run=True)['new'], 0)
+        self.assertEqual(w.alerts, [])
+        def refuse(text, identity): raise RuntimeError('down')
+        with mock.patch.object(c, 'why', lambda e: 'down'):
+            result = c.run(refuse, w.root, now=T0 + timedelta(minutes=10), read=w.read, label=w.label, count=w.count)
+        self.assertTrue(result['status'].startswith('partial'))
+        self.assertNotIn('ic:verifier:1', w.state()['seen'])
+        w.run(T0 + timedelta(minutes=20))
+        self.assertEqual(len(w.alerts), 1)
 
     def test_a_comment_of_ours_answers_the_earlier_comments_on_the_same_item_only(self):
         w = Watch()
