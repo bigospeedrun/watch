@@ -15,6 +15,12 @@ already sent and the comments still without a reply; the dead-man items comment-
 (deadman.py) read it: the watch passed in the last 30 minutes, and no human comment waited 2 hours for a
 reply.
 
+Hand-ack (Lead, 2026-11-02): when the lead decides that a comment needs no reply (for example the author's own close,
+refile or description note), an agent marks its entry in tracked by hand, never with a GitHub comment: replied=true,
+plus no_reply_needed with the reason and date ("Lead, 2026-11-02: the author's own close note; no reply"). Edit the file
+between two timer runs (it is rewritten whole). This watch never sets replied back to false and keeps the extra
+field, so the comment-reply item stays quiet for that entry until it ages out (KEEP).
+
 Guard (Lead, 2026-11-02, after a verifier#94 reply that had no agent line and that Nil found before we did):
 a comment by OWN that is not signed as an agent alerts at once, in its own message. Signed means the first line
 is an agent line (agent_signed) or the text holds "This is an agent for Nil". Nil writes there himself rarely, so a
