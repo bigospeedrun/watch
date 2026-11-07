@@ -23,7 +23,7 @@ Items:
                        timer triggered < 75 min ago (systemctl --user show)
   unanswered-submissions every verifier submission issue and PR open 45 min or more has a
                        github-actions reply; alerts once per item (issue #35 had none for 10 h,
-                       2026-10-21). stale-issues also reads PRs.
+                       2026-10-21; a maintainer test issue with the label test needs none). stale-issues also reads PRs.
   watch-errors         no error in pivot-watch.json names a watchlist repo (other-bounds and
                        pivot watchlists). Alerts once per new error string, never again
                        for the same string in one failing episode, and sends one recovery
@@ -354,7 +354,8 @@ class Sources:
         # Pull requests count too: "nothing in bigospeedrun/* stays open indefinitely" (Nil), and
         # verifier PRs from 2026-10-15 stayed open unseen when only issues were read (2026-10-21).
         return [dict(number=i.get('number'),title=i.get('title'),html_url=i.get('html_url'),created_at=i.get('created_at'),
-                     pr='pull_request' in i,body_sha256=hashlib.sha256((i.get('body') or '').encode('utf-8')).hexdigest()) for i in items]
+                     pr='pull_request' in i,body_sha256=hashlib.sha256((i.get('body') or '').encode('utf-8')).hexdigest(),
+                     labels=[l.get('name') for l in i.get('labels') or [] if isinstance(l,dict)]) for i in items]
     def bot_comments(self,repo,number):
         """[(created_at, body)] of the github-actions bot comments on the first comment page."""
         out=subprocess.run(['gh','api','-X','GET',f'repos/{repo}/issues/{int(number)}/comments','-f','per_page=100'],
@@ -743,6 +744,8 @@ def reply_check(src,now,results):
             opened=parse(issue['created_at'])
             if not opened or now-opened<REPLY_LIMIT:continue
             if not (issue.get('pr') or str(issue.get('title') or '').startswith(SUBMISSION_TITLE)):continue
+            # A maintainer test issue (label test, Lead 2026-11-06): the silent smokes post nothing by design.
+            if 'test' in (issue.get('labels') or []):continue
             if src.bot_replied(SUBMISSION_REPO,issue['number']):continue
             found.append(f"verifier#{int(issue['number'])}{' (PR)' if issue.get('pr') else ''} \"{safe_text(issue.get('title'),60)}\" "
                          f"has no bot reply {safe_text(issue.get('html_url'),100)}")

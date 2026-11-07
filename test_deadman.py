@@ -603,6 +603,13 @@ class DeadmanTests(unittest.TestCase):
         events=[p['event'] for p in self.sent if p.get('item')=='unanswered-submissions']
         self.assertEqual(events,['alert','recovered'])
 
+    def test_a_maintainer_test_issue_needs_no_bot_reply(self):
+        # verifier#172, 2026-11-06: the prime-gaps smoke is silent by design (label test). An unlabeled one still alerts.
+        f=Fake();f.issues={'bigospeedrun/verifier':[dict(self.issue(172,3,'[Lean submission] Agent for Nil: prime-gaps smoke'),labels=['test'])]}
+        self.assertTrue(d.check(f,NOW)['unanswered-submissions'][0])
+        f.issues['bigospeedrun/verifier'][0]['labels']=[]
+        self.assertIn('verifier#172',d.check(f,NOW)['unanswered-submissions'][1])
+
     def test_unreadable_replies_alert(self):
         f=Fake();f.issues={'bigospeedrun/verifier':[self.issue(35,10,'[Lean submission] x')]}
         f.bot_replied=lambda repo,number:(_ for _ in ()).throw(RuntimeError('down'))
