@@ -6,7 +6,7 @@ watch cron and Isomux cronjobs, so it does not depend on what it checks.
 Items:
   watch-cycle          last cycle with all steps passed < 4 h (.git/cycle-last-ok.json)
   candidate-review     the oldest file in .git/watch-candidates-pending/ (candidates the review session has
-                       not yet moved to .git/watch-candidates-reviewed/) is under 6 h old; the alert counts the
+                       not yet moved to .git/watch-candidates-reviewed/) is under 13 h old; the alert counts the
                        files. The session may be down on a usage limit while the timer cycle still runs
                        (BOS Reviewer, 2026-10-24)
   discord-intake       last passed < 4 h (#submit-a-result intake)
@@ -849,7 +849,8 @@ def check(src,now,to_time=systemd_time):
     marker('discord-intake',('discord-intake',),'discord-watch.log',4,'~/nil/bigospeedrun-data/.git/discord-watch.log')
     marker('problem-selection',('problem-selection',),'problem-selection.log',4,'~/nil/bigospeedrun-data/.git/problem-selection.log')
     waiting=sorted(src.pending_candidates())
-    old=bool(waiting) and now-waiting[0]>=6*H
+    # Review session interval 12 h in maintenance mode (Lead, 2026-11-07); it was 3 h with a 6 h limit.
+    old=bool(waiting) and now-waiting[0]>=13*H
     results['candidate-review']=(not old,f'{len(waiting)} cycle file(s) of candidates wait for the review session; the oldest since {waiting[0].isoformat(timespec="minutes")}' if old else None,
                                  None if old else now,'~/nil/bigospeedrun-data/.git/watch-candidates-pending/ (WATCH_RUNBOOK.md, "Quiet cycle")')
     try:

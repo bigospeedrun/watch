@@ -192,10 +192,10 @@ class DeadmanTests(unittest.TestCase):
         f.direct_reason=broken;runs(f,['failure']*3)
         self.assertEqual(d.check(f,NOW)['direct-import'][1],'the direct step kept the previous bundle in the 3 newest run(s): cannot read the step log: RuntimeError')
 
-    def test_candidates_wait_at_most_6_hours_for_the_review_session(self):
+    def test_candidates_wait_at_most_13_hours_for_the_review_session(self):
         f=Fake();self.assertEqual(self.failing(f),set())
-        f.pending=[NOW-timedelta(hours=5.9),NOW-timedelta(hours=1)];self.assertEqual(self.failing(f),set())
-        f.pending=[NOW-timedelta(hours=6),NOW-timedelta(hours=1)]
+        f.pending=[NOW-timedelta(hours=12.9),NOW-timedelta(hours=1)];self.assertEqual(self.failing(f),set())
+        f.pending=[NOW-timedelta(hours=13),NOW-timedelta(hours=1)]
         self.assertEqual(self.failing(f),{'candidate-review'})
         self.assertIn('2 cycle file(s)',d.check(f,NOW)['candidate-review'][1])
 
