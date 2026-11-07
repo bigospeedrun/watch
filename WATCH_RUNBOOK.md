@@ -154,7 +154,7 @@ intake and problem-selection steps (< 4 h), the site `refresh-data.yml`
 workflow (latest completed run succeeded, newest success < 2 h, GitHub GET
 only), `bigospeedrun-submissions.service` (last run ok, timer fired < 75 min),
 the cronjob "BOS chatbot gap review" (completed run < 26 h, from
-`~/.isomux/cronjobs`, read-only) and the candidate queue (no file in `.git/watch-candidates-pending/` older than 6 h,
+`~/.isomux/cronjobs`, read-only) and the candidate queue (no file in `.git/watch-candidates-pending/` older than 13 h while the review session runs every 12 h in maintenance mode; 6 h when it runs every 3 h,
 so a review session that stays down is noticed). A failing item alerts BOS Lead Dev once
 through a signed Isomux webhook (`.git/deadman.json`), then once on recovery.
 If the lead cannot be reached, the alert goes to `.git/deadman-alerts.log` and
