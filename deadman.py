@@ -97,7 +97,8 @@ Items:
                        on each new comment from anyone except our own accounts and bots, or on a
                        PR head change. GET only; one failed read is tolerated, two in a row alert
   chatbot-gap-review   Isomux cronjob "BOS chatbot gap review" completed a run
-                       without error < 26 h ago (~/.isomux/cronjobs, read-only)
+                       without error < 194 h ago (8 days + 2 h: weekly in maintenance mode, 26 h when daily)
+                       (~/.isomux/cronjobs, read-only)
   vps-deploy           self-hosted site on the VPS (a created, restarting or starting container is read again every
                        30 s, at most 4 times, and the last read counts), read through the forced-command
                        login boshealth (status.json + the site and egress containers):
@@ -153,6 +154,7 @@ CONFIG='.git/deadman.json'
 LAST_OK='.git/cycle-last-ok.json'
 CRONJOBS=Path.home()/'.isomux/cronjobs'
 GAP_REVIEW_JOB='3f73daae'
+GAP_REVIEW_LIMIT=8*24+2  # hours; 26 when the review runs daily
 # The boshealth key and pinned host key stay outside the repo; the host comes from
 # the pinned known_hosts entry, so no address is written here.
 VPS_SECRETS=Path.home()/'nil/bigospeedrun-notes/secrets'
@@ -949,7 +951,8 @@ def check(src,now,to_time=systemd_time):
         newest=max(runs,key=lambda r:r.get('startedAt',0),default=None)
         link=f"Isomux Automations > BOS chatbot gap review (cronjob {GAP_REVIEW_JOB})"
         if newest and newest.get('errorReason'):results['chatbot-gap-review']=(False,'latest run failed',good,link)
-        elif not good or now-good>=26*H:results['chatbot-gap-review']=(False,'no completed run in the last 26 h',good,link)
+        # Weekly in maintenance mode (Lead, 2026-11-07: Monday 17:00Z); back to 26 h when it is daily again.
+        elif not good or now-good>=GAP_REVIEW_LIMIT*H:results['chatbot-gap-review']=(False,f'no completed run in the last {GAP_REVIEW_LIMIT} h',good,link)
         else:results['chatbot-gap-review']=(True,None,good,link)
     except Exception as error:
         results['chatbot-gap-review']=(False,'cannot read cronjob runs: '+type(error).__name__,None,f'~/.isomux/cronjobs/{GAP_REVIEW_JOB}/runs.json')
