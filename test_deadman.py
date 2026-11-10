@@ -161,16 +161,10 @@ class DeadmanTests(unittest.TestCase):
         f=Fake();f.service['Result']='exit-code';f.service['ExecMainStatus']='1';cases['verifier-submissions']=f
         f=Fake();f.timer['LastTriggerUSec']=systemd(2);cases['verifier-submissions ']=f
         f=Fake();f.timer['ActiveState']='inactive';cases['verifier-submissions  ']=f
-        f=Fake();f.cron=[dict(f.cron[0],startedAt=(NOW-timedelta(hours=8*24+3)).timestamp()*1000)];cases['chatbot-gap-review']=f
+        f=Fake();f.cron=[dict(f.cron[0],startedAt=(NOW-timedelta(hours=27)).timestamp()*1000)];cases['chatbot-gap-review']=f
         f=Fake();f.cron.append(dict(status='failed',errorReason='session crashed',startedAt=(NOW-timedelta(hours=1)).timestamp()*1000));cases['chatbot-gap-review ']=f
         for item,src in cases.items():
             with self.subTest(item=item):self.assertEqual(self.failing(src),{item.strip()})
-
-    def test_the_weekly_gap_review_may_be_8_days_and_2_hours_old(self):
-        # Maintenance mode (Lead, 2026-11-07): the review runs every Monday 17:00Z.
-        f=Fake();f.cron=[dict(f.cron[0],startedAt=(NOW-timedelta(hours=8*24+1)).timestamp()*1000)];self.assertNotIn('chatbot-gap-review',self.failing(f))
-        f.cron=[dict(f.cron[0],startedAt=(NOW-timedelta(hours=8*24+2)).timestamp()*1000)];self.assertIn('chatbot-gap-review',self.failing(f))
-        self.assertEqual(d.check(f,NOW)['chatbot-gap-review'][1],'no completed run in the last 194 h')
 
     def test_prove2me_digest_checked_only_once_its_timer_is_installed(self):
         f=Fake();self.assertNotIn('prove2me-digest',d.check(f,NOW))
@@ -198,10 +192,10 @@ class DeadmanTests(unittest.TestCase):
         f.direct_reason=broken;runs(f,['failure']*3)
         self.assertEqual(d.check(f,NOW)['direct-import'][1],'the direct step kept the previous bundle in the 3 newest run(s): cannot read the step log: RuntimeError')
 
-    def test_candidates_wait_at_most_13_hours_for_the_review_session(self):
+    def test_candidates_wait_at_most_6_hours_for_the_review_session(self):
         f=Fake();self.assertEqual(self.failing(f),set())
-        f.pending=[NOW-timedelta(hours=12.9),NOW-timedelta(hours=1)];self.assertEqual(self.failing(f),set())
-        f.pending=[NOW-timedelta(hours=13),NOW-timedelta(hours=1)]
+        f.pending=[NOW-timedelta(hours=5.9),NOW-timedelta(hours=1)];self.assertEqual(self.failing(f),set())
+        f.pending=[NOW-timedelta(hours=6),NOW-timedelta(hours=1)]
         self.assertEqual(self.failing(f),{'candidate-review'})
         self.assertIn('2 cycle file(s)',d.check(f,NOW)['candidate-review'][1])
 

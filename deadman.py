@@ -6,7 +6,7 @@ watch cron and Isomux cronjobs, so it does not depend on what it checks.
 Items:
   watch-cycle          last cycle with all steps passed < 4 h (.git/cycle-last-ok.json)
   candidate-review     the oldest file in .git/watch-candidates-pending/ (candidates the review session has
-                       not yet moved to .git/watch-candidates-reviewed/) is under 13 h old; the alert counts the
+                       not yet moved to .git/watch-candidates-reviewed/) is under 6 h old; the alert counts the
                        files. The session may be down on a usage limit while the timer cycle still runs
                        (BOS Reviewer, 2026-10-24)
   discord-intake       last passed < 4 h (#submit-a-result intake)
@@ -97,8 +97,7 @@ Items:
                        on each new comment from anyone except our own accounts and bots, or on a
                        PR head change. GET only; one failed read is tolerated, two in a row alert
   chatbot-gap-review   Isomux cronjob "BOS chatbot gap review" completed a run
-                       without error < 194 h ago (8 days + 2 h: weekly in maintenance mode, 26 h when daily)
-                       (~/.isomux/cronjobs, read-only)
+                       without error < 26 h ago (~/.isomux/cronjobs, read-only)
   vps-deploy           self-hosted site on the VPS (a created, restarting or starting container is read again every
                        30 s, at most 4 times, and the last read counts), read through the forced-command
                        login boshealth (status.json + the site and egress containers):
@@ -154,7 +153,6 @@ CONFIG='.git/deadman.json'
 LAST_OK='.git/cycle-last-ok.json'
 CRONJOBS=Path.home()/'.isomux/cronjobs'
 GAP_REVIEW_JOB='3f73daae'
-GAP_REVIEW_LIMIT=8*24+2  # hours; 26 when the review runs daily
 # The boshealth key and pinned host key stay outside the repo; the host comes from
 # the pinned known_hosts entry, so no address is written here.
 VPS_SECRETS=Path.home()/'nil/bigospeedrun-notes/secrets'
@@ -851,8 +849,7 @@ def check(src,now,to_time=systemd_time):
     marker('discord-intake',('discord-intake',),'discord-watch.log',4,'~/nil/bigospeedrun-data/.git/discord-watch.log')
     marker('problem-selection',('problem-selection',),'problem-selection.log',4,'~/nil/bigospeedrun-data/.git/problem-selection.log')
     waiting=sorted(src.pending_candidates())
-    # Review session interval 12 h in maintenance mode (Lead, 2026-11-07); it was 3 h with a 6 h limit.
-    old=bool(waiting) and now-waiting[0]>=13*H
+    old=bool(waiting) and now-waiting[0]>=6*H
     results['candidate-review']=(not old,f'{len(waiting)} cycle file(s) of candidates wait for the review session; the oldest since {waiting[0].isoformat(timespec="minutes")}' if old else None,
                                  None if old else now,'~/nil/bigospeedrun-data/.git/watch-candidates-pending/ (WATCH_RUNBOOK.md, "Quiet cycle")')
     try:
@@ -951,8 +948,7 @@ def check(src,now,to_time=systemd_time):
         newest=max(runs,key=lambda r:r.get('startedAt',0),default=None)
         link=f"Isomux Automations > BOS chatbot gap review (cronjob {GAP_REVIEW_JOB})"
         if newest and newest.get('errorReason'):results['chatbot-gap-review']=(False,'latest run failed',good,link)
-        # Weekly in maintenance mode (Lead, 2026-11-07: Monday 17:00Z); back to 26 h when it is daily again.
-        elif not good or now-good>=GAP_REVIEW_LIMIT*H:results['chatbot-gap-review']=(False,f'no completed run in the last {GAP_REVIEW_LIMIT} h',good,link)
+        elif not good or now-good>=26*H:results['chatbot-gap-review']=(False,'no completed run in the last 26 h',good,link)
         else:results['chatbot-gap-review']=(True,None,good,link)
     except Exception as error:
         results['chatbot-gap-review']=(False,'cannot read cronjob runs: '+type(error).__name__,None,f'~/.isomux/cronjobs/{GAP_REVIEW_JOB}/runs.json')
