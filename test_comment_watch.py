@@ -361,6 +361,8 @@ class CommentWatchTests(unittest.TestCase):
 
     def test_a_review_comment_drafted_earlier_counts_from_its_update_time_and_bodyless_reviews_are_read(self):
         def pages(path, params=None, limit=30):
+            if path.endswith('/issues'):
+                return []
             if path.endswith('issues/comments'):
                 # An old issue comment that is only edited now is not a new comment.
                 return [dict(id=9, created_at=iso(-600), updated_at=iso(5), user=dict(login='a', type='User'), author_association='NONE', html_url='u9', body='edited',
@@ -400,6 +402,8 @@ class CommentWatchTests(unittest.TestCase):
 
         def pages(path, params=None, limit=30):
             calls.append(path)
+            if path.endswith('/issues'):
+                return []
             if path.endswith('issues/comments'):
                 return [dict(id=1, created_at=iso(5), updated_at=iso(5), user=dict(login='a', type='User'), author_association='NONE', html_url='u1', body='b',
                              issue_url='https://api.github.com/repos/bigospeedrun/verifier/issues/46'),
@@ -417,6 +421,55 @@ class CommentWatchTests(unittest.TestCase):
         self.assertTrue(any(p.endswith('pulls/46/reviews') for p in calls))
         self.assertFalse(any(p.endswith('pulls/3/reviews') for p in calls), 'a PR not updated since the cursor is not read')
 
+
+    def test_a_new_human_issue_or_pr_alerts_like_a_comment_and_a_comment_of_ours_is_its_reply(self):
+        # Task 5b3e0003: site#20 and site#21 were opened with a body and no comment.
+        w = Watch()
+        w.run(T0)
+        opened = dict(event(20, author='JorgeCepeda', repo='site', number=20, at=3, text='Organizations have no avatar.', kind='op'), opened=True, submission=False)
+        w.events['site'] = [opened]
+        result = w.run(T0 + timedelta(minutes=10))
+        self.assertEqual((result['new'], result['sent'], result['waiting']), (1, 1, 1))
+        text = w.alerts[0][0]
+        for part in ('1 new comment or opened item)', 'JorgeCepeda (contributor) | OPENED site#20 (PR merged; 1 agent reply so far)', '  │ item title: Add the thing',
+                     '  │ Organizations have no avatar.'):
+            self.assertIn(part, text)
+        self.assertEqual(w.state()['tracked']['op:site:20']['replied'], False)
+        w.events['site'] = [opened, event(21, author='nmamano', repo='site', number=20, at=12, text='Agent for Nil (BOS Integrations): done.')]
+        self.assertEqual(w.run(T0 + timedelta(minutes=20))['waiting'], 0)
+        self.assertEqual(len(w.alerts), 1, 'sent once; our signed reply does not alert')
+
+    def test_a_lean_submission_issue_alerts_without_reply_tracking_and_an_item_of_ours_does_not_alert(self):
+        w = Watch()
+        w.run(T0)
+        sub = dict(event(190, author='AnanasClassic', number=190, at=3, text='problem: dft', assoc='NONE', kind='op'), opened=True, submission=True)
+        ours = dict(event(191, author='nmamano', number=191, at=4, text='no agent line here', assoc='MEMBER', kind='op'), opened=True, submission=False)
+        w.events['verifier'] = [sub, ours]
+        result = w.run(T0 + timedelta(minutes=10))
+        self.assertEqual((result['new'], result['sent'], result['waiting']), (1, 1, 0))
+        self.assertIn('OPENED verifier#190 (PR merged; Lean submission: the verifier answers it; no reply tracked)', w.alerts[0][0])
+        self.assertNotIn('op:verifier:190', w.state()['tracked'])
+        self.assertNotIn('UNSIGNED', w.alerts[0][0])
+
+    def test_events_reads_items_opened_after_the_cursor(self):
+        def pages(path, params=None, limit=30):
+            if path.endswith('/issues'):
+                self.assertEqual((params['state'], params['since']), ('all', '2026-10-23T12:00:00Z'))
+                user = dict(login='a', type='User')
+                return [dict(number=20, created_at=iso(5), user=user, author_association='NONE', html_url='h20', title='Avatars', body='text'),
+                        dict(number=190, created_at=iso(6), user=user, author_association='NONE', html_url='h190', title='[Lean submission] DFT', body=None),
+                        dict(number=191, created_at=iso(7), user=user, author_association='NONE', html_url='h191', title='[Lean submission] x', body='', pull_request={}),
+                        dict(number=9, created_at=iso(8), user=dict(login='dependabot[bot]', type='Bot'), author_association='NONE', html_url='h9', title='Bump', body=''),
+                        dict(number=3, created_at=iso(-600), user=user, author_association='NONE', html_url='h3', title='old, commented now', body='')]
+            return []
+        with mock.patch.object(c.gh, 'pages', pages), mock.patch.object(c.gh, 'api', lambda path, params=None, **k: []):
+            got = {e['key']: e for e in c.events('verifier', T0)}
+        self.assertEqual(sorted(got), ['op:verifier:190', 'op:verifier:191', 'op:verifier:20', 'op:verifier:9'])
+        self.assertEqual({k for k, e in got.items() if e['submission']}, {'op:verifier:190'}, 'an issue with the form title only; a pull request is never one')
+        self.assertTrue(got['op:verifier:9']['bot'])
+        self.assertEqual((got['op:verifier:20']['at'], got['op:verifier:20']['text'], got['op:verifier:190']['text']), (iso(5), 'text', ''))
+        with mock.patch.object(c.gh, 'pages', pages), mock.patch.object(c.gh, 'api', lambda path, params=None, **k: []):
+            self.assertFalse(any(e['submission'] for e in c.events('site', T0)), 'only the verifier has the submission form')
 
 if __name__ == '__main__':
     unittest.main()

@@ -252,7 +252,11 @@ account of our agents) goes once to BOS Lead Dev through the signed webhook (rul
 and its state (issue or PR, open, closed or merged), link, and the first 200 characters, cleaned to one line
 and quoted as UNTRUSTED COMMENT TEXT. A ping of the verifier's own workflow bot that starts with the marker `<!-- bos-derivation-hold-v1 N ` in `bigospeedrun/verifier` also
 alerts once, with fixed text only ("derivation hold on verifier#N, release entry in the comment"; Reviewer,
-2026-10-23). Inline comments of a review submitted later count from their update time, a review that asks for changes counts without text,
+2026-10-23). A new issue or pull request opened by a human who is not `nmamano` alerts the same way, marked
+OPENED, with its title and the first 200 characters of its body, and its reply is tracked like a comment's
+(Lead task 5b3e0003, 2026-11-10: site#20 and site#21 were opened with no comment and showed up only in the 24 h
+stale-issues dead-man). A verifier issue whose title starts with `[Lean submission]` alerts but is not tracked: the
+verifier answers it. Inline comments of a review submitted later count from their update time, a review that asks for changes counts without text,
 and a deleted account is shown as `ghost`. Messages are cut by their size after JSON escaping. A failed webhook stops the run, keeps what was
 sent, and keeps the cursor. Reply cap (Nil rule, 2026-10-23: at most 3 agent replies per thread with outside people): when a new human comment arrives, the watch counts the comments of `nmamano`
 on that item (issue comments, and for a pull request its review comments and summaries) whose first line is signed as an agent ("Agent for Nil", "I'm the AI agent",

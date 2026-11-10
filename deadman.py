@@ -38,7 +38,8 @@ Items:
   comment-watch        comment_watch.py (bigospeedrun-comment-watch.timer, every 10 min) last passed
                        ok < 30 min; checked once that timer unit is installed
   comment-reply        every human comment on an issue or PR of bigospeedrun/site, verifier, board
-                       and watch, open or closed, has a reply of the maintainer account within 2 h
+                       and watch, open or closed, and every new issue or PR a human opens there (not a Lean
+                       submission issue of the verifier), has a reply of the maintainer account within 2 h
                        (comment-watch.local.json); an item that already has 3 agent replies waits for Nil and
                        is skipped (Nil rule 2026-10-23); alerts once per comment (Nil, 2026-10-23: a credit
                        dispute on merged verifier PR #46 sat unseen for hours)
