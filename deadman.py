@@ -70,7 +70,10 @@ Items:
                        jump holds), data/claim-review.json (CrocSwap claims),
                        data/platypii-lean.json (held note) or data/sources/intake.json
                        (incomplete PR list) on main; the alert names each wait and repeats
-                       when that set changes. Since 2026-10-20 a wait does not fail the run,
+                       when that set changes. A CrocSwap claim counts only after it has waited
+                       over 4 h from its "since" (its last ready_for_review time, else created_at;
+                       Lead 2026-11-11: the stream never empties and Ops batches the claims); a
+                       claim without "since" counts at once. Holds count at once. Since 2026-10-20 a wait does not fail the run,
                        so the alert comes from these files. A failed review step (a real
                        error) alerts too, and counts as a success for site-refresh, so a
                        wait does not hide a refresh fault
@@ -812,7 +815,17 @@ def prove2me_check(src,latest,results):
         return
     results['prove2me-import']=(False,safe_text(problem,500)+' (review data/prove2me-trust.json)',None,link)
 
-def review_check(src,latest,results):
+CLAIM_WAIT=4*H  # a CrocSwap claim waits for an Ops batch up to this long (Lead, 2026-11-11)
+
+def late_claims(queue,now):
+    """The claims of data/claim-review.json that have waited over CLAIM_WAIT from their "since" (written by the site
+    refresh). A claim without a readable "since" (a site before 2026-11-11) counts as late."""
+    def late(q):
+        try:return now-parse(q['since'])>CLAIM_WAIT
+        except Exception:return True
+    return [q for q in queue if late(q)]
+
+def review_check(src,latest,results,now):
     link=(latest or {}).get('html_url') or 'https://github.com/bigospeedrun/site/actions/workflows/refresh-data.yml'
     try:
         names={s['name']:s.get('conclusion') for s in src.run_steps(latest)} if latest else {}
@@ -822,13 +835,14 @@ def review_check(src,latest,results):
     if not step:return  # Runs before 2026-10-17 have no such step.
     try:
         holds,queue,*rest=src.review_state()
+        queue=late_claims(queue,now)
         platypii=rest[0] if rest else {}
         intake=rest[1] if len(rest)>1 else {}
         waits=[f"hold {safe_text(h.get('board'),30)} {safe_text(h.get('id'),60)} score {safe_text(h.get('score'),40)}" for h in holds[:10]]
         waits+=[f"CrocSwap #{safe_text(q.get('pr'),10)}: {safe_text(q.get('reason'),160)}" for q in queue[:10]]
         if (platypii or {}).get('status')=='held':waits.append('platypii Lean note held: '+safe_text(platypii.get('reason'),200))
         if (intake or {}).get('pulls_incomplete'):waits.append('CrocSwap PR list incomplete: '+safe_text(intake.get('pulls_incomplete'),200))
-        problem=((f'{len(holds)} hold(s), {len(queue)} claim(s) wait: '+'; '.join(waits)) if waits else
+        problem=((f'{len(holds)} hold(s), {len(queue)} claim(s) over 4 h wait: '+'; '.join(waits)) if waits else
                  'review step failed with no wait listed (read the run log)' if names[step]=='failure' else None)
     except Exception as error:
         problem='cannot read data/review-holds.json or data/claim-review.json: '+type(error).__name__
@@ -881,7 +895,7 @@ def check(src,now,to_time=systemd_time):
         except Exception as error:
             results['direct-import']=(False,'cannot read the direct step of the refresh runs: '+type(error).__name__,None,DIRECT_LINK)
     prove2me_check(src,latest,results)
-    review_check(src,latest,results)
+    review_check(src,latest,results,now)
     parity_check(src,now,results)
     method_check(src,now,results)
     cert_check(src,now,results)
