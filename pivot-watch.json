@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-11T17:06:12.343386+00:00",
+  "checked_at": "2026-11-11T20:05:52.437180+00:00",
   "watched_repositories": [
     {
       "repo": "eumemic/exact-dft-bounds",
@@ -34,59 +34,63 @@
       "status": "research claims; partial Lean arithmetic checks"
     }
   ],
-  "window_start": "2026-11-08T17:06:12Z",
+  "window_start": "2026-11-08T20:05:52Z",
   "queries": [
-    "\"matrix multiplication\" in:name,description pushed:>=2026-11-08T17:06:12Z fork:false",
-    "\"integer multiplication\" in:name,description pushed:>=2026-11-08T17:06:12Z fork:false",
-    "\"DFT\" in:name,description pushed:>=2026-11-08T17:06:12Z fork:false",
-    "\"FFT\" in:name,description pushed:>=2026-11-08T17:06:12Z fork:false",
-    "\"3SUM\" in:name,description pushed:>=2026-11-08T17:06:12Z fork:false",
-    "\"threesum\" in:name,description pushed:>=2026-11-08T17:06:12Z fork:false",
-    "\"APSP\" in:name,description pushed:>=2026-11-08T17:06:12Z fork:false",
-    "\"subset sum\" in:name,description pushed:>=2026-11-08T17:06:12Z fork:false",
-    "\"discrete Fourier transform\" in:name,description pushed:>=2026-11-08T17:06:12Z fork:false",
-    "\"bounds\" in:name,description,readme created:>=2026-11-08T17:06:12Z fork:false",
-    "\"bounds\" in:name,description,readme pushed:>=2026-11-08T17:06:12Z fork:false",
-    "\"kappa\" in:name,description,readme created:>=2026-11-08T17:06:12Z fork:false",
-    "\"kappa\" in:name,description,readme pushed:>=2026-11-08T17:06:12Z fork:false",
-    "\"exponent\" in:name,description,readme created:>=2026-11-08T17:06:12Z fork:false",
-    "\"exponent\" in:name,description,readme pushed:>=2026-11-08T17:06:12Z fork:false",
-    "\"speedrun\" in:name,description,readme created:>=2026-11-08T17:06:12Z fork:false",
-    "\"speedrun\" in:name,description,readme pushed:>=2026-11-08T17:06:12Z fork:false",
-    "\"matrix multiplication\" in:name,description,readme created:>=2026-11-08T17:06:12Z fork:false",
-    "\"matrix multiplication\" in:name,description,readme pushed:>=2026-11-08T17:06:12Z fork:false",
-    "\"integer multiplication\" in:name,description,readme created:>=2026-11-08T17:06:12Z fork:false",
-    "\"integer multiplication\" in:name,description,readme pushed:>=2026-11-08T17:06:12Z fork:false",
-    "\"DFT\" in:name,description,readme created:>=2026-11-08T17:06:12Z fork:false",
-    "\"DFT\" in:name,description,readme pushed:>=2026-11-08T17:06:12Z fork:false",
-    "\"FFT\" in:name,description,readme created:>=2026-11-08T17:06:12Z fork:false",
-    "\"FFT\" in:name,description,readme pushed:>=2026-11-08T17:06:12Z fork:false",
-    "\"3SUM\" in:name,description,readme created:>=2026-11-08T17:06:12Z fork:false",
-    "\"3SUM\" in:name,description,readme pushed:>=2026-11-08T17:06:12Z fork:false",
-    "\"threesum\" in:name,description,readme created:>=2026-11-08T17:06:12Z fork:false",
-    "\"threesum\" in:name,description,readme pushed:>=2026-11-08T17:06:12Z fork:false",
-    "\"APSP\" in:name,description,readme created:>=2026-11-08T17:06:12Z fork:false",
-    "\"APSP\" in:name,description,readme pushed:>=2026-11-08T17:06:12Z fork:false",
-    "\"subset sum\" in:name,description,readme created:>=2026-11-08T17:06:12Z fork:false",
-    "\"subset sum\" in:name,description,readme pushed:>=2026-11-08T17:06:12Z fork:false",
-    "\"discrete Fourier transform\" in:name,description,readme created:>=2026-11-08T17:06:12Z fork:false",
-    "\"discrete Fourier transform\" in:name,description,readme pushed:>=2026-11-08T17:06:12Z fork:false",
+    "\"matrix multiplication\" in:name,description pushed:>=2026-11-08T20:05:52Z fork:false",
+    "\"integer multiplication\" in:name,description pushed:>=2026-11-08T20:05:52Z fork:false",
+    "\"DFT\" in:name,description pushed:>=2026-11-08T20:05:52Z fork:false",
+    "\"FFT\" in:name,description pushed:>=2026-11-08T20:05:52Z fork:false",
+    "\"3SUM\" in:name,description pushed:>=2026-11-08T20:05:52Z fork:false",
+    "\"threesum\" in:name,description pushed:>=2026-11-08T20:05:52Z fork:false",
+    "\"APSP\" in:name,description pushed:>=2026-11-08T20:05:52Z fork:false",
+    "\"subset sum\" in:name,description pushed:>=2026-11-08T20:05:52Z fork:false",
+    "\"discrete Fourier transform\" in:name,description pushed:>=2026-11-08T20:05:52Z fork:false",
+    "\"bounds\" in:name,description,readme created:>=2026-11-08T20:05:52Z fork:false",
+    "\"bounds\" in:name,description,readme pushed:>=2026-11-08T20:05:52Z fork:false",
+    "\"kappa\" in:name,description,readme created:>=2026-11-08T20:05:52Z fork:false",
+    "\"kappa\" in:name,description,readme pushed:>=2026-11-08T20:05:52Z fork:false",
+    "\"exponent\" in:name,description,readme created:>=2026-11-08T20:05:52Z fork:false",
+    "\"exponent\" in:name,description,readme pushed:>=2026-11-08T20:05:52Z fork:false",
+    "\"speedrun\" in:name,description,readme created:>=2026-11-08T20:05:52Z fork:false",
+    "\"speedrun\" in:name,description,readme pushed:>=2026-11-08T20:05:52Z fork:false",
+    "\"matrix multiplication\" in:name,description,readme created:>=2026-11-08T20:05:52Z fork:false",
+    "\"matrix multiplication\" in:name,description,readme pushed:>=2026-11-08T20:05:52Z fork:false",
+    "\"integer multiplication\" in:name,description,readme created:>=2026-11-08T20:05:52Z fork:false",
+    "\"integer multiplication\" in:name,description,readme pushed:>=2026-11-08T20:05:52Z fork:false",
+    "\"DFT\" in:name,description,readme created:>=2026-11-08T20:05:52Z fork:false",
+    "\"DFT\" in:name,description,readme pushed:>=2026-11-08T20:05:52Z fork:false",
+    "\"FFT\" in:name,description,readme created:>=2026-11-08T20:05:52Z fork:false",
+    "\"FFT\" in:name,description,readme pushed:>=2026-11-08T20:05:52Z fork:false",
+    "\"3SUM\" in:name,description,readme created:>=2026-11-08T20:05:52Z fork:false",
+    "\"3SUM\" in:name,description,readme pushed:>=2026-11-08T20:05:52Z fork:false",
+    "\"threesum\" in:name,description,readme created:>=2026-11-08T20:05:52Z fork:false",
+    "\"threesum\" in:name,description,readme pushed:>=2026-11-08T20:05:52Z fork:false",
+    "\"APSP\" in:name,description,readme created:>=2026-11-08T20:05:52Z fork:false",
+    "\"APSP\" in:name,description,readme pushed:>=2026-11-08T20:05:52Z fork:false",
+    "\"subset sum\" in:name,description,readme created:>=2026-11-08T20:05:52Z fork:false",
+    "\"subset sum\" in:name,description,readme pushed:>=2026-11-08T20:05:52Z fork:false",
+    "\"discrete Fourier transform\" in:name,description,readme created:>=2026-11-08T20:05:52Z fork:false",
+    "\"discrete Fourier transform\" in:name,description,readme pushed:>=2026-11-08T20:05:52Z fork:false",
     "\"CrocSwap/integer-mult-bounds\" in:readme fork:true",
-    "\"Catalan irrationality\" in:name,description,readme pushed:>=2026-11-08T17:06:12Z fork:false",
-    "\"Catalan constant\" in:name,description,readme pushed:>=2026-11-08T17:06:12Z fork:false",
-    "\"primitive roots\" in:name,description,readme pushed:>=2026-11-08T17:06:12Z fork:false",
-    "\"primitive-root primes\" in:name,description,readme pushed:>=2026-11-08T17:06:12Z fork:false",
-    "\"matroid prophet\" in:name,description,readme pushed:>=2026-11-08T17:06:12Z fork:false",
-    "\"one-sample matroid\" in:name,description,readme pushed:>=2026-11-08T17:06:12Z fork:false",
-    "\"contingency tables\" in:name,description,readme pushed:>=2026-11-08T17:06:12Z fork:false",
-    "\"average sensitivity\" in:name,description,readme pushed:>=2026-11-08T17:06:12Z fork:false",
-    "\"ptf-average-sensitivity\" in:name,description,readme pushed:>=2026-11-08T17:06:12Z fork:false",
-    "\"van der Waerden\" in:name,description,readme pushed:>=2026-11-08T17:06:12Z fork:false",
-    "\"Sidorenko\" in:name,description,readme pushed:>=2026-11-08T17:06:12Z fork:false",
-    "\"forcing conjecture\" in:name,description,readme pushed:>=2026-11-08T17:06:12Z fork:false",
-    "\"unit distance\" in:name,description,readme pushed:>=2026-11-08T17:06:12Z fork:false",
-    "\"distinct distances\" in:name,description,readme pushed:>=2026-11-08T17:06:12Z fork:false",
-    "\"Snaky\" in:name,description,readme pushed:>=2026-11-08T17:06:12Z fork:false"
+    "\"ordered matrix removal\" in:name,description,readme pushed:>=2026-11-08T20:05:52Z fork:false",
+    "\"ordered binary matrices\" in:name,description,readme pushed:>=2026-11-08T20:05:52Z fork:false",
+    "\"binary matrix removal\" in:name,description,readme pushed:>=2026-11-08T20:05:52Z fork:false",
+    "\"Heilbronn triangle\" in:name,description,readme pushed:>=2026-11-08T20:05:52Z fork:false",
+    "\"Haldane gap\" in:name,description,readme pushed:>=2026-11-08T20:05:52Z fork:false",
+    "\"quasi Riemann\" in:name,description,readme pushed:>=2026-11-08T20:05:52Z fork:false",
+    "\"QuasiRiemann\" in:name,description,readme pushed:>=2026-11-08T20:05:52Z fork:false",
+    "\"zero-free half-plane\" in:name,description,readme pushed:>=2026-11-08T20:05:52Z fork:false",
+    "\"zero-free boundary\" in:name,description,readme pushed:>=2026-11-08T20:05:52Z fork:false",
+    "\"Catalan irrationality\" in:name,description,readme pushed:>=2026-11-08T20:05:52Z fork:false",
+    "\"Catalan constant\" in:name,description,readme pushed:>=2026-11-08T20:05:52Z fork:false",
+    "\"primitive roots\" in:name,description,readme pushed:>=2026-11-08T20:05:52Z fork:false",
+    "\"primitive-root primes\" in:name,description,readme pushed:>=2026-11-08T20:05:52Z fork:false",
+    "\"matroid prophet\" in:name,description,readme pushed:>=2026-11-08T20:05:52Z fork:false",
+    "\"one-sample matroid\" in:name,description,readme pushed:>=2026-11-08T20:05:52Z fork:false",
+    "\"contingency tables\" in:name,description,readme pushed:>=2026-11-08T20:05:52Z fork:false",
+    "\"average sensitivity\" in:name,description,readme pushed:>=2026-11-08T20:05:52Z fork:false",
+    "\"ptf-average-sensitivity\" in:name,description,readme pushed:>=2026-11-08T20:05:52Z fork:false",
+    "\"van der Waerden\" in:name,description,readme pushed:>=2026-11-08T20:05:52Z fork:false"
   ],
   "rechecked_retained_candidates": false,
   "preprint_names": [],
@@ -98,92 +102,88 @@
   ],
   "truncated_queries": [
     {
-      "query": "\"DFT\" in:name,description pushed:>=2026-11-08T17:06:12Z fork:false",
-      "total_count": 136
+      "query": "\"DFT\" in:name,description pushed:>=2026-11-08T20:05:52Z fork:false",
+      "total_count": 141
     },
     {
-      "query": "\"FFT\" in:name,description pushed:>=2026-11-08T17:06:12Z fork:false",
-      "total_count": 234
+      "query": "\"FFT\" in:name,description pushed:>=2026-11-08T20:05:52Z fork:false",
+      "total_count": 232
     },
     {
-      "query": "\"bounds\" in:name,description,readme created:>=2026-11-08T17:06:12Z fork:false",
-      "total_count": 5417
+      "query": "\"bounds\" in:name,description,readme created:>=2026-11-08T20:05:52Z fork:false",
+      "total_count": 5518
     },
     {
-      "query": "\"bounds\" in:name,description,readme pushed:>=2026-11-08T17:06:12Z fork:false",
-      "total_count": 35082
+      "query": "\"bounds\" in:name,description,readme pushed:>=2026-11-08T20:05:52Z fork:false",
+      "total_count": 35387
     },
     {
-      "query": "\"kappa\" in:name,description,readme created:>=2026-11-08T17:06:12Z fork:false",
-      "total_count": 664
+      "query": "\"kappa\" in:name,description,readme created:>=2026-11-08T20:05:52Z fork:false",
+      "total_count": 671
     },
     {
-      "query": "\"kappa\" in:name,description,readme pushed:>=2026-11-08T17:06:12Z fork:false",
-      "total_count": 2703
+      "query": "\"kappa\" in:name,description,readme pushed:>=2026-11-08T20:05:52Z fork:false",
+      "total_count": 2739
     },
     {
-      "query": "\"exponent\" in:name,description,readme created:>=2026-11-08T17:06:12Z fork:false",
-      "total_count": 597
+      "query": "\"exponent\" in:name,description,readme created:>=2026-11-08T20:05:52Z fork:false",
+      "total_count": 607
     },
     {
-      "query": "\"exponent\" in:name,description,readme pushed:>=2026-11-08T17:06:12Z fork:false",
-      "total_count": 3530
+      "query": "\"exponent\" in:name,description,readme pushed:>=2026-11-08T20:05:52Z fork:false",
+      "total_count": 3573
     },
     {
-      "query": "\"speedrun\" in:name,description,readme created:>=2026-11-08T17:06:12Z fork:false",
-      "total_count": 138
+      "query": "\"speedrun\" in:name,description,readme created:>=2026-11-08T20:05:52Z fork:false",
+      "total_count": 134
     },
     {
-      "query": "\"speedrun\" in:name,description,readme pushed:>=2026-11-08T17:06:12Z fork:false",
-      "total_count": 700
+      "query": "\"speedrun\" in:name,description,readme pushed:>=2026-11-08T20:05:52Z fork:false",
+      "total_count": 714
     },
     {
-      "query": "\"matrix multiplication\" in:name,description,readme created:>=2026-11-08T17:06:12Z fork:false",
-      "total_count": 218
+      "query": "\"matrix multiplication\" in:name,description,readme created:>=2026-11-08T20:05:52Z fork:false",
+      "total_count": 225
     },
     {
-      "query": "\"matrix multiplication\" in:name,description,readme pushed:>=2026-11-08T17:06:12Z fork:false",
-      "total_count": 1255
+      "query": "\"matrix multiplication\" in:name,description,readme pushed:>=2026-11-08T20:05:52Z fork:false",
+      "total_count": 1277
     },
     {
-      "query": "\"DFT\" in:name,description,readme created:>=2026-11-08T17:06:12Z fork:false",
-      "total_count": 238
+      "query": "\"DFT\" in:name,description,readme created:>=2026-11-08T20:05:52Z fork:false",
+      "total_count": 241
     },
     {
-      "query": "\"DFT\" in:name,description,readme pushed:>=2026-11-08T17:06:12Z fork:false",
-      "total_count": 1360
+      "query": "\"DFT\" in:name,description,readme pushed:>=2026-11-08T20:05:52Z fork:false",
+      "total_count": 1363
     },
     {
-      "query": "\"FFT\" in:name,description,readme created:>=2026-11-08T17:06:12Z fork:false",
-      "total_count": 900
+      "query": "\"FFT\" in:name,description,readme created:>=2026-11-08T20:05:52Z fork:false",
+      "total_count": 907
     },
     {
-      "query": "\"FFT\" in:name,description,readme pushed:>=2026-11-08T17:06:12Z fork:false",
-      "total_count": 4590
+      "query": "\"FFT\" in:name,description,readme pushed:>=2026-11-08T20:05:52Z fork:false",
+      "total_count": 4625
     },
     {
-      "query": "\"3SUM\" in:name,description,readme pushed:>=2026-11-08T17:06:12Z fork:false",
-      "total_count": 2763
+      "query": "\"3SUM\" in:name,description,readme pushed:>=2026-11-08T20:05:52Z fork:false",
+      "total_count": 2783
     },
     {
-      "query": "\"subset sum\" in:name,description,readme pushed:>=2026-11-08T17:06:12Z fork:false",
-      "total_count": 941
+      "query": "\"subset sum\" in:name,description,readme pushed:>=2026-11-08T20:05:52Z fork:false",
+      "total_count": 944
     },
     {
-      "query": "\"discrete Fourier transform\" in:name,description,readme pushed:>=2026-11-08T17:06:12Z fork:false",
-      "total_count": 125
+      "query": "\"discrete Fourier transform\" in:name,description,readme pushed:>=2026-11-08T20:05:52Z fork:false",
+      "total_count": 124
     },
     {
-      "query": "\"contingency tables\" in:name,description,readme pushed:>=2026-11-08T17:06:12Z fork:false",
-      "total_count": 156
-    },
-    {
-      "query": "\"unit distance\" in:name,description,readme pushed:>=2026-11-08T17:06:12Z fork:false",
-      "total_count": 123
+      "query": "\"contingency tables\" in:name,description,readme pushed:>=2026-11-08T20:05:52Z fork:false",
+      "total_count": 155
     },
     {
       "query": "Other bounds deferred work",
-      "total_count": "1340 repositories pending; next older fork page 1"
+      "total_count": "1343 repositories pending; next older fork page 1"
     }
   ],
   "candidates": [
@@ -242,7 +242,7 @@
       "url": "https://github.com/damonchandio/is-my-bus-late",
       "stars": 1,
       "created_at": "2026-10-28T17:33:50Z",
-      "pushed_at": "2026-11-11T16:32:34Z",
+      "pushed_at": "2026-11-11T19:56:26Z",
       "problem_guess": "DFT",
       "description": "Is my bus late? Live 3D map of West Yorkshire buses and an hourly punctuality leaderboard, from DfT Bus Open Data. DuckDB + dbt.",
       "rank": 7,
@@ -252,7 +252,7 @@
       "likely_new_race": false,
       "on_board": false,
       "stated_bound_changed": false,
-      "readme_commit": "2933d7b60f4dff385890116c27074ec4476092f3",
+      "readme_commit": "f22476bc2b4cafe88cb5fff151488294b26e8230",
       "wht_only": false,
       "likely_tracked_source": false,
       "likely_pivot": false,
@@ -559,7 +559,7 @@
       "url": "https://github.com/ToikY/integer-mult-bounds",
       "stars": 0,
       "created_at": "2026-10-13T10:11:53Z",
-      "pushed_at": "2026-11-11T17:08:31Z",
+      "pushed_at": "2026-11-11T19:55:23Z",
       "problem_guess": "integer multiplication",
       "description": "Conditional integer multiplication: kappa > 2^-15. Community proofs, exact certificates and reproducible audits; assumes the OpenAI #109 framework.",
       "rank": 6,
@@ -5534,10 +5534,10 @@
         "stargazers_count": 0,
         "fork": true
       },
-      "checked_cycle": 252
+      "checked_cycle": 253
     },
     "slitsey/catalan-irrationality-measure": {
-      "head": "203e6f7be1888894466aef69a9abcf2d07749cc1",
+      "head": "1afb01bed3b3cc15af87dd75456210b39711f364",
       "seen_claims": [
         "1171e0812d3d6f1f8a9ebdedabfd82433b07741a9b6d406f7bb5b8a301f0bf5e",
         "91478363316f2c05d5df1ff06d4ae2716ddf85e353cb6ae6e18f637b843c2ae0",
@@ -5572,12 +5572,12 @@
         "html_url": "https://github.com/slitsey/catalan-irrationality-measure",
         "default_branch": "main",
         "created_at": "2026-10-10T20:06:16Z",
-        "pushed_at": "2026-11-11T01:15:22Z",
+        "pushed_at": "2026-11-11T18:13:34Z",
         "description": "Hosts Lean and LaTeX code for bounds on the irrationality measure of Catalan's constant",
         "stargazers_count": 1,
         "fork": false
       },
-      "checked_cycle": 252
+      "checked_cycle": 253
     },
     "Rogerhu12/openai-math-extensions": {
       "head": "8e94120c0e9eecfe3d4991eb2102d4da8ede96cf",
@@ -5597,7 +5597,7 @@
         "stargazers_count": 0,
         "fork": false
       },
-      "checked_cycle": 252
+      "checked_cycle": 253
     },
     "shea256/matroid-prophet-inequality": {
       "head": "8cd1395994596d89ad20c2af8b69dab8e3402ee1",
@@ -5624,7 +5624,7 @@
         "stargazers_count": 1,
         "fork": false
       },
-      "checked_cycle": 252
+      "checked_cycle": 253
     },
     "EcoDataLab/contingency-tables": {
       "head": "d851f00508840e5182fe5e9328446e65626f6e6b",
@@ -5654,7 +5654,7 @@
         "stargazers_count": 0,
         "fork": false
       },
-      "checked_cycle": 252
+      "checked_cycle": 253
     },
     "log-prathm/ptf-average-sensitivity": {
       "head": "5e9f26cf74935f08be20f9ac4deb57b291d707d8",
@@ -5673,7 +5673,7 @@
         "stargazers_count": 0,
         "fork": false
       },
-      "checked_cycle": 252
+      "checked_cycle": 253
     },
     "rohanarun/van-der-waerden-refinement": {
       "head": "42f4c8a9b7b372f12b67318ef7300c34db6b8d55",
@@ -5769,7 +5769,7 @@
         "fork": false,
         "_openai_fork": false
       },
-      "checked_cycle": 252
+      "checked_cycle": 253
     },
     "rohanarun/sidorenko-template-refinements": {
       "head": "5ca68cb81cfcd7f1b32102b93e186b2b51d5e2f8",
@@ -5789,7 +5789,7 @@
         "fork": false,
         "_openai_fork": false
       },
-      "checked_cycle": 252
+      "checked_cycle": 253
     },
     "rohanarun/unit-distance-grid-refinement": {
       "head": "4e7b3af0a46a7127a57019a0ab6d76fa2b55fe2e",
@@ -5810,7 +5810,7 @@
         "fork": false,
         "_openai_fork": false
       },
-      "checked_cycle": 252
+      "checked_cycle": 253
     },
     "gotrevor/snaky-15x15": {
       "head": "58168449cc457de30e11abe4ad73d443624ecd75",
@@ -5830,7 +5830,7 @@
         "stargazers_count": 1,
         "fork": false
       },
-      "checked_cycle": 252
+      "checked_cycle": 253
     },
     "erebos-labs/ordered-matrix-removal-4x4": {
       "head": "0d43f182f2ee12e27419ac4d5e32fd2d9b68ab43",
@@ -5849,7 +5849,7 @@
         "stargazers_count": 0,
         "fork": false
       },
-      "checked_cycle": 252
+      "checked_cycle": 253
     },
     "littleBro/heilbronn-triangle-bounds": {
       "head": "45738785a8877fddf268a36ac7f3703d510be55e",
@@ -5872,7 +5872,7 @@
         "stargazers_count": 0,
         "fork": false
       },
-      "checked_cycle": 252
+      "checked_cycle": 253
     },
     "amachino/haldane-gap-refinement": {
       "head": "15909bdc15e947795b6fba946008dd8530bb3477",
@@ -5890,7 +5890,7 @@
         "stargazers_count": 0,
         "fork": false
       },
-      "checked_cycle": 252
+      "checked_cycle": 253
     },
     "massainodes/math": {
       "head": "fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb",
@@ -6331,7 +6331,7 @@
         "stargazers_count": 0,
         "fork": false
       },
-      "checked_cycle": 252
+      "checked_cycle": 253
     },
     "hansonwong310/openai-math": {
       "head": "fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb",
@@ -6549,7 +6549,7 @@
         "fork": false,
         "_openai_fork": false
       },
-      "checked_cycle": 252
+      "checked_cycle": 253
     },
     "gokhankelebek/math": {
       "head": "fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb",
@@ -7169,7 +7169,7 @@
         "stargazers_count": 0,
         "fork": false
       },
-      "checked_cycle": 252
+      "checked_cycle": 253
     },
     "Hesstastic/math": {
       "head": "fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb",
@@ -7498,7 +7498,7 @@
         "stargazers_count": 0,
         "fork": false
       },
-      "checked_cycle": 252
+      "checked_cycle": 253
     },
     "Czworldy/math": {
       "head": "fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb",
@@ -7715,7 +7715,7 @@
         "stargazers_count": 0,
         "fork": false
       },
-      "checked_cycle": 252
+      "checked_cycle": 253
     },
     "binbinao/math": {
       "head": "fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb",
@@ -7785,7 +7785,7 @@
         "stargazers_count": 2,
         "fork": false
       },
-      "checked_cycle": 252
+      "checked_cycle": 253
     },
     "StarChino/math": {
       "head": "fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb",
@@ -7886,7 +7886,7 @@
         "stargazers_count": 3,
         "fork": false
       },
-      "checked_cycle": 252
+      "checked_cycle": 253
     },
     "erratas/math": {
       "head": "fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb",
@@ -8179,7 +8179,7 @@
         "stargazers_count": 1,
         "fork": false
       },
-      "checked_cycle": 252
+      "checked_cycle": 253
     },
     "rongou/math": {
       "head": "fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb",
@@ -13302,7 +13302,7 @@
         "stargazers_count": 0,
         "fork": false
       },
-      "checked_cycle": 252
+      "checked_cycle": 253
     },
     "mostly-ai/mostlyai-qa": {
       "head": "1684d884a93f7337c3d1b6b2470370524306267f",
@@ -15161,7 +15161,7 @@
         "stargazers_count": 0,
         "fork": false
       },
-      "checked_cycle": 252
+      "checked_cycle": 253
     },
     "Cody-Stevens/math-gamedev-experiments": {
       "head": "89481d0572faab2e8da012d5117756ca2cfd53bb",
@@ -21710,7 +21710,7 @@
         "stargazers_count": 1,
         "fork": false
       },
-      "checked_cycle": 252
+      "checked_cycle": 253
     },
     "tech-andgar/awesome-stars": {
       "head": "74984519e9a3c75803d19821c78187831bfb767e",
@@ -22119,7 +22119,7 @@
         "stargazers_count": 0,
         "fork": false
       },
-      "checked_cycle": 252
+      "checked_cycle": 253
     },
     "LmeowLaunchpad/Legendary": {
       "head": "bb52579b96500ac630f644b962c6c9f58ccafed7",
@@ -26772,7 +26772,7 @@
         "stargazers_count": 0,
         "fork": false
       },
-      "checked_cycle": 252
+      "checked_cycle": 253
     },
     "soemoehtun/Site-2-Site-Distance-Calculator": {
       "head": "c59861517cb495f20801b3924cbc3ce4149418ce",
@@ -26878,7 +26878,7 @@
         "stargazers_count": 5,
         "fork": false
       },
-      "checked_cycle": 252
+      "checked_cycle": 253
     },
     "shazia28/RLWE_PUF_ARMOR_PQ": {
       "head": "ce9489be2793d2ae63976f50fde1aebdbf2377c1",
@@ -27056,7 +27056,7 @@
         "stargazers_count": 0,
         "fork": false
       },
-      "checked_cycle": 252
+      "checked_cycle": 253
     },
     "Kerinjo/mathdeck": {
       "head": "dbc639d790b07ef8d5422c916ca925b88265d335",
@@ -28653,7 +28653,7 @@
         "fork": true,
         "_openai_fork": false
       },
-      "checked_cycle": 252
+      "checked_cycle": 253
     },
     "artuskg/van-der-waerden-refinement": {
       "head": "54ac9715fceab938ca77d5980c36ab691765a04d",
@@ -28672,7 +28672,7 @@
         "stargazers_count": 0,
         "fork": true
       },
-      "checked_cycle": 252
+      "checked_cycle": 253
     },
     "MathCompressionBench/mcb-submissions": {
       "head": "08f444bbbda6c98c577c85fd79d2e9c8a1d3e829",
@@ -29285,7 +29285,7 @@
         "stargazers_count": 0,
         "fork": true
       },
-      "checked_cycle": 252
+      "checked_cycle": 253
     },
     "nielstron/QuasiRiemannTracker": {
       "head": "290d9c5463344c3e2fab93b878f3281e77e3fd6f",
@@ -29303,7 +29303,7 @@
         "stargazers_count": 0,
         "fork": true
       },
-      "checked_cycle": 252
+      "checked_cycle": 253
     },
     "Gaozhongpai/QuasiRiemannTracker": {
       "head": "40844a7614b67840801e65b836b3da2e1f7ff029",
@@ -29321,7 +29321,7 @@
         "stargazers_count": 0,
         "fork": true
       },
-      "checked_cycle": 252
+      "checked_cycle": 253
     },
     "lixiang90/RH-Zero-Free-Formalization": {
       "head": "3dd6c44c3df3cecbd21a91393c59db679269c4d9",
@@ -29339,7 +29339,7 @@
         "stargazers_count": 0,
         "fork": false
       },
-      "checked_cycle": 252
+      "checked_cycle": 253
     },
     "TheRealDubb/family-003-extension-xenoproof": {
       "head": "b6c98187528e036b8c60414a6961ef999caf31fb",
@@ -29357,7 +29357,7 @@
         "stargazers_count": 0,
         "fork": false
       },
-      "checked_cycle": 252
+      "checked_cycle": 253
     },
     "Gaozhongpai/seven-eighths-refinement-certificates": {
       "head": "8c995528481f144debf70ffd25678a3fdf379fd4",
@@ -29375,7 +29375,7 @@
         "stargazers_count": 1,
         "fork": false
       },
-      "checked_cycle": 252
+      "checked_cycle": 253
     },
     "shea256/ordered-binary-matrix-removal": {
       "head": "527bffa3e3798594738efe3dc1afc22a8ef2ce32",
@@ -29397,7 +29397,7 @@
         "stargazers_count": 4,
         "fork": false
       },
-      "checked_cycle": 252
+      "checked_cycle": 253
     },
     "auraecosystem/math": {
       "head": "853b754961a808377d75f463870943a051e5e1ed",
@@ -31980,7 +31980,7 @@
         "stargazers_count": 0,
         "fork": true
       },
-      "checked_cycle": 252
+      "checked_cycle": 253
     },
     "MathVisionAI/openai-deslop": {
       "head": "2e5240cba7415754ced9a50d42bc6d7b1bf3c487",
@@ -42530,10 +42530,10 @@
   },
   "other_bounds_checkpoint": {
     "version": 1,
-    "cycle": 252,
-    "search_cursor": 19,
+    "cycle": 253,
+    "search_cursor": 14,
     "fork_page": 1,
-    "fork_since": "2026-11-08T17:06:12Z",
+    "fork_since": "2026-11-08T20:05:52Z",
     "pending": [
       {
         "full_name": "exactory/exactory-math",
@@ -43372,7 +43372,7 @@
         "html_url": "https://github.com/bigospeedrun/site",
         "default_branch": "main",
         "created_at": "2026-10-10T10:04:52Z",
-        "pushed_at": "2026-11-11T16:36:52Z",
+        "pushed_at": "2026-11-11T19:37:53Z",
         "description": "Leaderboards for improved algorithmic bounds.",
         "stargazers_count": 0,
         "fork": false
@@ -43572,7 +43572,7 @@
         "html_url": "https://github.com/bigospeedrun/verifier",
         "default_branch": "main",
         "created_at": "2026-10-10T09:22:54Z",
-        "pushed_at": "2026-11-11T16:47:24Z",
+        "pushed_at": "2026-11-11T19:47:18Z",
         "description": "Public, isolated Lean proof reruns with Comparator and nanoda; pinned challenges and artifact receipts.",
         "stargazers_count": 6,
         "fork": false
@@ -43954,7 +43954,7 @@
         "html_url": "https://github.com/digital-twin-ph/example-1855-cholera-south-london",
         "default_branch": "main",
         "created_at": "2026-10-23T17:54:11Z",
-        "pushed_at": "2026-11-08T13:28:51Z",
+        "pushed_at": "2026-11-11T19:09:48Z",
         "description": null,
         "stargazers_count": 0,
         "fork": false
@@ -44114,7 +44114,7 @@
         "html_url": "https://github.com/legacy-codes/xlstat-unofficial-legacy-archives",
         "default_branch": "main",
         "created_at": "2026-06-19T13:34:38Z",
-        "pushed_at": "2026-11-11T09:57:51Z",
+        "pushed_at": "2026-11-11T17:40:13Z",
         "description": "XLStat 5.2.1413 Premium Full Setup 2026",
         "stargazers_count": 1,
         "fork": false
@@ -44374,7 +44374,7 @@
         "html_url": "https://github.com/coolbat/awesome-fable-5.5-usecase",
         "default_branch": "main",
         "created_at": "2026-10-03T09:28:04Z",
-        "pushed_at": "2026-11-10T14:33:40Z",
+        "pushed_at": "2026-11-11T14:40:22Z",
         "description": "Curated public community use cases attributed to Claude Fable 5.5, collected from GitHub, X, and Hacker News.",
         "stargazers_count": 8,
         "fork": false
@@ -44414,7 +44414,7 @@
         "html_url": "https://github.com/PericleV/sciplotflow",
         "default_branch": "main",
         "created_at": "2026-10-20T05:08:39Z",
-        "pushed_at": "2026-11-11T11:22:09Z",
+        "pushed_at": "2026-11-11T17:10:12Z",
         "description": "Sciplotflow is a lightweight we based app for data processing, analysis, and ploting with publish ready figures",
         "stargazers_count": 0,
         "fork": false
@@ -44494,7 +44494,7 @@
         "html_url": "https://github.com/enhansome/enhansome-courses",
         "default_branch": "main",
         "created_at": "2026-08-12T04:30:53Z",
-        "pushed_at": "2026-11-10T19:52:00Z",
+        "pushed_at": "2026-11-11T19:43:45Z",
         "description": null,
         "stargazers_count": 0,
         "fork": false
@@ -44514,7 +44514,7 @@
         "html_url": "https://github.com/genome-nexus/fusion-hotspots",
         "default_branch": "main",
         "created_at": "2026-09-02T21:35:52Z",
-        "pushed_at": "2026-11-11T15:53:33Z",
+        "pushed_at": "2026-11-11T18:25:20Z",
         "description": null,
         "stargazers_count": 0,
         "fork": false
@@ -44544,7 +44544,7 @@
         "html_url": "https://github.com/iszhanjiawei/TTS_arxiv_daily",
         "default_branch": "main",
         "created_at": "2025-07-29T03:13:56Z",
-        "pushed_at": "2026-11-11T04:48:56Z",
+        "pushed_at": "2026-11-11T19:15:37Z",
         "description": null,
         "stargazers_count": 3,
         "fork": false
@@ -44654,7 +44654,7 @@
         "html_url": "https://github.com/Foundation-0/formal-claims-audit",
         "default_branch": "main",
         "created_at": "2026-10-19T21:24:37Z",
-        "pushed_at": "2026-10-28T05:02:31Z",
+        "pushed_at": "2026-11-11T17:53:40Z",
         "description": "Checks whether the formal (Lean) statements behind AI-claimed results say what their papers claim.",
         "stargazers_count": 0,
         "fork": false
@@ -44704,7 +44704,7 @@
         "html_url": "https://github.com/JeffJenness/Wildlife_Tools",
         "default_branch": "main",
         "created_at": "2026-06-26T16:33:29Z",
-        "pushed_at": "2026-11-11T15:17:43Z",
+        "pushed_at": "2026-11-11T17:26:21Z",
         "description": "ArcGIS Pro Tools for Wildlife Analysis",
         "stargazers_count": 1,
         "fork": false
@@ -45398,7 +45398,7 @@
         "html_url": "https://github.com/texnet43/theory-of-everything",
         "default_branch": "main",
         "created_at": "2026-04-19T19:34:44Z",
-        "pushed_at": "2026-11-10T23:57:38Z",
+        "pushed_at": "2026-11-11T19:29:56Z",
         "description": "Theory of Everything: Trinity \u2014 An Operator-Algebraic Framework on Z\u2081\u2081 \u2014 \u03b1 to 0.8\u03c3 of CODATA-2022, All 19 SM + \u039bCDM Parameter Forms Closed, SM 3\u00d7(10\u22955\u0304) Anomaly-Free, the Born Rule from Spectral Weights, N + 1 = K(R) Derived, Induced Einstein Gravity with Exact Graviton Self-Couplings",
         "stargazers_count": 0,
         "fork": false
@@ -45533,7 +45533,7 @@
         "html_url": "https://github.com/BowenLIu1991/next-token-next-theorem",
         "default_branch": "main",
         "created_at": "2026-10-18T07:04:36Z",
-        "pushed_at": "2026-11-11T14:08:56Z",
+        "pushed_at": "2026-11-11T14:42:47Z",
         "description": "Slides and notes for a 45-minute talk on how LLMs work \u2014 from next-token prediction to theorem proving.",
         "stargazers_count": 0,
         "fork": false
@@ -47467,7 +47467,7 @@
         "html_url": "https://github.com/daniel-munro/leaps-in-bounds",
         "default_branch": "main",
         "created_at": "2025-01-27T04:29:41Z",
-        "pushed_at": "2026-11-11T02:23:23Z",
+        "pushed_at": "2026-11-11T19:26:18Z",
         "description": "Repository of progress on mathematical unknowns",
         "stargazers_count": 0,
         "fork": false
@@ -47887,7 +47887,7 @@
         "html_url": "https://github.com/dickie81/number-theory",
         "default_branch": "main",
         "created_at": "2026-10-23T15:34:48Z",
-        "pushed_at": "2026-11-11T13:38:29Z",
+        "pushed_at": "2026-11-11T19:13:03Z",
         "description": null,
         "stargazers_count": 1,
         "fork": false
@@ -48087,9 +48087,9 @@
         "html_url": "https://github.com/script-it/json-views",
         "default_branch": "main",
         "created_at": "2026-09-16T15:56:13Z",
-        "pushed_at": "2026-11-10T15:26:25Z",
+        "pushed_at": "2026-11-11T19:17:42Z",
         "description": "An extensible JSON viewer and editor for browsers, React apps, local files, humans, and agents.",
-        "stargazers_count": 50,
+        "stargazers_count": 51,
         "fork": false
       },
       {
@@ -48307,7 +48307,7 @@
         "html_url": "https://github.com/ShantiDraconis/clay-riemann-proof",
         "default_branch": "main",
         "created_at": "2026-10-29T15:05:02Z",
-        "pushed_at": "2026-11-11T12:45:23Z",
+        "pushed_at": "2026-11-11T16:52:40Z",
         "description": null,
         "stargazers_count": 0,
         "fork": false
@@ -48347,7 +48347,7 @@
         "html_url": "https://github.com/kusasyu36/openai-math-audit",
         "default_branch": "main",
         "created_at": "2026-10-30T05:03:04Z",
-        "pushed_at": "2026-11-11T07:43:30Z",
+        "pushed_at": "2026-11-11T14:44:11Z",
         "description": "Independent audit of selected unformalized results from OpenAI's AI-generated mathematics release (Oct 2026), with Lean 4 formalizations",
         "stargazers_count": 0,
         "fork": false
@@ -48377,7 +48377,7 @@
         "html_url": "https://github.com/EthanC100/forecast-panel",
         "default_branch": "main",
         "created_at": "2026-10-28T12:50:16Z",
-        "pushed_at": "2026-11-11T14:12:46Z",
+        "pushed_at": "2026-11-11T19:47:13Z",
         "description": null,
         "stargazers_count": 0,
         "fork": false
@@ -48987,7 +48987,7 @@
         "html_url": "https://github.com/basvandorst/praime",
         "default_branch": "main",
         "created_at": "2026-10-28T22:43:46Z",
-        "pushed_at": "2026-11-11T15:36:26Z",
+        "pushed_at": "2026-11-11T17:28:30Z",
         "description": "Beating prime puzzle records with LLM reasoning",
         "stargazers_count": 1,
         "fork": false
@@ -49628,7 +49628,7 @@
         "html_url": "https://github.com/suvrit/preprints",
         "default_branch": "main",
         "created_at": "2026-10-02T09:00:28Z",
-        "pushed_at": "2026-11-05T21:22:57Z",
+        "pushed_at": "2026-11-11T19:39:23Z",
         "description": "My preprints",
         "stargazers_count": 6,
         "fork": false
@@ -51018,7 +51018,7 @@
         "html_url": "https://github.com/Doldrums/sciel",
         "default_branch": "main",
         "created_at": "2026-09-18T10:40:40Z",
-        "pushed_at": "2026-11-10T20:22:14Z",
+        "pushed_at": "2026-11-11T18:39:41Z",
         "description": null,
         "stargazers_count": 3,
         "fork": false
@@ -52260,7 +52260,7 @@
         "html_url": "https://github.com/FabianCornejo/econometric-skills",
         "default_branch": "main",
         "created_at": "2026-10-17T20:31:34Z",
-        "pushed_at": "2026-11-11T15:26:50Z",
+        "pushed_at": "2026-11-11T19:50:31Z",
         "description": "Econometric agent skill for Claude (consultant, teacher, reviewer): regression diagnostics, causal inference (DAGs, DiD with covariates, Goodman-Bacon, RD, synthetic control, double ML), CATE, power, MLE, wild bootstrap, WACC betas, event studies, time series, VaR/ES with EVT and FRTB backtests, text as data. 507 tested checks.",
         "stargazers_count": 1,
         "fork": false
@@ -52460,7 +52460,7 @@
         "html_url": "https://github.com/ankitghoshthecreator/SpikeAttention",
         "default_branch": "main",
         "created_at": "2026-11-04T23:23:48Z",
-        "pushed_at": "2026-11-05T23:57:22Z",
+        "pushed_at": "2026-11-11T18:15:30Z",
         "description": null,
         "stargazers_count": 0,
         "fork": false
@@ -53140,7 +53140,7 @@
         "html_url": "https://github.com/polyidoit/Arxiv-TQFT",
         "default_branch": "main",
         "created_at": "2023-03-26T14:20:15Z",
-        "pushed_at": "2026-11-11T03:58:31Z",
+        "pushed_at": "2026-11-11T19:05:38Z",
         "description": "Arxiv prepring on TQFT, topological order and generalized symmetry. [The original version is modified from the source code by Vincentqyw]",
         "stargazers_count": 6,
         "fork": false
@@ -55072,7 +55072,7 @@
         "created_at": "2026-11-09T23:15:29Z",
         "pushed_at": "2026-11-11T08:13:37Z",
         "description": null,
-        "stargazers_count": 0,
+        "stargazers_count": 1,
         "fork": false
       },
       {
@@ -55832,7 +55832,7 @@
         "html_url": "https://github.com/ayberkdt/Stats-Lab",
         "default_branch": "main",
         "created_at": "2026-10-11T18:34:09Z",
-        "pushed_at": "2026-11-11T17:07:30Z",
+        "pushed_at": "2026-11-11T20:05:39Z",
         "description": null,
         "stargazers_count": 0,
         "fork": false
@@ -55872,7 +55872,7 @@
         "html_url": "https://github.com/amanmuarya/Data_Analytics_with_Python",
         "default_branch": "main",
         "created_at": "2026-11-11T15:35:55Z",
-        "pushed_at": "2026-11-11T15:39:16Z",
+        "pushed_at": "2026-11-11T18:25:02Z",
         "description": "I am learning Data Analytics with Python ",
         "stargazers_count": 0,
         "fork": false
@@ -55968,6 +55968,36 @@
         "fork": false
       },
       {
+        "full_name": "moralesgomez-dev/gut-microbiome-diversity",
+        "html_url": "https://github.com/moralesgomez-dev/gut-microbiome-diversity",
+        "default_branch": "main",
+        "created_at": "2026-10-29T08:31:55Z",
+        "pushed_at": "2026-11-11T17:24:47Z",
+        "description": null,
+        "stargazers_count": 0,
+        "fork": false
+      },
+      {
+        "full_name": "Crunch-io/catii",
+        "html_url": "https://github.com/Crunch-io/catii",
+        "default_branch": "master",
+        "created_at": "2023-01-31T15:18:13Z",
+        "pushed_at": "2026-11-11T16:38:18Z",
+        "description": null,
+        "stargazers_count": 3,
+        "fork": false
+      },
+      {
+        "full_name": "A190nux/boolnet",
+        "html_url": "https://github.com/A190nux/boolnet",
+        "default_branch": "main",
+        "created_at": "2026-04-26T14:29:52Z",
+        "pushed_at": "2026-11-11T18:30:47Z",
+        "description": "This project builds a neural network entirely out of Boolean logic, from first principles, from scratch, motivated by a single question: Can Boolean algebra be differentiated?",
+        "stargazers_count": 0,
+        "fork": false
+      },
+      {
         "full_name": "Akilleez-QA/read-em-and-weep",
         "html_url": "https://github.com/Akilleez-QA/read-em-and-weep",
         "default_branch": "main",
@@ -55982,15 +56012,15 @@
   },
   "other_bounds_usage": {
     "requests": 360,
-    "elapsed_seconds": 343.017,
+    "elapsed_seconds": 236.854,
     "request_limit": 360,
     "seconds_limit": 360,
     "repositories_checked": 38,
-    "pending_repositories": 1340,
-    "starting_pending_repositories": 1324,
+    "pending_repositories": 1343,
+    "starting_pending_repositories": 1340,
     "starting_pending_forks": 48,
     "pending_forks": 48,
-    "untouched_forks_skipped": 73,
+    "untouched_forks_skipped": 72,
     "forks_without_changed_files": 0,
     "forks_with_changed_files": 0
   },
@@ -55998,17 +56028,17 @@
     "eumemic/exact-dft-bounds": {
       "bound": "607/1250000",
       "source_commit": "6f87d1a0c9ae462cdcb2034a1361c87623221e66",
-      "checked_at": "2026-11-11T17:06:12.343386+00:00"
+      "checked_at": "2026-11-11T20:05:52.437180+00:00"
     },
     "shea256/fourier-transform-below-nlogn": {
       "bound": "2466337/2000000000",
       "source_commit": "0e61af6ce0ef712494c93c902baefa314ef7e23c",
-      "checked_at": "2026-11-11T17:06:12.343386+00:00"
+      "checked_at": "2026-11-11T20:05:52.437180+00:00"
     },
     "jacobalansussman/wht-power-saving-lean": {
       "bound": "3577409/2000000000",
       "source_commit": "0788bc656827ff2e7e44f5a77299eea19f0002fe",
-      "checked_at": "2026-11-11T17:06:12.343386+00:00"
+      "checked_at": "2026-11-11T20:05:52.437180+00:00"
     },
     "Swapnil-jain/threesum-derand": {
       "bound": [
@@ -56016,7 +56046,7 @@
         "2995943/1000000"
       ],
       "source_commit": "48adbc585f666a37003c700f97c89f3e73c570ce",
-      "checked_at": "2026-11-11T17:06:12.343386+00:00"
+      "checked_at": "2026-11-11T20:05:52.437180+00:00"
     }
   },
   "crocswap_pr_states": {
@@ -105511,6 +105541,78 @@
       "head": "77feabfe187c669545908f6225dfb7f711d7360c",
       "seen_claims": [],
       "updated_at": "2026-11-11T11:36:19Z"
+    },
+    "7311": {
+      "revision": "63b02b1780cdc85f7c4f748e0136cf2d3fec62c76c709ebdb9a6338960ad751f",
+      "pending_revision": "63b02b1780cdc85f7c4f748e0136cf2d3fec62c76c709ebdb9a6338960ad751f",
+      "next_file_page": 2,
+      "head": "3c4f2decb66af92d234979dd3a843d4224890c58",
+      "seen_claims": [],
+      "updated_at": "2026-11-11T19:56:09Z"
+    },
+    "7310": {
+      "revision": "b07fadf03da4ff7eb9cdde48d2ea6151f07d8263ba1a48d8d82b3675c69a6f74",
+      "pending_revision": "b07fadf03da4ff7eb9cdde48d2ea6151f07d8263ba1a48d8d82b3675c69a6f74",
+      "next_file_page": 2,
+      "head": "e91aeba37d4adc44d6f8f65f5b547b24d8f182ae",
+      "seen_claims": [],
+      "updated_at": "2026-11-11T19:44:51Z"
+    },
+    "7309": {
+      "revision": "51c702f511fb151f1ac60bafb6edb9e56659cc2f470fa3417b62178189e74c91",
+      "pending_revision": "51c702f511fb151f1ac60bafb6edb9e56659cc2f470fa3417b62178189e74c91",
+      "next_file_page": 2,
+      "head": "0de5abc36b4a17c7da4f29e1c3e78f956bf33de5",
+      "seen_claims": [],
+      "updated_at": "2026-11-11T19:32:10Z"
+    },
+    "7308": {
+      "revision": "db1f8737c725c9a4d01660c555451285d9a7395a5a87413d1df4cfcb2a533c6c",
+      "pending_revision": "db1f8737c725c9a4d01660c555451285d9a7395a5a87413d1df4cfcb2a533c6c",
+      "next_file_page": 2,
+      "head": "2c777389ec0476e97ab141c645af01ff28a46aa6",
+      "seen_claims": [],
+      "updated_at": "2026-11-11T19:18:12Z"
+    },
+    "7307": {
+      "revision": "f169b171818cc5762c0a65e5414b88763c9e22c1f2a4b05f86d9457bd5effd89",
+      "pending_revision": "f169b171818cc5762c0a65e5414b88763c9e22c1f2a4b05f86d9457bd5effd89",
+      "next_file_page": 2,
+      "head": "554ec957f62893611ffa9bc049bab99dd7bf4b8a",
+      "seen_claims": [],
+      "updated_at": "2026-11-11T18:57:45Z"
+    },
+    "7306": {
+      "revision": "601207b8f5a8f36bd628b5aca1d7c31fb884b08233d2bfe7190eace9d7dd435d",
+      "pending_revision": "601207b8f5a8f36bd628b5aca1d7c31fb884b08233d2bfe7190eace9d7dd435d",
+      "next_file_page": 2,
+      "head": "18b7045ee3515fa866a3f30b67cbd37bd4c361d7",
+      "seen_claims": [],
+      "updated_at": "2026-11-11T18:33:23Z"
+    },
+    "7305": {
+      "revision": "c071afdcff6e4e5d9358daefd14963a7785c70290064f446956011abaa193a06",
+      "pending_revision": "c071afdcff6e4e5d9358daefd14963a7785c70290064f446956011abaa193a06",
+      "next_file_page": 2,
+      "head": "a625a953a8f6865506d226b180b67ddbe0bcbde4",
+      "seen_claims": [],
+      "updated_at": "2026-11-11T18:07:20Z"
+    },
+    "7304": {
+      "revision": "414e57349cf618362585c1c23425d0a07b5568778e2eb141d9ccb4ceca33108c",
+      "pending_revision": "414e57349cf618362585c1c23425d0a07b5568778e2eb141d9ccb4ceca33108c",
+      "next_file_page": 2,
+      "head": "534a250ab99ec46d3dde0bd2fc9ce5bfd26b8b94",
+      "seen_claims": [],
+      "updated_at": "2026-11-11T17:44:50Z"
+    },
+    "7303": {
+      "revision": "d286713f4998996f48fbdd488249bb9acee3f417bae4f3d535da8801d5fe69ae",
+      "pending_revision": "d286713f4998996f48fbdd488249bb9acee3f417bae4f3d535da8801d5fe69ae",
+      "next_file_page": 2,
+      "head": "22dceca94d3540f4424786670b7fe7233761f29a",
+      "seen_claims": [],
+      "updated_at": "2026-11-11T17:31:12Z"
     }
   },
   "family_pr_states": {
@@ -106976,42 +107078,15 @@
     }
   },
   "crocswap_prs_checked": [
-    7302,
-    7301,
-    7300,
-    7299,
-    7298,
-    7297,
-    7296,
-    7295,
-    7294,
-    7293,
-    7292,
-    7291,
-    7290,
-    7277,
-    7289,
-    7288,
-    7287,
-    7286,
-    7285,
-    7284,
-    7283,
-    7282,
-    7281,
-    7280,
-    7279,
-    7278,
-    7274,
-    7276,
-    7275,
-    7273,
-    7206,
-    7207,
-    7205,
-    7204,
-    7203,
-    7209
+    7311,
+    7310,
+    7309,
+    7308,
+    7307,
+    7306,
+    7305,
+    7304,
+    7303
   ],
   "waiting_drafts": [
     {
