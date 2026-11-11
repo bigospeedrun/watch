@@ -381,10 +381,14 @@ class DeadmanTests(unittest.TestCase):
         late={'pr':7142,'reason':'r','since':iso(4+1/3600)}
         f.review=([],[fresh]);self.assertNotIn('review-wait',self.failing(f))
         f.review=([],[fresh,late]);result=d.check(f,NOW)['review-wait'][1]
-        self.assertIn('0 hold(s), 1 claim(s) over 4 h wait: CrocSwap #7142',result);self.assertNotIn('#7143',result)
+        self.assertIn('0 hold(s), 1 claim(s) wait (over 4 h, or a new head after a decision): CrocSwap #7142',result);self.assertNotIn('#7143',result)
         # A hold alerts at once; a claim without a readable "since" (an older site) counts as late.
         f.review=([{'board':'3sum','id':'x','score':'1'}],[fresh]);self.assertIn('1 hold(s), 0 claim(s)',d.check(f,NOW)['review-wait'][1])
         f.review=([],[{'pr':1,'reason':'r'},{'pr':2,'reason':'r','since':'bad'}]);self.assertIn('2 claim(s)',d.check(f,NOW)['review-wait'][1])
+        # A decided PR with a new head (Lead, 2026-11-11, #7155): its row left the board, so it alerts at once.
+        changed={'pr':7155,'reason':'head changed since decision','since':iso(0.5),'head_changed':True}
+        f.review=([],[fresh,changed]);result=d.check(f,NOW)['review-wait'][1]
+        self.assertIn('1 claim(s) wait (over 4 h, or a new head after a decision): CrocSwap #7155: head changed since decision',result);self.assertNotIn('#7143',result)
 
     def test_a_new_wait_alerts_again_and_recovery_is_reported(self):
         f=Fake();f.runs[0]['conclusion']='failure';self.review_run(f,f.runs[0]['html_url'])

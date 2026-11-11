@@ -73,7 +73,8 @@ Items:
                        when that set changes. A CrocSwap claim counts only after it has waited
                        over 4 h from its "since" (its last ready_for_review time, else created_at;
                        Lead 2026-11-11: the stream never empties and Ops batches the claims); a
-                       claim without "since" counts at once. Holds count at once. Since 2026-10-20 a wait does not fail the run,
+                       claim without "since" counts at once, and so does a claim with head_changed (a decided
+                       PR with a new head; its row left the board). Holds count at once. Since 2026-10-20 a wait does not fail the run,
                        so the alert comes from these files. A failed review step (a real
                        error) alerts too, and counts as a success for site-refresh, so a
                        wait does not hide a refresh fault
@@ -819,8 +820,10 @@ CLAIM_WAIT=4*H  # a CrocSwap claim waits for an Ops batch up to this long (Lead,
 
 def late_claims(queue,now):
     """The claims of data/claim-review.json that have waited over CLAIM_WAIT from their "since" (written by the site
-    refresh). A claim without a readable "since" (a site before 2026-11-11) counts as late."""
+    refresh). A claim without a readable "since" (a site before 2026-11-11) counts as late. A claim with head_changed (a
+    decided PR with a new head: its row has left the board; Lead, 2026-11-11, #7155) counts at once."""
     def late(q):
+        if q.get('head_changed') is True:return True
         try:return now-parse(q['since'])>CLAIM_WAIT
         except Exception:return True
     return [q for q in queue if late(q)]
@@ -842,7 +845,7 @@ def review_check(src,latest,results,now):
         waits+=[f"CrocSwap #{safe_text(q.get('pr'),10)}: {safe_text(q.get('reason'),160)}" for q in queue[:10]]
         if (platypii or {}).get('status')=='held':waits.append('platypii Lean note held: '+safe_text(platypii.get('reason'),200))
         if (intake or {}).get('pulls_incomplete'):waits.append('CrocSwap PR list incomplete: '+safe_text(intake.get('pulls_incomplete'),200))
-        problem=((f'{len(holds)} hold(s), {len(queue)} claim(s) over 4 h wait: '+'; '.join(waits)) if waits else
+        problem=((f'{len(holds)} hold(s), {len(queue)} claim(s) wait (over 4 h, or a new head after a decision): '+'; '.join(waits)) if waits else
                  'review step failed with no wait listed (read the run log)' if names[step]=='failure' else None)
     except Exception as error:
         problem='cannot read data/review-holds.json or data/claim-review.json: '+type(error).__name__
