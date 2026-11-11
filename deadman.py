@@ -290,8 +290,13 @@ class Sources:
         if out.returncode:raise RuntimeError('GitHub runs request failed')
         return json.loads(out.stdout)['workflow_runs']
     def run_steps(self,run):
-        out=subprocess.run(['gh','api','-X','GET',f"repos/bigospeedrun/site/actions/runs/{int(run['id'])}/jobs"],
-                           capture_output=True,text=True,timeout=60)
+        # 2026-11-11: GitHub answered "Server Error" (500) to the jobs request of 5 of the 7 newest runs, again and
+        # again for 20 min, while a request for the same run sometimes passed. Try 3 times before an error.
+        for wait in (2,5,None):
+            out=subprocess.run(['gh','api','-X','GET',f"repos/bigospeedrun/site/actions/runs/{int(run['id'])}/jobs"],
+                               capture_output=True,text=True,timeout=60)
+            if not out.returncode or wait is None:break
+            time.sleep(wait)
         if out.returncode:raise RuntimeError('GitHub jobs request failed')
         return [dict(name=s.get('name'),conclusion=s.get('conclusion')) for job in json.loads(out.stdout)['jobs'] for s in job.get('steps',[])]
     def direct_reason(self,run):
@@ -766,12 +771,19 @@ def safe_text(value,cap=200):
 
 def direct_check(src,now,done,failed_steps,results):
     """direct-import: the soft direct step failed in the 3 newest completed runs, or has not passed for 3 h."""
-    streak=0;good=None
+    streak=0;good=None;read=0;error=None
     for run in done[:6]:
-        if DIRECT_STEP in failed_steps(run):
+        # A run whose steps GitHub does not give (after the retries) is no verdict: skip it. Only a check that can
+        # read none of the 6 newest completed runs alerts (2026-11-11: 5 jobs reads failed, no direct step failed).
+        try:failed=failed_steps(run)
+        except Exception as e:
+            error=e;continue
+        read+=1
+        if DIRECT_STEP in failed:
             if good is None:streak+=1
         elif good is None:
             good=parse(run['created_at'])
+    if not read and error is not None:raise error
     if streak>=3 or (streak and (not good or now-good>=3*H)):
         try:reason=src.direct_reason(done[0])
         except Exception as error:reason='cannot read the step log: '+type(error).__name__

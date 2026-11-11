@@ -192,6 +192,28 @@ class DeadmanTests(unittest.TestCase):
         f.direct_reason=broken;runs(f,['failure']*3)
         self.assertEqual(d.check(f,NOW)['direct-import'][1],'the direct step kept the previous bundle in the 3 newest run(s): cannot read the step log: RuntimeError')
 
+    def test_direct_import_skips_runs_whose_steps_github_does_not_give(self):
+        # 2026-11-11: the jobs request of 5 completed runs answered 500; the check alerted "cannot read the direct
+        # step of the refresh runs" although no direct step had failed. An unreadable run is no verdict.
+        f=Fake();ok=dict(name='Refresh data through GitHub GET requests',conclusion='success')
+        f.runs=[dict(status='queued',conclusion=None,created_at=iso(0.1),html_url='https://github.com/x/runs/9',id=9)]+[
+            dict(status='completed',conclusion='success',created_at=iso(i+0.2),html_url=f'https://github.com/x/runs/{8-i}',id=8-i) for i in range(4)]
+        f.steps={r['html_url']:[ok,dict(name=d.DIRECT_STEP,conclusion='success')] for r in f.runs[1:]}
+        unreadable={'https://github.com/x/runs/8','https://github.com/x/runs/7'}
+        steps=f.run_steps
+        def flaky(run):
+            if run['html_url'] in unreadable:raise RuntimeError('GitHub jobs request failed')
+            return steps(run)
+        f.run_steps=flaky
+        self.assertTrue(d.check(f,NOW)['direct-import'][0])
+        # Failed direct steps in the readable runs still count.
+        f.steps.update({u:[ok,dict(name=d.DIRECT_STEP,conclusion='failure')] for u in ('https://github.com/x/runs/6','https://github.com/x/runs/5')})
+        f.direct_reason=lambda run:None
+        self.assertEqual(d.check(f,NOW)['direct-import'][1],'the direct step kept the previous bundle in the 2 newest run(s)')
+        # No readable run at all: the check alerts as before.
+        unreadable.update({'https://github.com/x/runs/6','https://github.com/x/runs/5'})
+        self.assertEqual(d.check(f,NOW)['direct-import'][1],'cannot read the direct step of the refresh runs: RuntimeError')
+
     def test_candidates_wait_at_most_6_hours_for_the_review_session(self):
         f=Fake();self.assertEqual(self.failing(f),set())
         f.pending=[NOW-timedelta(hours=5.9),NOW-timedelta(hours=1)];self.assertEqual(self.failing(f),set())
