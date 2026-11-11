@@ -210,8 +210,15 @@ class DeadmanTests(unittest.TestCase):
         f.steps.update({u:[ok,dict(name=d.DIRECT_STEP,conclusion='failure')] for u in ('https://github.com/x/runs/6','https://github.com/x/runs/5')})
         f.direct_reason=lambda run:None
         self.assertEqual(d.check(f,NOW)['direct-import'][1],'the direct step kept the previous bundle in the 2 newest run(s)')
+        # A run listed with no steps (or no direct step) is no verdict: it does not end the failure streak.
+        f.steps['https://github.com/x/runs/4']=[];f.runs.append(dict(status='completed',conclusion='success',created_at=iso(4.2),html_url='https://github.com/x/runs/4',id=4))
+        f.steps['https://github.com/x/runs/6']=[]
+        f.steps['https://github.com/x/runs/3']=[ok,dict(name=d.DIRECT_STEP,conclusion='failure')];f.runs.append(dict(status='completed',conclusion='success',created_at=iso(5.2),html_url='https://github.com/x/runs/3',id=3))
+        self.assertEqual(d.check(f,NOW)['direct-import'][1],'the direct step kept the previous bundle in the 2 newest run(s)')
+        f.steps['https://github.com/x/runs/6']=[ok,dict(name=d.DIRECT_STEP,conclusion='failure')]
+        self.assertEqual(d.check(f,NOW)['direct-import'][1],'the direct step kept the previous bundle in the 3 newest run(s)')
         # No readable run at all: the check alerts as before.
-        unreadable.update({'https://github.com/x/runs/6','https://github.com/x/runs/5'})
+        unreadable.update({'https://github.com/x/runs/6','https://github.com/x/runs/5','https://github.com/x/runs/4','https://github.com/x/runs/3'})
         self.assertEqual(d.check(f,NOW)['direct-import'][1],'cannot read the direct step of the refresh runs: RuntimeError')
 
     def test_candidates_wait_at_most_6_hours_for_the_review_session(self):

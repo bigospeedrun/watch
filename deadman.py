@@ -769,17 +769,20 @@ def safe_text(value,cap=200):
     text=' '.join(text.replace('\\n',' ').replace('\\r',' ').replace('\\t',' ').split())
     return text if len(text)<=cap else text[:cap-3]+'...'
 
-def direct_check(src,now,done,failed_steps,results):
+def direct_check(src,now,done,run_steps,results):
     """direct-import: the soft direct step failed in the 3 newest completed runs, or has not passed for 3 h."""
     streak=0;good=None;read=0;error=None
     for run in done[:6]:
         # A run whose steps GitHub does not give (after the retries) is no verdict: skip it. Only a check that can
         # read none of the 6 newest completed runs alerts (2026-11-11: 5 jobs reads failed, no direct step failed).
-        try:failed=failed_steps(run)
+        try:steps={s['name']:s.get('conclusion') for s in run_steps(run)}
         except Exception as e:
             error=e;continue
         read+=1
-        if DIRECT_STEP in failed:
+        # GitHub can list a run with no steps for a while (prove2me_check). A run with no direct step is no verdict
+        # either; before, it counted as a good run and could end a failure streak (Reviewer, 2026-11-11).
+        if DIRECT_STEP not in steps:continue
+        if steps[DIRECT_STEP]=='failure':
             if good is None:streak+=1
         elif good is None:
             good=parse(run['created_at'])
@@ -886,9 +889,10 @@ def check(src,now,to_time=systemd_time):
         runs=src.refresh_runs()
         done=[r for r in runs if r.get('status')=='completed']
         steps={}
-        def failed_steps(run):
-            if id(run) not in steps:steps[id(run)]=[s['name'] for s in src.run_steps(run) if s.get('conclusion')=='failure']
+        def run_steps(run):
+            if id(run) not in steps:steps[id(run)]=src.run_steps(run)
             return steps[id(run)]
+        def failed_steps(run):return [s['name'] for s in run_steps(run) if s.get('conclusion')=='failure']
         # A run that failed only in the prove2.me or lead review steps is a refresh success;
         # prove2me-import and review-wait report those.
         def succeeded(run,index):
@@ -906,7 +910,7 @@ def check(src,now,to_time=systemd_time):
         latest=None;done=None
         results['site-refresh']=(False,'cannot read GitHub runs: '+type(error).__name__,None,'https://github.com/bigospeedrun/site/actions/workflows/refresh-data.yml')
     if done:
-        try:direct_check(src,now,done,failed_steps,results)
+        try:direct_check(src,now,done,run_steps,results)
         except Exception as error:
             results['direct-import']=(False,'cannot read the direct step of the refresh runs: '+type(error).__name__,None,DIRECT_LINK)
     prove2me_check(src,latest,results)
