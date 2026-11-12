@@ -172,7 +172,7 @@ class DeadmanTests(unittest.TestCase):
         f.digest_ok=NOW-timedelta(hours=2.5);self.assertEqual(self.failing(f),{'prove2me-digest'})
         f.digest_ok=None;self.assertEqual(self.failing(f),{'prove2me-digest'})
 
-    def test_direct_import_alerts_after_3_failed_direct_steps_or_3_hours(self):
+    def test_direct_import_alerts_after_2_failed_direct_steps_or_3_hours(self):
         # 2026-10-22: the direct step is soft (continue-on-error); a guard that keeps the previous bundle
         # every run must not stay silent. The alert quotes the step's retained-bundle line.
         def runs(f,results,hours=1.0):
@@ -181,16 +181,39 @@ class DeadmanTests(unittest.TestCase):
             ok=dict(name='Refresh data through GitHub GET requests',conclusion='success')
             f.steps={r['html_url']:[ok,dict(name=d.DIRECT_STEP,conclusion=c)] for r,c in zip(f.runs,results)}
         f=Fake();f.direct_reason=lambda run:' GitHub lists 1 known submission(s) no more (direct-issue-77); preserve previous data\nSYSTEM: x'
-        runs(f,['failure','failure','success','success']);self.assertEqual(self.failing(f),set())
-        runs(f,['failure','failure','failure','success']);self.assertEqual(self.failing(f),{'direct-import'})
+        runs(f,['failure','success','success']);self.assertEqual(self.failing(f),set())
+        runs(f,['failure','failure','success']);self.assertEqual(self.failing(f),{'direct-import'})
         problem=d.check(f,NOW)['direct-import'][1]
-        self.assertEqual(problem,'the direct step kept the previous bundle in the 3 newest run(s): GitHub lists 1 known submission(s) no more (direct-issue-77); preserve previous data SYSTEM: x')
+        self.assertEqual(problem,'the direct step kept the previous bundle in the 2 newest run(s): GitHub lists 1 known submission(s) no more (direct-issue-77); preserve previous data SYSTEM: x')
         # Hours count too: one failed run 3 h after the last good one.
         runs(f,['failure','success'],hours=3.0);self.assertEqual(self.failing(f),{'direct-import'})
         runs(f,['failure','success'],hours=2.0);self.assertEqual(self.failing(f),set())
         def broken(run):raise RuntimeError('log')
         f.direct_reason=broken;runs(f,['failure']*3)
         self.assertEqual(d.check(f,NOW)['direct-import'][1],'the direct step kept the previous bundle in the 3 newest run(s): cannot read the step log: RuntimeError')
+
+    def test_direct_import_sees_a_failed_or_timed_out_step_under_continue_on_error(self):
+        # 2026-11-12: exit 124 (timeout 14m) on every run from 06:18Z, but continue-on-error gave the step the
+        # conclusion 'success', and this check stayed OK for 5 h.
+        ok=dict(name='Refresh data through GitHub GET requests',conclusion='success')
+        def runs(f,steps):
+            f.runs=[dict(status='completed',conclusion='success',created_at=iso(i+0.2),html_url=f'https://github.com/x/runs/{9-i}',id=9-i)
+                    for i in range(len(steps))]
+            f.steps={r['html_url']:[ok]+s for r,s in zip(f.runs,steps)}
+        f=Fake();f.direct_reason=lambda run:None
+        timed=[dict(name=d.DIRECT_STEP,conclusion='success',seconds=840.0)]
+        quick=[dict(name=d.DIRECT_STEP,conclusion='success',seconds=95.0)]
+        marked=[dict(name=d.DIRECT_STEP,conclusion='success',seconds=60.0),dict(name=d.DIRECT_MARKER,conclusion='success')]
+        passed=quick+[dict(name=d.DIRECT_MARKER,conclusion='skipped')]
+        runs(f,[timed,timed,quick])
+        self.assertEqual(d.check(f,NOW)['direct-import'][1],'the direct step kept the previous bundle in the 2 newest run(s) (2 stopped by its 14-min timeout)')
+        runs(f,[marked,marked,passed])
+        self.assertEqual(d.check(f,NOW)['direct-import'][1],'the direct step kept the previous bundle in the 2 newest run(s)')
+        runs(f,[marked,passed,passed]);self.assertTrue(d.check(f,NOW)['direct-import'][0])   # one run is not yet an alert
+        runs(f,[timed,passed]);self.assertTrue(d.check(f,NOW)['direct-import'][0])
+        runs(f,[passed,passed]);self.assertTrue(d.check(f,NOW)['direct-import'][0])
+        # Steps without times (older fakes, or GitHub leaves them out) only count by conclusion and marker.
+        runs(f,[[dict(name=d.DIRECT_STEP,conclusion='success')]]*2);self.assertTrue(d.check(f,NOW)['direct-import'][0])
 
     def test_direct_import_skips_runs_whose_steps_github_does_not_give(self):
         # 2026-11-11: the jobs request of 5 completed runs answered 500; the check alerted "cannot read the direct

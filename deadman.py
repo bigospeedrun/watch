@@ -15,7 +15,9 @@ Items:
                        succeeded and newest success < 2 h (GitHub GET only)
   direct-import        the soft step "Refresh direct submission issues and PRs" of the site refresh
                        (continue-on-error: a failure keeps the previous direct bundle, the run stays
-                       green) failed in the 3 newest completed runs, or has not passed for 3 h. The
+                       green) failed in the 2 newest completed runs, or has not passed for 3 h. A
+                       failure: conclusion failure, the site's "Report a failed direct step" ran (not
+                       skipped), or the step ran 13.5 min or more (its 14-min timeout). The
                        alert quotes the step's "previous bundle retained" line (for a known submission
                        that GitHub no longer lists, the key to retire). Lead, 2026-10-22, after an empty
                        issue list dropped 13 rows
@@ -299,7 +301,8 @@ class Sources:
             if not out.returncode or wait is None:break
             time.sleep(wait)
         if out.returncode:raise RuntimeError('GitHub jobs request failed')
-        return [dict(name=s.get('name'),conclusion=s.get('conclusion')) for job in json.loads(out.stdout)['jobs'] for s in job.get('steps',[])]
+        return [dict(name=s.get('name'),conclusion=s.get('conclusion'),seconds=step_seconds(s)) for job in json.loads(out.stdout)['jobs']
+                for s in job.get('steps',[])]
     def direct_reason(self,run):
         """The "previous bundle retained" line of the direct step in this run's job log, or None."""
         jobs=subprocess.run(['gh','api','-X','GET',f"repos/bigospeedrun/site/actions/runs/{int(run['id'])}/jobs"],
@@ -799,28 +802,49 @@ def safe_text(value,cap=200):
     text=' '.join(text.replace('\\n',' ').replace('\\r',' ').replace('\\t',' ').split())
     return text if len(text)<=cap else text[:cap-3]+'...'
 
+def step_seconds(step):
+    """The wall time of a jobs-API step, or None."""
+    try:return (parse(step['completed_at'])-parse(step['started_at'])).total_seconds()
+    except (KeyError,TypeError,ValueError):return None
+
+# The direct step runs under continue-on-error, so the jobs API gives it the conclusion 'success' even when it failed or
+# hit its 14-min timeout (2026-11-12: exit 124 on every hourly run from 06:18Z; this check stayed OK for 5 h and #187's
+# import waited). The site workflow's next step, DIRECT_MARKER, runs only when the direct step did not succeed. Runs
+# from before that step: a direct step that ran for DIRECT_TIMEOUT or longer was stopped by `timeout 14m`.
+DIRECT_MARKER='Report a failed direct step'
+DIRECT_TIMEOUT=13.5*60
+
+def direct_failed(steps):
+    """'timeout', 'failure' or None for one run's steps (name -> step dict)."""
+    step=steps[DIRECT_STEP];seconds=step.get('seconds')
+    if seconds is not None and seconds>=DIRECT_TIMEOUT:return 'timeout'
+    if step.get('conclusion')=='failure' or steps.get(DIRECT_MARKER,{}).get('conclusion') not in (None,'skipped'):return 'failure'
+    return None
+
 def direct_check(src,now,done,run_steps,results):
-    """direct-import: the soft direct step failed in the 3 newest completed runs, or has not passed for 3 h."""
-    streak=0;good=None;read=0;error=None
+    """direct-import: the soft direct step failed in the 2 newest completed runs, or has not passed for 3 h."""
+    streak=0;good=None;read=0;error=None;timeouts=0
     for run in done[:6]:
         # A run whose steps GitHub does not give (after the retries) is no verdict: skip it. Only a check that can
         # read none of the 6 newest completed runs alerts (2026-11-11: 5 jobs reads failed, no direct step failed).
-        try:steps={s['name']:s.get('conclusion') for s in run_steps(run)}
+        try:steps={s['name']:s for s in run_steps(run)}
         except Exception as e:
             error=e;continue
         read+=1
         # GitHub can list a run with no steps for a while (prove2me_check). A run with no direct step is no verdict
         # either; before, it counted as a good run and could end a failure streak (Reviewer, 2026-11-11).
         if DIRECT_STEP not in steps:continue
-        if steps[DIRECT_STEP]=='failure':
-            if good is None:streak+=1
+        failed=direct_failed(steps)
+        if failed:
+            if good is None:streak+=1;timeouts+=failed=='timeout'
         elif good is None:
             good=parse(run['created_at'])
     if not read and error is not None:raise error
-    if streak>=3 or (streak and (not good or now-good>=3*H)):
+    if streak>=2 or (streak and (not good or now-good>=3*H)):
         try:reason=src.direct_reason(done[0])
         except Exception as error:reason='cannot read the step log: '+type(error).__name__
-        problem=f'the direct step kept the previous bundle in the {streak} newest run(s)'+(f': {safe_text(reason,300)}' if reason else '')
+        problem=(f'the direct step kept the previous bundle in the {streak} newest run(s)'
+                 +(f' ({timeouts} stopped by its 14-min timeout)' if timeouts else '')+(f': {safe_text(reason,300)}' if reason else ''))
         results['direct-import']=(False,problem,good,done[0].get('html_url') or DIRECT_LINK)
     else:
         results['direct-import']=(True,None,good,DIRECT_LINK)
