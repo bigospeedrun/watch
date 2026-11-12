@@ -123,7 +123,8 @@ Items:
                        board.bigospeedrun.com:443 over v4 and over v6, each alone, so a box
                        v6 or v4 outage reads as such and not as an origin fault
   board-backup         vpsbackup.py fresh bigospeedrun-board exits non-zero (no fresh copy
-                       on auntie, or the desktop copy failed), or the newest ACK line in its
+                       on auntie, or the desktop copy failed; an unreachable desktop only 26 h
+                       after its last good read), or the newest ACK line in its
                        pull log (store/bigospeedrun-board.log) is ACK FAIL: the VPS did not
                        confirm its pull marker. No log yet = no ACK information.
                        The three board-* items arm themselves on their first success (the
@@ -509,11 +510,12 @@ class Sources:
             except Exception as error:out[name]=type(error).__name__
         return out
     def board_backup(self):
-        """(exit code, first line) of vpsbackup.py fresh, or None before the first pull."""
+        """(exit code, stdout) of vpsbackup.py fresh, or None before the first pull. stdout has two lines: the auntie copy
+        (FRESH OK|FAIL ...), then the desktop copy (DESKTOP OK|FAIL ...)."""
         if not (VPS_BACKUP/'store'/'bigospeedrun-board').is_dir():return None
         out=subprocess.run(['python3','-I',str(VPS_BACKUP/'vpsbackup.py'),'fresh','bigospeedrun-board'],
                            capture_output=True,text=True,timeout=300)
-        return out.returncode,((out.stdout.strip().splitlines() or [''])[0])[:200]
+        return out.returncode,out.stdout[:1000]
     def board_ack_log(self):
         """The board's pull log that vpsbackup.py appends to (ACK OK / ACK FAIL lines), or None if it is missing."""
         path=VPS_BACKUP/'store'/'bigospeedrun-board.log'
@@ -525,6 +527,34 @@ class Sources:
         if not self.persist:return
         path=self.root/BOARD_MEMORY;tmp=path.with_name(path.name+'.tmp')
         tmp.write_text(json.dumps(memory,indent=2)+'\n');tmp.replace(path)
+
+# The desktop (Nil's 4090) sleeps or is off at times; vpsbackup.py fresh then cannot reach it over ssh. Its copy was
+# fresh when last confirmed, and it holds a copy for vpsbackup's own limit (max_age_hours 26 in conf/bigospeedrun-board.json),
+# so an unreachable desktop alerts only 26 h after the last DESKTOP OK (Lead, 2026-11-12: board-backup alerted at
+# 11:37Z, "the desktop copy failed", while ssh to the desktop timed out). A desktop that answers with a missing,
+# stale or wrong copy alerts at once.
+DESKTOP_GRACE=26*H
+UNREACHABLE=('ssh: connect to host','Connection timed out','Connection refused','No route to host',
+             'Could not resolve hostname','desktop step timed out','Network is unreachable')
+
+def backup_problem(code,text,board,now):
+    """The board-backup problem for a non-zero vpsbackup.py fresh, or None (an unreachable desktop inside its grace).
+    Remembers desktop_ok_at (the last DESKTOP OK) and desktop_unreachable_since in the board memory."""
+    lines=[l.strip() for l in (text or '').splitlines() if l.strip()]
+    auntie=next((l for l in lines if l.startswith('FRESH ')),lines[0] if lines else '')[:200]
+    desk=next((l for l in lines if l.startswith('DESKTOP ')),'')
+    if desk.startswith('DESKTOP OK'):board['desktop_ok_at']=now.isoformat();board.pop('desktop_unreachable_since',None)
+    if code!=2:return 'no fresh backup: '+auntie
+    reason=desk.split(' reason=',1)[1] if ' reason=' in desk else (desk or 'no DESKTOP line')
+    if not any(mark in reason for mark in UNREACHABLE):
+        board.pop('desktop_unreachable_since',None)
+        return 'the desktop copy failed (the desktop answered): '+reason[:200]
+    since=board.setdefault('desktop_unreachable_since',now.isoformat())
+    last=board.get('desktop_ok_at')
+    start=parse(last) if last else parse(since)
+    if now-start<DESKTOP_GRACE:return None
+    return (f'the desktop is unreachable since {pt(parse(since))} ({reason[:120]}); its copy was last confirmed '
+            + (pt(parse(last)) if last else 'never by this check') + ', over 26 h ago')
 
 def newest_ack(log):
     """('OK'|'FAIL', time or None) of the newest ACK line vpsbackup.py wrote, or None."""
@@ -1051,10 +1081,11 @@ def board_checks(src,now,board,results):
     if fresh is None:
         if board.get('backup_armed'):results['board-backup']=(False,'no backup store for bigospeedrun-board on auntie',None,link)
     else:
-        code,line=fresh
-        if code==0:board['backup_armed']=True
+        code,text=fresh
+        if code==0:board['backup_armed']=True;board['desktop_ok_at']=now.isoformat();board.pop('desktop_unreachable_since',None)
         if code==0 or board.get('backup_armed'):
-            problems=[] if code==0 else [('the desktop copy failed: ' if code==2 else 'no fresh backup: ')+line]
+            problems=[] if code==0 else [backup_problem(code,text,board,now)]
+            problems=[p for p in problems if p]
             try:ack=newest_ack(src.board_ack_log())
             except Exception as error:ack=None;problems.append('cannot read the board pull log: '+type(error).__name__)
             if ack and ack[0]=='FAIL':

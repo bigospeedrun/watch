@@ -906,8 +906,31 @@ class BoardTests(unittest.TestCase):
         f=self.live();d.check(f,NOW)
         f.backup=(1,'FRESH FAIL product=bigospeedrun-board reason=stale');ok,problem,*_=d.check(f,NOW)['board-backup']
         self.assertFalse(ok);self.assertIn('no fresh backup',problem)
-        f.backup=(2,'DESKTOP FAIL reason=unreachable');self.assertIn('desktop',d.check(f,NOW)['board-backup'][1])
+        f.backup=(2,'FRESH OK product=bigospeedrun-board newest=x age_hours=0.9\nDESKTOP FAIL product=bigospeedrun-board reason=Fail: desktop copy x does not match its manifest')
+        ok,problem,*_=d.check(f,NOW)['board-backup'];self.assertFalse(ok)
+        self.assertEqual(problem,'the desktop copy failed (the desktop answered): Fail: desktop copy x does not match its manifest')
         f.backup=None;self.assertIn('no backup store',d.check(f,NOW)['board-backup'][1])
+
+    def test_an_unreachable_desktop_alerts_only_26_hours_after_its_last_good_read(self):
+        # 2026-11-12 11:37Z: ssh to the desktop timed out (asleep), and board-backup alerted at once with the auntie line.
+        f=self.live();f.backup=(0,'FRESH OK product=bigospeedrun-board\nDESKTOP OK product=bigospeedrun-board');d.check(f,NOW-timedelta(hours=1))
+        f.backup=(2,'FRESH OK product=bigospeedrun-board newest=x age_hours=0.9\nDESKTOP FAIL product=bigospeedrun-board reason=Fail: desktop step exit=255: ssh: connect to host desktop port 22: Connection timed out')
+        self.assertTrue(d.check(f,NOW)['board-backup'][0])
+        self.assertTrue(d.check(f,NOW+timedelta(hours=24))['board-backup'][0])
+        ok,problem,*_=d.check(f,NOW+timedelta(hours=25.5))['board-backup'];self.assertFalse(ok)
+        self.assertTrue(problem.startswith('the desktop is unreachable since '),problem)
+        self.assertIn('Connection timed out',problem);self.assertIn('last confirmed',problem)
+        # The desktop answers again: OK at once, and the grace starts from the new read.
+        f.backup=(0,'FRESH OK product=bigospeedrun-board\nDESKTOP OK product=bigospeedrun-board');self.assertTrue(d.check(f,NOW+timedelta(hours=26))['board-backup'][0])
+        self.assertNotIn('desktop_unreachable_since',f.board_mem)
+        # No earlier good read in memory: the grace counts from the first unreachable read.
+        f=self.live();d.check(f,NOW);f.board_mem.pop('desktop_ok_at',None)
+        f.backup=(2,'DESKTOP FAIL reason=Fail: desktop step timed out after 600 s')
+        self.assertTrue(d.check(f,NOW)['board-backup'][0])
+        self.assertIn('never by this check',d.check(f,NOW+timedelta(hours=27))['board-backup'][1])
+        # An auntie failure still alerts at once, whatever the desktop says.
+        f.backup=(1,'FRESH FAIL product=bigospeedrun-board reason=stale\nDESKTOP FAIL reason=Fail: ssh: connect to host d port 22: Connection timed out')
+        self.assertIn('no fresh backup: FRESH FAIL',d.check(f,NOW)['board-backup'][1])
 
     def test_backup_alerts_when_the_newest_ack_failed(self):
         ok_line='2026-10-15T00:10:00Z bigospeedrun-board ACK OK sha256=%s: the VPS wrote its pull marker\n'%('a'*64)
