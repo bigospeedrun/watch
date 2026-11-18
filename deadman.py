@@ -73,7 +73,7 @@ Items:
                        data/platypii-lean.json (held note) or data/sources/intake.json
                        (incomplete PR list) on main; the alert names each wait and repeats
                        when that set changes. A CrocSwap claim counts only after it has waited
-                       over 4 h from its "since" (its last ready_for_review time, else created_at;
+                       over 24 h in maintenance mode (4 h otherwise) from its "since" (its last ready_for_review time, else created_at;
                        Lead 2026-11-11: the stream never empties and Ops batches the claims); a
                        claim without "since" counts at once, and so does a claim with head_changed (a decided
                        PR with a new head; its row left the board). Holds count at once. Since 2026-10-20 a wait does not fail the run,
@@ -887,7 +887,7 @@ def prove2me_check(src,latest,results):
         return
     results['prove2me-import']=(False,safe_text(problem,500)+' (review data/prove2me-trust.json)',None,link)
 
-CLAIM_WAIT=4*H  # a CrocSwap claim waits for an Ops batch up to this long (Lead, 2026-11-11)
+CLAIM_WAIT=24*H  # a CrocSwap claim waits for an Ops batch up to this long (Lead, 2026-11-11: 4 h; maintenance mode, Lead 2026-11-18: 24 h, back to 4 h when it ends)
 
 def late_claims(queue,now):
     """The claims of data/claim-review.json that have waited over CLAIM_WAIT from their "since" (written by the site
@@ -916,7 +916,7 @@ def review_check(src,latest,results,now):
         waits+=[f"CrocSwap #{safe_text(q.get('pr'),10)}: {safe_text(q.get('reason'),160)}" for q in queue[:10]]
         if (platypii or {}).get('status')=='held':waits.append('platypii Lean note held: '+safe_text(platypii.get('reason'),200))
         if (intake or {}).get('pulls_incomplete'):waits.append('CrocSwap PR list incomplete: '+safe_text(intake.get('pulls_incomplete'),200))
-        problem=((f'{len(holds)} hold(s), {len(queue)} claim(s) wait (over 4 h, or a new head after a decision): '+'; '.join(waits)) if waits else
+        problem=((f'{len(holds)} hold(s), {len(queue)} claim(s) wait (over 24 h, or a new head after a decision): '+'; '.join(waits)) if waits else
                  'review step failed with no wait listed (read the run log)' if names[step]=='failure' else None)
     except Exception as error:
         problem='cannot read data/review-holds.json or data/claim-review.json: '+type(error).__name__

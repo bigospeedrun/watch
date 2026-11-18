@@ -155,7 +155,8 @@ workflow (latest completed run succeeded, newest success < 2 h, GitHub GET
 only), `bigospeedrun-submissions.service` (last run ok, timer fired < 75 min),
 the cronjob "BOS chatbot gap review" (completed run < 194 h while it runs weekly in maintenance mode; 26 h when daily; from
 `~/.isomux/cronjobs`, read-only) and the candidate queue (no file in `.git/watch-candidates-pending/` older than 13 h while the review session runs every 12 h in maintenance mode; 6 h when it runs every 3 h,
-so a review session that stays down is noticed). A failing item alerts BOS Lead Dev once
+so a review session that stays down is noticed).
+The review-wait item names a CrocSwap claim only after it waits over 24 h from its "since" while maintenance mode is on (Lead, 2026-11-18; 4 h when it ends). A failing item alerts BOS Lead Dev once
 through a signed Isomux webhook (`.git/deadman.json`), then once on recovery.
 If the lead cannot be reached, the alert goes to `.git/deadman-alerts.log` and
 the next hourly run retries. `python3 deadman.py --dry-run` prints item status
