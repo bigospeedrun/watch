@@ -311,7 +311,7 @@ class Sources:
                             capture_output=True,text=True,timeout=60)
         if jobs.returncode:raise RuntimeError('GitHub jobs request failed')
         for job in json.loads(jobs.stdout)['jobs']:
-            log=subprocess.run(['gh','api','-X','GET',f"repos/bigospeedrun/site/actions/jobs/{int(job['id'])}/logs"],
+            log=subprocess.run(['gh','api','--allow-escape-sequences','-X','GET',f"repos/bigospeedrun/site/actions/jobs/{int(job['id'])}/logs"],
                                capture_output=True,text=True,timeout=120)
             if log.returncode:raise RuntimeError('GitHub job log request failed')
             for line in log.stdout.splitlines():
