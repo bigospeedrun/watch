@@ -554,6 +554,20 @@ class DeadmanTests(unittest.TestCase):
         self.assertIn('run 3 #205: build: wall at 90% of the job deadline',found)
         self.assertTrue((self.root/d.RESOURCE_MEMORY).exists())
 
+    def test_verifier_resource_reads_every_page_of_the_artifact_list(self):
+        from unittest.mock import MagicMock
+        pages=[]
+        def api(path,params=None,**kw):
+            pages.append(params['page'])
+            if params['page']==1:return {'artifacts':[dict(name=f'chain-leg-2-1-195-leg{i}',id=100+i,size_in_bytes=10) for i in range(100)]}
+            return {'artifacts':[dict(name='verifier-receipt-and-logs-2-1-195',id=12,size_in_bytes=10)]}
+        src=d.Sources(self.root,persist=False)
+        with patch.object(d.github_read,'api',api),patch.object(d.subprocess,'run',return_value=MagicMock(returncode=0,stdout=self.zipped_receipt(['build: memory at 100% of its cap']))):
+            self.assertEqual(src.receipt_warnings(2,1),['run 2 #195: build: memory at 100% of its cap'])
+        self.assertEqual(pages,[1,2])
+        with patch.object(d.github_read,'api',lambda path,params=None,**kw:{'artifacts':[dict(name='x',id=1)]*100}):
+            with self.assertRaises(RuntimeError):src.receipt_warnings(2,1)
+
     def test_verifier_resource_one_bad_receipt_hides_no_other_run(self):
         from unittest.mock import MagicMock
         recent=(NOW-timedelta(hours=5)).isoformat();end=(NOW-timedelta(hours=1)).isoformat()

@@ -219,6 +219,7 @@ RESOURCE_MEMORY='.git/verifier-resource.json'
 RESOURCE_DAYS=3
 RESOURCE_PAGES=10
 RESOURCE_TRIES=3
+RESOURCE_ARTIFACT_PAGES=10
 RESOURCE_MIN_SECONDS=600
 RESOURCE_WORKFLOWS=('submissions.yml','verify.yml')
 RESOURCE_RECEIPT=re.compile(r'verifier-receipt-and-logs-[0-9]+-[0-9]+(-[0-9]+)?(-lean)?')
@@ -378,7 +379,12 @@ class Sources:
     def receipt_warnings(self,run_id,attempt=1):
         """The warnings of each receipt of this run attempt: one final receipt per checked issue (verifier-receipt-and-logs-
         RUN-ATTEMPT-ISSUE, or without ISSUE for the maintainer workflow), else its Lean-stage one (-lean)."""
-        names=github_read.api(f'repos/bigospeedrun/verifier/actions/runs/{run_id}/artifacts',{'per_page':100})['artifacts']
+        names=[]
+        for page in range(1,RESOURCE_ARTIFACT_PAGES+1):
+            got=github_read.api(f'repos/bigospeedrun/verifier/actions/runs/{run_id}/artifacts',{'per_page':100,'page':page})['artifacts']
+            names+=got
+            if len(got)<100:break
+        else:raise RuntimeError('too many artifacts to read')
         pattern=re.compile(f'verifier-receipt-and-logs-{run_id}-{attempt}(?:-([0-9]+))?(-lean)?')
         groups={}
         for artifact in names:
