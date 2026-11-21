@@ -21,6 +21,11 @@ Items:
                        alert quotes the step's "previous bundle retained" line (for a known submission
                        that GitHub no longer lists, the key to retire). Lead, 2026-10-22, after an empty
                        issue list dropped 13 rows
+  verifier-resource    a receipt of a verifier check run (submissions.yml, verify.yml) of the last 3 days has a
+                       resource_report warning: a build attempt, kernel, chain segment, audit or export at 80% or
+                       more of its memory cap or of the job deadline (verifier receipt field, task c46608b8). Alerts
+                       once per new warning, one recovery line when none is left in the window. Reads the receipt
+                       artifact of each run of 10 min or more once (.git/verifier-resource.json)
   verifier-submissions bigospeedrun-submissions.service last run ok and its
                        timer triggered < 75 min ago (systemctl --user show)
   unanswered-submissions every verifier submission issue and PR open 45 min or more has a
@@ -141,6 +146,7 @@ item stays unsent, so the next hourly run retries. Output holds no secrets.
 import argparse
 import hashlib
 import hmac
+import io
 import ipaddress
 import json
 import re
@@ -150,6 +156,8 @@ import subprocess
 import time
 import urllib.error
 import urllib.request
+import zipfile
+import github_read
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from zoneinfo import ZoneInfo
@@ -204,9 +212,18 @@ SOFT_STEPS={DIRECT_STEP,'Refresh public author profiles','Plan Discord record no
             'Post Discord record notifications','Plan X record notifications','Commit X reservations before sending','Post X record notifications'}
 # Items whose problem is a set of strings joined by SET_SEP: an alert lists only strings not
 # alerted yet in this failing period, and a repeated string never alerts again.
-SET_ITEMS={'watch-errors','unanswered-submissions','comment-reply'}
+SET_ITEMS={'watch-errors','unanswered-submissions','comment-reply','verifier-resource'}
 SET_SEP='\n'
 WATCH_ERRORS_LINK='~/nil/bigospeedrun-data/pivot-watch.json (errors)'
+RESOURCE_MEMORY='.git/verifier-resource.json'
+RESOURCE_DAYS=3
+RESOURCE_PAGES=10
+RESOURCE_TRIES=3
+RESOURCE_MIN_SECONDS=600
+RESOURCE_WORKFLOWS=('submissions.yml','verify.yml')
+RESOURCE_RECEIPT=re.compile(r'verifier-receipt-and-logs-[0-9]+-[0-9]+(-[0-9]+)?(-lean)?')
+RESOURCE_ZIP_MAX=64*1024*1024
+RESOURCE_LINK='https://github.com/bigospeedrun/verifier/actions (the receipt, resource_report; verifier task c46608b8)'
 # Items whose alert repeats when the problem text changes during one failing period.
 REALERT_ON_CHANGE={'prove2me-import','race-parity','stale-issues','review-wait','method-note'}
 ISSUE_REPOS=('bigospeedrun/site','bigospeedrun/board','bigospeedrun/verifier','bigospeedrun/watch')
@@ -316,6 +333,75 @@ class Sources:
                 if 'Direct import failed; previous bundle retained:' in line:
                     return line.split('Direct import failed; previous bundle retained:',1)[1]
         return None
+    def resource_warnings(self,now):
+        """The resource_report warnings of the receipts of verifier check runs created in the last RESOURCE_DAYS days, as
+        strings that name the run (and the issue when a run checks several). A run under RESOURCE_MIN_SECONDS has no check.
+        Each receipt is read once; an older receipt without the field has no warning. A receipt that cannot be read in
+        RESOURCE_TRIES reads counts as one string, so one bad artifact hides no other run. The list of runs: a failed read
+        keeps the last answer once and fails the second time in a row."""
+        path=self.root/RESOURCE_MEMORY
+        state=json.loads(path.read_text()) if path.exists() else {}
+        memory=state.setdefault('runs',{})
+        def save():
+            if self.persist:
+                tmp=path.with_name(path.name+'.tmp');tmp.write_text(json.dumps(state,indent=1)+'\n');tmp.replace(path)
+        since=(now-timedelta(days=RESOURCE_DAYS)).strftime('%Y-%m-%dT%H:%M:%SZ')
+        try:
+            runs=[]
+            for workflow in RESOURCE_WORKFLOWS:
+                for page in range(1,RESOURCE_PAGES+1):
+                    got=github_read.api(f'repos/bigospeedrun/verifier/actions/workflows/{workflow}/runs',
+                                        {'created':'>='+since,'per_page':100,'page':page})['workflow_runs']
+                    runs+=got
+                    if len(got)<100:break
+                else:raise RuntimeError('too many verifier runs to read')
+        except Exception:
+            state['read_failures']=state.get('read_failures',0)+1;save()
+            if state['read_failures']>=2:raise
+            return list(state.get('last_found',[]))
+        found=[]
+        for run in runs:
+            if run.get('status')!='completed':continue
+            started=parse(run.get('run_started_at') or run.get('created_at'));ended=parse(run.get('updated_at'))
+            if not started or not ended or (ended-started).total_seconds()<RESOURCE_MIN_SECONDS:continue
+            attempt=int(run.get('run_attempt') or 1);key=f"{int(run['id'])}.{attempt}"
+            entry=memory.setdefault(key,{'at':run['created_at'],'warnings':None,'tries':0})
+            if entry['warnings'] is None and entry['tries']<RESOURCE_TRIES:
+                try:entry['warnings']=self.receipt_warnings(int(run['id']),attempt)
+                except Exception as error:
+                    entry['tries']+=1
+                    if entry['tries']>=RESOURCE_TRIES:entry['warnings']=[f"run {int(run['id'])}: receipt unreadable ({type(error).__name__})"]
+            found+=entry['warnings'] or []
+        for key in [k for k,v in memory.items() if (parse(v.get('at')) or now)<now-timedelta(days=RESOURCE_DAYS)]:del memory[key]
+        state['read_failures']=0;state['last_found']=found;save()
+        return found
+    def receipt_warnings(self,run_id,attempt=1):
+        """The warnings of each receipt of this run attempt: one final receipt per checked issue (verifier-receipt-and-logs-
+        RUN-ATTEMPT-ISSUE, or without ISSUE for the maintainer workflow), else its Lean-stage one (-lean)."""
+        names=github_read.api(f'repos/bigospeedrun/verifier/actions/runs/{run_id}/artifacts',{'per_page':100})['artifacts']
+        pattern=re.compile(f'verifier-receipt-and-logs-{run_id}-{attempt}(?:-([0-9]+))?(-lean)?')
+        groups={}
+        for artifact in names:
+            match=pattern.fullmatch(artifact.get('name')) if isinstance(artifact.get('name'),str) else None
+            if match and not artifact.get('expired'):
+                # The final receipt wins over the -lean one of the same issue.
+                if match.group(1) not in groups or (groups[match.group(1)][1] and not match.group(2)):
+                    groups[match.group(1)]=(artifact,bool(match.group(2)))
+        warnings=[]
+        for issue,(artifact,_) in sorted(groups.items(),key=lambda kv:int(kv[0] or 0)):
+            if int(artifact.get('size_in_bytes') or 0)>RESOURCE_ZIP_MAX:raise RuntimeError('receipt artifact too large')
+            out=subprocess.run(['gh','api','-X','GET',f"repos/bigospeedrun/verifier/actions/artifacts/{int(artifact['id'])}/zip"],
+                               capture_output=True,timeout=180)
+            if out.returncode or len(out.stdout)>RESOURCE_ZIP_MAX:raise RuntimeError('GitHub artifact request failed')
+            with zipfile.ZipFile(io.BytesIO(out.stdout)) as archive:
+                info=archive.getinfo('receipt.json')
+                if info.file_size>16*1024*1024:raise RuntimeError('receipt too large')
+                data=json.loads(archive.read(info))
+            report=data.get('resource_report') if isinstance(data,dict) else None
+            listed=report.get('warnings') if isinstance(report,dict) else None
+            label=f'run {run_id} #{int(issue)}' if issue else f'run {run_id}'
+            warnings+=[f'{label}: '+safe_text(w,160) for w in listed[:20] if isinstance(w,str)] if isinstance(listed,list) else []
+        return warnings
     def prove2me_state(self):
         out=subprocess.run(['gh','api','-X','GET','repos/bigospeedrun/site/contents/data/prove2me.json','-H','Accept: application/vnd.github.raw'],
                            capture_output=True,text=True,timeout=60)
@@ -978,6 +1064,11 @@ def check(src,now,to_time=systemd_time):
                                   'journalctl --user -u bigospeedrun-race-channels.service')
     issue_check(src,now,results)
     reply_check(src,now,results)
+    try:
+        found=sorted(set(src.resource_warnings(now)))
+        results['verifier-resource']=(not found,SET_SEP.join(found) or None,None if found else now,RESOURCE_LINK)
+    except Exception as error:
+        results['verifier-resource']=(False,'cannot read verifier receipts: '+type(error).__name__,None,RESOURCE_LINK)
     try:
         service=src.systemd('bigospeedrun-submissions.service','Result','ExecMainStatus','ExecMainExitTimestamp')
         timer=src.systemd('bigospeedrun-submissions.timer','LastTriggerUSec','ActiveState')

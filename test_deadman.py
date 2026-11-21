@@ -27,6 +27,10 @@ class Fake:
     installed=False;digest_ok=None;stalled=();pending=[]
     def pending_candidates(self):return list(self.pending)
     def stalled_sources(self):return list(self.stalled)
+    rwarnings=[]
+    def resource_warnings(self,now):
+        if isinstance(self.rwarnings,Exception):raise self.rwarnings
+        return list(self.rwarnings)
     werrors=[]
     def watch_errors(self):
         if isinstance(self.werrors,Exception):raise self.werrors
@@ -146,7 +150,7 @@ class DeadmanTests(unittest.TestCase):
 
     def test_all_healthy_sends_nothing(self):
         report=self.run_at(Fake())
-        self.assertEqual(set(report),{'watch-cycle','candidate-review','discord-intake','problem-selection','site-refresh','verifier-submissions','chatbot-gap-review','watch-sources','watch-errors','vps-deploy','vps-board','race-parity','method-note','croc-certifications','stale-issues','unanswered-submissions','direct-import'})
+        self.assertEqual(set(report),{'watch-cycle','candidate-review','discord-intake','problem-selection','site-refresh','verifier-submissions','chatbot-gap-review','watch-sources','watch-errors','vps-deploy','vps-board','race-parity','method-note','croc-certifications','stale-issues','unanswered-submissions','direct-import','verifier-resource'})
         self.assertTrue(all(v=='ok' for v in report.values()));self.assertEqual(self.sent,[])
 
     def test_each_simulated_stale_or_failed_state_is_caught(self):
@@ -490,6 +494,124 @@ class DeadmanTests(unittest.TestCase):
         problem=d.check(f,NOW)['watch-errors'][1]
         self.assertTrue(problem.isascii());self.assertNotIn('\n',problem);self.assertLessEqual(len(problem),300)
         f.werrors=RuntimeError('gone');self.assertIn('cannot read pivot-watch.json',d.check(f,NOW)['watch-errors'][1])
+
+    def test_verifier_resource_alerts_once_per_new_warning_and_recovers_once(self):
+        # Verifier task c46608b8: a receipt's resource_report warns at 80% of a memory cap or of the job deadline.
+        a='run 43694265500: build attempt 1 (2 Lake workers): memory at 100% of its cap'
+        b='run 43700000000: lean segment check4: memory at 82% of its cap'
+        f=Fake();f.rwarnings=[a]
+        self.run_at(f);self.run_at(f)
+        alerts=[p for p in self.sent if p.get('item')=='verifier-resource']
+        self.assertEqual([p['event'] for p in alerts],['alert']);self.assertIn('1 new: '+a,alerts[0]['text'])
+        f.rwarnings=[a,b];self.run_at(f)
+        f.rwarnings=[b];self.run_at(f)
+        f.rwarnings=[];self.run_at(f);self.run_at(f)
+        self.assertEqual([p['event'] for p in self.sent if p.get('item')=='verifier-resource'],['alert','alert','recovered'])
+        f.rwarnings=RuntimeError('token ghp_secret in message')
+        problem=d.check(f,NOW)['verifier-resource'][1]
+        self.assertIn('cannot read verifier receipts: RuntimeError',problem);self.assertNotIn('ghp_secret',problem)
+
+    def zipped_receipt(self,warnings):
+        import io, zipfile
+        buffer=io.BytesIO()
+        with zipfile.ZipFile(buffer,'w') as z:z.writestr('receipt.json',json.dumps({'resource_report':{'warnings':warnings}}))
+        return buffer.getvalue()
+
+    def test_verifier_resource_reads_each_long_run_once_and_every_issue_of_a_run(self):
+        from unittest.mock import MagicMock
+        def run(started,minutes,rid,attempt=1,status='completed'):
+            end=datetime.fromisoformat(started)+timedelta(minutes=minutes)
+            return dict(id=rid,run_attempt=attempt,status=status,created_at=started,run_started_at=started,updated_at=end.isoformat())
+        recent=(NOW-timedelta(hours=5)).isoformat()
+        listed=[run(recent,5,1),run(recent,200,2),run(recent,200,3,2),run(recent,200,4,status='in_progress')]
+        arts={2:[('verifier-receipt-and-logs-2-1-195-lean',11),('verifier-receipt-and-logs-2-1-195',12),   # final wins over -lean
+                 ('verifier-receipt-and-logs-2-1-204-lean',13),                                          # only a Lean-stage receipt
+                 ('verifier-receipt-and-logs-2-1',14),                                                   # a maintainer run has no issue
+                 ('verifier-receipt-and-logs-2-2-195',15),('verifier-receipt-and-logs-9-1-195',16),   # another attempt, another run
+                 ('chain-leg-2-1-195-build1',17)],
+              3:[('verifier-receipt-and-logs-3-2-205',21)]}
+        zips={12:['build attempt 1 (2 Lake workers): memory at 100% of its cap','x'*400,7],13:['lean segment check4: memory at 82% of its cap'],
+              14:[],21:['build: wall at 90% of the job deadline']}
+        calls=[]
+        def api(path,params=None,**kw):
+            if path.endswith('/runs'):return {'workflow_runs':listed if 'submissions.yml' in path else []}
+            rid=int(path.split('/runs/')[1].split('/')[0]);calls.append(rid)
+            return {'artifacts':[dict(name=n,id=i,size_in_bytes=10) for n,i in arts[rid]]}
+        downloaded=[]
+        def fake_run(args,**kw):
+            artifact=int(args[-1].split('/artifacts/')[1].split('/')[0]);downloaded.append(artifact)
+            return MagicMock(returncode=0,stdout=self.zipped_receipt(zips[artifact]))
+        src=d.Sources(self.root,persist=True)
+        with patch.object(d.github_read,'api',api),patch.object(d.subprocess,'run',fake_run):
+            found=src.resource_warnings(NOW);again=src.resource_warnings(NOW)
+        # Run 1 is under 10 min and run 4 has not finished. Each receipt is read once, run 2's three issues (195, 204 and the
+        # maintainer one) all count, and the receipts of another attempt or run do not.
+        self.assertEqual(calls,[2,3]);self.assertEqual(sorted(downloaded),[12,13,14,21])
+        self.assertEqual(found,again);self.assertEqual(len(found),4)
+        self.assertEqual(found[0],'run 2 #195: build attempt 1 (2 Lake workers): memory at 100% of its cap')
+        self.assertTrue(found[1].startswith('run 2 #195: xxx') and len(found[1])<190)
+        self.assertIn('run 2 #204: lean segment check4: memory at 82% of its cap',found)
+        self.assertIn('run 3 #205: build: wall at 90% of the job deadline',found)
+        self.assertTrue((self.root/d.RESOURCE_MEMORY).exists())
+
+    def test_verifier_resource_one_bad_receipt_hides_no_other_run(self):
+        from unittest.mock import MagicMock
+        recent=(NOW-timedelta(hours=5)).isoformat();end=(NOW-timedelta(hours=1)).isoformat()
+        listed=[dict(id=i,run_attempt=1,status='completed',created_at=recent,run_started_at=recent,updated_at=end) for i in (2,3)]
+        def api(path,params=None,**kw):
+            if path.endswith('/runs'):return {'workflow_runs':listed if 'submissions.yml' in path else []}
+            rid=int(path.split('/runs/')[1].split('/')[0])
+            return {'artifacts':[dict(name=f'verifier-receipt-and-logs-{rid}-1-195',id=rid*10,size_in_bytes=10)]}
+        def fake_run(args,**kw):
+            if '/artifacts/20/' in args[-1]:return MagicMock(returncode=0,stdout=b'not a zip')
+            return MagicMock(returncode=0,stdout=self.zipped_receipt(['build: memory at 100% of its cap']))
+        src=d.Sources(self.root,persist=True)
+        with patch.object(d.github_read,'api',api),patch.object(d.subprocess,'run',fake_run):
+            first=src.resource_warnings(NOW);second=src.resource_warnings(NOW);third=src.resource_warnings(NOW)
+        # The good run answers at once. The bad one is retried and becomes one string at the third failed read.
+        self.assertEqual(first,['run 3 #195: build: memory at 100% of its cap']);self.assertEqual(second,first)
+        self.assertEqual(third,['run 2: receipt unreadable (BadZipFile)','run 3 #195: build: memory at 100% of its cap'])
+        with patch.object(d.github_read,'api',api),patch.object(d.subprocess,'run',side_effect=AssertionError('read again')):
+            self.assertEqual(src.resource_warnings(NOW),third)
+
+    def test_verifier_resource_list_failure_needs_two_in_a_row(self):
+        recent=(NOW-timedelta(hours=5)).isoformat();end=(NOW-timedelta(hours=1)).isoformat()
+        listed=[dict(id=2,run_attempt=1,status='completed',created_at=recent,run_started_at=recent,updated_at=end)]
+        state={'fail':False}
+        def api(path,params=None,**kw):
+            if state['fail']:raise RuntimeError('GitHub GET failed')
+            if path.endswith('/runs'):return {'workflow_runs':listed if 'submissions.yml' in path else []}
+            return {'artifacts':[dict(name='verifier-receipt-and-logs-2-1-195',id=20,size_in_bytes=10)]}
+        from unittest.mock import MagicMock
+        src=d.Sources(self.root,persist=True)
+        with patch.object(d.subprocess,'run',return_value=MagicMock(returncode=0,stdout=self.zipped_receipt(['build: memory at 100% of its cap']))):
+            with patch.object(d.github_read,'api',api):first=src.resource_warnings(NOW)
+            state['fail']=True
+            with patch.object(d.github_read,'api',api):
+                self.assertEqual(src.resource_warnings(NOW),first)      # one blip keeps the last answer
+                with self.assertRaises(RuntimeError):src.resource_warnings(NOW)
+            state['fail']=False
+            with patch.object(d.github_read,'api',api):self.assertEqual(src.resource_warnings(NOW),first)
+            state['fail']=True
+            with patch.object(d.github_read,'api',api):self.assertEqual(src.resource_warnings(NOW),first)   # the count restarted
+
+    def test_verifier_resource_receipt_without_the_field_or_bad_zip(self):
+        import io, zipfile
+        from unittest.mock import MagicMock
+        def zipped(payload):
+            buffer=io.BytesIO()
+            with zipfile.ZipFile(buffer,'w') as z:z.writestr('receipt.json',payload)
+            return MagicMock(returncode=0,stdout=buffer.getvalue())
+        src=d.Sources(self.root,persist=False)
+        arts={'artifacts':[{'id':12,'name':'verifier-receipt-and-logs-2-1-195','size_in_bytes':10}]}
+        with patch.object(d.github_read,'api',return_value=arts):
+            for payload in ['{}','[]','{"resource_report":null}','{"resource_report":{"warnings":"x"}}']:
+                with patch.object(d.subprocess,'run',return_value=zipped(payload)):
+                    self.assertEqual(src.receipt_warnings(2),[])
+            with patch.object(d.subprocess,'run',return_value=MagicMock(returncode=1,stdout=b'')):
+                with self.assertRaises(RuntimeError):src.receipt_warnings(2)
+            with patch.object(d.subprocess,'run',return_value=MagicMock(returncode=0,stdout=b'not a zip')):
+                with self.assertRaises(Exception):src.receipt_warnings(2)
 
     def test_watch_errors_reads_only_watchlist_repos(self):
         (self.root/'pivot-watch.json').write_text(json.dumps({'errors':[
