@@ -582,11 +582,45 @@ class DeadmanTests(unittest.TestCase):
         src=d.Sources(self.root,persist=True)
         with patch.object(d.github_read,'api',api),patch.object(d.subprocess,'run',fake_run):
             first=src.resource_warnings(NOW);second=src.resource_warnings(NOW);third=src.resource_warnings(NOW)
-        # The good run answers at once. The bad one is retried and becomes one string at the third failed read.
+        # The good run answers at once. The bad one is retried and becomes one string at the third failed read; the string
+        # names its issue (task 720237f9).
         self.assertEqual(first,['run 3 #195: build: memory at 100% of its cap']);self.assertEqual(second,first)
-        self.assertEqual(third,['run 2: receipt unreadable (BadZipFile)','run 3 #195: build: memory at 100% of its cap'])
+        self.assertEqual(third,['run 2 #195: receipt unreadable (BadZipFile)','run 3 #195: build: memory at 100% of its cap'])
         with patch.object(d.github_read,'api',api),patch.object(d.subprocess,'run',side_effect=AssertionError('read again')):
             self.assertEqual(src.resource_warnings(NOW),third)
+
+    def test_verifier_resource_one_unreadable_issue_hides_no_other_issue_of_its_run(self):
+        # Task 720237f9 (Reviewer note 1 on ebfb312): a run that checks several issues keeps the tries and the answers per
+        # issue. One issue whose receipt cannot be read does not turn the whole run into one string.
+        from unittest.mock import MagicMock
+        recent=(NOW-timedelta(hours=5)).isoformat();end=(NOW-timedelta(hours=1)).isoformat()
+        listed=[dict(id=2,run_attempt=1,status='completed',created_at=recent,run_started_at=recent,updated_at=end)]
+        def api(path,params=None,**kw):
+            if path.endswith('/runs'):return {'workflow_runs':listed if 'submissions.yml' in path else []}
+            return {'artifacts':[dict(name=f'verifier-receipt-and-logs-2-1-{i}',id=i*10,size_in_bytes=10) for i in (195,204,205)]}
+        reads=[]
+        def fake_run(args,**kw):
+            artifact=int(args[-1].split('/artifacts/')[1].split('/')[0]);reads.append(artifact)
+            if artifact==2040:return MagicMock(returncode=0,stdout=b'not a zip')
+            return MagicMock(returncode=0,stdout=self.zipped_receipt([f'build: memory at {artifact//20}% of its cap']))
+        src=d.Sources(self.root,persist=True)
+        with patch.object(d.github_read,'api',api),patch.object(d.subprocess,'run',fake_run):
+            first=src.resource_warnings(NOW)
+            # The two good issues answer at once and are not read again; the bad one is retried.
+            self.assertEqual(first,['run 2 #195: build: memory at 97% of its cap','run 2 #205: build: memory at 102% of its cap'])
+            second=src.resource_warnings(NOW);third=src.resource_warnings(NOW)
+        self.assertEqual(second,first)
+        self.assertEqual(third,['run 2 #195: build: memory at 97% of its cap','run 2 #204: receipt unreadable (BadZipFile)',
+                                'run 2 #205: build: memory at 102% of its cap'])
+        self.assertEqual(sorted(reads),[1950,2040,2040,2040,2050])
+        def runs_only(path,params=None,**kw):
+            if path.endswith('/runs'):return {'workflow_runs':listed if 'submissions.yml' in path else []}
+            raise AssertionError('listed again')
+        with patch.object(d.github_read,'api',runs_only),patch.object(d.subprocess,'run',side_effect=AssertionError('read again')):
+            self.assertEqual(src.resource_warnings(NOW),third)
+        # The state file keeps one flat answer for the finished run.
+        self.assertIsNotNone(json.loads((self.root/d.RESOURCE_MEMORY).read_text())['runs']['2.1']['warnings'])
+        self.assertNotIn('groups',json.loads((self.root/d.RESOURCE_MEMORY).read_text())['runs']['2.1'])
 
     def test_verifier_resource_list_failure_needs_two_in_a_row(self):
         recent=(NOW-timedelta(hours=5)).isoformat();end=(NOW-timedelta(hours=1)).isoformat()

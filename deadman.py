@@ -338,7 +338,8 @@ class Sources:
         """The resource_report warnings of the receipts of verifier check runs created in the last RESOURCE_DAYS days, as
         strings that name the run (and the issue when a run checks several). A run under RESOURCE_MIN_SECONDS has no check.
         Each receipt is read once; an older receipt without the field has no warning. A receipt that cannot be read in
-        RESOURCE_TRIES reads counts as one string, so one bad artifact hides no other run. The list of runs: a failed read
+        RESOURCE_TRIES reads counts as one string for its own run and issue, so one bad artifact hides no other run and no
+        other issue of its run (the tries and the answers are kept per run, attempt and issue). The list of runs: a failed read
         keeps the last answer once and fails the second time in a row."""
         path=self.root/RESOURCE_MEMORY
         state=json.loads(path.read_text()) if path.exists() else {}
@@ -367,18 +368,41 @@ class Sources:
             if not started or not ended or (ended-started).total_seconds()<RESOURCE_MIN_SECONDS:continue
             attempt=int(run.get('run_attempt') or 1);key=f"{int(run['id'])}.{attempt}"
             entry=memory.setdefault(key,{'at':run['created_at'],'warnings':None,'tries':0})
-            if entry['warnings'] is None and entry['tries']<RESOURCE_TRIES:
-                try:entry['warnings']=self.receipt_warnings(int(run['id']),attempt)
-                except Exception as error:
-                    entry['tries']+=1
-                    if entry['tries']>=RESOURCE_TRIES:entry['warnings']=[f"run {int(run['id'])}: receipt unreadable ({type(error).__name__})"]
-            found+=entry['warnings'] or []
+            if entry['warnings'] is None:self.resource_run(entry,int(run['id']),attempt)
+            # A run with a group that is still to be read shows the warnings of its other groups (task 720237f9).
+            found+=entry['warnings'] if entry['warnings'] is not None else [
+                w for issue in sorted(entry.get('groups',{}),key=lambda k:int(k or 0)) for w in entry['groups'][issue]['warnings'] or []]
         for key in [k for k,v in memory.items() if (parse(v.get('at')) or now)<now-timedelta(days=RESOURCE_DAYS)]:del memory[key]
         state['read_failures']=0;state['last_found']=found;save()
         return found
-    def receipt_warnings(self,run_id,attempt=1):
-        """The warnings of each receipt of this run attempt: one final receipt per checked issue (verifier-receipt-and-logs-
-        RUN-ATTEMPT-ISSUE, or without ISSUE for the maintainer workflow), else its Lean-stage one (-lean)."""
+    def resource_run(self,entry,run_id,attempt):
+        """Read the receipts of one run attempt into its memory entry. The list of artifacts has RESOURCE_TRIES tries for the
+        whole run. Each issue has its own tries and answer in entry['groups'] (the group's key is its issue number, or ''); a
+        group that fails RESOURCE_TRIES times answers with one string that names its run and issue. entry['warnings'] is set
+        when every group has an answer, and the groups are dropped."""
+        if entry['tries']>=RESOURCE_TRIES:return
+        try:groups=self.receipt_groups(run_id,attempt)
+        except Exception as error:
+            entry['tries']+=1
+            if entry['tries']>=RESOURCE_TRIES:entry['warnings']=[f"run {run_id}: receipt unreadable ({type(error).__name__})"]
+            return
+        slots=entry.setdefault('groups',{})
+        for issue,artifact in groups:
+            slot=slots.setdefault(issue,{'warnings':None,'tries':0})
+            if slot['warnings'] is None:
+                try:slot['warnings']=self.group_warnings(run_id,issue,artifact)
+                except Exception as error:
+                    slot['tries']+=1
+                    if slot['tries']>=RESOURCE_TRIES:slot['warnings']=[f"{self.group_label(run_id,issue)}: receipt unreadable ({type(error).__name__})"]
+        if all(slots[issue]['warnings'] is not None for issue,_ in groups):
+            entry['warnings']=[w for issue,_ in groups for w in slots[issue]['warnings']];entry.pop('groups',None)
+    @staticmethod
+    def group_label(run_id,issue):
+        return f'run {run_id} #{int(issue)}' if issue else f'run {run_id}'
+    def receipt_groups(self,run_id,attempt=1):
+        """The receipts of this run attempt, one per checked issue, as (issue key, artifact) pairs in issue order: the final
+        receipt verifier-receipt-and-logs-RUN-ATTEMPT-ISSUE, else its Lean-stage one (-lean). The issue key is '' for the
+        maintainer workflow, which has no issue."""
         names=[]
         for page in range(1,RESOURCE_ARTIFACT_PAGES+1):
             got=github_read.api(f'repos/bigospeedrun/verifier/actions/runs/{run_id}/artifacts',{'per_page':100,'page':page})['artifacts']
@@ -391,23 +415,27 @@ class Sources:
             match=pattern.fullmatch(artifact.get('name')) if isinstance(artifact.get('name'),str) else None
             if match and not artifact.get('expired'):
                 # The final receipt wins over the -lean one of the same issue.
-                if match.group(1) not in groups or (groups[match.group(1)][1] and not match.group(2)):
-                    groups[match.group(1)]=(artifact,bool(match.group(2)))
-        warnings=[]
-        for issue,(artifact,_) in sorted(groups.items(),key=lambda kv:int(kv[0] or 0)):
-            if int(artifact.get('size_in_bytes') or 0)>RESOURCE_ZIP_MAX:raise RuntimeError('receipt artifact too large')
-            out=subprocess.run(['gh','api','-X','GET',f"repos/bigospeedrun/verifier/actions/artifacts/{int(artifact['id'])}/zip"],
-                               capture_output=True,timeout=180)
-            if out.returncode or len(out.stdout)>RESOURCE_ZIP_MAX:raise RuntimeError('GitHub artifact request failed')
-            with zipfile.ZipFile(io.BytesIO(out.stdout)) as archive:
-                info=archive.getinfo('receipt.json')
-                if info.file_size>16*1024*1024:raise RuntimeError('receipt too large')
-                data=json.loads(archive.read(info))
-            report=data.get('resource_report') if isinstance(data,dict) else None
-            listed=report.get('warnings') if isinstance(report,dict) else None
-            label=f'run {run_id} #{int(issue)}' if issue else f'run {run_id}'
-            warnings+=[f'{label}: '+safe_text(w,160) for w in listed[:20] if isinstance(w,str)] if isinstance(listed,list) else []
-        return warnings
+                key=match.group(1) or ''
+                if key not in groups or (groups[key][1] and not match.group(2)):
+                    groups[key]=(artifact,bool(match.group(2)))
+        return [(issue,groups[issue][0]) for issue in sorted(groups,key=lambda k:int(k or 0))]
+    def group_warnings(self,run_id,issue,artifact):
+        """The resource_report warnings of one receipt, as strings that name the run and the issue."""
+        if int(artifact.get('size_in_bytes') or 0)>RESOURCE_ZIP_MAX:raise RuntimeError('receipt artifact too large')
+        out=subprocess.run(['gh','api','-X','GET',f"repos/bigospeedrun/verifier/actions/artifacts/{int(artifact['id'])}/zip"],
+                           capture_output=True,timeout=180)
+        if out.returncode or len(out.stdout)>RESOURCE_ZIP_MAX:raise RuntimeError('GitHub artifact request failed')
+        with zipfile.ZipFile(io.BytesIO(out.stdout)) as archive:
+            info=archive.getinfo('receipt.json')
+            if info.file_size>16*1024*1024:raise RuntimeError('receipt too large')
+            data=json.loads(archive.read(info))
+        report=data.get('resource_report') if isinstance(data,dict) else None
+        listed=report.get('warnings') if isinstance(report,dict) else None
+        label=self.group_label(run_id,issue)
+        return [f'{label}: '+safe_text(w,160) for w in listed[:20] if isinstance(w,str)] if isinstance(listed,list) else []
+    def receipt_warnings(self,run_id,attempt=1):
+        """The warnings of each receipt of this run attempt (the groups of receipt_groups); a group that cannot be read raises."""
+        return [w for issue,artifact in self.receipt_groups(run_id,attempt) for w in self.group_warnings(run_id,issue,artifact)]
     def prove2me_state(self):
         out=subprocess.run(['gh','api','-X','GET','repos/bigospeedrun/site/contents/data/prove2me.json','-H','Accept: application/vnd.github.raw'],
                            capture_output=True,text=True,timeout=60)
