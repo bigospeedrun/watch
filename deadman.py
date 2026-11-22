@@ -370,21 +370,23 @@ class Sources:
             entry=memory.setdefault(key,{'at':run['created_at'],'warnings':None,'tries':0})
             if entry['warnings'] is None:self.resource_run(entry,int(run['id']),attempt)
             # A run with a group that is still to be read shows the warnings of its other groups (task 720237f9).
-            found+=entry['warnings'] if entry['warnings'] is not None else [
-                w for issue in sorted(entry.get('groups',{}),key=lambda k:int(k or 0)) for w in entry['groups'][issue]['warnings'] or []]
+            found+=entry['warnings'] if entry['warnings'] is not None else self.answered_warnings(entry)
         for key in [k for k,v in memory.items() if (parse(v.get('at')) or now)<now-timedelta(days=RESOURCE_DAYS)]:del memory[key]
         state['read_failures']=0;state['last_found']=found;save()
         return found
     def resource_run(self,entry,run_id,attempt):
         """Read the receipts of one run attempt into its memory entry. The list of artifacts has RESOURCE_TRIES tries for the
-        whole run. Each issue has its own tries and answer in entry['groups'] (the group's key is its issue number, or ''); a
+        whole run; when they fail, entry['warnings'] is the warnings of the groups that were answered, then one string for
+        the run. Each issue has its own tries and answer in entry['groups'] (the group's key is its issue number, or ''); a
         group that fails RESOURCE_TRIES times answers with one string that names its run and issue. entry['warnings'] is set
         when every group has an answer, and the groups are dropped."""
         if entry['tries']>=RESOURCE_TRIES:return
         try:groups=self.receipt_groups(run_id,attempt)
         except Exception as error:
             entry['tries']+=1
-            if entry['tries']>=RESOURCE_TRIES:entry['warnings']=[f"run {run_id}: receipt unreadable ({type(error).__name__})"]
+            if entry['tries']>=RESOURCE_TRIES:
+                # The groups that were answered keep their warnings; the run-level string comes after them (task 908c318e).
+                entry['warnings']=self.answered_warnings(entry)+[f"run {run_id}: receipt unreadable ({type(error).__name__})"];entry.pop('groups',None)
             return
         slots=entry.setdefault('groups',{})
         for issue,artifact in groups:
@@ -396,6 +398,10 @@ class Sources:
                     if slot['tries']>=RESOURCE_TRIES:slot['warnings']=[f"{self.group_label(run_id,issue)}: receipt unreadable ({type(error).__name__})"]
         if all(slots[issue]['warnings'] is not None for issue,_ in groups):
             entry['warnings']=[w for issue,_ in groups for w in slots[issue]['warnings']];entry.pop('groups',None)
+    @staticmethod
+    def answered_warnings(entry):
+        """The warnings of the groups of a run entry that have an answer, in issue order."""
+        return [w for issue in sorted(entry.get('groups',{}),key=lambda k:int(k or 0)) for w in entry['groups'][issue]['warnings'] or []]
     @staticmethod
     def group_label(run_id,issue):
         return f'run {run_id} #{int(issue)}' if issue else f'run {run_id}'

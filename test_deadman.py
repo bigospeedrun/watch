@@ -622,6 +622,33 @@ class DeadmanTests(unittest.TestCase):
         self.assertIsNotNone(json.loads((self.root/d.RESOURCE_MEMORY).read_text())['runs']['2.1']['warnings'])
         self.assertNotIn('groups',json.loads((self.root/d.RESOURCE_MEMORY).read_text())['runs']['2.1'])
 
+    def test_verifier_resource_a_failing_list_keeps_the_answered_groups(self):
+        # Task 908c318e (Reviewer note on 720237f9): the artifact list fails three times after some issues of the run were answered.
+        # The answered warnings stay; the run-level string comes after them.
+        from unittest.mock import MagicMock
+        recent=(NOW-timedelta(hours=5)).isoformat();end=(NOW-timedelta(hours=1)).isoformat()
+        listed=[dict(id=2,run_attempt=1,status='completed',created_at=recent,run_started_at=recent,updated_at=end)]
+        state={'fail':False}
+        def api(path,params=None,**kw):
+            if path.endswith('/runs'):return {'workflow_runs':listed if 'submissions.yml' in path else []}
+            if state['fail']:raise RuntimeError('GitHub GET failed')
+            return {'artifacts':[dict(name=f'verifier-receipt-and-logs-2-1-{i}',id=i*10,size_in_bytes=10) for i in (204,199,195)]}
+        def fake_run(args,**kw):
+            if '/artifacts/2040/' in args[-1]:return MagicMock(returncode=0,stdout=b'not a zip')
+            return MagicMock(returncode=0,stdout=self.zipped_receipt(['build: memory at 97% of its cap']))
+        src=d.Sources(self.root,persist=True)
+        with patch.object(d.github_read,'api',api),patch.object(d.subprocess,'run',fake_run):
+            first=src.resource_warnings(NOW)
+            self.assertEqual(first,['run 2 #195: build: memory at 97% of its cap','run 2 #199: build: memory at 97% of its cap'])
+            state['fail']=True
+            # The list fails twice: the answered group still shows, and nothing is final.
+            self.assertEqual(src.resource_warnings(NOW),first);self.assertEqual(src.resource_warnings(NOW),first)
+            third=src.resource_warnings(NOW)
+        self.assertEqual(third,first+['run 2: receipt unreadable (RuntimeError)'])
+        with patch.object(d.github_read,'api',lambda path,params=None,**kw:{'workflow_runs':listed if 'submissions.yml' in path else []}),patch.object(d.subprocess,'run',side_effect=AssertionError('read again')):
+            self.assertEqual(src.resource_warnings(NOW),third)
+        self.assertNotIn('groups',json.loads((self.root/d.RESOURCE_MEMORY).read_text())['runs']['2.1'])
+
     def test_verifier_resource_list_failure_needs_two_in_a_row(self):
         recent=(NOW-timedelta(hours=5)).isoformat();end=(NOW-timedelta(hours=1)).isoformat()
         listed=[dict(id=2,run_attempt=1,status='completed',created_at=recent,run_started_at=recent,updated_at=end)]
