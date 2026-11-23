@@ -451,6 +451,51 @@ class CommentWatchTests(unittest.TestCase):
         self.assertNotIn('op:verifier:190', w.state()['tracked'])
         self.assertNotIn('UNSIGNED', w.alerts[0][0])
 
+    def test_a_verifier_pr_that_changes_only_submissions_files_is_a_submission_and_only_its_opening_is_untracked(self):
+        # Lead, 2026-11-23: PRs #209 and #215 (one new folder under submissions/) were flagged 'no reply'.
+        user = dict(login='HalitZiyaKARTAL', type='User')
+        listing = [dict(number=209, created_at=iso(5), user=user, author_association='NONE', html_url='h209', title='Exact DFT saving', body='b', pull_request={}),
+                   dict(number=215, created_at=iso(6), user=user, author_association='NONE', html_url='h215', title='DFT native 64', body='b', pull_request={}),
+                   dict(number=216, created_at=iso(7), user=user, author_association='NONE', html_url='h216', title='Fix the workflow', body='b', pull_request={}),
+                   dict(number=217, created_at=iso(8), user=user, author_association='NONE', html_url='h217', title='Rename', body='b', pull_request={}),
+                   dict(number=218, created_at=iso(9), user=user, author_association='NONE', html_url='h218', title='Empty', body='b', pull_request={}),
+                   dict(number=219, created_at=iso(10), user=user, author_association='NONE', html_url='h219', title='Unreadable', body='b', pull_request={})]
+        files = {209: [dict(filename='submissions/dft/halitziyakartal-halitziyav7-42/manifest.json'), dict(filename='submissions/dft/halitziyakartal-halitziyav7-42/Submission.lean')],
+                 215: [dict(filename='submissions/dft/josephbebel-x/manifest.json')],
+                 216: [dict(filename='submissions/dft/a/manifest.json'), dict(filename='.github/workflows/submission-check.yml')],
+                 217: [dict(filename='submissions/dft/a/Submission.lean', previous_filename='scripts/verifier.py')],
+                 218: []}
+        reads = []
+        def pages(path, params=None, limit=30):
+            if path.endswith('/issues'):
+                return listing
+            if '/pulls/' in path and path.endswith('/files'):
+                n = int(path.split('/pulls/')[1].split('/')[0])
+                reads.append(n)
+                if n == 219:
+                    raise RuntimeError('boom')
+                return files[n]
+            return []
+        with mock.patch.object(c.gh, 'pages', pages), mock.patch.object(c.gh, 'api', lambda path, params=None, **k: []):
+            got = {e['key']: e for e in c.events('verifier', T0)}
+            self.assertEqual({k for k, e in got.items() if e['submission']}, {'op:verifier:209', 'op:verifier:215'})
+            self.assertEqual(sorted(reads), [209, 215, 216, 217, 218, 219], 'one read per new PR')
+            reads.clear()
+            c.events('site', T0)
+            self.assertEqual(reads, [], 'only the verifier has submission PRs')
+        # The alert says so and tracks nothing for the opening; a human comment on the same PR is tracked as before.
+        w = Watch()
+        w.run(T0)
+        opening = dict(event(209, author='HalitZiyaKARTAL', number=209, at=3, text='Exact DFT', assoc='NONE', kind='op'), opened=True, submission=True)
+        comment = event(7094, author='HalitZiyaKARTAL', number=209, at=4, text='did you read our files?', assoc='NONE')
+        w.events['verifier'] = [opening, comment]
+        result = w.run(T0 + timedelta(minutes=10))
+        self.assertEqual((result['new'], result['sent'], result['waiting']), (2, 2, 1))
+        self.assertIn('OPENED verifier#209 (PR merged; Lean submission: the verifier answers it; no reply tracked)', w.alerts[0][0])
+        self.assertIn('verifier#209 (PR merged; 1 agent reply so far)', w.alerts[0][0])
+        self.assertNotIn('op:verifier:209', w.state()['tracked'])
+        self.assertIn('ic:verifier:7094', w.state()['tracked'])
+
     def test_events_reads_items_opened_after_the_cursor(self):
         def pages(path, params=None, limit=30):
             if path.endswith('/issues'):
@@ -465,7 +510,7 @@ class CommentWatchTests(unittest.TestCase):
         with mock.patch.object(c.gh, 'pages', pages), mock.patch.object(c.gh, 'api', lambda path, params=None, **k: []):
             got = {e['key']: e for e in c.events('verifier', T0)}
         self.assertEqual(sorted(got), ['op:verifier:190', 'op:verifier:191', 'op:verifier:20', 'op:verifier:9'])
-        self.assertEqual({k for k, e in got.items() if e['submission']}, {'op:verifier:190'}, 'an issue with the form title only; a pull request is never one')
+        self.assertEqual({k for k, e in got.items() if e['submission']}, {'op:verifier:190'}, 'an issue with the form title only; a pull request with no files is not one')
         self.assertTrue(got['op:verifier:9']['bot'])
         self.assertEqual((got['op:verifier:20']['at'], got['op:verifier:20']['text'], got['op:verifier:190']['text']), (iso(5), 'text', ''))
         with mock.patch.object(c.gh, 'pages', pages), mock.patch.object(c.gh, 'api', lambda path, params=None, **k: []):

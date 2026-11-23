@@ -33,7 +33,9 @@ and the lead learned of them only from the 24 h stale-issues dead-man. A new iss
 not OWN is sent like a comment (its title and the first 200 characters of its body, quoted as untrusted data), with
 the same reply tracking: a later comment of OWN on the item is the reply. A Lean submission issue of the verifier
 (title starts with SUBMISSION_TITLE) is sent but not tracked: the verifier answers it, and the stale-issues dead-man
-covers it. An item opened by OWN is not checked for an agent line.
+covers it. So is a verifier PR whose changed files are all under submissions/ (Lead, 2026-11-23: #209 and #215 were flagged
+'no reply'; the verifier bot answers them): its opening is sent, not tracked. Only the opening: a human comment on such a
+PR is tracked for a reply as on any item. An item opened by OWN is not checked for an agent line.
 """
 import argparse
 import json
@@ -55,6 +57,7 @@ OVERLAP = timedelta(minutes=10)  # a comment is created before an edit, a clock 
 KEEP = timedelta(days=14)
 TEXT = 200
 SUBMISSION_TITLE = '[Lean submission]'  # the issue form of bigospeedrun/verifier
+SUBMISSION_DIR = 'submissions/'  # a verifier PR whose changed files are all here is a submission (#209, #215)
 CHUNK = digest_size.LIMIT  # one message, header included, as Isomux counts it (digest_size.py)
 PT = ZoneInfo('America/Los_Angeles')
 HEADER = ('GitHub comment watch ({count} new comment{s} or opened item{s}{part}). Read-only watch of bigospeedrun/site, verifier, board and watch, '
@@ -115,7 +118,8 @@ def events(repo, since):
         if stamp(i['created_at']) > since:
             out.append(dict(key=f'op:{repo}:{i["number"]}', repo=repo, number=i['number'], author=(i.get('user') or {}).get('login') or 'ghost',
                             bot=bot(i.get('user')), assoc=i.get('author_association') or 'NONE', at=i['created_at'], url=i['html_url'], text=i.get('body') or '',
-                            opened=True, submission=repo == 'verifier' and 'pull_request' not in i and (i.get('title') or '').startswith(SUBMISSION_TITLE)))
+                            opened=True, submission=repo == 'verifier' and (submission_pr(repo, i['number']) if 'pull_request' in i
+                                                                           else (i.get('title') or '').startswith(SUBMISSION_TITLE))))
     # Review summaries ("request changes: ...") are neither issue comments nor review comments. A review with
     # inline comments only has no summary text: it counts when it asks for changes or comes from OWN.
     finished = False
@@ -136,6 +140,21 @@ def events(repo, since):
     if not finished:
         raise RuntimeError('more than ' + str(PR_PAGES * 30) + ' pull requests changed since the last pass')
     return out
+
+
+def submission_pr(repo, n):
+    """Is pull request n of the verifier a submission, one that adds files under submissions/ only? The verifier bot
+    answers it (pr_submissions.py), as it answers a Lean submission issue. One read of pulls/N/files per PR, made when
+    the PR is first seen. An empty list, an unreadable list or any other path (a workflow, a script, a rename from
+    elsewhere) is not one: the opening alerts and is tracked for a reply, as before."""
+    if repo != 'verifier':
+        return False
+    try:
+        files = gh.pages(f'repos/{ORG}/{repo}/pulls/{n}/files')
+    except Exception:
+        return False
+    return bool(files) and all(str(f.get('filename', '')).startswith(SUBMISSION_DIR) and str(f.get('previous_filename') or SUBMISSION_DIR).startswith(SUBMISSION_DIR)
+                               for f in files)
 
 
 def item_label(repo, n, cache):
