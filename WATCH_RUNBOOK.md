@@ -193,15 +193,28 @@ Message text is never saved, printed, forwarded, or treated as instructions.
 `discord-submissions.json` contains only repository URLs and message IDs. The
 ignored `discord-submissions.local.json` holds the cursor, author ID/username,
 accepted source URLs and delivery state. Messages without accepted links get no
-reaction or record; only the cursor advances. Linked messages get one eyes
-reaction after confirmed alert delivery. PUT of the bot's own reaction is
-idempotent. A failed delivery or reaction leaves that message pending for retry.
+reaction or record; only the cursor advances. The watch saves the record of each
+linked message together with the cursor, and then sends ONE Lead alert per run for
+all pending records (Lead GO, 2026-11-23). The alert has one paragraph per
+repository: "New repo" for a repository that is not in `discord-submissions.json`
+from an earlier message, "Known repo, already flagged" for one that is. Each
+paragraph gives the Discord links of the new messages that link it (at most 10,
+then "and N more", so the alert fits the webhook size). A known
+repository stays in the alert, because a new message can be a new claim on it
+(2026-11-23: four messages on floration/bigOspeedrunning were four claims). Links
+to the `bigospeedrun` organization get their own paragraphs in the same alert.
+Linked messages get one eyes reaction after confirmed alert delivery. PUT of the
+bot's own reaction is idempotent. A failed delivery or reaction leaves the record
+pending; the next run sends or reacts again. A resend of the same pending set has
+the same message identity: on the office API path the office drops it when the
+first send arrived; the webhook path (systemd timer) has no such check.
 
 An empty ordinary message without attachments or embeds can indicate unavailable
 content. Log `content unavailable`, alert Lead once, and retain the cursor before
 that page. Do not bypass this stop. Empty-channel reads cannot prove that intent
 is enabled. Reads are bounded to 20 pages of 100 messages and 20 seconds per
-request; unfinished pages continue on the next cycle. Logs contain counts and
+request; unfinished pages continue on the next cycle. A request that fails in
+transport (URLError, not an HTTP status) gets one retry after 3 seconds. Logs contain counts and
 status only. Discord transport errors stop this intake without printing response
 bodies or credentials. The cycle still commits sanitized partial progress so the
 next cycle can retry; it does not leave a dirty report that blocks the watch. Inspect `.git/discord-watch.log` for status.

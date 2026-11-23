@@ -1,17 +1,22 @@
 #!/usr/bin/env python3
 """Data-only Discord intake. Message bodies never leave process memory."""
 import argparse
+import hashlib
 import json
 import os
 import re
+import time
 from datetime import datetime, timezone
 from pathlib import Path
 from urllib.parse import urlsplit, quote
+from urllib.error import HTTPError, URLError
 from urllib.request import Request, build_opener, HTTPRedirectHandler
 
 ROOT=Path(__file__).resolve().parent
 PUBLIC='discord-submissions.json'
 PRIVATE='discord-submissions.local.json'
+RETRY_DELAY=3 # seconds before the one retry of a request that failed in transport
+MAX_LINKS=10 # message links per repository paragraph of the Lead alert
 
 class NoRedirect(HTTPRedirectHandler):
     def redirect_request(self,*args,**kwargs):return None
@@ -67,10 +72,19 @@ class Discord:
     def request(self,path,method='GET'):
         request=Request('https://discord.com/api/v10/'+path,method=method,
             headers={'Authorization':'Bot '+self.token,'User-Agent':'BigOSpeedrunWatch/1.0'})
-        with build_opener(NoRedirect).open(request,timeout=20) as response:
-            raw=response.read(4_000_001)
-            if len(raw)>4_000_000:raise ValueError('Discord response too large')
-            return json.loads(raw) if raw else None
+        # One retry after a transport failure (2026-11-23 08:05Z: one URLError stopped the intake for a
+        # cycle). An HTTP status is an answer from Discord, so it is not retried. Every request here is a
+        # GET or the idempotent PUT of the bot's own reaction, so a second attempt is safe.
+        for attempt in (1,2):
+            try:
+                with build_opener(NoRedirect).open(request,timeout=20) as response:
+                    raw=response.read(4_000_001)
+                    if len(raw)>4_000_000:raise ValueError('Discord response too large')
+                    return json.loads(raw) if raw else None
+            except HTTPError:raise
+            except URLError:
+                if attempt==2:raise
+                time.sleep(RETRY_DELAY)
     def check_channel(self):
         channel=self.request('channels/'+self.channel)
         if channel.get('guild_id')!=self.guild or channel.get('type')!=0:raise ValueError('Unexpected channel')
@@ -79,6 +93,56 @@ class Discord:
     def react(self,message):
         self.request('channels/'+self.channel+'/messages/'+message+'/reactions/'+quote('👀',safe='')+'/@me','PUT')
 
+def message_link(api,mid):return f'https://discord.com/channels/{api.guild}/{api.channel}/{mid}'
+
+def alert_text(api,public,pending,own):
+    """One Lead alert for all pending messages of a cycle (Lead GO, 2026-11-23: four messages linking one
+    repository gave four alerts). Each repository is one paragraph with the links to its new messages. A repository
+    already in the public list from an earlier message is marked "known" and stays in the alert: a new message
+    can be a new claim on it (the four floration messages were four claims)."""
+    ids={mid for mid,_ in pending}
+    known={r for row in public['submissions'] if row['message_id'] not in ids for r in row['repo_urls']}
+    repos={}
+    for mid,record in pending:
+        for repo in sorted({repo_url(u) for u in record['urls']}):repos.setdefault(repo,[]).append(mid)
+    owns={}
+    for mid,record in own:
+        for url in record['own_urls']:owns.setdefault(url,[]).append(mid)
+    def links(mids):
+        # The webhook path sends at most 4 parts of 1700 characters (poll.lead_notify); keep each paragraph short.
+        more=f' and {len(mids)-MAX_LINKS} more' if len(mids)>MAX_LINKS else ''
+        return ' '.join(message_link(api,m) for m in mids[:MAX_LINKS])+more
+    def count(mids):return '1 new message' if len(mids)==1 else f'{len(mids)} new messages'
+    stamp=datetime.now(timezone.utc).isoformat(timespec='seconds')
+    total=len(ids|{mid for mid,_ in own})
+    lines=[f'{stamp}: Discord #submit-a-result: {total} new message{"" if total==1 else "s"} with GitHub links.']
+    if repos:lines.append('Possible new bound race or problem pivot; README signals need review.')
+    for repo,mids in repos.items():
+        kind='Known repo, already flagged' if repo in known else 'New repo'
+        lines.append(f'{kind}: {repo} (Discord submission). {count(mids)}: {links(mids)}')
+    for url,mids in owns.items():
+        lines.append(f'Link to our own repository; read it and answer: {url} (Discord submission). {count(mids)}: {links(mids)}')
+    return '\n\n'.join(lines)
+
+def flush(api,notify,root,state,public):
+    """Send the one alert for every pending record, and then react to each alerted message. The records and
+    the cursor are saved before this step, so a failed delivery or reaction is retried on the next run."""
+    rows=sorted(state['messages'].items(),key=lambda x:int(x[0]))
+    pending=[(mid,r) for mid,r in rows if r.get('urls') and not r.get('alerted')]
+    own=[(mid,r) for mid,r in rows if r.get('own_urls') and not r.get('own_alerted')]
+    if pending or own:
+        ids=','.join(sorted({mid for mid,_ in pending+own},key=int))
+        notify(alert_text(api,public,pending,own),'discord-intake-'+hashlib.sha256(ids.encode()).hexdigest()[:16])
+        for _,record in pending:record['alerted']=True
+        for _,record in own:record['own_alerted']=True
+        save(root/PRIVATE,state)
+    for mid,record in rows:
+        # Records from before 2026-11-23 have no 'reacted' key; their reaction was done before the cursor moved.
+        # Every record is alerted at this point: a failed notify() above raises before this loop.
+        if record.get('reacted',True) is False:
+            api.react(mid) # PUT @me is idempotent if a prior attempt was interrupted.
+            record['reacted']=True;save(root/PRIVATE,state)
+
 def run(api,notify,root=None,dry_run=False):
     # Resolve ROOT at call time; a default bound at definition time ignores a
     # patched ROOT and made a test read the live cursor (2026-10-14 cycle stop).
@@ -86,7 +150,7 @@ def run(api,notify,root=None,dry_run=False):
     state=load(root/PRIVATE,{'last_seen':'0','messages':{},'content_alerted':False})
     public=load(root/PUBLIC,{'submissions':[]})
     api.check_channel()
-    cursor=state['last_seen'];count=0;hits=0
+    cursor=state['last_seen'];count=0;hits=0;status='ok'
     for _ in range(20):
         batch=api.messages(cursor)
         if not batch:break
@@ -97,7 +161,7 @@ def run(api,notify,root=None,dry_run=False):
             if not dry_run and not state['content_alerted']:
                 notify('Discord submission watch: content unavailable; enable Message Content intent. Cursor unchanged.', 'discord-content-unavailable')
                 state['content_alerted']=True;save(root/PRIVATE,state)
-            return {'status':'content unavailable','messages':count,'hits':hits}
+            status='content unavailable';break
         for message in sorted(batch,key=lambda m:int(m['id'])):
             mid=message['id']
             if not re.fullmatch(r'[0-9]+',mid) or int(mid)<=int(cursor):raise ValueError('Invalid message order')
@@ -105,36 +169,23 @@ def run(api,notify,root=None,dry_run=False):
             # Links to our own organization are not new races: they alert the lead (Lead, 2026-10-21: no silent
             # pass for a PR link such as bigospeedrun/verifier/pull/27) but stay out of the public repo list.
             urls=[u for u in found if not own_url(u)];own=[u for u in found if own_url(u)]
-            if urls or own:
-                hits+=1
-                if not dry_run:
-                    record=state['messages'].setdefault(mid,dict(author_id=message['author']['id'],
-                        username=message['author']['username'],urls=urls,alerted=False))
-                    if urls:
-                        repos=sorted({repo_url(u) for u in urls})
-                        # Persist sanitized evidence before any acknowledgement.
-                        if not any(r['message_id']==mid for r in public['submissions']):
-                            public['submissions'].append(dict(message_id=mid,repo_urls=repos))
-                        save(root/PUBLIC,public);save(root/PRIVATE,state)
-                        if not record['alerted']:
-                            stamp=datetime.now(timezone.utc).isoformat(timespec='seconds')
-                            notify(stamp+': Possible new bound race or problem pivot; README signals need review: '+
-                                   '; '.join(u+' (Discord submission)' for u in repos),'discord-submission-'+mid)
-                            record['alerted']=True;save(root/PRIVATE,state)
-                    if own:
-                        record['own_urls']=own;save(root/PRIVATE,state)
-                        if not record.get('own_alerted'):
-                            stamp=datetime.now(timezone.utc).isoformat(timespec='seconds')
-                            notify(stamp+': A Discord message in #submit-a-result links to our own repository; read it and answer: '+
-                                   '; '.join(own)+' (Discord submission)','discord-own-'+mid)
-                            record['own_alerted']=True;save(root/PRIVATE,state)
-                    api.react(mid) # PUT @me is idempotent if a prior attempt was interrupted.
+            if (urls or own) and not dry_run:
+                record=state['messages'].setdefault(mid,dict(author_id=message['author']['id'],
+                    username=message['author']['username'],urls=urls,alerted=False,reacted=False))
+                if own:record['own_urls']=own;record.setdefault('own_alerted',False)
+                if urls and not any(r['message_id']==mid for r in public['submissions']):
+                    # Persist sanitized evidence before any acknowledgement.
+                    public['submissions'].append(dict(message_id=mid,repo_urls=sorted({repo_url(u) for u in urls})))
+                    save(root/PUBLIC,public)
+            if urls or own:hits+=1
             cursor=mid
             if not dry_run:
+                # The record and the cursor are saved together; flush() alerts for the record later in this run.
                 state['last_seen']=cursor;save(root/PRIVATE,state)
         if len(batch)<100:break
-    else:return {'status':'partial: page budget reached','messages':count,'hits':hits}
-    return {'status':'ok','messages':count,'hits':hits}
+    else:status='partial: page budget reached'
+    if not dry_run:flush(api,notify,root,state,public)
+    return {'status':status,'messages':count,'hits':hits}
 
 def main():
     parser=argparse.ArgumentParser();parser.add_argument('--dry-run',action='store_true');args=parser.parse_args()
