@@ -10,9 +10,11 @@ commit, when:
      changes and names the target, or a Lean declaration has type EndToEnd
      (the alert says whether that file contains sorry);
   2. the proved kappa in the README changes (2^-37 when this watch started), including
-     values that came and went between two cycles: the watch reads README.md at each
-     commit since the last seen head (3213/2^44 lived 19:40-21:11Z on 2026-10-17,
-     between the 19:04Z and 22:04Z cycles, and was missed);
+     values that came and went between two cycles: the watch lists the commits that touch
+     README.md since the last seen head and reads README.md at each of them (3213/2^44
+     lived 19:40-21:11Z on 2026-10-17, between the 19:04Z and 22:04Z cycles, and was
+     missed). Commits that leave README.md alone are never read: platypii/integer-mult-bounds-lean
+     commits about every 4 minutes, so a walk over all commits skipped 149 of them on 2026-11-23;
   3. a Lean proof of the FinTM2-to-multitape simulation appears: a declaration
      from FinTM2 or MathlibTM2.Statement to Machine or EndToEnd, or a file named
      for that simulation.
@@ -30,7 +32,9 @@ import subprocess
 import tarfile
 from pathlib import Path
 from github_read import api, content
-MAX_WALK=100  # newest commits read between two cycles (one contents GET each). 30 was too low: 32 commits came between two cycles on 2026-10-24.
+MAX_WALK=100  # newest README-touching commits read between two cycles (one contents GET each).
+PER_PAGE=100  # commits per listing page
+MAX_PAGES=3   # listing pages read per cycle: PER_PAGE*MAX_PAGES README commits at most
 
 ROOT=Path(__file__).resolve().parent
 STATE='.git/lean-target-watch.json'
@@ -106,16 +110,26 @@ def snapshot(readme):
     return dict(kappa=kappa(readme),target_open=target_open(readme),status=status,
                 status_hash=hashlib.sha256(status.encode()).hexdigest()[:16])
 
-def walk_kappas(get,readme_at,old_head,head):
-    """([(sha, kappa)], skipped) for the commits after old_head up to head, oldest first:
-    the README kappa at each of the MAX_WALK newest (head excluded: the tarball covers
-    it); skipped counts older commits not read. A commit whose README cannot be read gives
-    kappa None; a failed compare (for example after a force-push) gives no walk."""
+def walk_kappas(get,readme_at,old_head,old_date,head,head_date):
+    """([(sha, kappa)], skipped) for the commits that touch README.md after old_head up to head,
+    oldest first: the README kappa at each of the MAX_WALK newest (head excluded: the tarball
+    covers it); skipped counts older README commits not read. The list is one request per
+    PER_PAGE commits (GET /commits?path=README.md&since=&until=), so commits that leave README.md
+    alone cost nothing. since is the old head's committer date, so a README commit made in the
+    same second as the old head but before it can be read again (a repeat read, never a miss).
+    A commit whose README cannot be read gives kappa None; a listing that fails gives no walk.
+    old_date None (a state from before this field): the old head's date is read first, and a
+    head that no longer exists (a force-push) gives no walk."""
     try:
-        commits=[c['sha'] for c in get(f'repos/{REPO}/compare/{old_head}...{head}').get('commits',[])]
+        if not old_date:old_date=get(f'repos/{REPO}/commits/{old_head}')['commit']['committer']['date']
+        listed=[]
+        for page in range(1,MAX_PAGES+1):
+            rows=get(f'repos/{REPO}/commits',{'path':'README.md','since':old_date,'until':head_date,'per_page':PER_PAGE,'page':page})
+            listed+=[c['sha'] for c in rows]
+            if len(rows)<PER_PAGE:break
     except Exception:
         return [],0
-    walk=commits[:-1]
+    walk=[sha for sha in reversed(listed) if sha not in (old_head,head)]
     out=[]
     for sha in walk[-MAX_WALK:]:
         try:value=kappa(readme_at(sha))
@@ -126,7 +140,7 @@ def walk_kappas(get,readme_at,old_head,head):
 def run(get,fetch,notify,root=None,dry_run=False,readme_at=None):
     root=root or ROOT;path=root/STATE
     state=json.loads(path.read_text()) if path.exists() else {}
-    head=get(f'repos/{REPO}/commits/HEAD')['sha']
+    head_commit=get(f'repos/{REPO}/commits/HEAD');head=head_commit['sha']
     if head==state.get('head'):return {'status':'ok','changed':False,'alerts':0}
     readme,files=fetch(head)
     if not readme or not files:raise ValueError('README or Lean files missing from the tarball')
@@ -136,9 +150,9 @@ def run(get,fetch,notify,root=None,dry_run=False,readme_at=None):
     # Values between the last seen head and this one, each with the commit that first had it.
     if state.get('head') and readme_at:
         previous=old.get('kappa')
-        walked,skipped=walk_kappas(get,readme_at,state['head'],head)
+        walked,skipped=walk_kappas(get,readme_at,state['head'],state.get('head_date'),head,head_commit['commit']['committer']['date'])
         if skipped:
-            signals.append(('skipped:'+head,f'{skipped} earlier commits since the last cycle were not read for README kappa values'))
+            signals.append(('skipped:'+head,f'{skipped} earlier README commits since the last cycle were not read for kappa values'))
         for sha,value in walked:
             if value and value!=previous:
                 signals.append(('kappa:'+value,f'README kappa changed from {previous} to {value} at {sha[:10]} (between two watch cycles)'))
@@ -152,7 +166,7 @@ def run(get,fetch,notify,root=None,dry_run=False,readme_at=None):
         notify(f'{REPO} at {head[:10]} ({url}): '+'; '.join(t for _,t in fresh)+'.',f'lean-target-{head[:12]}')
         sent.update(k for k,_ in fresh)
     if not dry_run:
-        state.update(head=head,readme={k:v for k,v in new.items() if k!='status'},sent=sorted(sent)[-500:])
+        state.update(head=head,head_date=head_commit['commit']['committer']['date'],readme={k:v for k,v in new.items() if k!='status'},sent=sorted(sent)[-500:])
         tmp=path.with_name(path.name+'.tmp');tmp.write_text(json.dumps(state,indent=2)+'\n');tmp.replace(path)
     return {'status':'ok','changed':True,'alerts':len(fresh),'lean_files':len(files)}
 
