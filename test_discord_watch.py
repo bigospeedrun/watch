@@ -180,6 +180,12 @@ class RequestRetryTests(unittest.TestCase):
             self.assertEqual(self.client().request('channels/1'),{'ok':1})
         self.assertEqual(len(calls),2);sleep.assert_called_once_with(w.RETRY_DELAY)
 
+    def test_a_read_timeout_is_retried(self):
+        calls,patch=self.opener(TimeoutError('read'),None)
+        with patch,mock.patch.object(w.time,'sleep') as sleep:
+            self.assertEqual(self.client().request('channels/1'),{'ok':1})
+        self.assertEqual(len(calls),2);sleep.assert_called_once_with(w.RETRY_DELAY)
+
     def test_a_second_transport_failure_stops(self):
         calls,patch=self.opener(URLError('reset'),URLError('reset'),None)
         with patch,mock.patch.object(w.time,'sleep'),self.assertRaises(URLError):self.client().request('channels/1')

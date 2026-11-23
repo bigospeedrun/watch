@@ -73,7 +73,8 @@ class Discord:
         request=Request('https://discord.com/api/v10/'+path,method=method,
             headers={'Authorization':'Bot '+self.token,'User-Agent':'BigOSpeedrunWatch/1.0'})
         # One retry after a transport failure (2026-11-23 08:05Z: one URLError stopped the intake for a
-        # cycle). An HTTP status is an answer from Discord, so it is not retried. Every request here is a
+        # cycle) or a read timeout (TimeoutError from response.read(), not wrapped in URLError). An HTTP
+        # status is an answer from Discord, so it is not retried. Every request here is a
         # GET or the idempotent PUT of the bot's own reaction, so a second attempt is safe.
         for attempt in (1,2):
             try:
@@ -82,7 +83,7 @@ class Discord:
                     if len(raw)>4_000_000:raise ValueError('Discord response too large')
                     return json.loads(raw) if raw else None
             except HTTPError:raise
-            except URLError:
+            except (URLError,TimeoutError):
                 if attempt==2:raise
                 time.sleep(RETRY_DELAY)
     def check_channel(self):

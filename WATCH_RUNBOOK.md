@@ -214,7 +214,7 @@ content. Log `content unavailable`, alert Lead once, and retain the cursor befor
 that page. Do not bypass this stop. Empty-channel reads cannot prove that intent
 is enabled. Reads are bounded to 20 pages of 100 messages and 20 seconds per
 request; unfinished pages continue on the next cycle. A request that fails in
-transport (URLError, not an HTTP status) gets one retry after 3 seconds. Logs contain counts and
+transport (URLError or a read timeout, not an HTTP status) gets one retry after 3 seconds. Logs contain counts and
 status only. Discord transport errors stop this intake without printing response
 bodies or credentials. The cycle still commits sanitized partial progress so the
 next cycle can retry; it does not leave a dirty report that blocks the watch. Inspect `.git/discord-watch.log` for status.
